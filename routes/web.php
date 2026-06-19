@@ -14,6 +14,7 @@ Auth::routes();
 // ===========================
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/movies', [AdminController::class, 'movies'])->name('movies');
 });
 
 /**
