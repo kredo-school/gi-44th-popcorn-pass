@@ -16,6 +16,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/movies', [AdminController::class, 'movies'])->name('movies');
     Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])->name('movies.details');
+    Route::get('/movies/create', [AdminController::class, 'createMovie'])->name('movies.create');
+    Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');
 });
 
 /**

@@ -14,7 +14,7 @@
             <option>Status: All</option>
         </select>
         <div class="ms-auto d-flex gap-2">
-            <a href="#" class="btn btn-outline-warning">+ Add Movie</a>
+            <a href="{{ route('admin.movies.create') }}" class="btn btn-outline-warning">+ Add Movie</a>
             <a href="#" class="btn btn-outline-light">Edit Movie</a>
             <a href="#" class="btn btn-outline-danger">Archive Movie</a>
         </div>
