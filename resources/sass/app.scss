@@ -12,6 +12,15 @@
 
 .nav-font{
     font-family: Georgia, serif;
+    font-size: large;
+    color: white;
+    text-shadow: 0 1px 1px white;
+}
+.nav-font:hover {
+    color: #ffd700;
+    text-shadow:
+        0 0 10px rgba(255,215,0,.8),
+        0 0 20px rgba(255,215,0,.5);
 }
 
 .btn-color {
@@ -27,10 +36,26 @@
     color: #000;
 
     -webkit-text-stroke: 0.5px #fff;
+}
+.yellow-color{
+    color:#F5C126;
+}
+.base{
+    font-family: Georgia, serif;
+}
+.ranking-title{
+    font-family: "jsMath-cmti10", serif;
+    color: #000;
+    font-style: italic;
 
     text-shadow:
-        0.5px 0.5x 0 #fff,
-        0.5px 0.5px 0 #fff,
-        0.5px 0.5px 0 #fff,
-        0.5px 0.5px 0 #fff;
+        -5px -5px 0 rgba(245,193,38,0.7),
+         5px -5px 0 rgba(245,193,38,0.7),
+        -5px  5px 0 rgba(245,193,38,0.7),
+         5px  5px 0 rgba(245,193,38,0.7);
 }
+.back-gray{
+   background-color: #D9D9D9;
+}
+
+

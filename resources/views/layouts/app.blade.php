@@ -13,7 +13,6 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -35,10 +34,10 @@
 
                 <!-- Logo -->
                 <a class="navbar-brand m-0 p-0" href="{{ url('/') }}">
-                    <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" width="50" height="50">
+                    <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" width="70" height="70">
                 </a>
 
-                <div class="container">
+                <div class="container px-0">
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
                         <!-- Center Links -->
@@ -55,13 +54,24 @@
                         </ul>
 
                         <!-- My Page -->
-                        <ul class="navbar-nav ms-auto">
-                            <li class="nav-item">
+                        <ul class="navbar-nav ">
+                            @auth
+                                {{-- logged in --}}
                                 <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
-                                    <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage"
-                                         width="35" height="35">
+                                    <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage" width="35"
+                                        height="35">
                                     My Page
                                 </a>
+                            @else
+                                {{-- not logged in --}}
+                                <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
+                                    <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage" width="35"
+                                        height="35">
+                                    Log in
+                                </a>
+                            @endauth
+                            <li class="nav-item">
+                                
                             </li>
                         </ul>
 
@@ -71,10 +81,10 @@
             </div>
         </nav>
 
-        <main class="py-5">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-12">
+        <main class="">
+            <div class="container-fluid px-0">
+                <div class="row g-0 ">
+                    <div class="col-12 p-0">
                         @yield('content')
                     </div>
                 </div>
@@ -82,4 +92,5 @@
         </main>
     </div>
 </body>
+
 </html>
