@@ -68,27 +68,27 @@
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Title</label>
-                    <div class="form-control bg-transparent">—</div>
+                    <div class="form-control bg-transparent" id="detail-title">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Synopsis</label>
-                    <div class="form-control bg-transparent" style="min-height: 60px;">—</div>
+                    <div class="form-control bg-transparent" id="detail-synopsis" style="min-height: 60px;">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Director</label>
-                    <div class="form-control bg-transparent">—</div>
+                    <div class="form-control bg-transparent" id="detail-director">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Cast</label>
-                    <div class="form-control bg-transparent">—</div>
+                    <div class="form-control bg-transparent" id="detail-cast">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Trailer URL</label>
-                    <div class="form-control bg-transparent">—</div>
+                    <div class="form-control bg-transparent" id="detail-trailer">—</div>
                 </div>
 
                 <div class="mb-3">
@@ -108,4 +108,23 @@
         </div>
     </div>
 
+@endsection
+
+@section('scripts')
+<script>
+document.querySelectorAll('.movie-row').forEach(function (row) {
+    row.addEventListener('click', function () {
+        const movieId = this.dataset.movieId;
+        fetch(`/admin/movies/${movieId}/details`)
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('#detail-title').textContent = data.title || '—';
+                document.querySelector('#detail-synopsis').textContent = data.synopsis || '—';
+                document.querySelector('#detail-director').textContent = data.director || '—';
+                document.querySelector('#detail-cast').textContent = data.cast || '—';
+                document.querySelector('#detail-trailer').textContent = data.trailer_url || '—';
+            });
+    });
+});
+</script>
 @endsection

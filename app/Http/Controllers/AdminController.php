@@ -20,4 +20,17 @@ class AdminController extends Controller
 
         return view('admin.movies.index', compact('movies'));
     }
+
+    public function movieDetails($id)
+    {
+        $movie = Movie::findOrFail($id);
+
+        return response()->json([
+            'title' => $movie->title,
+            'synopsis' => $movie->synopsis,
+            'director' => $movie->director,
+            'cast' => $movie->cast,
+            'trailer_url' => $movie->trailer_url,
+        ]);
+    }
 }
