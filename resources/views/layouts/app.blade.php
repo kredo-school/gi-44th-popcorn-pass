@@ -42,14 +42,14 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
                         <!-- Center Links -->
-                        <ul class="navbar-nav flex-row mx-auto align-items-center">
+                        <ul class="navbar-nav flex-row mx-auto  align-items-center" style="padding-left: 110px;">
                             <li class="nav-item me-5">
                                 <a href="#" class="text-decoration-none text-white nav-font">Now playing</a>
                             </li>
                             <li class="nav-item me-5 ms-5">
                                 <a href="#" class="text-decoration-none text-white nav-font">Coming soon</a>
                             </li>
-                            <li class="nav-item ms-5 me-5">
+                            <li class="nav-item ms-5 ">
                                 <a href="#" class="text-decoration-none text-white nav-font">Food & Drink</a>
                             </li>
                         </ul>
@@ -57,11 +57,24 @@
                         <!-- My Page -->
                         <ul class="navbar-nav ms-auto">
                             <li class="nav-item">
-                                <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
-                                    <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage"
-                                         width="35" height="35">
-                                    My Page
-                                </a>
+                                @auth
+                                    {{-- logged in --}}
+                                    <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
+                                        <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage" width="35"
+                                            height="35">
+                                        My Page
+                                    </a>
+                                @else
+                                    {{-- not logged in --}}
+                                    <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
+                                        <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage" width="35"
+                                            height="35">
+                                        Login
+                                    </a>
+                                @endauth
+
+
+
                             </li>
                         </ul>
 
@@ -82,4 +95,5 @@
         </main>
     </div>
 </body>
+
 </html>
