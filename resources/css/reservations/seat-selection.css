@@ -71,18 +71,23 @@ body {
 }
 
 .seat-tag {
-    min-width: 32px;
-    height: 32px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 4px;
+    font-weight: bold;
+}
 
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+.seat-tag.normal {
+    background-color: #103985;
+    color: #fff;
+    border: 2px solid #fff;
+}
 
-    padding: 0 4px;
-    font-size: 15px;
-    font-weight: bolder;
-
-    white-space: nowrap;
+.seat-tag.premium {
+    background-color: #F5C126;
+    color: #000;
+    border: 2px solid #fff;
 }
 
 .available,

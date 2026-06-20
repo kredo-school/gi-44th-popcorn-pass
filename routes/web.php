@@ -10,6 +10,12 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/seat-selection', function () {
-    return view('reservations.seat-selection');
-});   //temporary (mirei)
+
+////////////// temporary (mirei)
+    Route::get('/seat-selection', function () {
+        return view('reservations.seat-selection');
+    });   
+    Route::get('/ticket-type-selection', function () {
+        return view('reservations.ticket-type');
+    });
+//////////////

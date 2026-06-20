@@ -1,0 +1,44 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+
+    background-image: url("/images/reservation_bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    font-family: Georgia, serif;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Current */
+.current .step-circle {
+    background-color: #F5C126;
+    color: #000;
+}
+
+/* Complete */
+.complete .step-circle {
+    background-color: #FFF;
+    color: #000;
+    border: 2px solid #1D3761;
+}
+
+/* Upcoming */
+.upcoming .step-circle {
+    background-color: #6C757D;
+    color: #FFF;
+}
+
+.step-line {
+    width: 80px;
+    height: 2px;
+    background-color: #6C757D;
+}
+
