@@ -9,3 +9,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/seat-selection', function () {
+    return view('reservations.seat-selection');
+});   //temporary (mirei)
