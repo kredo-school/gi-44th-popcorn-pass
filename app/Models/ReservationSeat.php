@@ -10,6 +10,12 @@ class ReservationSeat extends Model
 {
     use HasFactory, HasUuids;
 
+    /**
+     * reservation_seats テーブルには updated_at カラムが存在しないため、
+     * Eloquentにそれを管理させないようにする。
+     */
+    const UPDATED_AT = null;
+
     protected $fillable = [
         'reservation_id',
         'showtime_seat_id',
