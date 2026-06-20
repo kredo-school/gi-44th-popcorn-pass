@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use App\Models\Genre;
 use App\Models\AgeRating;
+use App\Models\Payment;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -70,5 +72,55 @@ class AdminController extends Controller
         Movie::create($validated);
 
         return redirect()->route('admin.movies')->with('success', 'Movie added successfully.');
+    }
+
+    public function analytics()
+    {
+        $dailyRevenue = Payment::where('payment_status', 'paid')
+            ->whereDate('paid_at', today())
+            ->sum('amount');
+
+        $weeklyRevenue = Payment::where('payment_status', 'paid')
+            ->whereBetween('paid_at', [now()->startOfWeek(), now()->endOfWeek()])
+            ->sum('amount');
+
+        $monthlyRevenue = Payment::where('payment_status', 'paid')
+            ->whereMonth('paid_at', now()->month)
+            ->whereYear('paid_at', now()->year)
+            ->sum('amount');
+
+        $avgTicketPrice = Payment::where('payment_status', 'paid')->avg('amount') ?? 0;
+
+        $dailyRevenueChart = Payment::where('payment_status', 'paid')
+            ->selectRaw('DATE(paid_at) as date, SUM(amount) as total')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->limit(7)
+            ->get();
+
+        $topMovies = Reservation::selectRaw('movie_id, SUM(final_amount) as total_revenue, COUNT(*) as ticket_count')
+            ->groupBy('movie_id')
+            ->orderByDesc('total_revenue')
+            ->limit(5)
+            ->with('movie')
+            ->get();
+
+        return view('admin.analytics.index', compact(
+            'dailyRevenue',
+            'weeklyRevenue',
+            'monthlyRevenue',
+            'avgTicketPrice',
+            'dailyRevenueChart',
+            'topMovies'
+        ));
+    }
+
+    public function reservations()
+    {
+        $reservations = Reservation::with(['user', 'movie', 'cinema', 'screen', 'payment'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
+        return view('admin.reservations.index', compact('reservations'));
     }
 }

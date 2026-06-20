@@ -18,6 +18,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])->name('movies.details');
     Route::get('/movies/create', [AdminController::class, 'createMovie'])->name('movies.create');
     Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');
+    Route::get('/analytics', [AdminController::class, 'analytics'])->name('analytics');
+    Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
 });
 
 /**
