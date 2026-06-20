@@ -20,6 +20,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');
     Route::get('/analytics', [AdminController::class, 'analytics'])->name('analytics');
     Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
+    Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])->name('reservations.export');
+    Route::get('/reservations/{id}/details', [AdminController::class, 'reservationDetails'])->name('reservations.details');
 });
 
 /**

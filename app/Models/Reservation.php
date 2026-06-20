@@ -63,4 +63,25 @@ class Reservation extends Model
     {
         return $this->hasOne(Payment::class);
     }
+
+    public function reservationSeats()
+    {
+        return $this->hasMany(ReservationSeat::class);
+    }
+
+    /**
+     * Returns a collection of actual seat numbers (e.g. ['D5', 'D6'])
+     * by walking reservation_seats -> showtime_seats -> screen_seats.
+     * Requires reservationSeats.showtimeSeat.screenSeat to be eager loaded
+     * to avoid N+1 queries.
+     */
+    public function getSeatNumbersAttribute()
+    {
+        return $this->reservationSeats
+            ->map(function ($reservationSeat) {
+                return $reservationSeat->showtimeSeat->screenSeat->seat_number ?? null;
+            })
+            ->filter()
+            ->values();
+    }
 }
