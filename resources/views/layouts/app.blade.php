@@ -43,19 +43,19 @@
         <!-- Center Links -->
         <ul class="navbar-nav flex-row position-absolute start-50 translate-middle-x ">
             <li class="nav-item me-5">
-                <a href="#" class="text-decoration-none text-white nav-font">
+                <a href="#Nowplaying" class="text-decoration-none text-white nav-font">
                     Now playing
                 </a>
             </li>
 
             <li class="nav-item me-5 ms-5">
-                <a href="#" class="text-decoration-none text-white nav-font">
+                <a href="#Comingsoon" class="text-decoration-none text-white nav-font">
                     Coming soon
                 </a>
             </li>
 
             <li class="nav-item ms-5 me-5">
-                <a href="#" class="text-decoration-none text-white nav-font">
+                <a href="#Food&drink" class="text-decoration-none text-white nav-font">
                     Food & Drink
                 </a>
             </li>

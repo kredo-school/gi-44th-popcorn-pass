@@ -26,7 +26,7 @@
 
 
             {{-- Top Ranking --}}
-            <div class="container-fuild section-gap" style="">
+            <div class="container-fuild section-gap" id="Topranking">
                 <p class="display-3 text-white title-base ms-5 ">
                     👑 Top Ranking
                 </p>
@@ -116,7 +116,7 @@
             </div>
 
 
-            <div class="container-fluid px-0 mt-5 section-gap">
+            <div class="container-fluid px-0 mt-5 section-gap" id="Nowplaying">
                 <p class="display-3 text-white title-base ms-5">
                     🎬 Now Playing
                 </p>
@@ -184,7 +184,7 @@
                 </div>
 
             </div>
-            <div class="container-fluid px-0 mt-5 section-gap">
+            <div class="container-fluid px-0 mt-5 section-gap" id="Comingsoon">
                 <p class="display-3 text-white title-base ms-5">
                     🎞️Coming Soon
                 </p>
@@ -248,7 +248,7 @@
             <hr class="text-white">
 
             {{-- food & Drink --}}
-            <div class="container-fluid px-0 mt-5 section-gap">
+            <div class="container-fluid px-0 mt-5 section-gap" id="Food&drink">
                 <p class="display-3 text-white title-base ms-5">
                     🍿 Food & Drink
                 </p>
@@ -263,7 +263,7 @@
             <hr class="text-white">
 
             {{-- Information --}}
-            <div class="container-fluid px-0 mt-5 section-gap">
+            <div class="container-fluid px-0 mt-5 section-gap" id="Information">
                 <p class="display-3 text-white title-base ms-5 text-center">
                     📢 Information
                 </p>
