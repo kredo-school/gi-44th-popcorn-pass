@@ -47,9 +47,9 @@ class AdminController extends Controller
         return view('admin.movies.create', compact('genres', 'ageRatings'));
     }
 
-    public function storeMovie(Request $request)
+    private function movieValidationRules(): array
     {
-        $validated = $request->validate([
+        return [
             'title' => 'required|string|max:255',
             'genre_id' => 'required|exists:genres,id',
             'duration' => 'required|integer|min:1',
@@ -60,19 +60,53 @@ class AdminController extends Controller
             'synopsis' => 'nullable|string',
             'director' => 'nullable|string|max:255',
             'cast' => 'nullable|string',
+            'search_keywords' => 'nullable|string',
             'trailer_url' => 'nullable|url',
+            'poster_url' => 'nullable|url',
+            'banner_image_url' => 'nullable|url',
             'budget' => 'nullable|numeric',
             'box_office' => 'nullable|numeric',
+            'priority_order' => 'nullable|integer',
             'is_featured' => 'nullable|boolean',
-        ]);
+        ];
+    }
+
+    public function storeMovie(Request $request)
+    {
+        $validated = $request->validate($this->movieValidationRules());
 
         $validated['cast'] = $validated['cast'] ?? null;
+        $validated['search_keywords'] = $validated['search_keywords'] ?? null;
         $validated['is_featured'] = $request->has('is_featured');
         $validated['created_by_id'] = auth()->id();
 
         Movie::create($validated);
 
         return redirect()->route('admin.movies')->with('success', 'Movie added successfully.');
+    }
+
+    public function editMovie($id)
+    {
+        $movie = Movie::findOrFail($id);
+        $genres = Genre::orderBy('title')->get();
+        $ageRatings = AgeRating::orderBy('title')->get();
+
+        return view('admin.movies.edit', compact('movie', 'genres', 'ageRatings'));
+    }
+
+    public function updateMovie(Request $request, $id)
+    {
+        $movie = Movie::findOrFail($id);
+
+        $validated = $request->validate($this->movieValidationRules());
+
+        $validated['cast'] = $validated['cast'] ?? null;
+        $validated['search_keywords'] = $validated['search_keywords'] ?? null;
+        $validated['is_featured'] = $request->has('is_featured');
+
+        $movie->update($validated);
+
+        return redirect()->route('admin.movies')->with('success', 'Movie updated successfully.');
     }
 
     public function analytics()
@@ -116,19 +150,11 @@ class AdminController extends Controller
         ));
     }
 
-    /**
-     * List of valid reservation_status values used for the filter dropdown.
-     * Defined here since there is no separate status master table.
-     */
     private function reservationStatusOptions(): array
     {
         return ['pending', 'confirmed', 'cancelled', 'expired'];
     }
 
-    /**
-     * Builds the base reservations query with search/status/cinema filters applied.
-     * Shared between the index page and the CSV export so both stay in sync.
-     */
     private function buildReservationsQuery(Request $request)
     {
         $query = Reservation::with([

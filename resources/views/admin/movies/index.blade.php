@@ -15,7 +15,7 @@
         </select>
         <div class="ms-auto d-flex gap-2">
             <a href="{{ route('admin.movies.create') }}" class="btn btn-outline-warning">+ Add Movie</a>
-            <a href="#" class="btn btn-outline-light">Edit Movie</a>
+            <a href="#" id="edit-movie-btn" class="btn btn-outline-light disabled">Edit Movie</a>
             <a href="#" class="btn btn-outline-danger">Archive Movie</a>
         </div>
     </div>
@@ -112,9 +112,17 @@
 
 @section('scripts')
 <script>
+const editButton = document.querySelector('#edit-movie-btn');
+
 document.querySelectorAll('.movie-row').forEach(function (row) {
     row.addEventListener('click', function () {
         const movieId = this.dataset.movieId;
+
+        if (editButton) {
+            editButton.href = `/admin/movies/${movieId}/edit`;
+            editButton.classList.remove('disabled');
+        }
+
         fetch(`/admin/movies/${movieId}/details`)
             .then(response => response.json())
             .then(data => {
