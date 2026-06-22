@@ -74,7 +74,7 @@
                                     My Page
                                 </a>
                             @else
-                                <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
+                                <a href="/login" class="btn btn-color mypage-text pt-0 pb-0">
                                     <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage" width="35"
                                         height="35">
                                     Log in
