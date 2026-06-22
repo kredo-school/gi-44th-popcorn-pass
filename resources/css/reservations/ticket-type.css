@@ -42,3 +42,54 @@ body {
     background-color: #6C757D;
 }
 
+/* ticket type selection */
+.ticket-card {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    padding: 10px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.seat-number-box {
+    width: 50px;
+    height: 50px;
+    margin: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    font-size: 1.3rem;
+
+    background-color: #F5C126;
+    color: #000;
+}
+
+.ticket-selection {
+    margin-left: 150px;
+    margin: auto;
+}
+
+.ticket-type-btn {
+    width: 340px;
+    height: 50px;
+
+    border: none;
+
+    background-color: #F5F1E8;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.premium-text {
+    margin-top: 5px;
+
+    text-align: right;
+
+    color: #9C022F;
+    font-size: 1rem;
+    font-weight: 600;
+}
