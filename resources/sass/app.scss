@@ -8,4 +8,33 @@
 @import 'bootstrap/scss/bootstrap';
 
 @import '../css/reservations/seat-selection.css';
+
 @import '../css/reservations/ticket-type.css';
+
+
+/* CSS */
+
+.nav-font{
+    font-family: Georgia, serif;
+}
+
+.btn-color {
+    background-color: #F5C126 !important;
+    border-color: #F5C126 !important;
+    color: black !important;
+}
+
+.mypage-text{
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: #000;
+
+    -webkit-text-stroke: 0.5px #fff;
+
+    text-shadow:
+        0.5px 0.5x 0 #fff,
+        0.5px 0.5px 0 #fff,
+        0.5px 0.5px 0 #fff,
+        0.5px 0.5px 0 #fff;
+}
