@@ -37,53 +37,53 @@
                     <img src="{{ asset('storage/images/logo.png') }}" alt="Logo" width="70" height="70">
                 </a>
 
-               <div class="container-fluid px-0">
-    <div class="collapse navbar-collapse d-flex" id="navbarSupportedContent">
+                <div class="container-fluid px-0">
+                    <div class="collapse navbar-collapse d-flex" id="navbarSupportedContent">
 
-        <!-- Center Links -->
-        <ul class="navbar-nav flex-row position-absolute start-50 translate-middle-x ">
-            <li class="nav-item me-5">
-                <a href="#Nowplaying" class="text-decoration-none text-white nav-font">
-                    Now playing
-                </a>
-            </li>
+                        <!-- Center Links -->
+                        <ul class="navbar-nav flex-row position-absolute start-50 translate-middle-x ">
+                            <li class="nav-item me-5">
+                                <a href="#Nowplaying" class="text-decoration-none text-white nav-font">
+                                    Now playing
+                                </a>
+                            </li>
 
-            <li class="nav-item me-5 ms-5">
-                <a href="#Comingsoon" class="text-decoration-none text-white nav-font">
-                    Coming soon
-                </a>
-            </li>
+                            <li class="nav-item me-5 ms-5">
+                                <a href="#Comingsoon" class="text-decoration-none text-white nav-font">
+                                    Coming soon
+                                </a>
+                            </li>
 
-            <li class="nav-item ms-5 me-5">
-                <a href="#Food&drink" class="text-decoration-none text-white nav-font">
-                    Food & Drink
-                </a>
-            </li>
-        </ul>
+                            <li class="nav-item ms-5 me-5">
+                                <a href="#Food&drink" class="text-decoration-none text-white nav-font">
+                                    Food & Drink
+                                </a>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit">ログアウト</button>
+                                </form>
+                            </li>
+                        </ul>
 
-        <!-- My Page -->
-        <div class="ms-auto me-3">
-            @auth
-                <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
-                    <img src="{{ asset('storage/images/mypage.png') }}"
-                         alt="mypage"
-                         width="35"
-                         height="35">
-                    My Page
-                </a>
-            @else
-                <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
-                    <img src="{{ asset('storage/images/mypage.png') }}"
-                         alt="mypage"
-                         width="35"
-                         height="35">
-                    Log in
-                </a>
-            @endauth
-        </div>
+                        <!-- My Page -->
+                        <div class="ms-auto me-3">
+                            @auth
+                                <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
+                                    <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage" width="35"
+                                        height="35">
+                                    My Page
+                                </a>
+                            @else
+                                <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
+                                    <img src="{{ asset('storage/images/mypage.png') }}" alt="mypage" width="35"
+                                        height="35">
+                                    Log in
+                                </a>
+                            @endauth
+                        </div>
 
-    </div>
-</div>
+                    </div>
+                </div>
         </nav>
 
         <main class="">
