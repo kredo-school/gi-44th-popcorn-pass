@@ -24,6 +24,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
     Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])->name('reservations.export');
     Route::get('/reservations/{id}/details', [AdminController::class, 'reservationDetails'])->name('reservations.details');
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/users/{id}/details', [AdminController::class, 'userDetails'])->name('users.details');
+    Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
 });
 
 /**

@@ -8,6 +8,7 @@ use App\Models\AgeRating;
 use App\Models\Cinema;
 use App\Models\Payment;
 use App\Models\Reservation;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -269,5 +270,77 @@ class AdminController extends Controller
         };
 
         return response()->stream($callback, 200, $headers);
+    }
+
+    private function userRoleOptions(): array
+    {
+        return [
+            1 => 'Customer',
+            2 => 'Admin',
+            3 => 'Manager',
+            4 => 'Support',
+        ];
+    }
+
+    public function users(Request $request)
+    {
+        $query = User::query();
+
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('username', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('role') && $request->get('role') !== 'all') {
+            $query->where('role', $request->get('role'));
+        }
+
+        if ($request->filled('status') && $request->get('status') !== 'all') {
+            $query->where('is_active', $request->get('status') === 'active' ? 1 : 0);
+        }
+
+        $users = $query->orderBy('created_at', 'desc')
+            ->paginate(15)
+            ->withQueryString();
+
+        $roleOptions = $this->userRoleOptions();
+
+        return view('admin.users.index', compact('users', 'roleOptions'));
+    }
+
+    public function userDetails($id)
+    {
+        $user = User::findOrFail($id);
+
+        return response()->json([
+            'id' => $user->id,
+            'username' => $user->username,
+            'email' => $user->email,
+            'phone' => $user->phone,
+            'date_of_birth' => optional($user->date_of_birth)->format('Y-m-d'),
+            'role' => (int) $user->role,
+            'is_active' => (bool) $user->is_active,
+            'last_login_at' => optional($user->last_login_at)->format('Y-m-d H:i'),
+            'created_at' => optional($user->created_at)->format('Y-m-d H:i'),
+        ]);
+    }
+
+    public function updateUser(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'role' => 'required|integer|in:1,2,3,4',
+            'is_active' => 'nullable|boolean',
+        ]);
+
+        $validated['is_active'] = $request->has('is_active');
+
+        $user->update($validated);
+
+        return redirect()->route('admin.users')->with('success', 'User updated successfully.');
     }
 }

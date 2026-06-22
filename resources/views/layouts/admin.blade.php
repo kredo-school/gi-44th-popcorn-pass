@@ -89,7 +89,8 @@
             <nav class="admin-nav">
                 <a href="{{ route('admin.dashboard') }}" class="nav-link d-inline {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a>
                 <a href="{{ route('admin.movies') }}" class="nav-link d-inline {{ request()->routeIs('admin.movies*') ? 'active' : '' }}">Movies</a>
-                <a href="{{ route('admin.reservations') }}" class="nav-link d-inline {{ request()->routeIs('admin.reservations') ? 'active' : '' }}">Reservations</a>
+                <a href="{{ route('admin.reservations') }}" class="nav-link d-inline {{ request()->routeIs('admin.reservations*') ? 'active' : '' }}">Reservations</a>
+                <a href="{{ route('admin.users') }}" class="nav-link d-inline {{ request()->routeIs('admin.users*') ? 'active' : '' }}">Users</a>
                 <a href="{{ route('admin.analytics') }}" class="nav-link d-inline {{ request()->routeIs('admin.analytics') ? 'active' : '' }}">Analytics</a>
             </nav>
         </div>
