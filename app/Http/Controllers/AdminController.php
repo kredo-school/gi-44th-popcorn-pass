@@ -9,6 +9,7 @@ use App\Models\Cinema;
 use App\Models\Payment;
 use App\Models\Reservation;
 use App\Models\User;
+use App\Models\SystemSetting;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -342,5 +343,37 @@ class AdminController extends Controller
         $user->update($validated);
 
         return redirect()->route('admin.users')->with('success', 'User updated successfully.');
+    }
+
+    public function settings()
+    {
+        $settings = SystemSetting::current();
+
+        return view('admin.settings.index', compact('settings'));
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $settings = SystemSetting::current();
+
+        $validated = $request->validate([
+            'site_name' => 'required|string|max:255',
+            'support_email' => 'nullable|email|max:255',
+            'contact_phone' => 'nullable|string|max:20',
+            'timezone' => 'required|string|max:50',
+            'smtp_host' => 'nullable|string|max:255',
+            'smtp_port' => 'nullable|integer',
+            'smtp_username' => 'nullable|string|max:255',
+            'smtp_encryption' => 'nullable|string|max:20',
+            'notification_email' => 'nullable|email|max:255',
+            'payment_gateway' => 'required|string|max:50',
+            'currency' => 'required|string|max:10',
+            'tax_rate' => 'nullable|numeric|min:0|max:100',
+            'stripe_publishable_key' => 'nullable|string|max:255',
+        ]);
+
+        $settings->update($validated);
+
+        return redirect()->route('admin.settings')->with('success', 'Settings updated successfully.');
     }
 }
