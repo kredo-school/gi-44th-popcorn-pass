@@ -7,13 +7,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::get('/seat-selection', function () {
-    return view('reservations.seat-selection');
-});   //temporary (mirei)
 
 Auth::routes();
 // ===========================
@@ -36,6 +29,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])->name('coupons-promotions');
+    Route::post('/coupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
+    Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
+    Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
+    Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
 });
 
 /**
