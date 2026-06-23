@@ -10,11 +10,27 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+
 
 #[Fillable(['username', 'email', 'password_hash', 'phone', 'date_of_birth', 'role', 'is_active'])]
 #[Hidden(['password_hash', 'remember_token'])]
 class User extends Authenticatable
 {
+     // uuid自動生成
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function ($model) {
+            $model->id = Str::uuid();
+        });
+    }
+
+    // idをuuidとして扱う
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasUuids;
 

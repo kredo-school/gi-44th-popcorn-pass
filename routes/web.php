@@ -2,13 +2,23 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\HomeController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
+Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+//Movie showtime
+Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
+
+
+Route::get('/seat-selection', function () {
+    return view('reservations.seat-selection');
+});      #temporary(morei)
+
+
 // ===========================
 // Admin Routes
 // ===========================
