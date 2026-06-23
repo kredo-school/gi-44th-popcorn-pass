@@ -10,6 +10,8 @@ use App\Models\Payment;
 use App\Models\Reservation;
 use App\Models\User;
 use App\Models\SystemSetting;
+use App\Models\Coupon;
+use App\Models\Promotion;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -375,5 +377,91 @@ class AdminController extends Controller
         $settings->update($validated);
 
         return redirect()->route('admin.settings')->with('success', 'Settings updated successfully.');
+    }
+
+    public function couponsPromotions()
+    {
+        $coupons = Coupon::orderBy('created_at', 'desc')->paginate(10, ['*'], 'coupons_page');
+        $promotions = Promotion::orderBy('created_at', 'desc')->paginate(10, ['*'], 'promotions_page');
+
+        $genres = Genre::orderBy('title')->get();
+        $movies = Movie::orderBy('title')->get();
+        $cinemas = Cinema::orderBy('cinema_name')->get();
+
+        return view('admin.coupons-promotions.index', compact(
+            'coupons',
+            'promotions',
+            'genres',
+            'movies',
+            'cinemas'
+        ));
+    }
+
+    public function storeCoupon(Request $request)
+    {
+        $validated = $request->validate([
+            'code' => 'required|string|max:50|unique:coupons,code',
+            'coupon_type' => 'required|string|in:percentage,fixed_amount',
+            'discount_percent' => 'nullable|integer|min:1|max:100',
+            'discount_amount' => 'nullable|numeric|min:0',
+            'max_uses' => 'nullable|integer|min:1',
+            'expires_at' => 'nullable|date',
+        ]);
+
+        $validated['current_uses'] = 0;
+        $validated['coupon_status'] = 'active';
+        $validated['issued_at'] = now();
+        $validated['issued_by_id'] = auth()->id();
+
+        Coupon::create($validated);
+
+        return redirect()->route('admin.coupons-promotions')->with('success', 'Coupon created successfully.');
+    }
+
+    public function toggleCouponStatus($id)
+    {
+        $coupon = Coupon::findOrFail($id);
+
+        $coupon->update([
+            'coupon_status' => $coupon->coupon_status === 'active' ? 'disabled' : 'active',
+        ]);
+
+        return redirect()->route('admin.coupons-promotions')->with('success', 'Coupon status updated.');
+    }
+
+    public function storePromotion(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'type' => 'required|string|in:percentage,fixed_amount',
+            'discount_value' => 'required|numeric|min:0',
+            'applicable_genre_id' => 'nullable|exists:genres,id',
+            'applicable_movie_id' => 'nullable|exists:movies,id',
+            'applicable_cinema_id' => 'nullable|exists:cinemas,id',
+            'max_uses' => 'nullable|integer|min:1',
+            'min_ticket_purchase' => 'nullable|integer|min:1',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
+        $validated['current_uses'] = 0;
+        $validated['promotion_status'] = 'active';
+        $validated['created_by_id'] = auth()->id();
+
+        Promotion::create($validated);
+
+        return redirect()->route('admin.coupons-promotions')->with('success', 'Promotion created successfully.');
+    }
+
+    public function togglePromotionStatus($id)
+    {
+        $promotion = Promotion::findOrFail($id);
+
+        $promotion->update([
+            'promotion_status' => $promotion->promotion_status === 'active' ? 'disabled' : 'active',
+        ]);
+
+        return redirect()->route('admin.coupons-promotions')->with('success', 'Promotion status updated.');
     }
 }

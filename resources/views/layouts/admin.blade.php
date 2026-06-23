@@ -91,6 +91,7 @@
                 <a href="{{ route('admin.movies') }}" class="nav-link d-inline {{ request()->routeIs('admin.movies*') ? 'active' : '' }}">Movies</a>
                 <a href="{{ route('admin.reservations') }}" class="nav-link d-inline {{ request()->routeIs('admin.reservations*') ? 'active' : '' }}">Reservations</a>
                 <a href="{{ route('admin.users') }}" class="nav-link d-inline {{ request()->routeIs('admin.users*') ? 'active' : '' }}">Users</a>
+                <a href="{{ route('admin.coupons-promotions') }}" class="nav-link d-inline {{ request()->routeIs('admin.coupons-promotions*') ? 'active' : '' }}">Coupons</a>
                 <a href="{{ route('admin.analytics') }}" class="nav-link d-inline {{ request()->routeIs('admin.analytics') ? 'active' : '' }}">Analytics</a>
                 <a href="{{ route('admin.settings') }}" class="nav-link d-inline {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">Settings</a>
             </nav>
