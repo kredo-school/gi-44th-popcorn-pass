@@ -18,10 +18,11 @@ Route::get('/seat-selection', function () {
     return view('reservations.seat-selection');
 });      #temporary(morei)
 
+
 // ===========================
 // Admin Routes
 // ===========================
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/movies', [AdminController::class, 'movies'])->name('movies');
     Route::get('/movies/create', [AdminController::class, 'createMovie'])->name('movies.create');
@@ -36,6 +37,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::get('/users/{id}/details', [AdminController::class, 'userDetails'])->name('users.details');
     Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
+    Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
+    Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
+    Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])->name('coupons-promotions');
+    Route::post('/coupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
+    Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
+    Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
+    Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
 });
 
 /**
