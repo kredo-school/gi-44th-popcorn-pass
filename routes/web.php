@@ -12,7 +12,7 @@ Auth::routes();
 // ===========================
 // Admin Routes
 // ===========================
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/movies', [AdminController::class, 'movies'])->name('movies');
     Route::get('/movies/create', [AdminController::class, 'createMovie'])->name('movies.create');
