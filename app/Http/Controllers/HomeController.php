@@ -38,5 +38,14 @@ class HomeController extends Controller
                            ->with('comingSoonMovies', $comingSoonMovies)
                            ->with('topMovies', $topMovies);
     }
+
+    public function showtime_display()
+{
+    $movies = Movie::with('showtimes')
+                    ->where('status', 'now_playing')
+                    ->get();
+
+    return view('layouts.showtime_display')->with('movies', $movies);
+}
    
 }

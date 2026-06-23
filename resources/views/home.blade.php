@@ -23,33 +23,27 @@
 
             {{-- WELCOME --}}
             <div class="carousel-item active">
-
-                <img src="{{ asset('storage/images/welcome.png') }}" class="hero-image-welcome">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
+                <img src="{{ asset('images/welcome.png') }}" class="hero-image-welcome">
+                <div class="hero-content-welcome">
                     <p>
                         Experience the Magic of Movies
                     </p>
-                    <div class="ms-auto me-3">
-                            @auth
-                                <a href="#" class="btn btn-white mypage-text pt-0 pb-0">
-                                    My Page
-                                </a>
-                            @else
-                                <a href="/login" class="btn btn-white mypage-text pt-0 pb-0">
-                                    Log in
-                                </a>
-                            @endauth
-                        </div>
-                    
+                    @auth
+                        <a href="#" class="btn btn-white">
+                            My Page
+                        </a>
+                    @else
+                        <a href="/login" class="btn btn-white">
+                            Log in
+                        </a>
+                    @endauth
                 </div>
-
             </div>
 
             {{-- COMING SOON --}}
             <div class="carousel-item">
 
-                <img src="{{ asset('storage/images/king.png') }}" class="hero-image">
+                <img src="{{ asset('images/king.png') }}" class="hero-image">
 
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
@@ -63,41 +57,39 @@
                     <p>
                         Discover the most anticipated movies.
                     </p>
-                    <a href="#coming-soon" class="btn-book">
-                        VIEW MORE
+                    <a href="#" class="btn-book">
+                        VIEW MORE →
                     </a>
                 </div>
-
             </div>
 
             {{-- TOP RANKING --}}
             <div class="carousel-item">
 
-                <img src="{{ asset('storage/images/king2.png') }}" class="hero-image">
+                <img src="{{ asset('images/king2.png') }}" class="hero-image">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <span class="hero-tag">
+                    <span class="hero-tag" style="color:#ff4040;">
                         TOP RANKING
                     </span>
                     <h1>
-                        #1 MOVIE<br>
+                        No.1 MOVIE<br>
                         OF THE WEEK
                     </h1>
                     <p>
                         Most watched by our audience.
                     </p>
-                    <a href="#ranking" class="btn-book">
-                        SEE RANKING
+                    <a href="#" class="btn-book" style="border-color:#ff4040;color:#ff4040;">
+                        SEE RANKING →
                     </a>
                 </div>
             </div>
-
         </div>
 
     </div>
     <div class="mt-0"
         style="
-                background-image: url('{{ asset('storage/images/home_back.png') }}');
+                background-image: url('{{ asset('images/home_back.png') }}');
                 background-size: cover;
                 background-position: center top;
                 background-repeat: no-repeat;
@@ -191,8 +183,8 @@
                                         {{-- image --}}
                                         <div
                                             style="height: {{ $s['height'] }}; max-height: {{ $s['maxHeight'] }}; overflow: hidden; position: relative;">
-                                            <img src="{{ asset('storage/' . $movie->poster_url) }}"
-                                                alt="{{ $movie->title }}" class="w-100 h-100" style="object-fit: cover;">
+                                            <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
+                                                class="w-100 h-100" style="object-fit: cover;">
                                             {{-- gradation --}}
                                             <div
                                                 style="
@@ -225,7 +217,7 @@
                                 </div>
                             @endforeach
                         @else
-                            <p class="text-white"> no image</p>
+                            <p class="text-white"> No images</p>
                         @endif
 
 
@@ -245,7 +237,7 @@
 
                     <!-- View All -->
                     <div class="d-flex justify-content-end px-4 mb-3">
-                        <a href="#" class="view-all fs-5">View All</a>
+                        <a href="#" class="view-all fs-5">View All Showtimes</a>
                     </div>
 
                     <div class="d-flex align-items-center px-3 m-3 gap-2">
@@ -267,8 +259,7 @@
                                 @foreach ($movies as $movie)
                                     <div class="flex-shrink-0" style="scroll-snap-align: start; width: 200px;">
                                         <div class="movie-card">
-                                            <img src="{{ asset('storage/' . $movie->poster_url) }}"
-                                                class="movie-poster w-100">
+                                            <img src="{{ asset($movie->poster_url) }}" class="movie-poster w-100">
                                             <div class="movie-info" style="background:#081729">
                                                 <h6 class="text-white text-center mb-2 mt-2">
                                                     {{ $movie->title }}
@@ -324,7 +315,7 @@
                                     style="scroll-snap-align: start; width: 400px;">
 
                                     <div style="overflow: hidden;">
-                                        <img src="{{ asset('storage/' . $movie->poster_url) }}" alt="Movie"
+                                        <img src="{{ asset($movie->poster_url) }}" alt="Movie"
                                             style="width: 100%; height: 360px; object-fit: cover; display: block;">
                                         <div class="p-2" style="background: rgba(255,255,255,0.85);">
                                             <p class="mb-0 text-dark text-center small">{{ $movie->title }}</p>
@@ -381,7 +372,7 @@
                 </p>
 
                 <div class="w-75 mx-auto" style="background: rgba(16, 57, 133, 0.5);">
-                    <img src="{{ asset('storage/images/foodmenu.png') }}" alt="foodmenu" class="w-100"
+                    <img src="{{ asset('images/foodmenu.png') }}" alt="foodmenu" class="w-100"
                         style="display: block; object-fit: cover;">
                 </div>
 
@@ -391,7 +382,7 @@
 
             {{-- Information --}}
             <div class="container-fluid px-0 mt-5 section-gap" id="Information">
-                <p class="display-3 text-white title-base ms-5 text-center mb-5">
+                <p class="display-3 text-white title-base ms-5 text-center">
                     Information
                 </p>
                 <div class="container">
@@ -404,7 +395,7 @@
                                             NEWS
                                         </div>
                                     </div>
-                                    <img src="{{ asset('storage/images/news.png') }}" class="card-img-top"
+                                    <img src="{{ asset('images/news.png') }}" class="card-img-top"
                                         style="object-fit: cover; height: 200px;">
                                     <div class="card-body">
                                         If you're a member, you get great deals every Friday!
@@ -418,9 +409,20 @@
 
 
             </div>
+            <div class="back-to-top mb-5">
+            <a href="#top" class="back-to-top-link">
+                <div class="arrow">
+                    <div class="arrow">
+                        <i class="fa-solid fa-chevron-up"></i>
+                    </div>
+                </div>
+                <span>to top page</span>
+            </a>
         </div>
-
+        </div>
+        
 
     </div>
+
     </div>
 @endsection

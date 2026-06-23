@@ -10,6 +10,10 @@ Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+//Movie showtime
+Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
+
+
 Route::get('/seat-selection', function () {
     return view('reservations.seat-selection');
 });      #temporary(morei)
