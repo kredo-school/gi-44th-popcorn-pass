@@ -1,8 +1,99 @@
 @extends('layouts.app')
 
 @section('content')
-    <div>
-        <img src="{{ asset('storage/images/welcome.png') }}" alt="welcome.image" style="width: 100%; display: block;">
+
+    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active">
+            </button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1">
+            </button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2">
+            </button>
+        </div>
+
+        <div class="carousel-inner">
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+
+            {{-- WELCOME --}}
+            <div class="carousel-item active">
+
+                <img src="{{ asset('storage/images/welcome.png') }}" class="hero-image-welcome">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <p>
+                        Experience the Magic of Movies
+                    </p>
+                    <div class="ms-auto me-3">
+                            @auth
+                                <a href="#" class="btn btn-white mypage-text pt-0 pb-0">
+                                    My Page
+                                </a>
+                            @else
+                                <a href="/login" class="btn btn-white mypage-text pt-0 pb-0">
+                                    Log in
+                                </a>
+                            @endauth
+                        </div>
+                    
+                </div>
+
+            </div>
+
+            {{-- COMING SOON --}}
+            <div class="carousel-item">
+
+                <img src="{{ asset('storage/images/king.png') }}" class="hero-image">
+
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <span class="hero-tag">
+                        COMING SOON
+                    </span>
+                    <h1>
+                        UPCOMING<br>
+                        BLOCKBUSTERS
+                    </h1>
+                    <p>
+                        Discover the most anticipated movies.
+                    </p>
+                    <a href="#coming-soon" class="btn-book">
+                        VIEW MORE
+                    </a>
+                </div>
+
+            </div>
+
+            {{-- TOP RANKING --}}
+            <div class="carousel-item">
+
+                <img src="{{ asset('storage/images/king2.png') }}" class="hero-image">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <span class="hero-tag">
+                        TOP RANKING
+                    </span>
+                    <h1>
+                        #1 MOVIE<br>
+                        OF THE WEEK
+                    </h1>
+                    <p>
+                        Most watched by our audience.
+                    </p>
+                    <a href="#ranking" class="btn-book">
+                        SEE RANKING
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
     </div>
     <div class="mt-0"
         style="
@@ -63,12 +154,12 @@
                         @endphp
                         @if (isset($topMovies))
                             @foreach ($topMovies as $index => $movie)
-                            @php $s = $sizes[$index]; @endphp
-                            <div class="col-10 col-md-3 text-center" style="position: relative;">
+                                @php $s = $sizes[$index]; @endphp
+                                <div class="col-10 col-md-3 text-center" style="position: relative;">
 
-                                {{-- Ranking Number --}}
-                                <div class="ranking-title"
-                                    style="
+                                    {{-- Ranking Number --}}
+                                    <div class="ranking-title"
+                                        style="
                                     position: absolute;
                                     top: {{ $s['top'] }};
                                     left: {{ $s['left'] }};
@@ -82,62 +173,62 @@
                                     text-shadow: none;
                                     filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
                                 ">
-                                                {{ $index + 1 }}
-                                            </div>
+                                        {{ $index + 1 }}
+                                    </div>
 
-                                            {{-- card --}}
-                                            <div class="card border-0"
-                                                style="
+                                    {{-- card --}}
+                                    <div class="card border-0"
+                                        style="
                                     background: transparent;
                                     box-shadow: 0 8px 32px rgba(0,0,0,0.5);
                                     border-radius: 12px;
                                     overflow: hidden;
                                     transition: transform 0.3s;
                                 "
-                                    onmouseover="this.style.transform='translateY(-8px)'"
-                                    onmouseout="this.style.transform='translateY(0)'">
+                                        onmouseover="this.style.transform='translateY(-8px)'"
+                                        onmouseout="this.style.transform='translateY(0)'">
 
-                                    {{-- image --}}
-                                    <div
-                                        style="height: {{ $s['height'] }}; max-height: {{ $s['maxHeight'] }}; overflow: hidden; position: relative;">
-                                        <img src="{{ asset('storage/' . $movie->poster_url) }}" alt="{{ $movie->title }}"
-                                            class="w-100 h-100" style="object-fit: cover;">
-                                        {{-- gradation --}}
+                                        {{-- image --}}
                                         <div
-                                            style="
+                                            style="height: {{ $s['height'] }}; max-height: {{ $s['maxHeight'] }}; overflow: hidden; position: relative;">
+                                            <img src="{{ asset('storage/' . $movie->poster_url) }}"
+                                                alt="{{ $movie->title }}" class="w-100 h-100" style="object-fit: cover;">
+                                            {{-- gradation --}}
+                                            <div
+                                                style="
                                         position: absolute;
                                         bottom: 0; left: 0; right: 0;
                                         height: 60%;
                                         background: linear-gradient(transparent, rgba(0,0,0,0.7));
                                     ">
+                                            </div>
+                                            {{-- medal --}}
+                                            <div style="position: absolute; top: 10px; right: 10px; font-size: 2rem;">
+                                                {{ $medals[$index] }}
+                                            </div>
                                         </div>
-                                        {{-- medal --}}
-                                        <div style="position: absolute; top: 10px; right: 10px; font-size: 2rem;">
-                                            {{ $medals[$index] }}
+
+                                        {{-- title --}}
+                                        <div class="p-2" style="background: rgba(8, 23, 41, 0.95);">
+                                            <h5 class="text-white text-center mt-1 mb-1"
+                                                style="font-size: clamp(0.8rem, 1.5vw, 1.1rem);">
+                                                {{ $movie->title }}
+                                            </h5>
+                                            <p class="text-warning text-center mb-1" style="font-size: 0.85rem;">
+                                                ⭐ {{ $movie->review_average }} &nbsp;·&nbsp;
+                                                <span class="text-white-50">{{ floor($movie->duration / 60) }}h
+                                                    {{ $movie->duration % 60 }}m</span>
+                                            </p>
                                         </div>
-                                    </div>
 
-                                    {{-- title --}}
-                                    <div class="p-2" style="background: rgba(8, 23, 41, 0.95);">
-                                        <h5 class="text-white text-center mt-1 mb-1"
-                                            style="font-size: clamp(0.8rem, 1.5vw, 1.1rem);">
-                                            {{ $movie->title }}
-                                        </h5>
-                                        <p class="text-warning text-center mb-1" style="font-size: 0.85rem;">
-                                            ⭐ {{ $movie->review_average }} &nbsp;·&nbsp;
-                                            <span class="text-white-50">{{ floor($movie->duration / 60) }}h
-                                                {{ $movie->duration % 60 }}m</span>
-                                        </p>
                                     </div>
-
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
                         @else
-                            <p class="text-white">データなし</p>
+                            <p class="text-white"> no image</p>
                         @endif
 
-                        
+
 
                     </div>
                 </div>
@@ -188,7 +279,8 @@
                                                         <span>{{ $movie->duration }}</span>
                                                     </div>
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <span class="text-white-50" style="font-size:0.75rem;">Genre</span>
+                                                        <span class="text-white-50"
+                                                            style="font-size:0.75rem;">Genre</span>
                                                         <span>⭐{{ $movie->review_avarage }}</span>
                                                     </div>
                                                 </div>
