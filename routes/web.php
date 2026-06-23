@@ -7,6 +7,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/seat-selection', function () {
+    return view('reservations.seat-selection');
+});   //temporary (mirei)
 
 Auth::routes();
 // ===========================

@@ -1,0 +1,151 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+
+    background-image: url("/images/reservation_bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    font-family: Georgia, serif;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Current */
+.current .step-circle {
+    background-color: #F5C126;
+    color: #000;
+}
+
+/* Complete */
+.complete .step-circle {
+    background-color: #FFF;
+    color: #000;
+    border: 2px solid #1D3761;
+}
+
+/* Upcoming */
+.upcoming .step-circle {
+    background-color: #6C757D;
+    color: #FFF;
+}
+
+.step-line {
+    width: 80px;
+    height: 2px;
+    background-color: #6C757D;
+}
+
+/* Seat */
+.row-label {
+    width: 40px;
+}
+
+.seat-number {
+    width: 48px;
+}
+
+.seat {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.seat.selected {
+    background-color: #6C757D;
+}
+
+#selected-seats span {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 3px;
+    border-radius: 6px;
+}
+
+.seat-tag {
+    min-width: 32px;
+    height: 32px;
+
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 0 4px;
+    font-size: 15px;
+    font-weight: bolder;
+
+    white-space: nowrap;
+}
+
+.available,
+.wheelchair {
+    background-color: #103985;
+}
+
+.wheelchair {
+    color: #FFF;
+}
+
+.premium {
+    background-color: #F5C126;
+}
+
+.premium-divider {
+    width: 75%;
+    margin: 0 auto;
+    border: 0;
+    border-top: 5px solid #000;
+}
+
+.pay-extra{
+    color: #9C022F;
+}
+
+.legend-seat {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.seat-bg{
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Reservation Summary */
+.card.summary {
+    background-color: #1D3761;
+    color: #fff;
+    border: 2px solid #F5C126;
+}
+
+/* button */
+.back-btn,
+.next-btn {
+    padding: 10px 30px;
+    font-size: 18px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.back-btn {
+    background-color: #000;
+    color: #FFF;
+    border: 3px solid #FFF;
+}
+
+.next-btn {
+    background-color: #F5C126;
+    color: #000;
+    border: none;
+    border: 3px solid #F5C126;
+}
