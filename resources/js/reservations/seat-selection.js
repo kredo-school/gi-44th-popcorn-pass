@@ -6,13 +6,18 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedSeats = [];
 
     function updateSummary() {
+
         if (selectedSeats.length === 0) {
-            summary.innerHTML = "<p>No seats selected</p>";
+            summary.innerHTML = "No seats selected";
             return;
         }
 
         summary.innerHTML = selectedSeats
-            .map(seat => `<span class="seat-tag bg-white text-black me-1">${seat}</span>`)
+            .map(item => {
+                return `<span class="seat-tag ${item.premium ? 'premium' : 'normal'}">
+                            ${item.seat}
+                        </span>`;
+            })
             .join('');
     }
 
@@ -20,13 +25,21 @@ document.addEventListener('DOMContentLoaded', function () {
         seat.addEventListener('click', function () {
 
             const seatNumber = this.dataset.seat;
+            const isPremium = this.classList.contains('premium');
 
-            this.classList.toggle('selected');
+            const existingIndex = selectedSeats.findIndex(
+                s => s.seat === seatNumber
+            );
 
-            if (selectedSeats.includes(seatNumber)) {
-                selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+            if (existingIndex !== -1) {
+                selectedSeats.splice(existingIndex, 1);
+                this.classList.remove('selected');
             } else {
-                selectedSeats.push(seatNumber);
+                selectedSeats.push({
+                    seat: seatNumber,
+                    premium: isPremium
+                });
+                this.classList.add('selected');
             }
 
             updateSummary();

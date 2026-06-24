@@ -176,6 +176,7 @@
     
         </div>
 
+        {{-- Button --}}
         <div class="d-flex justify-content-between mt-5">
             <button class="back-btn ms-5"><i class="fa-solid fa-arrow-left"></i>BACK</button>
             <button class="next-btn me-5">NEXT<i class="fa-solid fa-arrow-right"></i></button>
