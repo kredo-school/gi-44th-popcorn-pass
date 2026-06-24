@@ -5,11 +5,15 @@
 @import 'variables';
 
 // Bootstrap
+
+//Reservation
 @import 'bootstrap/scss/bootstrap';
 
 @import '../css/reservations/seat-selection.css';
 
 @import '../css/reservations/ticket-type.css';
+
+@import '../css/reservations/payment-method.css';
 
 
 /* CSS */

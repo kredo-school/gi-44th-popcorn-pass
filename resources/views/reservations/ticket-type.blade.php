@@ -10,7 +10,7 @@ $selectedSeats = [
 @section('content')
 
 
-<div class="seat-page">
+<div class="reservation-page">
 
 
     {{-- Stepper --}}
