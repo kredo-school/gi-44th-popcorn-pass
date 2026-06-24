@@ -86,18 +86,37 @@
                 background-repeat: no-repeat;
                 width: 100%;
             ">
-        <div>{{-- SEARCH --}}
+        <ul class="nav nav-tabs">
+    <li class="nav-item">
+        <button
+            class="nav-link active"
+            data-bs-toggle="tab"
+            data-bs-target="#nowPlaying">
+            Now Playing
+        </button>
+    </li>
 
-            <div class="search-wrapper w-50 container pt-5 mb-5">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+    <li class="nav-item">
+        <button
+            class="nav-link"
+            data-bs-toggle="tab"
+            data-bs-target="#searchMovie">
+            Searching Movie
+        </button>
+    </li>
+</ul>
 
-                <input type="text" class="search-input mt-3" placeholder="Search movies, genres, or showtimes...">
+<div class="tab-content mt-3">
 
-                <button class="search-btn">
-                    SEARCH
-                </button>
-            </div>
-        </div>
+    <div class="tab-pane fade show active" id="nowPlaying">
+        映画一覧とスケジュール
+    </div>
+
+    <div class="tab-pane fade" id="searchMovie">
+        検索フォーム
+    </div>
+
+</div>
 
         
     </div>
