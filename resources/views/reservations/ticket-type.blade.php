@@ -1,3 +1,10 @@
+@php
+$selectedSeats = [
+['seat' => 'E9', 'premium' => true],
+['seat' => 'G8', 'premium' => false],
+];
+@endphp
+
 @extends('layouts.app')
 @section('title', 'Ticket Type')
 @section('content')
@@ -55,48 +62,30 @@
 
         {{-- Ticket Type Selection --}}
         <div class="col-lg-8">
-            <div class="ticket-card">
-                <div class="d-flex align-items-start">
-    
-                    {{-- Seat Number --}}
-                    <div class="seat-number-box premium">
-                        E9
-                    </div>
-            
-                    {{-- Ticket Type Area --}}
-                    <div class="ticket-selection">
-            
-                        <button type="button" class="ticket-type-btn" data-bs-toggle="modal" data-bs-target="#ticketTypeModal">
-                            SELECT TICKET TYPE
-                        </button>
-            
-                        <div class="premium-text">
-                            Premium Seat  + $10
+        
+            @foreach($selectedSeats as $seat)
+                <div class="ticket-card mb-3">
+                    <div class="d-flex align-items-start">
+                        <div class="seat-number-box {{ $seat['premium'] ? 'premium' : 'regular' }}">
+                            {{ $seat['seat'] }}
+                        </div>
+
+                        <div class="ticket-selection">
+                            <button type="button" class="ticket-type-btn" data-bs-toggle="modal" data-bs-target="#ticketTypeModal"
+                                data-seat="{{ $seat['seat'] }}" data-premium="{{ $seat['premium'] }}">
+                                SELECT TICKET TYPE
+                            </button>
+
+                            @if($seat['premium'])
+                                <div class="premium-text">
+                                    Premium Seat + $10
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="ticket-card mt-2">
-                <div class="d-flex align-items-start">
-            
-                    {{-- Seat Number --}}
-                    <div class="seat-number-box premium">
-                        E9
-                    </div>
-            
-                    {{-- Ticket Type Area --}}
-                    <div class="ticket-selection">
-            
-                        <button type="button" class="ticket-type-btn" data-bs-toggle="modal" data-bs-target="#ticketTypeModal">
-                            SELECT TICKET TYPE
-                        </button>
-            
-                        <div class="premium-text">
-                            
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endforeach
+
         </div>
 
         {{-- Reservation Summary --}}
@@ -129,6 +118,13 @@
                             <p>No seats selected</p>
                         </div>
                     </div>
+                    <hr>
+                    <div class="mb-3">
+                        <small class="fd-5">Total Amount</small>
+                        <p class="mb-0 fw-bold total-price">
+                            $25.00
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -137,13 +133,17 @@
 
     {{-- Button --}}
     <div class="d-flex justify-content-between mt-5">
-        <button class="back-btn ms-5"><i class="fa-solid fa-arrow-left"></i>BACK</button>
-        <button class="next-btn me-5">NEXT<i class="fa-solid fa-arrow-right"></i></button>
+        <button class="back-btn ms-5">
+            <i class="fa-solid fa-arrow-left"></i>BACK
+        </button>
+    
+        <button id="next-btn" class="next-btn me-5" disabled>
+            NEXT<i class="fa-solid fa-arrow-right"></i>
+        </button>
     </div>
-
 
 </div>
 
-
+@include('reservations.modals.ticket-type-selection')
 
 @endsection

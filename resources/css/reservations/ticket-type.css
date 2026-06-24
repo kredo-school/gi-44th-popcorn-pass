@@ -59,12 +59,20 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 6px;
 
     font-weight: bold;
     font-size: 1.3rem;
+}
 
+.seat-number-box.premium {
     background-color: #F5C126;
     color: #000;
+}
+
+.seat-number-box.regular {
+    background-color: #103985;
+    color: #fff;
 }
 
 .ticket-selection {
@@ -78,7 +86,7 @@ body {
 
     border: none;
 
-    background-color: #F5F1E8;
+    background-color: #FAF0E3;
 
     font-size: 1.2rem;
     font-weight: 700;
@@ -92,4 +100,41 @@ body {
     color: #9C022F;
     font-size: 1rem;
     font-weight: 600;
+}
+
+/* Total Price */
+.total-price {
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+/* Ticket Type Modal */
+.modal-content.ticket-modal {
+    background-color: #FAF0E3;
+    margin: auto;
+}
+
+.ticket-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 60%;
+    margin: 0 auto 10px;
+    padding: 6px 10px;
+
+    background-color: #fff;
+    border: 1px solid #000;
+
+    font-size: 1rem;
+}
+
+.ticket-row:last-child {
+    margin-bottom: 1.5rem;
+}
+
+/* Button */
+.next-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
