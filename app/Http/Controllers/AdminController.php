@@ -6,6 +6,10 @@ use App\Models\Movie;
 use App\Models\Genre;
 use App\Models\AgeRating;
 use App\Models\Cinema;
+use App\Models\Screen;
+use App\Models\ScreenSeat;
+use App\Models\Showtime;
+use App\Models\ShowtimeSeat;
 use App\Models\Payment;
 use App\Models\Reservation;
 use App\Models\User;
@@ -13,6 +17,7 @@ use App\Models\SystemSetting;
 use App\Models\Coupon;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -23,6 +28,10 @@ class AdminController extends Controller
 
     public function movies()
     {
+        // Keep statuses (coming_soon -> now_showing -> archived) up to date
+        // every time the Movie Management list is loaded.
+        Movie::syncStatuses();
+
         $movies = Movie::with(['genre', 'ageRating'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
@@ -47,8 +56,10 @@ class AdminController extends Controller
     {
         $genres = Genre::orderBy('title')->get();
         $ageRatings = AgeRating::orderBy('title')->get();
+        $cinemas = Cinema::orderBy('cinema_name')->get();
+        $screens = Screen::with('cinema')->orderBy('screen_number')->get();
 
-        return view('admin.movies.create', compact('genres', 'ageRatings'));
+        return view('admin.movies.create', compact('genres', 'ageRatings', 'cinemas', 'screens'));
     }
 
     private function movieValidationRules(): array
@@ -77,16 +88,95 @@ class AdminController extends Controller
 
     public function storeMovie(Request $request)
     {
-        $validated = $request->validate($this->movieValidationRules());
+        $rules = $this->movieValidationRules();
+        $rules['showtimes'] = 'nullable|array|max:6';
+        $rules['showtimes.*.cinema_id'] = 'nullable|exists:cinemas,id';
+        $rules['showtimes.*.screen_id'] = 'nullable|exists:screens,id';
+        $rules['showtimes.*.date'] = 'nullable|date';
+        $rules['showtimes.*.start_time'] = 'nullable';
+
+        $validated = $request->validate($rules);
+
+        $showtimesInput = $validated['showtimes'] ?? [];
+        unset($validated['showtimes']);
 
         $validated['cast'] = $validated['cast'] ?? null;
         $validated['search_keywords'] = $validated['search_keywords'] ?? null;
         $validated['is_featured'] = $request->has('is_featured');
         $validated['created_by_id'] = auth()->id();
 
-        Movie::create($validated);
+        $movie = Movie::create($validated);
 
-        return redirect()->route('admin.movies')->with('success', 'Movie added successfully.');
+        $showtimeWarnings = $this->processShowtimes($movie, $showtimesInput);
+
+        $message = 'Movie added successfully.';
+        if (! empty($showtimeWarnings)) {
+            $message .= ' However, some showtimes could not be created: ' . implode(' ', $showtimeWarnings);
+        }
+
+        return redirect()->route('admin.movies')->with('success', $message);
+    }
+
+    /**
+     * Creates a Showtime (and the matching ShowtimeSeat rows for every seat
+     * on that screen) for each filled-in row in the "Showtimes" section of
+     * the Add Movie form. Blank rows are skipped silently. Returns a list
+     * of human-readable warnings for rows that could not be created.
+     */
+    private function processShowtimes(Movie $movie, array $showtimesInput): array
+    {
+        $warnings = [];
+
+        foreach ($showtimesInput as $index => $row) {
+            $screenId = $row['screen_id'] ?? null;
+            $date = $row['date'] ?? null;
+            $startTime = $row['start_time'] ?? null;
+
+            if (! $screenId || ! $date || ! $startTime) {
+                continue; // row left blank - skip silently
+            }
+
+            $screen = Screen::find($screenId);
+
+            if (! $screen) {
+                $warnings[] = 'Showtime #' . ($index + 1) . ': screen not found.';
+                continue;
+            }
+
+            $startsAt = Carbon::parse("{$date} {$startTime}");
+            $endsAt = $startsAt->copy()->addMinutes($movie->duration);
+
+            $alreadyExists = Showtime::where('screen_id', $screen->id)
+                ->where('start_time', $startsAt)
+                ->exists();
+
+            if ($alreadyExists) {
+                $warnings[] = 'Showtime #' . ($index + 1) . ': this screen already has a showtime at that exact time.';
+                continue;
+            }
+
+            $showtime = Showtime::create([
+                'screen_id' => $screen->id,
+                'movie_id' => $movie->id,
+                'start_time' => $startsAt,
+                'end_time' => $endsAt,
+                'is_active' => true,
+                'created_by_id' => auth()->id(),
+            ]);
+
+            $screenSeats = ScreenSeat::where('screen_id', $screen->id)->get();
+
+            foreach ($screenSeats as $screenSeat) {
+                ShowtimeSeat::create([
+                    'showtime_id' => $showtime->id,
+                    'screen_seat_id' => $screenSeat->id,
+                    'seat_status' => 'available',
+                    'price_at_showtime' => $screenSeat->price,
+                ]);
+            }
+        }
+
+        return $warnings;
     }
 
     public function editMovie($id)
