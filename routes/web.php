@@ -24,6 +24,12 @@ Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name(
     Route::get('/payment-method' , function() {
         return view('reservations.payment-method');
     });
+    Route::get ('/reservation-confirm', function () {
+        return view('reservations.reservation-confirm');
+    });
+Route::get('/reservation-complete', function () {
+    return view('reservations.reservation-complete');
+});
 //////////////
 
 

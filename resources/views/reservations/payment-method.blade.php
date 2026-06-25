@@ -68,11 +68,7 @@
                     </button>
             
                     <button type="button" class="payment-btn">
-                        E-Money
-                    </button>
-            
-                    <button type="button" class="payment-btn">
-                        Convenience Store
+                        Paypal
                     </button>
             
                     <button type="button" class="payment-btn">
@@ -80,8 +76,40 @@
                     </button>
             
                 </div>
+
+                <div id="payment-form-container" class="mt-4">
+                
+                    <div id="card-form" class="payment-form">
+                        <input type="text" placeholder="Card Number" class="form-control mb-3">
+                        <input type="text" placeholder="Card Holder Name" class="form-control mb-3">
+                
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" placeholder="MM/YY" class="form-control">
+                            </div>
+                
+                            <div class="col">
+                                <input type="text" placeholder="CVV" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div id="paypal-form" class="payment-form d-none">
+                        <input type="email" placeholder="Paypal Email" class="form-control">
+                    </div>
+                
+                    <div id="onsite-form" class="payment-form d-none">
+                        <div class="alert alert-light mb-0">
+                            <i class="fa-solid fa-triangle-exclamation"></i> You will pay at the cinema on the day of your visit.
+                        </div>
+                    </div>
+                
+                </div>
             
             </div>
+
+            
+            
         </div>
 
         {{-- Reservation Summary --}}

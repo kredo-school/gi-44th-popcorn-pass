@@ -50,3 +50,13 @@
     background-color: #1D3761;
     color: #F5C126;
 }
+
+/* Payment form */
+.payment-form {
+    width: 400px;
+    margin: 30px auto 0;
+}
+
+.payment-btn.active {
+    border: 3px solid #F5C126;
+}
