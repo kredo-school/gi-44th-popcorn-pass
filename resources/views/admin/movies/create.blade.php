@@ -179,13 +179,19 @@
                     </div>
 
                     @for ($i = 0; $i < 6; $i++)
+                        @php
+                            $oldDate = old('showtimes.' . $i . '.date');
+                            $oldStartTime = old('showtimes.' . $i . '.start_time');
+                            $oldCinemaId = old('showtimes.' . $i . '.cinema_id');
+                            $oldScreenId = old('showtimes.' . $i . '.screen_id');
+                        @endphp
                         <div class="row g-2 mb-2 align-items-center">
                             <div class="col-md-1 text-secondary small text-center">#{{ $i + 1 }}</div>
                             <div class="col-md-3">
                                 <select name="showtimes[{{ $i }}][cinema_id]" class="form-select showtime-cinema" data-index="{{ $i }}">
                                     <option value="">Cinema...</option>
                                     @foreach ($cinemas as $cinema)
-                                        <option value="{{ $cinema->id }}" {{ old("showtimes.$i.cinema_id") == $cinema->id ? 'selected' : '' }}>{{ $cinema->cinema_name }}</option>
+                                        <option value="{{ $cinema->id }}" {{ $oldCinemaId == $cinema->id ? 'selected' : '' }}>{{ $cinema->cinema_name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -193,17 +199,17 @@
                                 <select name="showtimes[{{ $i }}][screen_id]" class="form-select showtime-screen" data-index="{{ $i }}">
                                     <option value="">Screen...</option>
                                     @foreach ($screens as $screen)
-                                        <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}" {{ old("showtimes.$i.screen_id") == $screen->id ? 'selected' : '' }}>
+                                        <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}" {{ $oldScreenId == $screen->id ? 'selected' : '' }}>
                                             {{ $screen->cinema->cinema_name }} - Screen {{ $screen->screen_number }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <input type="date" name="showtimes[{{ $i }}][date]" class="form-control" value="{{ old(\"showtimes.$i.date\") }}">
+                                <input type="date" name="showtimes[{{ $i }}][date]" class="form-control" value="{{ $oldDate }}">
                             </div>
                             <div class="col-md-2">
-                                <input type="time" name="showtimes[{{ $i }}][start_time]" class="form-control" value="{{ old(\"showtimes.$i.start_time\") }}">
+                                <input type="time" name="showtimes[{{ $i }}][start_time]" class="form-control" value="{{ $oldStartTime }}">
                             </div>
                         </div>
                     @endfor
