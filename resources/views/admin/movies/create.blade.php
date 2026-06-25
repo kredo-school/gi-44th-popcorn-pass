@@ -8,6 +8,16 @@
     <div class="text-secondary small mb-3">Movies &gt; Add New</div>
     <h4 class="text-warning fw-bold mb-3">Add New Movie</h4>
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="POST" action="{{ route('admin.movies.store') }}">
         @csrf
 
@@ -65,6 +75,9 @@
 
                                 <input type="radio" class="btn-check" name="status" id="status-archived" value="archived" autocomplete="off" {{ old('status') == 'archived' ? 'checked' : '' }}>
                                 <label class="btn btn-outline-secondary" for="status-archived">Archived</label>
+                            </div>
+                            <div class="form-text text-secondary">
+                                Note: once a Release Date / End Date is set, this status will be updated automatically over time.
                             </div>
                         </div>
 
@@ -136,7 +149,7 @@
                     </div>
                 </div>
 
-                <div class="card card-dark p-3 mb-3">
+                <div class="card card-dark p-3">
                     <div class="text-warning fw-bold mb-3">Feature Settings</div>
 
                     <div class="form-check form-switch mb-3">
@@ -153,7 +166,53 @@
                         </select>
                     </div>
                 </div>
+            </div>
+        </div>
 
+        <div class="row g-3 mt-1">
+            <div class="col-12">
+                <div class="card card-dark p-3">
+                    <div class="text-warning fw-bold mb-1">Showtimes</div>
+                    <div class="text-secondary small mb-3">
+                        Optional — add up to 6 showtimes for this movie. Leave a row completely blank to skip it.
+                        The end time is calculated automatically from the movie's duration.
+                    </div>
+
+                    @for ($i = 0; $i < 6; $i++)
+                        <div class="row g-2 mb-2 align-items-center">
+                            <div class="col-md-1 text-secondary small text-center">#{{ $i + 1 }}</div>
+                            <div class="col-md-3">
+                                <select name="showtimes[{{ $i }}][cinema_id]" class="form-select showtime-cinema" data-index="{{ $i }}">
+                                    <option value="">Cinema...</option>
+                                    @foreach ($cinemas as $cinema)
+                                        <option value="{{ $cinema->id }}" {{ old("showtimes.$i.cinema_id") == $cinema->id ? 'selected' : '' }}>{{ $cinema->cinema_name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select name="showtimes[{{ $i }}][screen_id]" class="form-select showtime-screen" data-index="{{ $i }}">
+                                    <option value="">Screen...</option>
+                                    @foreach ($screens as $screen)
+                                        <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}" {{ old("showtimes.$i.screen_id") == $screen->id ? 'selected' : '' }}>
+                                            {{ $screen->cinema->cinema_name }} - Screen {{ $screen->screen_number }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="date" name="showtimes[{{ $i }}][date]" class="form-control" value="{{ old(\"showtimes.$i.date\") }}">
+                            </div>
+                            <div class="col-md-2">
+                                <input type="time" name="showtimes[{{ $i }}][start_time]" class="form-control" value="{{ old(\"showtimes.$i.start_time\") }}">
+                            </div>
+                        </div>
+                    @endfor
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-1">
+            <div class="col-12">
                 <div class="card card-dark p-3">
                     <div class="text-warning fw-bold mb-3">Actions</div>
                     <div class="d-flex gap-2">
@@ -165,4 +224,37 @@
         </div>
     </form>
 
+@endsection
+
+@section('scripts')
+<script>
+function filterScreensForRow(cinemaSelect) {
+    const index = cinemaSelect.dataset.index;
+    const screenSelect = document.querySelector(`.showtime-screen[data-index="${index}"]`);
+    const selectedCinema = cinemaSelect.value;
+
+    Array.from(screenSelect.options).forEach(function (option) {
+        if (!option.value) return; // always keep the placeholder visible
+
+        const matches = option.dataset.cinema === selectedCinema;
+        option.hidden = selectedCinema !== '' && !matches;
+    });
+
+    const currentOption = screenSelect.options[screenSelect.selectedIndex];
+    if (currentOption && currentOption.hidden) {
+        screenSelect.value = '';
+    }
+}
+
+document.querySelectorAll('.showtime-cinema').forEach(function (cinemaSelect) {
+    cinemaSelect.addEventListener('change', function () {
+        filterScreensForRow(this);
+    });
+
+    // Re-apply filtering on page load in case of validation-error redisplay
+    if (cinemaSelect.value) {
+        filterScreensForRow(cinemaSelect);
+    }
+});
+</script>
 @endsection

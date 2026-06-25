@@ -6,38 +6,38 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
-class ScreenSeat extends Model
+class Screen extends Model
 {
     use HasFactory, HasUuids;
 
     protected $fillable = [
-        'screen_id',
-        'seat_number',
-        'seat_row',
-        'seat_position',
-        'seat_category_id',
-        'price',
-        'is_wheelchair_accessible',
-        'is_blocked',
+        'cinema_id',
+        'screen_number',
+        'screen_name',
+        'screen_type',
+        'layout_id',
+        'total_seats',
+        'is_active',
+        'created_by_id',
     ];
 
-    protected $casts = [
-        'is_wheelchair_accessible' => 'boolean',
-        'is_blocked' => 'boolean',
-    ];
-
-    public function screen()
+    public function cinema()
     {
-        return $this->belongsTo(Screen::class);
+        return $this->belongsTo(Cinema::class);
     }
 
-    public function seatCategory()
+    public function layout()
     {
-        return $this->belongsTo(SeatCategory::class);
+        return $this->belongsTo(TheaterLayout::class, 'layout_id');
     }
 
-    public function showtimeSeats()
+    public function screenSeats()
     {
-        return $this->hasMany(ShowtimeSeat::class);
+        return $this->hasMany(ScreenSeat::class);
+    }
+
+    public function showtimes()
+    {
+        return $this->hasMany(Showtime::class);
     }
 }

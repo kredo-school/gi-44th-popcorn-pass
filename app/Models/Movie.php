@@ -52,4 +52,30 @@ class Movie extends Model
     {
         return $this->belongsTo(AgeRating::class, 'age_rating_id');
     }
+
+    public function showtimes()
+    {
+        return $this->hasMany(Showtime::class);
+    }
+
+    /**
+     * Moves movies between statuses based on released_date / end_date:
+     *   coming_soon -> now_showing  (once released_date has passed)
+     *   anything    -> archived     (once end_date has passed)
+     * Archived movies are never automatically re-activated.
+     */
+    public static function syncStatuses(): void
+    {
+        $today = now()->toDateString();
+
+        static::where('status', 'coming_soon')
+            ->whereNotNull('released_date')
+            ->whereDate('released_date', '<=', $today)
+            ->update(['status' => 'now_showing']);
+
+        static::where('status', '!=', 'archived')
+            ->whereNotNull('end_date')
+            ->whereDate('end_date', '<', $today)
+            ->update(['status' => 'archived']);
+    }
 }
