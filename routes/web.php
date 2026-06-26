@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -14,19 +15,21 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
 
 
-////////////// temporary (mirei)
-    Route::get('/seat-selection', function () {
-        return view('reservations.seat-selection');
-    });   
-    Route::get('/ticket-type-selection', function () {
-        return view('reservations.ticket-type');
-    });
-    Route::get('/payment-method' , function() {
-        return view('reservations.payment-method');
-    });
-    Route::get ('/reservation-confirm', function () {
-        return view('reservations.reservation-confirm');
-    });
+////////////// Reservation Routes
+Route::get('/seat-selection', [ReservationController::class, 'selectSeat'])
+    ->name('reservations.seat-selection');
+
+Route::post('/ticket-type-selection', [ReservationController::class, 'ticket'])
+    ->name('reservations.ticket');
+
+Route::get('/payment-method', function () {
+    return view('reservations.payment-method');
+});
+
+Route::get('/reservation-confirm', function () {
+    return view('reservations.reservation-confirm');
+});
+
 Route::get('/reservation-complete', function () {
     return view('reservations.reservation-complete');
 });

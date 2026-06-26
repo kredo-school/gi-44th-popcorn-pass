@@ -1,10 +1,3 @@
-@php
-$selectedSeats = [
-['seat' => 'E9', 'premium' => true],
-['seat' => 'G8', 'premium' => false],
-];
-@endphp
-
 @extends('layouts.app')
 @section('title', 'Ticket Type')
 @section('content')
