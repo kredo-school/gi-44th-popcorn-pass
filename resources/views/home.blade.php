@@ -285,9 +285,9 @@
             <div class="container-fluid px-0 section-gap" id="Comingsoon">
                 <div class="section-title-wrap">
                     <div class="coming-title-line"></div>
-                    <h2 class="coming-title">
+                    <h1 class="coming-title">
                         🎞️ COMING SOON
-                    </h2>
+                    </h1>
                     <div class="coming-title-line"></div>
                 </div>
 
@@ -331,7 +331,7 @@
                                                     {{ $releaseDate->format('j.n.Y') }}
                                                 </span>
                                             @elseif ($daysLeft <= 30)
-                                                <span class="badge bg-info">
+                                                <span class="coming-badge">
                                                     ⏳ In {{ $daysLeft }} days
                                                 </span><br>
                                                 <span class="display-4 text-white fw-bold base">
@@ -347,9 +347,6 @@
                                             @endif
 
                                             <br>
-
-
-
                                         </p>
                                         <div class="coming-title-line"></div>
                                     </div>

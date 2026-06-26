@@ -134,6 +134,7 @@ class AdminController extends Controller
         $warnings = [];
 
         foreach ($showtimesInput as $index => $row) {
+         
             $screenId = $row['screen_id'] ?? null;
             $date = $row['date'] ?? null;
             $startTime = $row['start_time'] ?? null;

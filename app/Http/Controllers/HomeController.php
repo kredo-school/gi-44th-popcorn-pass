@@ -43,6 +43,12 @@ class HomeController extends Controller
             ->where('status', 'now_playing')
             ->get();
 
-        return view('layouts.showtime_display')->with('movies', $movies);
+        $dates = collect();
+        for ($i = 0; $i < 14; $i++) {
+            $dates->push(now()->copy()->addDays($i));
+        }
+
+        return view('layouts.showtime_display')->with('movies', $movies)
+                                               ->with('dates' , $dates);
     }
 }

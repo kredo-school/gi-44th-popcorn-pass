@@ -57,7 +57,6 @@ class Movie extends Model
     {
         return $this->hasMany(Showtime::class);
     }
-}
 
     /**
      * Moves movies between statuses based on released_date / end_date:

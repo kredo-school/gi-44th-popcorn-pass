@@ -79,7 +79,35 @@
 
     </div>
 
-    <div class="pt-5 "
+    <div class="date-slider-wrapper">
+        <div class="w-50 mx-auto">
+            <div class="date-slider">
+
+                @foreach ($dates as $date)
+                    @php
+                        $selected = request('date') == $date->format('Y-m-d');
+                        $isFuture = $loop->index >= 7;
+                    @endphp
+
+                    <a href="?date={{ $date->format('Y-m-d') }}#showtimes"
+                        class="date-item
+                  {{ $selected ? 'active' : '' }}
+                  {{ $isFuture ? 'date-disabled' : '' }}">
+
+                        <div class="date-day">
+                            {{ $date->format('n/j') }}
+                        </div>
+
+                        <div class="date-week">
+                            ({{ $date->format('D') }})
+                        </div>
+                    </a>
+                @endforeach
+                </div>
+        </div>
+    </div>
+
+    <div id="showtimes" class="pt-5 "
         style="
                 background-image: url('{{ asset('images/home_back.png') }}');
                 background-size: cover;
@@ -102,7 +130,7 @@
             </li>
         </ul>
 
-        <div class="tab-content mt-3 showtime-bg">
+        <div class="tab-content showtime-bg">
 
             {{-- showtime schedule --}}
             <div class="tab-pane fade show active" id="nowPlaying">
@@ -115,7 +143,7 @@
 
                                 <!-- movie poster images -->
                                 <div class="col-2 text-end mt-2">
-                                    <img src="{{ asset('images/' . $movie->image) }}" alt="{{ $movie->title }}"
+                                    <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
                                         class="img-showtime">
                                 </div>
 
@@ -124,7 +152,7 @@
 
                                     <!-- title -->
                                     <div class="mb-4">
-                                        <a href="#" class="movie-title text-decoration-none">
+                                        <a href="#" class="showtime-movie-title text-decoration-none">
                                             {{ strtoupper($movie->title) }} >
                                         </a>
                                     </div>
@@ -145,7 +173,7 @@
                                                             Theater
                                                         </div>
                                                         <div class="theater-number theater-box">
-                                                            {{ $showtime->theater_number }}
+                                                            {{ $showtime->screen_id }}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -180,7 +208,7 @@
                         <div class="col-10">
                             <!-- title -->
                             <div class="mb-4">
-                                <a href="#" class="movie-title text-decoration-none">
+                                <a href="#" class="showtime-movie-title text-decoration-none">
                                     LION KING >
                                 </a>
                             </div>
@@ -217,33 +245,33 @@
                 </div>
             </div>
 
-     
+
             {{-- searching movie --}}
             <div class="tab-pane fade" id="searchMovie">
                 {{-- SEARCH FORM --}}
-                <div class="mt-3">
+                <div class="">
                     <form action="#" method="GET">
 
-                    <div class="movie-search-wrapper">
+                        <div class="movie-search-wrapper">
 
-                        <div class="movie-search-box">
+                            <div class="movie-search-box">
 
-                            <i class="fa-solid fa-magnifying-glass movie-search-icon"></i>
+                                <i class="fa-solid fa-magnifying-glass movie-search-icon"></i>
 
-                            <input type="text" name="keyword" class="movie-search-input" placeholder="Search movies..."
-                                value="{{ request('keyword') }}">
+                                <input type="text" name="keyword" class="movie-search-input"
+                                    placeholder="Search movies..." value="{{ request('keyword') }}">
 
-                            <button type="submit" class="movie-search-btn">
-                                SEARCH
-                            </button>
+                                <button type="submit" class="movie-search-btn">
+                                    SEARCH
+                                </button>
+
+                            </div>
 
                         </div>
 
-                    </div>
-
-                </form>
+                    </form>
                 </div>
-                
+
 
                 {{-- POPULAR GENRES --}}
                 <div class="movie-search-genres">
@@ -267,7 +295,7 @@
 
                 {{-- SEARCH RESULTS --}}
                 @isset($searchResults)
-                    <div class="container mt-5">
+                    <div class="container">
 
                         <h3 class="text-white mb-4">
                             Search Results

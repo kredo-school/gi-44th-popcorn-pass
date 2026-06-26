@@ -262,8 +262,6 @@
     </form>
 
 @endsection
-<<<<<<< HEAD
-=======
 
 @section('scripts')
 <script>
@@ -297,4 +295,3 @@ document.querySelectorAll('.showtime-cinema').forEach(function (cinemaSelect) {
 });
 </script>
 @endsection
->>>>>>> main

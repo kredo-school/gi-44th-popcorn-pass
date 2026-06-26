@@ -313,6 +313,7 @@
 .ranking-main-title{
     position:relative;
     display:inline-block;
+    overflow: hidden;
 
     font-family:'Times New Roman', serif;
     font-size:clamp(3rem, 6vw, 6rem);
@@ -808,7 +809,7 @@
 .coming-movie-title{
     color:#081729;
     font-family:'Times New Roman', serif;
-    font-size:1.1rem;
+    font-size:1.8rem;
     font-weight:700;
     letter-spacing:1px;
 
@@ -847,21 +848,115 @@
     animation: shineComing 5s infinite;
 }
 .countdown-badge{
-    display:inline-block;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
 
-    padding:8px 16px;
+    padding:10px 22px;
 
-    background:#ff2e2e;
-    color:white;
-
-    font-weight:900;
+    color:#fff;
+    font-size:0.9rem;
+    font-weight:700;
     letter-spacing:2px;
+    text-transform:uppercase;
 
-    border-radius:6px;
+    background:linear-gradient(
+        135deg,
+        #ff1f3d,
+        #ff7b00
+    );
 
-    animation:alertBlink 1s infinite;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:999px;
+
+    box-shadow:
+        0 0 10px rgba(255,80,80,.45),
+        0 0 25px rgba(255,60,60,.35),
+        inset 0 0 10px rgba(255,255,255,.15);
+
+    position:relative;
+    overflow:hidden;
+
+    animation:pulseCountdown 2s infinite;
 }
 
+
+.countdown-badge::before{
+            content:'';
+
+            position:absolute;
+            top:0;
+            left:-120%;
+
+            width:40%;
+            height:100%;
+
+            background:linear-gradient(
+                90deg,
+                transparent,
+                rgba(255,255,255,.8),
+                transparent
+            );
+
+            transform:skewX(-25deg);
+
+            animation:countdownShine 3s infinite;
+}
+
+.coming-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+
+    padding:6px 14px;
+
+    color:#f5c126;
+    font-size:0.8rem;
+    font-weight:600;
+    letter-spacing:1px;
+
+    background:rgba(245,193,38,.12);
+    border:1px solid rgba(245,193,38,.35);
+    border-radius:30px;
+
+    backdrop-filter:blur(4px);
+
+    transition:.3s ease;
+}
+
+.coming-badge:hover{
+    background:rgba(245,193,38,.18);
+    border-color:#f5c126;
+}
+
+@keyframes pulseCountdown{
+
+    0%,100%{
+        transform:scale(1);
+        box-shadow:
+            0 0 10px rgba(255,80,80,.45),
+            0 0 25px rgba(255,60,60,.35);
+    }
+
+    50%{
+        transform:scale(1.05);
+        box-shadow:
+            0 0 20px rgba(255,120,120,.8),
+            0 0 40px rgba(255,80,80,.6);
+    }
+
+}
+@keyframes countdownShine{
+
+    from{
+        transform:translateX(-250%) skewX(-25deg);
+    }
+
+    to{
+        transform:translateX(450%) skewX(-25deg);
+    }
+
+}
 @keyframes alertBlink{
 
     0%,100%{
@@ -875,7 +970,6 @@
             0 0 50px rgba(255,0,0,.8);
     }
 }
-
 @keyframes shineComing{
     0%{
         left:-120%;
@@ -885,7 +979,6 @@
         left:220%;
     }
 }
-
 @keyframes filmGlow{
     0%,100%{
         transform:scale(1);
@@ -903,38 +996,151 @@
     background:rgba(217, 217, 217, 0.7);
     min-height:800px;
 }
+    // date-bar
+
+.date-slider-wrapper{
+    width:100%;
+    margin:auto;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.date-slider{
+    flex:1;
+
+    display:flex;
+
+    overflow-x:auto;
+    scroll-behavior:smooth;
+
+    scrollbar-width:none;
+}
+
+.date-slider::-webkit-scrollbar{
+    display:none;
+}
+
+.date-item{
+
+    min-width:120px;
+
+    text-decoration:none;
+
+    color:#111;
+
+    background:#efefef;
+
+    border-right:1px solid #999;
+
+    text-align:center;
+
+    padding:14px 0;
+
+    transition:.25s;
+}
+
+.date-item.active{
+    background: #e247a2;
+}
+
+.date-item:hover{
+
+    background:#d9d9d9;
+
+}
+
+.date-day{
+
+    font-size:2rem;
+
+    font-weight:700;
+
+    font-family:"Helvetica Neue";
+
+}
+
+.date-week{
+
+    margin-top:3px;
+
+    color:#555;
+
+    font-size:.9rem;
+}
+
+.date-arrow{
+
+    width:55px;
+
+    height:100%;
+
+    border:none;
+
+    color:white;
+
+    background:rgba(255,255,255,.15);
+
+    font-size:2rem;
+
+    transition:.3s;
+}
+
+.active .date-week{
+    color:#555;
+}
+.showtime-movie-title{
+    color:#000000 !important;
+    font-family: "Times New Roman", serif;
+    font-size: 1.5rem;   /* 文字を大きく */
+    font-weight: 700;
+}
+.date-disabled{
+    background:#d8d8d8;
+    color:#8a8a8a;
+    pointer-events:none;   /* unable clic */
+    cursor:not-allowed;
+}
+.date-disabled .date-week{
+    color:#999;
+}
+.date-disabled:hover{
+    background:#d8d8d8;
+    transform:none;
+}
+
+
 
 .movie-tab {
     width: 300px;
     color: white !important;
     background-color: transparent;
+    border: 1px solid white !important; 
     font-weight: bold;
     font-size: 18px;
 }
-
 .movie-tab.active {
-    color: black !important;
-    border: 2px solid white !important; 
-    border-bottom: 2px solid white !important; 
-}
+    background: rgba(217, 217, 217, 0.7) !important;
+    color: rgb(255, 255, 255) !important;
 
+    border: 2px solid white !important;
+    border-bottom: 2px solid white !important;
+}
 .movie-title{
     font-size: 28px;
     font-weight: bold;
     color: black;
 }
-
 .movie-title:hover{
     color: #666;
 }
-
 .img-showtime{
     height:25vh;
     width:50%;
     object-fit:cover;
 
 }
-
 .movie-title{
     font-size:28px;
     color:black;
@@ -953,7 +1159,6 @@
     border-radius:15px;
     overflow:hidden;
 }
-
 .showtime-top{
     padding:15px;
     margin-top: 0px;
@@ -962,32 +1167,27 @@
     justify-content:space-between;
     align-items:flex-start;
 }
-
 .showtime-time{
     font-size:40px;
     line-height:1;
     padding-top: 10px;
 }
-
 .showtime-end{
     font-size:14px;
     text-align:end;
     margin-top:10px;
 }
-
 .theater-box{
     width:70px;
     background:white;
     border:1px solid #999;
     text-align:center;
 }
-
 .theater-box small{
     display:block;
     font-size:12px;
     line-height:1;
 }
-
 .theater-number{
     font-size:50px;
     line-height:1;
@@ -996,7 +1196,6 @@
     font-size:14px;
     text-align:center;
 }
-
 .showtime-bottom{
     border-top:3px solid white;
     display:flex;
@@ -1004,7 +1203,6 @@
     justify-content:center;
     gap:15px;
 }
-
 .closed-icon{
     color:#ff3b5c;
     font-size:50px;
@@ -1014,8 +1212,6 @@
     font-size:20px;
 }
 
-
-// showtime search page
 /* SEARCH */
 
 .movie-search-wrapper{
