@@ -52,4 +52,9 @@ class Movie extends Model
     {
         return $this->belongsTo(AgeRating::class, 'age_rating_id');
     }
+
+    public function showtimes()
+    {
+        return $this->hasMany(Showtime::class);
+    }
 }

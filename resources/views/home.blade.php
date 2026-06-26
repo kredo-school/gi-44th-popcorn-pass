@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
     <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active">
@@ -39,7 +38,6 @@
                     @endauth
                 </div>
             </div>
-
             {{-- COMING SOON --}}
             <div class="carousel-item">
 
@@ -62,7 +60,6 @@
                     </a>
                 </div>
             </div>
-
             {{-- TOP RANKING --}}
             <div class="carousel-item">
 
@@ -73,7 +70,7 @@
                         TOP RANKING
                     </span>
                     <h1>
-                        No.1 MOVIE<br>
+                        #1 MOVIE<br>
                         OF THE WEEK
                     </h1>
                     <p>
@@ -109,129 +106,114 @@
 
 
             {{-- Top Ranking --}}
-            <div class="container-fuild section-gap" id="Topranking">
-                <p class="display-3 text-white title-base ms-5 ">
-                    👑 Top Ranking
-                </p>
+            <div class="">
 
-                {{-- Top 3 --}}
-                <div style="background: rgba(16, 57, 133, 0.5)">
-                    <div class="row justify-content-center align-items-end g-5 mt-2 pb-5">
-
-                        @php
-                            $sizes = [
-                                0 => [
-                                    'top' => '-6vw',
-                                    'left' => '-1vw',
-                                    'font' => 'clamp(8rem, 20vw, 20rem)',
-                                    'height' => '25vw',
-                                    'maxHeight' => '600px',
-                                ],
-                                1 => [
-                                    'top' => '-5vw',
-                                    'left' => '0vw',
-                                    'font' => 'clamp(3rem, 15vw, 15rem)',
-                                    'height' => '23vw',
-                                    'maxHeight' => '560px',
-                                ],
-                                2 => [
-                                    'top' => '-3vw',
-                                    'left' => '0vw',
-                                    'font' => 'clamp(2rem, 10vw, 10rem)',
-                                    'height' => '23vw',
-                                    'maxHeight' => '540px',
-                                ],
-                            ];
-                            $medals = ['🥇', '🥈', '🥉'];
-                        @endphp
-                        @if (isset($topMovies))
-                            @foreach ($topMovies as $index => $movie)
-                                @php $s = $sizes[$index]; @endphp
-                                <div class="col-10 col-md-3 text-center" style="position: relative;">
-
-                                    {{-- Ranking Number --}}
-                                    <div class="ranking-title"
-                                        style="
-                                    position: absolute;
-                                    top: {{ $s['top'] }};
-                                    left: {{ $s['left'] }};
-                                    font-size: {{ $s['font'] }};
-                                    line-height: 1;
-                                    z-index: 1;
-                                    background: linear-gradient(180deg, #fff 0%, #888 100%);
-                                    -webkit-background-clip: text;
-                                    -webkit-text-fill-color: transparent;
-                                    font-weight: 900;
-                                    text-shadow: none;
-                                    filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5));
-                                ">
-                                        {{ $index + 1 }}
-                                    </div>
-
-                                    {{-- card --}}
-                                    <div class="card border-0"
-                                        style="
-                                    background: transparent;
-                                    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-                                    border-radius: 12px;
-                                    overflow: hidden;
-                                    transition: transform 0.3s;
-                                "
-                                        onmouseover="this.style.transform='translateY(-8px)'"
-                                        onmouseout="this.style.transform='translateY(0)'">
-
-                                        {{-- image --}}
-                                        <div
-                                            style="height: {{ $s['height'] }}; max-height: {{ $s['maxHeight'] }}; overflow: hidden; position: relative;">
-                                            <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
-                                                class="w-100 h-100" style="object-fit: cover;">
-                                            {{-- gradation --}}
-                                            <div
-                                                style="
-                                        position: absolute;
-                                        bottom: 0; left: 0; right: 0;
-                                        height: 60%;
-                                        background: linear-gradient(transparent, rgba(0,0,0,0.7));
-                                    ">
-                                            </div>
-                                            {{-- medal --}}
-                                            <div style="position: absolute; top: 10px; right: 10px; font-size: 2rem;">
-                                                {{ $medals[$index] }}
-                                            </div>
-                                        </div>
-
-                                        {{-- title --}}
-                                        <div class="p-2" style="background: rgba(8, 23, 41, 0.95);">
-                                            <h5 class="text-white text-center mt-1 mb-1"
-                                                style="font-size: clamp(0.8rem, 1.5vw, 1.1rem);">
-                                                {{ $movie->title }}
-                                            </h5>
-                                            <p class="text-warning text-center mb-1" style="font-size: 0.85rem;">
-                                                ⭐ {{ $movie->review_average }} &nbsp;·&nbsp;
-                                                <span class="text-white-50">{{ floor($movie->duration / 60) }}h
-                                                    {{ $movie->duration % 60 }}m</span>
-                                            </p>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            @endforeach
-                        @else
-                            <p class="text-white"> No images</p>
-                        @endif
-
-
-
+                <div class="ranking-header">
+                    <hr class="ranking-line w-50 mx-auto">
+                    <div class="ranking-main-title">
+                        👑 TOP 3 MOVIES
                     </div>
+                    <div class="ranking-sub-title">
+                        WEEKLY RANKING
+                    </div>
+                    <hr class="ranking-line w-50 mx-auto">
                 </div>
 
+                @php
+                    $order = [1, 0, 2];
+
+                    $sizes = [
+                        0 => [
+                            'height' => '400px',
+                            'number' => '20rem',
+                            'class' => 'first',
+                        ],
+                        1 => [
+                            'height' => '300px',
+                            'number' => '12rem',
+                            'class' => 'second',
+                        ],
+                        2 => [
+                            'height' => '300px',
+                            'number' => '12rem',
+                            'class' => 'third',
+                        ],
+                    ];
+                @endphp
+
+                <div class="row justify-content-center align-items-end gx-5">
+                    @foreach ($order as $rankIndex)
+                        @if (isset($topMovies[$rankIndex]))
+                            @php
+                                $movie = $topMovies[$rankIndex];
+                                $s = $sizes[$rankIndex];
+                            @endphp
+
+                            <div
+                                class="
+                    col-md-3
+                    {{ $rankIndex == 0 ? 'order-md-2' : '' }}
+                    {{ $rankIndex == 1 ? 'order-md-1' : '' }}
+                    {{ $rankIndex == 2 ? 'order-md-3' : '' }}
+                    ">
+                                <div class="ranking-card-wrapper">
+
+                                    <div class="rank-number rank-{{ $rankIndex + 1 }}"
+                                        style="
+                            font-size: {{ $s['number'] }};
+                            ">
+                                        {{ $rankIndex + 1 }}
+                                    </div>
+                                    @if ($rankIndex == 0)
+                                        <div class="top-crown">👑</div>
+                                    @endif
+                                    <div class="top-card {{ $s['class'] }}">
+                                        <div class="poster-area" style="height:{{ $s['height'] }}">
+                                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
+                                                class="w-100 h-100">
+
+                                            <div class="movie-overlay"></div>
+                                        </div>
+
+                                        <div class="movie-info-box">
+                                            <div class="movie-title">
+                                                {{ $movie->title }}
+                                            </div>
+
+                                            <div class="movie-meta">
+                                                <span class="movie-rating">
+                                                    ⭐ {{ $movie->review_average }}
+                                                </span>
+
+                                                <span class="meta-divider">|</span>
+
+                                                <span class="movie-duration">
+                                                    ⏱ {{ floor($movie->duration / 60) }}h {{ $movie->duration % 60 }}m
+                                                </span>
+                                            </div>
+
+                                            <button class="ranking-book-btn">
+                                                BOOK NOW
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
             </div>
 
-
-            <div class="container-fluid px-0 mt-5 section-gap" id="Nowplaying">
-                <p class="display-3 text-white title-base ms-5">
-                    🎬 Now Playing
-                </p>
+            {{-- Nowplaying --}}
+            <div class="container-fluid px-0 section-gap" id="Nowplaying">
+                <div class="section-title-wrap">
+                    <div class="section-title-line"></div>
+                    <h2 class="section-title">
+                        <span class="title-icon">🎬</span>
+                        NOW PLAYING
+                    </h2>
+                    <div class="section-title-line"></div>
+                </div>
 
                 <div class="w-100 py-4" style="background: rgba(16, 57, 133, 0.5);">
 
@@ -298,10 +280,16 @@
                 </div>
 
             </div>
-            <div class="container-fluid px-0 mt-5 section-gap" id="Comingsoon">
-                <p class="display-3 text-white title-base ms-5">
-                    🎞️Coming Soon
-                </p>
+
+            {{-- Coming sooon --}}
+            <div class="container-fluid px-0 section-gap" id="Comingsoon">
+                <div class="section-title-wrap">
+                    <div class="coming-title-line"></div>
+                    <h2 class="coming-title">
+                        🎞️ COMING SOON
+                    </h2>
+                    <div class="coming-title-line"></div>
+                </div>
 
                 <div style="background: rgba(16, 57, 133, 0.5)">
 
@@ -311,25 +299,59 @@
                             style="overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
 
                             @foreach ($comingSoonMovies as $movie)
-                                <a href="#" class="text-decoration-none flex-shrink-0 m-4"
+                                <a href="#" class="coming-card text-decoration-none flex-shrink-0 m-4"
                                     style="scroll-snap-align: start; width: 400px;">
-
                                     <div style="overflow: hidden;">
-                                        <img src="{{ asset($movie->poster_url) }}" alt="Movie"
+                                        <img src="{{ $movie->poster_url }}" alt="Movie"
                                             style="width: 100%; height: 360px; object-fit: cover; display: block;">
                                         <div class="p-2" style="background: rgba(255,255,255,0.85);">
-                                            <p class="mb-0 text-dark text-center small">{{ $movie->title }}</p>
+                                            <div class="coming-movie-info">
+                                                <p class="mb-0 text-center coming-movie-title">
+                                                    {{ $movie->title }}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div>
 
-                                        <p class="text-white text-center mt-2 ">
-                                            Published on<br>
-                                            <span class="display-5 text-white text-center fw-bold base">
-                                                {{ \Carbon\Carbon::parse($movie->released_date)->format('j.n.Y') }}
+                                        @php
+                                            $releaseDate = \Carbon\Carbon::parse($movie->released_date);
+                                            $daysLeft = (int) now()->diffInDays($releaseDate, false);
+                                        @endphp
 
-                                            </span>
+                                        <p class="text-white text-center mt-2">
+
+                                            @if ($daysLeft == 0)
+                                                <span class="badge bg-danger">🎉 TODAY</span>
+                                            @elseif ($daysLeft <= 7)
+                                                <span class="badge bg-warning text-dark countdown-badge">
+                                                    🔥 In {{ $daysLeft }} days
+                                                </span><br>
+                                                <span class="display-4 coming-text fw-bold base">
+                                                    {{ $releaseDate->format('j.n.Y') }}
+                                                </span>
+                                            @elseif ($daysLeft <= 30)
+                                                <span class="badge bg-info">
+                                                    ⏳ In {{ $daysLeft }} days
+                                                </span><br>
+                                                <span class="display-4 text-white fw-bold base">
+                                                    {{ $releaseDate->format('j.n.Y') }}
+                                                </span>
+                                            @else
+                                                <span class="text-secondary">
+                                                    Published on
+                                                </span><br>
+                                                <span class="display-4 text-white fw-bold base">
+                                                    {{ $releaseDate->format('j.n.Y') }}
+                                                </span>
+                                            @endif
+
+                                            <br>
+
+
+
                                         </p>
+                                        <div class="coming-title-line"></div>
                                     </div>
 
 
@@ -357,9 +379,6 @@
 
 
                     </div>
-
-
-
                 </div>
             </div>
 
@@ -409,18 +428,19 @@
 
 
             </div>
+
             <div class="back-to-top mb-5">
-            <a href="#top" class="back-to-top-link">
-                <div class="arrow">
+                <a href="#top" class="back-to-top-link">
                     <div class="arrow">
-                        <i class="fa-solid fa-chevron-up"></i>
+                        <div class="arrow">
+                            <i class="fa-solid fa-chevron-up"></i>
+                        </div>
                     </div>
-                </div>
-                <span>to top page</span>
-            </a>
+                    <span>to top page</span>
+                </a>
+            </div>
         </div>
-        </div>
-        
+
 
     </div>
 

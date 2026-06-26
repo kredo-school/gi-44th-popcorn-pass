@@ -77,7 +77,9 @@ class AdminController extends Controller
 
     public function storeMovie(Request $request)
     {
+        
         $validated = $request->validate($this->movieValidationRules());
+
 
         $validated['cast'] = $validated['cast'] ?? null;
         $validated['search_keywords'] = $validated['search_keywords'] ?? null;
@@ -174,9 +176,9 @@ class AdminController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('reservation_reference', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($uq) use ($search) {
-                      $uq->where('username', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('username', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -293,7 +295,7 @@ class AdminController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 

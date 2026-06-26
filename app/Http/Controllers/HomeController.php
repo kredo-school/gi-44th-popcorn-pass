@@ -13,10 +13,7 @@ class HomeController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        
-    }
+    public function __construct() {}
 
     /**
      * Show the application dashboard.
@@ -25,27 +22,27 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $movies = Movie::all();
+        $movies = Movie::where('status', 'now_playing')
+            ->get();
         $comingSoonMovies = Movie::where('status', 'coming_soon')
-                            ->orderBy('released_date', 'asc')
-                            ->get();
+            ->whereDate('released_date', '>=', now())
+            ->orderBy('released_date', 'asc')
+            ->get();
         $topMovies = Movie::where('status', 'now_playing')
-                    ->where('released_date', '>=', Carbon::now()->subWeek())
-                    ->orderBy('popularity_score', 'desc')
-                    ->take(3)
-                    ->get();                    
+            ->orderBy('review_average', 'desc')
+            ->take(3)
+            ->get();
         return view('home')->with('movies', $movies)
-                           ->with('comingSoonMovies', $comingSoonMovies)
-                           ->with('topMovies', $topMovies);
+            ->with('comingSoonMovies', $comingSoonMovies)
+            ->with('topMovies', $topMovies);
     }
 
     public function showtime_display()
-{
-    $movies = Movie::with('showtimes')
-                    ->where('status', 'now_playing')
-                    ->get();
+    {
+        $movies = Movie::with('showtimes')
+            ->where('status', 'now_playing')
+            ->get();
 
-    return view('layouts.showtime_display')->with('movies', $movies);
-}
-   
+        return view('layouts.showtime_display')->with('movies', $movies);
+    }
 }
