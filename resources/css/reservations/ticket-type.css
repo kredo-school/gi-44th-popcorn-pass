@@ -1,0 +1,140 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+
+    background-image: url("/images/reservation_bg.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    font-family: Georgia, serif;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Current */
+.current .step-circle {
+    background-color: #F5C126;
+    color: #000;
+}
+
+/* Complete */
+.complete .step-circle {
+    background-color: #FFF;
+    color: #000;
+    border: 2px solid #1D3761;
+}
+
+/* Upcoming */
+.upcoming .step-circle {
+    background-color: #6C757D;
+    color: #FFF;
+}
+
+.step-line {
+    width: 80px;
+    height: 2px;
+    background-color: #6C757D;
+}
+
+/* ticket type selection */
+.ticket-card {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    padding: 10px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.seat-number-box {
+    width: 50px;
+    height: 50px;
+    margin: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.seat-number-box.premium {
+    background-color: #F5C126;
+    color: #000;
+}
+
+.seat-number-box.regular {
+    background-color: #103985;
+    color: #fff;
+}
+
+.ticket-selection {
+    margin-left: 150px;
+    margin: auto;
+}
+
+.ticket-type-btn {
+    width: 340px;
+    height: 50px;
+
+    border: none;
+
+    background-color: #FAF0E3;
+
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.premium-text {
+    margin-top: 5px;
+
+    text-align: right;
+
+    color: #9C022F;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+/* Total Price */
+.total-price {
+    font-size: 1.5rem;
+    color: #fff;
+}
+
+/* Ticket Type Modal */
+.modal-content.ticket-modal {
+    background-color: #FAF0E3;
+    margin: auto;
+}
+
+.ticket-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 60%;
+    margin: 0 auto 10px;
+    padding: 6px 10px;
+
+    background-color: #fff;
+    border: 1px solid #000;
+
+    font-size: 1rem;
+}
+
+.ticket-row:last-child {
+    margin-bottom: 1.5rem;
+}
+
+/* Button */
+.next-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

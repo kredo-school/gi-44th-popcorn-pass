@@ -5,6 +5,10 @@
 
 @section('content')
 
+    @if (session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
     <div class="d-flex gap-2 mb-3">
         <input type="text" class="form-control" placeholder="Search movies..." style="max-width: 250px;">
         <select class="form-select" style="max-width: 150px;">
