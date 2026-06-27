@@ -5,6 +5,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const hiddenInput = document.getElementById('selectedSeatsInput');
     const nextButton = document.querySelector('.next-btn');
 
+    if (!hiddenInput || !summary || !nextButton) {
+        return;
+    }
+
     let selectedSeats = [];
 
     function updateSummary() {
@@ -18,15 +22,11 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        summary.innerHTML = selectedSeats
-            .map(item => {
-                return `
-                    <span class="seat-tag ${item.premium ? 'premium' : 'normal'}">
-                        ${item.seat}
-                    </span>
-                `;
-            })
-            .join('');
+        summary.innerHTML = selectedSeats.map(item => `
+            <span class="seat-tag ${item.premium ? 'premium' : 'normal'}">
+                ${item.seat}
+            </span>
+        `).join('');
     }
 
     seats.forEach(seat => {
@@ -43,8 +43,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (existingIndex !== -1) {
                 selectedSeats.splice(existingIndex, 1);
                 this.classList.remove('selected');
-            }
-            else {
+            } else {
                 selectedSeats.push({
                     seat: seatNumber,
                     premium: isPremium
@@ -59,5 +58,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     updateSummary();
-
 });

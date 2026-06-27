@@ -51,7 +51,7 @@
     
         
         {{-- Main --}}
-        <form id="seat-form" action="{{ route('reservations.ticket') }}" method="POST">
+        <form id="seat-form" action="{{ route('reservations.seat-selection.store') }}" method="POST">
             @csrf
         
             <input type="hidden" name="selectedSeats" id="selectedSeatsInput">
@@ -171,9 +171,7 @@
                             <hr>
                             <div class="mb-3">
                                 <small class="">Seats</small>
-                                <div id="selected-seats">
-                                    <p>No seats selected</p>
-                                </div>
+                                <div id="selected-seats"></div>
                             </div>
                         </div>
                     </div>

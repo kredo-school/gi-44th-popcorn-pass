@@ -16,24 +16,27 @@ Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name(
 
 
 ////////////// Reservation Routes
-Route::get('/seat-selection', [ReservationController::class, 'selectSeat'])
+
+Route::get('/seat-selection', [ReservationController::class, 'seatSelectionPage'])
     ->name('reservations.seat-selection');
 
-Route::post('/ticket-type-selection', [ReservationController::class, 'ticket'])
-    ->name('reservations.ticket');
+Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
+    ->name('reservations.seat-selection.store');
 
-Route::get('/payment-method', function () {
-    return view('reservations.payment-method');
-});
+Route::get('/ticket-type', [ReservationController::class, 'ticketType'])
+    ->name('reservations.ticket-type');
 
-Route::get('/reservation-confirm', function () {
-    return view('reservations.reservation-confirm');
-});
+Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
+    ->name('reservations.save-ticket');
 
-Route::get('/reservation-complete', function () {
-    return view('reservations.reservation-complete');
-});
-//////////////
+Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
+    ->name('reservations.payment-method');
+
+Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
+    ->name('reservations.confirm');
+
+Route::get('/reservation-complete', [ReservationController::class, 'complete'])
+    ->name('reservations.complete');
 
 
 // ===========================
