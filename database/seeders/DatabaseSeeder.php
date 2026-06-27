@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             GenreSeeder::class,
             AgeRatingSeeder::class,
+            AdminSeeder::class,
         ]);
     }
 }
