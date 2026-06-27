@@ -1,3 +1,5 @@
+@import './reservation-common.css';
+
 /* Seat */
 .row-label {
     width: 40px;

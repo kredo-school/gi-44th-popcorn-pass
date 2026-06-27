@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
+use App\Http\Controllers\ReservationController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -16,23 +17,28 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
 
 
-////////////// temporary (mirei)
-    Route::get('/seat-selection', function () {
-        return view('reservations.seat-selection');
-    });   
-    Route::get('/ticket-type-selection', function () {
-        return view('reservations.ticket-type');
-    });
-    Route::get('/payment-method' , function() {
-        return view('reservations.payment-method');
-    });
-    Route::get ('/reservation-confirm', function () {
-        return view('reservations.reservation-confirm');
-    });
-Route::get('/reservation-complete', function () {
-    return view('reservations.reservation-complete');
-});
-//////////////
+////////////// Reservation Routes
+
+Route::get('/seat-selection', [ReservationController::class, 'seatSelectionPage'])
+    ->name('reservations.seat-selection');
+
+Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
+    ->name('reservations.seat-selection.store');
+
+Route::get('/ticket-type', [ReservationController::class, 'ticketType'])
+    ->name('reservations.ticket-type');
+
+Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
+    ->name('reservations.save-ticket');
+
+Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
+    ->name('reservations.payment-method');
+
+Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
+    ->name('reservations.confirm');
+
+Route::get('/reservation-complete', [ReservationController::class, 'complete'])
+    ->name('reservations.complete');
 
 
 // ===========================

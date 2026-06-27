@@ -34,7 +34,7 @@
 }
 
 .ticket-selection {
-    margin-left: 150px;
+    /* margin-left: 150px; */
     margin: auto;
 }
 
@@ -48,6 +48,22 @@
 
     font-size: 1.2rem;
     font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.ticket-type-btn.selected {
+    justify-content: space-between;
+}
+
+.ticket-type-btn.selected .ticket-name {
+    padding-left: 20px;
+}
+
+.ticket-type-btn.selected .ticket-price {
+    padding-right: 20px;
 }
 
 .premium-text {
@@ -90,4 +106,3 @@
 .ticket-row:last-child {
     margin-bottom: 1.5rem;
 }
-
