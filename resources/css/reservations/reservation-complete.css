@@ -1,0 +1,33 @@
+@import './reservation-common.css';
+
+.go-to-mypage-btn {
+    background-color: #103985;
+    color: #F5C126;
+    border: 3px solid #F5C126;
+
+    padding: 12px 32px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+/* delete after update(QR) */
+.qr-placeholder {
+    width: 220px;
+    height: 220px;
+
+    margin: 0 auto;
+
+    border: 2px solid #1D3761;
+    border-radius: 8px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #f8f9fa;
+
+    color: #1D3761;
+    font-weight: 600;
+    letter-spacing: 2px;
+}

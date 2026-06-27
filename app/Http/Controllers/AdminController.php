@@ -104,8 +104,7 @@ class AdminController extends Controller
         $showtimesInput = $validated['showtimes'] ?? [];
         unset($validated['showtimes']);
 
-
-
+        $validated['duration'] = (int) $validated['duration'];
         $validated['cast'] = $validated['cast'] ?? null;
         $validated['search_keywords'] = $validated['search_keywords'] ?? null;
         $validated['is_featured'] = $request->has('is_featured');
@@ -132,6 +131,7 @@ class AdminController extends Controller
     private function processShowtimes(Movie $movie, array $showtimesInput): array
     {
         $warnings = [];
+        $durationMinutes = (int) $movie->duration;
 
         foreach ($showtimesInput as $index => $row) {
          
@@ -151,7 +151,7 @@ class AdminController extends Controller
             }
 
             $startsAt = Carbon::parse("{$date} {$startTime}");
-            $endsAt = $startsAt->copy()->addMinutes($movie->duration);
+            $endsAt = $startsAt->copy()->addMinutes($durationMinutes);
 
             $alreadyExists = Showtime::where('screen_id', $screen->id)
                 ->where('start_time', $startsAt)
@@ -201,6 +201,7 @@ class AdminController extends Controller
 
         $validated = $request->validate($this->movieValidationRules());
 
+        $validated['duration'] = (int) $validated['duration'];
         $validated['cast'] = $validated['cast'] ?? null;
         $validated['search_keywords'] = $validated['search_keywords'] ?? null;
         $validated['is_featured'] = $request->has('is_featured');

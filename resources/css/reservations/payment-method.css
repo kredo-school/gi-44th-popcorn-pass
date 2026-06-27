@@ -1,0 +1,62 @@
+@import './reservation-common.css';
+
+.payment-panel {
+    width: 80%;
+    max-width: 650px;
+
+    margin: 0 auto;
+    padding: 50px 30px;
+
+    background-color: rgba(255, 255, 255, 0.7);
+
+    border-radius: 8px;
+
+    text-align: center;
+}
+
+.payment-title {
+    margin-bottom: 35px;
+
+    color: #000;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.payment-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.payment-btn {
+    width: 320px;
+    height: 55px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: #103985;
+    color: #FFFFFF;
+
+    font-size: 1.2rem;
+    font-weight: 500;
+
+    transition: 0.2s ease;
+}
+
+.payment-btn.active {
+    border: 3px solid #F5C126;
+    background-color: #1D3761;
+    color: #F5C126;
+}
+
+/* Payment form */
+.payment-form {
+    width: 400px;
+    margin: 30px auto 0;
+}
+
+.payment-btn.active {
+    border: 3px solid #F5C126;
+}
