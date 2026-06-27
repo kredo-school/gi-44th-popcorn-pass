@@ -1,16 +1,10 @@
-@php
-$selectedSeats = [
-['seat' => 'E9', 'premium' => true],
-['seat' => 'G8', 'premium' => false],
-];
-@endphp
-
 @extends('layouts.app')
 @section('title', 'Ticket Type')
 @section('content')
 
 
-<div class="reservation-page">
+<div class="reservation-page" id="ticket-data"
+     data-seats='@json($selectedSeats)'>
 
 
     {{-- Stepper --}}
@@ -115,14 +109,18 @@ $selectedSeats = [
                     <div class="mb-3">
                         <small class="">Seats</small>
                         <div id="selected-seats">
-                            <p>No seats selected</p>
+                            @foreach($selectedSeats as $seat)
+                                <span class="seat-tag {{ $seat['premium'] ? 'premium' : 'normal' }}">
+                                    {{ $seat['seat'] }}
+                                </span>
+                            @endforeach
                         </div>
                     </div>
                     <hr>
                     <div class="mb-3">
                         <small class="fd-5">Total Amount</small>
                         <p class="mb-0 fw-bold total-price">
-                            $25.00
+                            ${{ $totalPrice }}
                         </p>
                     </div>
                 </div>

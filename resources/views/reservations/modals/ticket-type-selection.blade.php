@@ -9,27 +9,27 @@
 
             <div class="modal-body">
 
-                <div class="ticket-row ticket-option" data-ticket="Adult" data-price="15">
+                <div class="ticket-row ticket-option" data-ticket="Adult" data-price="15" data-bs-dismiss="modal">
                     <span>Adult</span>
                     <span>$15</span>
                 </div>
 
-                <div class="ticket-row ticket-option" data-ticket="Child" data-price="10">
+                <div class="ticket-row ticket-option" data-ticket="Child" data-price="10" data-bs-dismiss="modal">
                     <span>Child (under 10y/o)</span>
                     <span>$10</span>
                 </div>
 
-                <div class="ticket-row ticket-option" data-ticket="Senior" data-price="10">
+                <div class="ticket-row ticket-option" data-ticket="Senior" data-price="10" data-bs-dismiss="modal">
                     <span>Senior (over 60y/o)</span>
                     <span>$10</span>
                 </div>
 
-                <div class="ticket-row ticket-option" data-ticket="Student" data-price="12">
+                <div class="ticket-row ticket-option" data-ticket="Student" data-price="12" data-bs-dismiss="modal">
                     <span>Student</span>
                     <span>$12</span>
                 </div>
                 
-                <div class="ticket-row ticket-option" data-ticket="PWD" data-price="10">
+                <div class="ticket-row ticket-option" data-ticket="PWD" data-price="10" data-bs-dismiss="modal">
                     <span>PWD</span>
                     <span>$10</span>
                 </div>

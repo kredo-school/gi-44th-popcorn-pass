@@ -1,98 +1,122 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    const modal = document.getElementById('ticketTypeModal');
+    const ticketButtons = document.querySelectorAll('.ticket-type-btn');
+    const ticketOptions = document.querySelectorAll('.ticket-option');
+    const nextButton = document.getElementById('next-btn');
 
-    let currentSeat = null;
-    let selectedData = {}; // seatごとの選択保持
+    if (ticketButtons.length === 0) return;
 
-    // モーダルを開いたとき「どの席か」を受け取る
-    modal.addEventListener('show.bs.modal', function (event) {
 
-        const button = event.relatedTarget;
+    let selectedSeats = [];
 
-        currentSeat = button.getAttribute('data-seat');
-        const isPremium = button.getAttribute('data-premium') === '1' || button.getAttribute('data-premium') === 'true';
+    const dataEl = document.getElementById('ticket-data');
 
-        modal.querySelector('.selected-seat').textContent = currentSeat;
+    if (dataEl) {
+        selectedSeats = JSON.parse(dataEl.dataset.seats || '[]');
+    }
 
-        // premium表示制御（必要なら）
-        const premiumLabel = modal.querySelector('.premium-info');
-        if (premiumLabel) {
-            premiumLabel.style.display = isPremium ? 'block' : 'none';
+    let currentButton = null;
+
+
+    function updateTotal() {
+
+        let total = selectedSeats.reduce((sum, seat) => {
+
+            let price = Number(seat.price) || 0;
+
+            if (seat.premium) {
+                price += 10;
+            }
+
+            return sum + price;
+
+        }, 0);
+
+        const el = document.querySelector('.total-price');
+
+        if (el) {
+            el.textContent = `$${total}`;
         }
+    }
+
+
+    function checkAllSelected() {
+
+        const allSelected = selectedSeats.every(seat => {
+            return seat.ticket && seat.price;
+        });
+
+        if (nextButton) {
+            nextButton.disabled = !allSelected;
+        }
+    }
+
+
+    ticketButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            currentButton = this;
+        });
     });
 
-    // 券種ボタン（モーダル内）クリック処理
-    document.addEventListener('click', function (e) {
 
-        if (!e.target.classList.contains('ticket-option-btn')) return;
+    ticketOptions.forEach(option => {
+        option.addEventListener('click', function () {
 
-        e.preventDefault();
+            const ticketName = this.dataset.ticket;
+            const price = Number(this.dataset.price);
 
-        const ticketType = e.target.getAttribute('data-type');
-        const price = e.target.getAttribute('data-price');
+            if (!currentButton) return;
 
-        if (!currentSeat) return;
-
-        // seatごとに保存
-        selectedData[currentSeat] = {
-            type: ticketType,
-            price: price
-        };
-
-        console.log('selected:', selectedData);
-
-        updateSummary();
-        updateNextButton();
-
-        // モーダル閉じる
-        const bsModal = bootstrap.Modal.getInstance(modal);
-        bsModal.hide();
-    });
-
-    // サマリー更新
-    function updateSummary() {
-
-        const container = document.getElementById('selected-seats');
-
-        if (Object.keys(selectedData).length === 0) {
-            container.innerHTML = '<p>No seats selected</p>';
-            return;
-        }
-
-        let html = '';
-
-        let total = 0;
-
-        for (const seat in selectedData) {
-
-            const data = selectedData[seat];
-
-            total += Number(data.price);
-
-            html += `
-                <div class="d-flex justify-content-between">
-                    <span>${seat} (${data.type})</span>
-                    <span>$${data.price}</span>
-                </div>
+            currentButton.innerHTML = `
+                <span class="ticket-name">${ticketName}</span>
+                <span class="ticket-price">$${price}</span>
             `;
-        }
 
-        container.innerHTML = html;
+            currentButton.classList.add('selected');
 
-        document.querySelector('.total-price').textContent = `$${total.toFixed(2)}`;
-    }
+            currentButton.dataset.ticket = ticketName;
+            currentButton.dataset.price = price;
 
-    // NEXTボタン制御
-    function updateNextButton() {
+            const seatCard = currentButton.closest('.ticket-card');
 
-        const btn = document.getElementById('next-btn');
+            const seatNumber = seatCard
+                .querySelector('.seat-number-box')
+                .textContent
+                .trim();
 
-        if (Object.keys(selectedData).length > 0) {
-            btn.disabled = false;
-        } else {
-            btn.disabled = true;
-        }
-    }
+            const seat = selectedSeats.find(s => s.seat === seatNumber);
+
+            if (seat) {
+                seat.ticket = ticketName;
+                seat.price = price;
+            }
+
+            updateTotal();
+            checkAllSelected();
+
+            console.log('selectedSeats:', selectedSeats);
+        });
+    });
+
+
+    updateTotal();
+    checkAllSelected();
+
+    nextButton.addEventListener('click', function () {
+
+    fetch('/reservation/save-ticket', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({
+            seats: selectedSeats
+        })
+    }).then(() => {
+        window.location.href = "{{ route('reservations.payment-method') }}";
+    });
+
+});
 
 });

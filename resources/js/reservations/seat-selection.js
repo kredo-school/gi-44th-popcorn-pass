@@ -2,26 +2,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const seats = document.querySelectorAll('.seat');
     const summary = document.getElementById('selected-seats');
+    const hiddenInput = document.getElementById('selectedSeatsInput');
+    const nextButton = document.querySelector('.next-btn');
+
+    if (!hiddenInput || !summary || !nextButton) {
+        return;
+    }
 
     let selectedSeats = [];
 
     function updateSummary() {
+
+        hiddenInput.value = JSON.stringify(selectedSeats);
+
+        nextButton.disabled = selectedSeats.length === 0;
 
         if (selectedSeats.length === 0) {
             summary.innerHTML = "No seats selected";
             return;
         }
 
-        summary.innerHTML = selectedSeats
-            .map(item => {
-                return `<span class="seat-tag ${item.premium ? 'premium' : 'normal'}">
-                            ${item.seat}
-                        </span>`;
-            })
-            .join('');
+        summary.innerHTML = selectedSeats.map(item => `
+            <span class="seat-tag ${item.premium ? 'premium' : 'normal'}">
+                ${item.seat}
+            </span>
+        `).join('');
     }
 
     seats.forEach(seat => {
+
         seat.addEventListener('click', function () {
 
             const seatNumber = this.dataset.seat;
@@ -39,11 +48,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     seat: seatNumber,
                     premium: isPremium
                 });
+
                 this.classList.add('selected');
             }
 
             updateSummary();
         });
+
     });
 
+    updateSummary();
 });
