@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\MyPage\DashboardController;
+use App\Http\Controllers\MyPage\RewardsController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -58,6 +60,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
+});
+
+// ===========================
+// My Page Routes
+// ===========================
+Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
 });
 
 /**
