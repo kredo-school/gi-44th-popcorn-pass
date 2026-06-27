@@ -79,34 +79,6 @@
 
     </div>
 
-    <div class="date-slider-wrapper">
-        <div class="w-50 mx-auto">
-            <div class="date-slider">
-
-                @foreach ($dates as $date)
-                    @php
-                        $selected = request('date') == $date->format('Y-m-d');
-                        $isFuture = $loop->index >= 7;
-                    @endphp
-
-                    <a href="?date={{ $date->format('Y-m-d') }}#showtimes"
-                        class="date-item
-                  {{ $selected ? 'active' : '' }}
-                  {{ $isFuture ? 'date-disabled' : '' }}">
-
-                        <div class="date-day">
-                            {{ $date->format('n/j') }}
-                        </div>
-
-                        <div class="date-week">
-                            ({{ $date->format('D') }})
-                        </div>
-                    </a>
-                @endforeach
-                </div>
-        </div>
-    </div>
-
     <div id="showtimes" class="pt-5 "
         style="
                 background-image: url('{{ asset('images/home_back.png') }}');
@@ -115,16 +87,46 @@
                 background-repeat: no-repeat;
                 width: 100%;
             ">
+        <div class="date-slider-wrapper">
+            <div class="w-50 mx-auto">
+                <div class="date-slider">
 
-        <ul class="nav nav-tabs justify-content-center">
+                    @foreach ($dates as $date)
+                        @php
+                            $selected = $selectedDate == $date->format('Y-m-d');
+                            $isFuture = $loop->index >= 7;
+                        @endphp
+
+                        <a href="?date={{ $date->format('Y-m-d') }}#showtimes"
+                            class="date-item
+                  {{ $selected ? 'active' : '' }}
+                  {{ $isFuture ? 'date-disabled' : '' }}">
+
+                            <div class="date-day">
+                                {{ $date->format('n/j') }}
+                            </div>
+
+                            <div class="date-week">
+                                ({{ $date->format('D') }})
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            </div>
+
+        </div>
+
+        <ul class="nav nav-tabs justify-content-center mt-5">
             <li class="nav-item">
-                <button class="nav-link active movie-tab" data-bs-toggle="tab" data-bs-target="#nowPlaying">
+                <button class="nav-link movie-tab {{ $isSearch ? '' : 'active' }}" data-bs-toggle="tab"
+                    data-bs-target="#nowPlaying">
                     Now Playing
                 </button>
             </li>
 
             <li class="nav-item">
-                <button class="nav-link movie-tab" data-bs-toggle="tab" data-bs-target="#searchMovie">
+                <button class="nav-link movie-tab {{ $isSearch ? 'active' : '' }}" data-bs-toggle="tab"
+                    data-bs-target="#searchMovie">
                     Searching Movie
                 </button>
             </li>
@@ -133,8 +135,8 @@
         <div class="tab-content showtime-bg">
 
             {{-- showtime schedule --}}
-            <div class="tab-pane fade show active" id="nowPlaying">
-                {{-- <div class="tab-pane fade show active" id="nowPlaying">
+            <div class="tab-pane fade {{ $isSearch ? '' : 'show active' }}" id="nowPlaying">
+                <div class="tab-pane fade show active" id="nowPlaying">
 
                     @foreach ($movies as $movie)
                         <div class="movie-row p-4">
@@ -142,13 +144,13 @@
                             <div class="row">
 
                                 <!-- movie poster images -->
-                                <div class="col-2 text-end mt-2">
+                                <div class="col-3 text-end mt-2">
                                     <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
                                         class="img-showtime">
                                 </div>
 
                                 <!-- Right side -->
-                                <div class="col-10">
+                                <div class="col-9">
 
                                     <!-- title -->
                                     <div class="mb-4">
@@ -160,12 +162,14 @@
                                     <!-- display movies -->
                                     <div class="d-flex gap-3 flex-wrap">
                                         @foreach ($movie->showtimes as $showtime)
-                                            <div class="showtime-card">
+                                            {{-- <div class="showtime-card">
                                                 <div class="showtime-top">
                                                     <div class="showtime-time">
                                                         {{ \Carbon\Carbon::parse($showtime->start_time)->format('H:i') }}
+                                                            
                                                         <div class="showtime-end">
                                                             ～{{ \Carbon\Carbon::parse($showtime->end_time)->format('H:i') }}
+                                                            
                                                         </div>
                                                     </div>
                                                     <div class="ms-3">
@@ -174,6 +178,7 @@
                                                         </div>
                                                         <div class="theater-number theater-box">
                                                             {{ $showtime->screen_id }}
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -190,14 +195,17 @@
                                                         </div>
                                                     @endif
                                                 </div>
-                                            </div>
+                                            </div> --}}
+                                            
+                                            
                                         @endforeach
                                     </div>
                                 </div>
                             </div>
                         </div>
                     @endforeach
-                </div> --}}
+                </div>
+                {{-- 下は参考 --}}
                 <div class="movie-row p-4">
                     <div class="row">
                         <!-- image -->
@@ -247,10 +255,10 @@
 
 
             {{-- searching movie --}}
-            <div class="tab-pane fade" id="searchMovie">
+            <div class="tab-pane fade {{ $isSearch ? 'show active' : '' }}" id="searchMovie">
                 {{-- SEARCH FORM --}}
                 <div class="">
-                    <form action="#" method="GET">
+                    <form action="{{ route('movies.search') }}#searchMovie" method="GET">
 
                         <div class="movie-search-wrapper">
 
@@ -280,14 +288,14 @@
                         Popular Genres
                     </p>
 
-                    <div class="movie-search-genres-list">
+                    <div class="movie-search-genres-list text-decoration-none">
 
-                        <span class="movie-search-chip">Action</span>
-                        <span class="movie-search-chip">Adventure</span>
-                        <span class="movie-search-chip">Animation</span>
-                        <span class="movie-search-chip">Comedy</span>
-                        <span class="movie-search-chip">Drama</span>
-                        <span class="movie-search-chip">Sci-Fi</span>
+                        <a href="?keyword=Action#searchMovie" class="movie-search-chip">Action</a>
+                        <a href="?keyword=Adventure#searchMovie" class="movie-search-chip">Adventure</a>
+                        <a href="?keyword=Animation#searchMovie" class="movie-search-chip">Animation</a>
+                        <a href="?keyword=Comedy#searchMovie" class="movie-search-chip">Comedy</a>
+                        <a href="?keyword=Drama#searchMovie" class="movie-search-chip">Drama</a>
+                        <a href="?keyword=Sci-Fi#searchMovie" class="movie-search-chip">Sci-Fi</a>
 
                     </div>
 
@@ -304,7 +312,7 @@
                         <div class="row">
 
                             @forelse($searchResults as $movie)
-                                <div class="col-md-3 mb-4">
+                                <div class="col-md-4 mb-4">
 
                                     <div class="movie-search-card">
 

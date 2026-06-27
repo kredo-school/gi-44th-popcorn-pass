@@ -14,6 +14,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
 
 
+Route::get('/movies/search', [HomeController::class, 'search'])->name('movies.search');
+
 ////////////// temporary (mirei)
     Route::get('/seat-selection', function () {
         return view('reservations.seat-selection');

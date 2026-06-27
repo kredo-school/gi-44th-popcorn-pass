@@ -37,18 +37,49 @@ class HomeController extends Controller
             ->with('topMovies', $topMovies);
     }
 
-    public function showtime_display()
+    private function commonData()
     {
-        $movies = Movie::with('showtimes')
-            ->where('status', 'now_playing')
-            ->get();
-
         $dates = collect();
+
         for ($i = 0; $i < 14; $i++) {
             $dates->push(now()->copy()->addDays($i));
         }
 
-        return view('layouts.showtime_display')->with('movies', $movies)
-                                               ->with('dates' , $dates);
+        return [
+            'movies' => Movie::with('showtimes')->where('status', 'now_playing')->get(),
+            'dates' => $dates,
+        ];
+    }
+
+    public function showtime_display()
+    {
+        $data = $this->commonData();
+
+        $data['selectedDate'] = request('date', now()->toDateString());
+        $data['isSearch'] = false;
+
+        return view('layouts.showtime_display', $data);
+    }
+
+    public function search(Request $request)
+    {
+        $data = $this->commonData();
+
+        $keyword = $request->keyword;
+
+        $data['searchResults'] = Movie::where(function ($query) use ($keyword) {
+            $query->where('title', 'like', "%{$keyword}%")
+                ->orWhere('director', 'like', "%{$keyword}%")
+                ->orWhere('synopsis', 'like', "%{$keyword}%")
+                ->orWhereHas('genre', function ($q) use ($keyword) {
+                    $q->where('title', 'like', "%{$keyword}%");
+                })
+                ->orWhereJsonContains('search_keywords', $keyword);
+        })->get();
+
+        $data['selectedDate'] = request('date', now()->toDateString());
+        $data['isSearch'] = true;
+
+        return view('layouts.showtime_display', $data);
     }
 }

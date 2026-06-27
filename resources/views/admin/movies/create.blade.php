@@ -225,6 +225,7 @@
                                         <option value="{{ $cinema->id }}" {{ $oldCinemaId == $cinema->id ? 'selected' : '' }}>{{ $cinema->cinema_name }}</option>
                                     @endforeach
                                 </select>
+                                
                             </div>
                             <div class="col-md-3">
                                 <select name="showtimes[{{ $i }}][screen_id]" class="form-select showtime-screen" data-index="{{ $i }}">

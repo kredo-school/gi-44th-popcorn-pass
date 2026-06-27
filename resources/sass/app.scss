@@ -1050,7 +1050,11 @@
 }
 
 .date-item.active{
-    background: #e247a2;
+    background:#7f7f7f;
+    color:#000000;
+    transform:translateY(-3px);
+    box-shadow:0 8px 18px rgba(0,0,0,.2);
+    z-index:1;
 }
 
 .date-item:hover{
@@ -1144,10 +1148,10 @@
     color: #666;
 }
 .img-showtime{
-    height:25vh;
-    width:50%;
+    width:75%;
+    height:30vh;
     object-fit:cover;
-
+    object-position:center;
 }
 .movie-title{
     font-size:28px;
@@ -1224,7 +1228,9 @@
 
 .movie-search-wrapper{
     max-width:900px;
-    margin:50px auto;
+    margin: auto;
+    padding-top: 50px;
+    padding-bottom: 20px;
 }
 
 .movie-search-box{
@@ -1296,20 +1302,17 @@
     text-align:center;
     margin-bottom:50px;
 }
-
 .movie-search-genres-title{
     color:white;
     font-size:1.2rem;
     margin-bottom:20px;
 }
-
 .movie-search-genres-list{
     display:flex;
     justify-content:center;
     flex-wrap:wrap;
     gap:12px;
 }
-
 .movie-search-chip{
     padding:10px 20px;
 
@@ -1323,12 +1326,10 @@
 
     cursor:pointer;
 }
-
 .movie-search-chip:hover{
     background:#F5C126;
     color:#081729;
 }
-
 /* CARD */
 
 .movie-search-card{
@@ -1362,7 +1363,7 @@
 .movie-search-movie-title{
     text-align:center;
 
-    color:#000000;
+    color:#ffffff;
 
     font-size:1.1rem;
     font-weight:700;
@@ -1381,5 +1382,5 @@
 }
 
 .movie-search-rating{
-    color:#000000;
+    color:#fff200;
 }
