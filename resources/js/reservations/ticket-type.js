@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (ticketButtons.length === 0) return;
 
-
     let selectedSeats = [];
 
     const dataEl = document.getElementById('ticket-data');
@@ -16,32 +15,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     let currentButton = null;
-
+    let pendingSelection = null;
 
     function updateTotal() {
-
         let total = selectedSeats.reduce((sum, seat) => {
-
             let price = Number(seat.price) || 0;
-
-            if (seat.premium) {
-                price += 10;
-            }
-
-            return sum + price;
-
+            let premium = seat.premium ? 10 : 0;
+            return sum + price + premium;
         }, 0);
 
         const el = document.querySelector('.total-price');
-
         if (el) {
             el.textContent = `$${total}`;
         }
     }
 
-
     function checkAllSelected() {
-
         const allSelected = selectedSeats.every(seat => {
             return seat.ticket && seat.price;
         });
@@ -51,72 +40,69 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     ticketButtons.forEach(button => {
         button.addEventListener('click', function () {
             currentButton = this;
         });
     });
 
-
     ticketOptions.forEach(option => {
         option.addEventListener('click', function () {
-
             const ticketName = this.dataset.ticket;
-            const price = Number(this.dataset.price);
+            const basePrice = Number(this.dataset.price);
 
             if (!currentButton) return;
 
-            currentButton.innerHTML = `
-                <span class="ticket-name">${ticketName}</span>
-                <span class="ticket-price">$${price}</span>
-            `;
-
-            currentButton.classList.add('selected');
-
-            currentButton.dataset.ticket = ticketName;
-            currentButton.dataset.price = price;
-
-            const seatCard = currentButton.closest('.ticket-card');
-
-            const seatNumber = seatCard
-                .querySelector('.seat-number-box')
-                .textContent
-                .trim();
-
-            const seat = selectedSeats.find(s => s.seat === seatNumber);
-
-            if (seat) {
-                seat.ticket = ticketName;
-                seat.price = price;
-            }
-
-            updateTotal();
-            checkAllSelected();
-
-            console.log('selectedSeats:', selectedSeats);
+            pendingSelection = {
+                button: currentButton,
+                ticketName,
+                basePrice,
+                seatNumber: currentButton.dataset.seat
+            };
         });
     });
 
+    document.getElementById('ticketTypeModal').addEventListener('hidden.bs.modal', function () {
+        if (!pendingSelection) return;
+
+        const { button, ticketName, basePrice, seatNumber } = pendingSelection;
+
+        button.innerHTML = `
+            <span class="ticket-name">${ticketName}</span>
+            <span class="ticket-price">$${basePrice}</span>
+        `;
+        button.classList.add('selected');
+
+        const seat = selectedSeats.find(s => s.seat === seatNumber);
+        if (seat) {
+            seat.ticket = ticketName;
+            seat.price = basePrice;
+        }
+
+        updateTotal();
+        checkAllSelected();
+
+        pendingSelection = null;
+    });
 
     updateTotal();
     checkAllSelected();
 
-    nextButton.addEventListener('click', function () {
-
-    fetch('/reservation/save-ticket', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({
-            seats: selectedSeats
-        })
-    }).then(() => {
-        window.location.href = "{{ route('reservations.payment-method') }}";
-    });
-
-});
+    if (nextButton) {
+        nextButton.addEventListener('click', function () {
+            fetch('/save-ticket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    seats: selectedSeats
+                })
+            }).then(() => {
+                window.location.href = "/payment-method";
+            });
+        });
+    }
 
 });

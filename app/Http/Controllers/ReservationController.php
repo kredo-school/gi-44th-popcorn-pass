@@ -34,8 +34,16 @@ class ReservationController extends Controller
         $selectedSeats = session('selectedSeats', []);
 
         $totalPrice = collect($selectedSeats)->sum(function ($seat) {
-            return (int)($seat['price'] ?? 0);
-        }) + collect($selectedSeats)->where('premium', true)->count() * 10;
+            return !empty($seat['premium']) ? 10 : 0; 
+        });
+
+        $totalPrice = collect($selectedSeats)->sum(function ($seat) {
+            $price = $seat['price'] ?? 0;
+            if (!empty($seat['premium'])) {
+                $price += 10;
+            }
+            return $price;
+        });
 
         return view('reservations.ticket-type', compact(
             'selectedSeats',
@@ -63,8 +71,21 @@ class ReservationController extends Controller
     public function paymentMethod()
     {
         $selectedSeats = session('selectedSeats', []);
+        
+        $totalPrice = collect($selectedSeats)->sum(function ($seat) {
+            $price = $seat['price'] ?? 0;
 
-        return view('reservations.payment-method', compact('selectedSeats'));
+            if (!empty($seat['premium'])) {
+                $price += 10;
+            }
+
+            return $price;
+        });
+
+        return view('reservations.payment-method', compact(
+            'selectedSeats',
+            'totalPrice'
+        ));
     }
 
     // --------------------

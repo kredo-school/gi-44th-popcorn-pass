@@ -63,15 +63,15 @@
             
                 <div class="payment-options">
             
-                    <button type="button" class="payment-btn active">
+                    <button class="payment-btn active" data-method="card">
                         Credit Card
                     </button>
-            
-                    <button type="button" class="payment-btn">
+                    
+                    <button class="payment-btn" data-method="paypal">
                         Paypal
                     </button>
-            
-                    <button type="button" class="payment-btn">
+                    
+                    <button class="payment-btn" data-method="onsite">
                         Pay On-Site
                     </button>
             
@@ -118,10 +118,9 @@
                 <div class="card-header text-center border-0 ">
                     <h5 class="mb-0">YOUR SELECTION</h5>
                 </div>
-
+        
                 <div class="card-body">
-                    <img src="{{ asset('images/greatest-showman.jpg') }}" alt="Movie Poster"
-                        class="img-fluid rounded mb-3">
+                    <img src="{{ asset('images/greatest-showman.jpg') }}" alt="Movie Poster" class="img-fluid rounded mb-3">
                     <h5 class="fw-bold">
                         The Greatest Showman
                     </h5>
@@ -139,14 +138,18 @@
                     <div class="mb-3">
                         <small class="">Seats</small>
                         <div id="selected-seats">
-                            <p>No seats selected</p>
+                            @foreach($selectedSeats as $seat)
+                            <span class="seat-tag {{ $seat['premium'] ? 'premium' : 'normal' }}">
+                                {{ $seat['seat'] }}
+                            </span>
+                            @endforeach
                         </div>
                     </div>
                     <hr>
                     <div class="mb-3">
                         <small class="fd-5">Total Amount</small>
                         <p class="mb-0 fw-bold total-price">
-                            $25.00
+                            ${{ $totalPrice }}
                         </p>
                     </div>
                 </div>
@@ -167,6 +170,5 @@
     </div>
 
 </div>
-
 
 @endsection
