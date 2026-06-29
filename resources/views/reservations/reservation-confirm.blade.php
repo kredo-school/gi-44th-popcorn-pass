@@ -78,16 +78,48 @@
                     </div>
                     <hr>
                     <div class="mb-3">
-                        <small class="">Seats</small>
+                        <small>Seats</small>
                         <div id="selected-seats">
-                            <p>No seats selected</p>
+                            <div class="row">
+                                @forelse($selectedSeats as $seat)
+                                <div class="col-6 mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="seat-tag {{ $seat['premium'] ? 'premium' : 'normal' }}">
+                                            {{ $seat['seat'] }}
+                                        </span>
+                                        <p class="mb-0">{{ $seat['ticket'] }}</p>
+                                        @if($seat['premium'])
+                                        <p class="mb-0 text-warning fw-bold">(Premium +$10)</p>
+                                        @endif
+                                        <p class="mb-0 fw-bold">
+                                            ${{ $seat['price'] + ($seat['premium'] ? 10 : 0) }}
+                                        </p>
+                                    </div>
+                                </div>
+                                @empty
+                                <p>No seats selected</p>
+                                @endforelse
+                            </div>
                         </div>
                     </div>
                     <hr>
                     <div class="mb-3">
-                        <small class="fd-5">Total Amount</small>
+                        <small>Payment Method</small>
+                        <p class="mb-0 fw-bold">
+                            @if($paymentInfo['method'] === 'card')
+                            Credit Card (ending {{ $paymentInfo['last4'] }})
+                            @elseif($paymentInfo['method'] === 'paypal')
+                            PayPal ({{ $paymentInfo['email'] }})
+                            @else
+                            Pay On-Site
+                            @endif
+                        </p>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <small>Total Amount</small>
                         <p class="mb-0 fw-bold total-price">
-                            $25.00
+                            ${{ $totalPrice }}
                         </p>
                     </div>
                 </div>
@@ -98,11 +130,13 @@
 
     {{-- Button --}}
     <div class="d-flex justify-content-between mt-5">
-        <button class="back-btn ms-5">
-            <i class="fa-solid fa-arrow-left"></i>BACK
-        </button>
+        <form action="{{ route('reservations.payment-method') }}" method="GET">
+            <button type="submit" class="back-btn ms-5">
+                <i class="fa-solid fa-arrow-left"></i>BACK
+            </button>
+        </form>
 
-        <button id="confirm-btn" class="confirm-btn me-5" disabled>
+        <button id="confirm-btn" class="confirm-btn me-5" onclick="window.location.href='{{ route('reservations.complete') }}'">
             Confirm Booking<i class="fa-solid fa-arrow-right"></i>
         </button>
     </div>

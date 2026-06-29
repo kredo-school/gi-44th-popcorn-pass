@@ -9,9 +9,10 @@ class ReservationController extends Controller
     // --------------------
     // Seat Selection Page
     // --------------------
-    public function seatSelectionPage()
+    public function seatSelection()
     {
-        return view('reservations.seat-selection');
+        $selectedSeats = session('selectedSeats', []);
+        return view('reservations.seat-selection', compact('selectedSeats'));
     }
 
     // --------------------
@@ -71,7 +72,7 @@ class ReservationController extends Controller
     public function paymentMethod()
     {
         $selectedSeats = session('selectedSeats', []);
-        
+
         $totalPrice = collect($selectedSeats)->sum(function ($seat) {
             $price = $seat['price'] ?? 0;
 
@@ -89,13 +90,40 @@ class ReservationController extends Controller
     }
 
     // --------------------
+    // Save Payment
+    // --------------------
+    public function savePayment(Request $request)
+    {
+        session(['paymentInfo' => [
+            'method' => $request->method,
+            'last4'  => $request->last4 ?? null,
+            'email'  => $request->email ?? null,
+        ]]);
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    // --------------------
     // Confirm
     // --------------------
     public function confirmation()
     {
         $selectedSeats = session('selectedSeats', []);
+        $paymentInfo = session('paymentInfo', []);
 
-        return view('reservations.reservation-confirm', compact('selectedSeats'));
+        $totalPrice = collect($selectedSeats)->sum(function ($seat) {
+            $price = $seat['price'] ?? 0;
+            if (!empty($seat['premium'])) {
+                $price += 10;
+            }
+            return $price;
+        });
+
+        return view('reservations.reservation-confirm', compact(
+            'selectedSeats',
+            'paymentInfo',
+            'totalPrice'
+        ));
     }
 
     // --------------------
@@ -103,8 +131,19 @@ class ReservationController extends Controller
     // --------------------
     public function complete()
     {
-        session()->forget('selectedSeats');
+        $selectedSeats = session('selectedSeats', []);
 
-        return view('reservations.reservation-complete');
+        $totalPrice = collect($selectedSeats)->sum(function ($seat) {
+            $price = $seat['price'] ?? 0;
+            if (!empty($seat['premium'])) {
+                $price += 10;
+            }
+            return $price;
+        });
+
+        session()->forget('selectedSeats');
+        session()->forget('paymentInfo');
+
+        return view('reservations.reservation-complete', compact('selectedSeats', 'totalPrice'));
     }
 }

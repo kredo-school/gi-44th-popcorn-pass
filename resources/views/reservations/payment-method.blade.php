@@ -54,7 +54,7 @@
     <div class="row">
 
         {{-- Payment method selection --}}
-        <div class="col-lg-8">
+        <div class="col-lg-7">
             <div class="payment-panel">
             
                 <h2 class="payment-title">
@@ -113,7 +113,7 @@
         </div>
 
         {{-- Reservation Summary --}}
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <div class="card summary">
                 <div class="card-header text-center border-0 ">
                     <h5 class="mb-0">YOUR SELECTION</h5>
@@ -136,13 +136,28 @@
                     </div>
                     <hr>
                     <div class="mb-3">
-                        <small class="">Seats</small>
+                        <small>Seats</small>
                         <div id="selected-seats">
-                            @foreach($selectedSeats as $seat)
-                            <span class="seat-tag {{ $seat['premium'] ? 'premium' : 'normal' }}">
-                                {{ $seat['seat'] }}
-                            </span>
-                            @endforeach
+                            <div class="row">
+                                @forelse($selectedSeats as $seat)
+                                <div class="col-6 mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="seat-tag {{ $seat['premium'] ? 'premium' : 'normal' }}">
+                                            {{ $seat['seat'] }}
+                                        </span>
+                                        <p class="mb-0">{{ $seat['ticket'] }}</p>
+                                        @if($seat['premium'])
+                                        <p class="mb-0 text-warning fw-bold">(Premium +$10)</p>
+                                        @endif
+                                        <p class="mb-0 fw-bold">
+                                            ${{ $seat['price'] + ($seat['premium'] ? 10 : 0) }}
+                                        </p>
+                                    </div>
+                                </div>
+                                @empty
+                                <p>No seats selected</p>
+                                @endforelse
+                            </div>
                         </div>
                     </div>
                     <hr>
@@ -160,9 +175,11 @@
 
     {{-- Button --}}
     <div class="d-flex justify-content-between mt-5">
-        <button class="back-btn ms-5">
-            <i class="fa-solid fa-arrow-left"></i>BACK
-        </button>
+        <form action="{{ route('reservations.ticket-type') }}" method="GET">
+            <button type="submit" class="back-btn ms-5">
+                <i class="fa-solid fa-arrow-left"></i>BACK
+            </button>
+        </form>
 
         <button id="next-btn" class="next-btn me-5" disabled>
             NEXT<i class="fa-solid fa-arrow-right"></i>

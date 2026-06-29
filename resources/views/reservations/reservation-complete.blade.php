@@ -83,10 +83,34 @@
                     </div>
                     <hr>
                     <div class="mb-3">
-                        <small class="">Seats</small>
+                        <small>Seats</small>
                         <div id="selected-seats">
-                            <p>No seats selected</p>
+                            <div class="row">
+                                @forelse($selectedSeats as $seat)
+                                <div class="col-6 mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="seat-tag {{ $seat['premium'] ? 'premium' : 'normal' }}">
+                                            {{ $seat['seat'] }}
+                                        </span>
+                                        <p class="mb-0">{{ $seat['ticket'] }}</p>
+                                        @if($seat['premium'])
+                                        <p class="mb-0 text-warning fw-bold">(Premium +$10)</p>
+                                        @endif
+                                        <p class="mb-0 fw-bold">
+                                            ${{ $seat['price'] + ($seat['premium'] ? 10 : 0) }}
+                                        </p>
+                                    </div>
+                                </div>
+                                @empty
+                                <p>No seats selected</p>
+                                @endforelse
+                            </div>
                         </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                        <small>Total Amount</small>
+                        <p class="mb-0 fw-bold total-price">${{ $totalPrice }}</p>
                     </div>
                     <hr>
 
@@ -108,7 +132,7 @@
 
     </div>
 
-    {{-- Button --}}
+    {{-- Button !!!!UPDATE LATER!!!! --}}
     <div class="mt-5 text-center">
         <button id="go-to-mypage-btn" class="go-to-mypage-btn me-5" disabled>
             My Page<i class="fa-solid fa-arrow-right"></i>

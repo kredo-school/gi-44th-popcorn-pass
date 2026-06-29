@@ -55,7 +55,7 @@
     <div class="row">
 
         {{-- Ticket Type Selection --}}
-        <div class="col-lg-8">
+        <div class="col-lg-7">
         
             @foreach($selectedSeats as $seat)
                 <div class="ticket-card mb-3">
@@ -65,9 +65,14 @@
                         </div>
 
                         <div class="ticket-selection">
-                            <button type="button" class="ticket-type-btn" data-bs-toggle="modal" data-bs-target="#ticketTypeModal"
-                                data-seat="{{ $seat['seat'] }}" data-premium="{{ $seat['premium'] }}">
+                            <button type="button" class="ticket-type-btn {{ $seat['ticket'] ?? '' ? 'selected' : '' }}" data-bs-toggle="modal"
+                                data-bs-target="#ticketTypeModal" data-seat="{{ $seat['seat'] }}" data-premium="{{ $seat['premium'] }}">
+                                @if(isset($seat['ticket']))
+                                <span class="ticket-name">{{ $seat['ticket'] }}</span>
+                                <span class="ticket-price">${{ $seat['price'] }}</span>
+                                @else
                                 SELECT TICKET TYPE
+                                @endif
                             </button>
 
                             @if($seat['premium'])
@@ -83,7 +88,7 @@
         </div>
 
         {{-- Reservation Summary --}}
-        <div class="col-lg-4">
+        <div class="col-lg-5">
             <div class="card summary">
                 <div class="card-header text-center border-0 ">
                     <h5 class="mb-0">YOUR SELECTION</h5>
@@ -131,9 +136,11 @@
 
     {{-- Button --}}
     <div class="d-flex justify-content-between mt-5">
-        <button class="back-btn ms-5">
-            <i class="fa-solid fa-arrow-left"></i>BACK
-        </button>
+        <form action="{{ route('reservations.seat-selection') }}" method="GET">
+            <button type="submit" class="back-btn ms-5" id="back-btn">
+                <i class="fa-solid fa-arrow-left"></i>BACK
+            </button>
+        </form>
     
         <button id="next-btn" class="next-btn me-5" disabled>
             NEXT<i class="fa-solid fa-arrow-right"></i>

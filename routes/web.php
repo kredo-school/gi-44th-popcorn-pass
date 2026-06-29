@@ -17,7 +17,7 @@ Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name(
 
 ////////////// Reservation Routes
 
-Route::get('/seat-selection', [ReservationController::class, 'seatSelectionPage'])
+Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
 
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
@@ -31,6 +31,9 @@ Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
 
 Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
     ->name('reservations.payment-method');
+
+Route::post('/save-payment', [ReservationController::class, 'savePayment'])
+    ->name('reservations.save-payment');
 
 Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');

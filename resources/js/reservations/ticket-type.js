@@ -17,6 +17,23 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentButton = null;
     let pendingSelection = null;
 
+    const backBtn = document.getElementById('back-btn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            fetch('/save-ticket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({ seats: selectedSeats })
+            }).then(() => {
+                window.location.href = '/seat-selection';
+            });
+        });
+    }
+
     function updateTotal() {
         let total = selectedSeats.reduce((sum, seat) => {
             let price = Number(seat.price) || 0;
