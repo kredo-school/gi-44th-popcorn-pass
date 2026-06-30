@@ -9,9 +9,12 @@ class ReservationController extends Controller
     // --------------------
     // Seat Selection Page
     // --------------------
-    public function seatSelectionPage()
+    public function seatSelection()
     {
-        return view('reservations.seat-selection');
+        $selectedSeats = session('selectedSeats', []);
+        session()->forget('paymentInfo');
+
+        return view('reservations.seat-selection', compact('selectedSeats'));
     }
 
     // --------------------
@@ -21,7 +24,15 @@ class ReservationController extends Controller
     {
         $selectedSeats = json_decode($request->selectedSeats ?? '[]', true);
 
+        $selectedSeats = array_map(function ($seat) {
+            return [
+                'seat' => $seat['seat'],
+                'premium' => $seat['premium'],
+            ];
+        }, $selectedSeats);
+
         session(['selectedSeats' => $selectedSeats]);
+        session()->forget('paymentInfo');
 
         return redirect()->route('reservations.ticket-type');
     }
@@ -33,9 +44,18 @@ class ReservationController extends Controller
     {
         $selectedSeats = session('selectedSeats', []);
 
+        if (empty($selectedSeats)) {
+            return redirect()->route('reservations.seat-selection')
+                ->with('error', 'Your session has expired. Please start again.');
+        }
+
         $totalPrice = collect($selectedSeats)->sum(function ($seat) {
-            return (int)($seat['price'] ?? 0);
-        }) + collect($selectedSeats)->where('premium', true)->count() * 10;
+            $price = $seat['price'] ?? 0;
+            if (!empty($seat['premium'])) {
+                $price += 10;
+            }
+            return $price;
+        });
 
         return view('reservations.ticket-type', compact(
             'selectedSeats',
@@ -53,6 +73,11 @@ class ReservationController extends Controller
             : $request->seats;
 
         session(['selectedSeats' => $selectedSeats]);
+        session()->forget('paymentInfo');
+
+        if ($request->clearPayment) {
+            session()->forget('paymentInfo');
+        }
 
         return response()->json(['status' => 'ok']);
     }
@@ -63,8 +88,42 @@ class ReservationController extends Controller
     public function paymentMethod()
     {
         $selectedSeats = session('selectedSeats', []);
+        $paymentInfo = session('paymentInfo', []);
 
-        return view('reservations.payment-method', compact('selectedSeats'));
+        if (empty($selectedSeats)) {
+            return redirect()->route('reservations.seat-selection')
+                ->with('error', 'Your session has expired. Please start again.');
+        }
+
+        $totalPrice = collect($selectedSeats)->sum(function ($seat) {
+            $price = $seat['price'] ?? 0;
+
+            if (!empty($seat['premium'])) {
+                $price += 10;
+            }
+
+            return $price;
+        });
+
+        return view('reservations.payment-method', compact(
+            'selectedSeats',
+            'totalPrice',
+            'paymentInfo'
+        ));
+    }
+
+    // --------------------
+    // Save Payment
+    // --------------------
+    public function savePayment(Request $request)
+    {
+        session(['paymentInfo' => [
+            'method' => $request->method,
+            'last4'  => $request->last4 ?? null,
+            'email'  => $request->email ?? null,
+        ]]);
+
+        return response()->json(['status' => 'ok']);
     }
 
     // --------------------
@@ -73,8 +132,26 @@ class ReservationController extends Controller
     public function confirmation()
     {
         $selectedSeats = session('selectedSeats', []);
+        $paymentInfo = session('paymentInfo', []);
 
-        return view('reservations.reservation-confirm', compact('selectedSeats'));
+        if (empty($selectedSeats) || empty($paymentInfo)) {
+            return redirect()->route('reservations.seat-selection')
+                ->with('error', 'Your session has expired. Please start again.');
+        }
+
+        $totalPrice = collect($selectedSeats)->sum(function ($seat) {
+            $price = $seat['price'] ?? 0;
+            if (!empty($seat['premium'])) {
+                $price += 10;
+            }
+            return $price;
+        });
+
+        return view('reservations.reservation-confirm', compact(
+            'selectedSeats',
+            'paymentInfo',
+            'totalPrice'
+        ));
     }
 
     // --------------------
@@ -82,8 +159,24 @@ class ReservationController extends Controller
     // --------------------
     public function complete()
     {
-        session()->forget('selectedSeats');
+        $selectedSeats = session('selectedSeats', []);
 
-        return view('reservations.reservation-complete');
+        if (empty($selectedSeats)) {
+            return redirect()->route('reservations.seat-selection')
+                ->with('error', 'Your session has expired. Please start again.');
+        }
+
+        $totalPrice = collect($selectedSeats)->sum(function ($seat) {
+            $price = $seat['price'] ?? 0;
+            if (!empty($seat['premium'])) {
+                $price += 10;
+            }
+            return $price;
+        });
+
+        session()->forget('selectedSeats');
+        session()->forget('paymentInfo');
+
+        return view('reservations.reservation-complete', compact('selectedSeats', 'totalPrice'));
     }
 }
