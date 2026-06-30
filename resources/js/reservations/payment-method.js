@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
         onsite: document.getElementById('onsite-form'),
     };
 
-    let selectedMethod = 'card';
+    let selectedMethod = document.querySelector('.payment-btn.active')?.dataset.method || 'card';
 
     buttons.forEach(button => {
         button.addEventListener('click', () => {

@@ -5,7 +5,6 @@
 
 <div class="reservation-page">
 
-
     {{-- Stepper --}}
     <div class="stepper d-flex justify-content-center align-items-center mb-5">
 

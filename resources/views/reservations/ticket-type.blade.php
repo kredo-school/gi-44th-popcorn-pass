@@ -6,7 +6,6 @@
 <div class="reservation-page" id="ticket-data"
      data-seats='@json($selectedSeats)'>
 
-
     {{-- Stepper --}}
     <div class="stepper d-flex justify-content-center align-items-center mb-5">
 

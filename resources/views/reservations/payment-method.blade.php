@@ -5,7 +5,6 @@
 
 <div class="reservation-page">
 
-
     {{-- Stepper --}}
     <div class="stepper d-flex justify-content-center align-items-center mb-5">
 
@@ -62,25 +61,26 @@
                 </h2>
             
                 <div class="payment-options">
-            
-                    <button class="payment-btn active" data-method="card">
+                
+                    <button class="payment-btn {{ ($paymentInfo['method'] ?? 'card') === 'card' ? 'active' : '' }}" data-method="card">
                         Credit Card
                     </button>
-                    
-                    <button class="payment-btn" data-method="paypal">
+                
+                    <button class="payment-btn {{ ($paymentInfo['method'] ?? '') === 'paypal' ? 'active' : '' }}" data-method="paypal">
                         Paypal
                     </button>
-                    
-                    <button class="payment-btn" data-method="onsite">
+                
+                    <button class="payment-btn {{ ($paymentInfo['method'] ?? '') === 'onsite' ? 'active' : '' }}" data-method="onsite">
                         Pay On-Site
                     </button>
-            
+                
                 </div>
-
+                
                 <div id="payment-form-container" class="mt-4">
                 
-                    <div id="card-form" class="payment-form">
-                        <input type="text" placeholder="Card Number" class="form-control mb-3">
+                    <div id="card-form" class="payment-form {{ ($paymentInfo['method'] ?? 'card') !== 'card' ? 'd-none' : '' }}">
+                        <input type="text" placeholder="Card Number" class="form-control mb-3"
+                            value="{{ isset($paymentInfo['last4']) ? '**** **** **** ' . $paymentInfo['last4'] : '' }}">
                         <input type="text" placeholder="Card Holder Name" class="form-control mb-3">
                 
                         <div class="row">
@@ -94,11 +94,11 @@
                         </div>
                     </div>
                 
-                    <div id="paypal-form" class="payment-form d-none">
-                        <input type="email" placeholder="Paypal Email" class="form-control">
+                    <div id="paypal-form" class="payment-form {{ ($paymentInfo['method'] ?? '') !== 'paypal' ? 'd-none' : '' }}">
+                        <input type="email" placeholder="Paypal Email" class="form-control" value="{{ $paymentInfo['email'] ?? '' }}">
                     </div>
                 
-                    <div id="onsite-form" class="payment-form d-none">
+                    <div id="onsite-form" class="payment-form {{ ($paymentInfo['method'] ?? '') !== 'onsite' ? 'd-none' : '' }}">
                         <div class="alert alert-light mb-0">
                             <i class="fa-solid fa-triangle-exclamation"></i> You will pay at the cinema on the day of your visit.
                         </div>

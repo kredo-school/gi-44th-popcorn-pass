@@ -5,7 +5,12 @@
 
     <div class="reservation-page">
 
-        
+        @if(session('error')) 
+            <div class="alert alert-danger text-center">
+                {{ session('error') }}
+            </div>
+        @endif
+
         {{-- Stepper --}}
         <div class="stepper d-flex justify-content-center align-items-center mb-5">
     
