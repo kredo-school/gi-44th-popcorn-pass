@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active">
@@ -79,7 +80,7 @@
 
     </div>
 
-    <div id="showtimes" class="pt-5 "
+    <div id="showtƒimes" class="pt-5 "
         style="
                 background-image: url('{{ asset('images/home_back.png') }}');
                 background-size: cover;
@@ -97,10 +98,10 @@
                             $isFuture = $loop->index >= 7;
                         @endphp
 
-                        <a href="?date={{ $date->format('Y-m-d') }}#showtimes"
+                        <a href="{{ route('movie.showtime.display', ['date' => $date->format('Y-m-d')]) }}#showtimes"
                             class="date-item
-                  {{ $selected ? 'active' : '' }}
-                  {{ $isFuture ? 'date-disabled' : '' }}">
+                            {{ $selected ? 'active' : '' }}
+                            {{ $isFuture ? 'date-disabled' : '' }}">
 
                             <div class="date-day">
                                 {{ $date->format('n/j') }}
@@ -132,25 +133,32 @@
             </li>
         </ul>
 
-        <div class="tab-content showtime-bg">
+        <div class="tab-content showtime-bg row">
 
             {{-- showtime schedule --}}
-            <div class="tab-pane fade {{ $isSearch ? '' : 'show active' }}" id="nowPlaying">
+
+            <div class="tab-pane col-10 mx-auto fade {{ $isSearch ? '' : 'show active' }}" id="nowPlaying">
                 <div class="tab-pane fade show active" id="nowPlaying">
 
-                    @foreach ($movies as $movie)
+                    @php
+                        $visibleMovies = $movies->filter(fn($movie) => $movie->showtimes->isNotEmpty());
+                    @endphp
+
+                    @forelse ($visibleMovies as $movie)
                         <div class="movie-row p-4">
 
                             <div class="row">
 
                                 <!-- movie poster images -->
-                                <div class="col-3 text-end mt-2">
-                                    <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
-                                        class="img-showtime">
+                                <div class="col-2 text-end mt-2">
+                                    <a href="#">
+                                        <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
+                                            class="img-showtime">
+                                    </a>
                                 </div>
 
                                 <!-- Right side -->
-                                <div class="col-9">
+                                <div class="col-10">
 
                                     <!-- title -->
                                     <div class="mb-4">
@@ -160,98 +168,72 @@
                                     </div>
 
                                     <!-- display movies -->
-                                    <div class="d-flex gap-3 flex-wrap">
-                                        @foreach ($movie->showtimes as $showtime)
-                                            {{-- <div class="showtime-card">
-                                                <div class="showtime-top">
-                                                    <div class="showtime-time">
-                                                        {{ \Carbon\Carbon::parse($showtime->start_time)->format('H:i') }}
-                                                            
-                                                        <div class="showtime-end">
-                                                            ～{{ \Carbon\Carbon::parse($showtime->end_time)->format('H:i') }}
-                                                            
+                                    <div class="d-flex gap-3 flex-wrap showtime-list">
+
+                                        @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
+                                            @if ($showtime->start_time->isPast())
+                                                <a href="#"></a>
+                                                <div class="showtime-card-closed">
+                                                    <div class="showtime-top">
+                                                        <div class="showtime-time">
+                                                            {{ $showtime->start_time->format('H:i') }}
+                                                            <div class="showtime-end">
+                                                                ～{{ $showtime->end_time->format('H:i') }}
+                                                            </div>
+                                                        </div>
+                                                        <div class="ms-2">
+                                                            <div class="theater-text">Theater</div>
+                                                            <div class="theater-number theater-box">
+                                                                {{ $showtime->screen->screen_number }}
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                    <div class="ms-3">
-                                                        <div class="thater-text">
-                                                            Theater
-                                                        </div>
-                                                        <div class="theater-number theater-box">
-                                                            {{ $showtime->screen_id }}
-                                                            
-                                                        </div>
+                                                    <div class="showtime-bottom">
+                                                        <div class="closed-icon">✖️</div>
+                                                        <div class="closed-text">Closed</div>
                                                     </div>
                                                 </div>
-                                                <div class="showtime-bottom">
-                                                    @if ($showtime->is_closed)
-                                                        <div class="closed-icon">✕</div>
-                                                        <div class="closed-text">
-                                                            Closed
+                                            @else
+                                                <div class="showtime-card-reservation">
+                                                    <div class="showtime-top">
+                                                        <div class="showtime-time">
+                                                            {{ $showtime->start_time->format('H:i') }}
+                                                            <div class="showtime-end">
+                                                                ～{{ $showtime->end_time->format('H:i') }}
+                                                            </div>
                                                         </div>
-                                                    @else
-                                                        <div class="reservation-icon">○</div>
-                                                        <div class="reservation-text">
-                                                            Reservation
+                                                        <div class="ms-2">
+                                                            <div class="theater-text">Theater</div>
+                                                            <div class="theater-number theater-box">
+                                                                {{ $showtime->screen->screen_number }}
+                                                            </div>
                                                         </div>
-                                                    @endif
+                                                    </div>
+                                                    <a href="#" class="text-decoration-none">
+                                                        <div class="showtime-bottom pt-2">
+                                                            <div class="reservation-icon">⭕️</div>
+                                                            <div class="reservation-text">Reservation</div>
+                                                        </div>
+                                                    </a>
                                                 </div>
-                                            </div> --}}
-                                            
-                                            
+                                            @endif
                                         @endforeach
                                     </div>
+
                                 </div>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-                {{-- 下は参考 --}}
-                <div class="movie-row p-4">
-                    <div class="row">
-                        <!-- image -->
-                        <div class="col-2 text-end mt-2">
-                            <img src="{{ asset('images/king.png') }}" alt="lionking" class="img-showtime">
-                        </div>
-                        <!-- 右側 -->
-                        <div class="col-10">
-                            <!-- title -->
-                            <div class="mb-4">
-                                <a href="#" class="showtime-movie-title text-decoration-none">
-                                    LION KING >
-                                </a>
-                            </div>
-                            <!-- schedule -->
-                            <div class="showtime-card">
 
-                                <div class="showtime-top">
-
-                                    <div class="showtime-time">
-                                        09:55
-                                        <div class="showtime-end">〜13:15</div>
-                                    </div>
-
-                                    <div class="ms-3">
-                                        <div class="thater-text">Theater</div>
-                                        <div class="theater-number theater-box">2</div>
-                                    </div>
-
-                                </div>
-
-                                <div class="showtime-bottom">
-
-                                    <div class="closed-icon">✕</div>
-
-                                    <div class="closed-text">
-                                        Closed
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
+                    @empty
+                        <h1 class="text-white text-center mt-5">
+                            No movies available for this date.
+                        </h1>
+                    @endforelse
                 </div>
             </div>
+
+
+
 
 
             {{-- searching movie --}}
@@ -279,8 +261,6 @@
 
                     </form>
                 </div>
-
-
                 {{-- POPULAR GENRES --}}
                 <div class="movie-search-genres">
 
@@ -312,35 +292,106 @@
                         <div class="row">
 
                             @forelse($searchResults as $movie)
-                                <div class="col-md-4 mb-4">
+                                @continue($movie->showtimes->isEmpty())
+                                <div class="movie-row p-4">
 
-                                    <div class="movie-search-card">
+                                    <div class="row">
 
-                                        <img src="{{ $movie->poster_url }}" class="movie-search-poster">
+                                        <!-- movie poster images -->
+                                        <div class="col-2 text-end mt-2">
+                                            <a href="#">
+                                                <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
+                                                    class="img-showtime">
+                                            </a>
+                                        </div>
 
-                                        <div class="movie-search-info">
+                                        <!-- Right side -->
+                                        <div class="col-10">
 
-                                            <div class="movie-search-movie-title">
-                                                {{ $movie->title }}
+                                            <!-- title -->
+                                            <div class="mb-4">
+                                                <a href="#" class="showtime-movie-title text-decoration-none">
+                                                    {{ strtoupper($movie->title) }} >
+                                                </a>
                                             </div>
 
-                                            <div class="movie-search-meta">
+                                            <!-- display movies -->
+                                            <div class="d-flex gap-3 flex-wrap showtime-list">
 
-                                                <span class="movie-search-rating">
-                                                    ⭐ {{ $movie->review_average }}
-                                                </span>
+                                                @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
+                                                    @if ($showtime->start_time->isPast())
+                                                        <a href="#">
 
-                                                <span>
-                                                    ⏱ {{ floor($movie->duration / 60) }}h
-                                                    {{ $movie->duration % 60 }}m
-                                                </span>
+                                                        </a>
+                                                        <div class="showtime-card-closed">
 
+                                                            <div class="showtime-top">
+                                                                <div class="showtime-time">
+                                                                    {{ $showtime->start_time->format('H:i') }}
+
+                                                                    <div class="showtime-end">
+                                                                        ～{{ $showtime->end_time->format('H:i') }}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="ms-2 ">
+                                                                    <div class="theater-text">
+                                                                        Theater
+                                                                    </div>
+
+                                                                    <div class="theater-number theater-box">
+                                                                        {{ $showtime->screen->screen_number }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="showtime-bottom ">
+                                                                <div class="closed-icon">✖️</div>
+                                                                <div class="closed-text ">
+                                                                    Closed
+                                                                </div>
+                                                            </div>
+
+
+                                                        </div>
+                                                    @else
+                                                        <div class="showtime-card-reservation">
+
+                                                            <div class="showtime-top">
+                                                                <div class="showtime-time">
+                                                                    {{ $showtime->start_time->format('H:i') }}
+
+                                                                    <div class="showtime-end">
+                                                                        ～{{ $showtime->end_time->format('H:i') }}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="ms-2">
+                                                                    <div class="theater-text">
+                                                                        Theater
+                                                                    </div>
+
+                                                                    <div class="theater-number theater-box">
+                                                                        {{ $showtime->screen->screen_number }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <a href="#" class="text-decoration-none">
+                                                                <div class="showtime-bottom pt-2">
+                                                                    <div class="reservation-icon">⭕️</div>
+                                                                    <div class="reservation-text ">
+                                                                        Reservation
+                                                                    </div>
+                                                                </div>
+                                                            </a>
+
+
+                                                        </div>
+                                                    @endif
+                                                @endforeach
                                             </div>
 
                                         </div>
-
                                     </div>
-
                                 </div>
 
                             @empty

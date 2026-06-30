@@ -55,7 +55,13 @@ class HomeController extends Controller
     {
         $data = $this->commonData();
 
-        $data['selectedDate'] = request('date', now()->toDateString());
+        $selectedDate = request('date', today()->format('Y-m-d'));
+
+        $data['movies'] = Movie::with(['showtimes' => function ($query) use ($selectedDate) {
+            $query->whereDate('start_time', $selectedDate);
+        }, 'showtimes.screen.cinema'])->get();
+
+        $data['selectedDate'] = $selectedDate;
         $data['isSearch'] = false;
 
         return view('layouts.showtime_display', $data);
@@ -66,18 +72,22 @@ class HomeController extends Controller
         $data = $this->commonData();
 
         $keyword = $request->keyword;
+        $selectedDate = request('date', now()->toDateString());
 
-        $data['searchResults'] = Movie::where(function ($query) use ($keyword) {
-            $query->where('title', 'like', "%{$keyword}%")
-                ->orWhere('director', 'like', "%{$keyword}%")
-                ->orWhere('synopsis', 'like', "%{$keyword}%")
-                ->orWhereHas('genre', function ($q) use ($keyword) {
-                    $q->where('title', 'like', "%{$keyword}%");
-                })
-                ->orWhereJsonContains('search_keywords', $keyword);
-        })->get();
+        $data['searchResults'] = Movie::with(['showtimes' => function ($query) use ($selectedDate) {
+            $query->whereDate('start_time', $selectedDate);
+        }, 'showtimes.screen.cinema'])
+            ->where(function ($query) use ($keyword) {
+                $query->where('title', 'like', "%{$keyword}%")
+                    ->orWhere('director', 'like', "%{$keyword}%")
+                    ->orWhere('synopsis', 'like', "%{$keyword}%")
+                    ->orWhereHas('genre', function ($q) use ($keyword) {
+                        $q->where('title', 'like', "%{$keyword}%");
+                    })
+                    ->orWhereJsonContains('search_keywords', $keyword);
+            })->get();
 
-        $data['selectedDate'] = request('date', now()->toDateString());
+        $data['selectedDate'] = $selectedDate;
         $data['isSearch'] = true;
 
         return view('layouts.showtime_display', $data);

@@ -1167,9 +1167,15 @@
 
 
 // showtime scchedule
-.showtime-card{
-    width:230px;
-    background:#bdbdbd;
+.showtime-card-closed{
+    width:180px;
+    background:#a9a9a9;
+    border-radius:15px;
+    overflow:hidden;
+}
+.showtime-card-reservation{
+    width:180px;
+    background:#ebeaea;
     border-radius:15px;
     overflow:hidden;
 }
@@ -1192,7 +1198,7 @@
     margin-top:10px;
 }
 .theater-box{
-    width:70px;
+    width:50px;
     background:white;
     border:1px solid #999;
     text-align:center;
@@ -1203,11 +1209,11 @@
     line-height:1;
 }
 .theater-number{
-    font-size:50px;
+    font-size:30px;
     line-height:1;
 }
 .theater-text{
-    font-size:14px;
+    font-size:10px;
     text-align:center;
 }
 .showtime-bottom{
@@ -1223,6 +1229,23 @@
     font-weight:bold;
 }
 .closed-text{
+    font-size:20px;
+}
+.showtime-list {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+}
+
+.showtime-list > div {
+    flex-shrink: 0;
+}
+.reservation-icon{
+    font-size:35px;
+    font-weight:bold;
+}
+.reservation-text{
     font-size:20px;
 }
 
@@ -1292,10 +1315,6 @@
     padding:18px 35px;
 
     transition:.3s;
-}
-
-.movie-search-btn:hover{
-    background:#000000;
 }
 
 /* GENRE */

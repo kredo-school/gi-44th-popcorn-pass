@@ -98,7 +98,8 @@
                                 <label class="btn btn-outline-secondary" for="status-archived">Archived</label>
                             </div>
                             <div class="form-text text-secondary">
-                                Note: once a Release Date / End Date is set, this status will be updated automatically over time.
+                                Note: once a Release Date / End Date is set, this status will be updated automatically over
+                                time.
                             </div>
                         </div>
 
@@ -219,29 +220,36 @@
                         <div class="row g-2 mb-2 align-items-center">
                             <div class="col-md-1 text-secondary small text-center">#{{ $i + 1 }}</div>
                             <div class="col-md-3">
-                                <select name="showtimes[{{ $i }}][cinema_id]" class="form-select showtime-cinema" data-index="{{ $i }}">
+                                <select name="showtimes[{{ $i }}][cinema_id]"
+                                    class="form-select showtime-cinema" data-index="{{ $i }}">
                                     <option value="">Cinema...</option>
                                     @foreach ($cinemas as $cinema)
-                                        <option value="{{ $cinema->id }}" {{ $oldCinemaId == $cinema->id ? 'selected' : '' }}>{{ $cinema->cinema_name }}</option>
+                                        <option value="{{ $cinema->id }}"
+                                            {{ old('showtimes.' . $i . '.cinema_id') == $cinema->id ? 'selected' : '' }}>
+                                            {{ $cinema->cinema_name }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                
                             </div>
                             <div class="col-md-3">
-                                <select name="showtimes[{{ $i }}][screen_id]" class="form-select showtime-screen" data-index="{{ $i }}">
+                                <select name="showtimes[{{ $i }}][screen_id]"
+                                    class="form-select showtime-screen" data-index="{{ $i }}">
                                     <option value="">Screen...</option>
                                     @foreach ($screens as $screen)
-                                        <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}" {{ $oldScreenId == $screen->id ? 'selected' : '' }}>
+                                        <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}"
+                                            {{ old('showtimes.' . $i . '.screen_id') == $screen->id ? 'selected' : '' }}>
                                             {{ $screen->cinema->cinema_name }} - Screen {{ $screen->screen_number }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-3">
-                                <input type="date" name="showtimes[{{ $i }}][date]" class="form-control" value="{{ $oldDate }}">
+                                <input type="date" name="showtimes[{{ $i }}][date]" class="form-control"
+                                    value="{{ $oldDate }}">
                             </div>
                             <div class="col-md-2">
-                                <input type="time" name="showtimes[{{ $i }}][start_time]" class="form-control" value="{{ $oldStartTime }}">
+                                <input type="time" name="showtimes[{{ $i }}][start_time]"
+                                    class="form-control" value="{{ $oldStartTime }}">
                             </div>
                         </div>
                     @endfor
@@ -263,36 +271,44 @@
     </form>
 
 @endsection
-
+@section('styles')
+    <style>
+        select.form-select {
+            display: block !important;
+            background-color: white !important;
+            color: black !important;
+        }
+    </style>
+@endsection
 @section('scripts')
-<script>
-function filterScreensForRow(cinemaSelect) {
-    const index = cinemaSelect.dataset.index;
-    const screenSelect = document.querySelector(`.showtime-screen[data-index="${index}"]`);
-    const selectedCinema = cinemaSelect.value;
+    <script>
+        function filterScreensForRow(cinemaSelect) {
+            const index = cinemaSelect.dataset.index;
+            const screenSelect = document.querySelector(`.showtime-screen[data-index="${index}"]`);
+            const selectedCinema = cinemaSelect.value;
 
-    Array.from(screenSelect.options).forEach(function (option) {
-        if (!option.value) return; // always keep the placeholder visible
+            Array.from(screenSelect.options).forEach(function(option) {
+                if (!option.value) return; // always keep the placeholder visible
 
-        const matches = option.dataset.cinema === selectedCinema;
-        option.hidden = selectedCinema !== '' && !matches;
-    });
+                const matches = option.dataset.cinema === selectedCinema;
+                option.hidden = selectedCinema !== '' && !matches;
+            });
 
-    const currentOption = screenSelect.options[screenSelect.selectedIndex];
-    if (currentOption && currentOption.hidden) {
-        screenSelect.value = '';
-    }
-}
+            const currentOption = screenSelect.options[screenSelect.selectedIndex];
+            if (currentOption && currentOption.hidden) {
+                screenSelect.value = '';
+            }
+        }
 
-document.querySelectorAll('.showtime-cinema').forEach(function (cinemaSelect) {
-    cinemaSelect.addEventListener('change', function () {
-        filterScreensForRow(this);
-    });
+        document.querySelectorAll('.showtime-cinema').forEach(function(cinemaSelect) {
+            cinemaSelect.addEventListener('change', function() {
+                filterScreensForRow(this);
+            });
 
-    // Re-apply filtering on page load in case of validation-error redisplay
-    if (cinemaSelect.value) {
-        filterScreensForRow(cinemaSelect);
-    }
-});
-</script>
+            // Re-apply filtering on page load in case of validation-error redisplay
+            if (cinemaSelect.value) {
+                filterScreensForRow(cinemaSelect);
+            }
+        });
+    </script>
 @endsection
