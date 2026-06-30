@@ -88,6 +88,10 @@ class AdminController extends Controller
 
     public function storeMovie(Request $request)
     {
+
+        
+        $validated = $request->validate($this->movieValidationRules());
+
         $rules = $this->movieValidationRules();
         $rules['showtimes'] = 'nullable|array|max:6';
         $rules['showtimes.*.cinema_id'] = 'nullable|exists:cinemas,id';
@@ -130,6 +134,7 @@ class AdminController extends Controller
         $durationMinutes = (int) $movie->duration;
 
         foreach ($showtimesInput as $index => $row) {
+         
             $screenId = $row['screen_id'] ?? null;
             $date = $row['date'] ?? null;
             $startTime = $row['start_time'] ?? null;
@@ -267,9 +272,9 @@ class AdminController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('reservation_reference', 'like', "%{$search}%")
-                  ->orWhereHas('user', function ($uq) use ($search) {
-                      $uq->where('username', 'like', "%{$search}%");
-                  });
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('username', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -386,7 +391,7 @@ class AdminController extends Controller
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 

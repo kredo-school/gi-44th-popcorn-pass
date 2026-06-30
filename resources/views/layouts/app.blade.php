@@ -65,6 +65,7 @@
                                 <a href="#FoodDrink" class="text-decoration-none nav-font">
                                     Food & Drink
                                 </a>
+                                
                             </li>
 
                         </ul>
@@ -85,6 +86,7 @@
                                 </a>
                             @endauth
                         </div>
+                        
 
                     </div>
                 </div>
