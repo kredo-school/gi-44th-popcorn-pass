@@ -4,7 +4,11 @@
          alt="{{ $user->full_name }}"
          class="mypage-sidebar-avatar rounded-circle mb-2">
 
-    <div class="mypage-sidebar-name">{{ $user->full_name }}</div>
+    <div class="mb-1">
+        <a href="{{ route('mypage.profile') }}" class="mypage-sidebar-name text-decoration-none text-white">
+            {{ $user->full_name }}
+        </a>
+    </div>
 
     <span class="mypage-tier-badge mypage-tier-{{ $user->tier }}">
         {{ $user->tier_label }} Member
@@ -12,7 +16,7 @@
 </div>
 
 <div class="mypage-sidebar-stats d-flex flex-column gap-3">
-    <a href="{{ route('mypage.dashboard') }}" class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
+    <a href="{{ route('mypage.tickets') }}" class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
         <span><i class="fa-solid fa-ticket me-2"></i>Upcoming Tickets</span>
         <strong>{{ $upcomingTicketsCount ?? 0 }}</strong>
     </a>
@@ -22,7 +26,7 @@
         <strong>{{ $moviesWatchedCount ?? 0 }}</strong>
     </a>
 
-    <a href="#" class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
+    <a href="{{ route('mypage.reviews-written') }}" class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
         <span><i class="fa-solid fa-star me-2"></i>Reviews Written</span>
         <strong>{{ $reviewsWrittenCount ?? 0 }}</strong>
     </a>

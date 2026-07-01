@@ -8,6 +8,7 @@ use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
 use App\Http\Controllers\MyPage\ReviewController;
+use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 
@@ -56,9 +57,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])->name('movies.details');
     Route::get('/movies/{id}/edit', [AdminController::class, 'editMovie'])->name('movies.edit');
     Route::put('/movies/{id}', [AdminController::class, 'updateMovie'])->name('movies.update');
-    Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])->name('movies.showtimes');
-    Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])->name('movies.showtimes.generate');
-    Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])->name('showtimes.delete');
     Route::get('/analytics', [AdminController::class, 'analytics'])->name('analytics');
     Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
     Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])->name('reservations.export');
@@ -84,6 +82,8 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
     Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])->name('movies-watched');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{id}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
     Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
 });

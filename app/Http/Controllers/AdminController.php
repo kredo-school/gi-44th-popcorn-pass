@@ -28,8 +28,6 @@ class AdminController extends Controller
 
     public function movies()
     {
-        // Keep statuses (coming_soon -> now_showing -> archived) up to date
-        // every time the Movie Management list is loaded.
         Movie::syncStatuses();
 
         $movies = Movie::with(['genre', 'ageRating'])
@@ -118,12 +116,6 @@ class AdminController extends Controller
         return redirect()->route('admin.movies')->with('success', $message);
     }
 
-    /**
-     * Creates a Showtime (and the matching ShowtimeSeat rows for every seat
-     * on that screen) for each filled-in row in the "Showtimes" section of
-     * the Add Movie form. Blank rows are skipped silently. Returns a list
-     * of human-readable warnings for rows that could not be created.
-     */
     private function processShowtimes(Movie $movie, array $showtimesInput): array
     {
         $warnings = [];
@@ -135,7 +127,7 @@ class AdminController extends Controller
             $startTime = $row['start_time'] ?? null;
 
             if (! $screenId || ! $date || ! $startTime) {
-                continue; // row left blank - skip silently
+                continue;
             }
 
             $screen = Screen::find($screenId);
@@ -186,8 +178,9 @@ class AdminController extends Controller
         $movie = Movie::findOrFail($id);
         $genres = Genre::orderBy('title')->get();
         $ageRatings = AgeRating::orderBy('title')->get();
+        $screens = Screen::with('cinema')->orderBy('screen_number')->get();
 
-        return view('admin.movies.edit', compact('movie', 'genres', 'ageRatings'));
+        return view('admin.movies.edit', compact('movie', 'genres', 'ageRatings', 'screens'));
     }
 
     public function updateMovie(Request $request, $id)
@@ -204,6 +197,105 @@ class AdminController extends Controller
         $movie->update($validated);
 
         return redirect()->route('admin.movies')->with('success', 'Movie updated successfully.');
+    }
+
+    public function movieShowtimes($id)
+    {
+        $movie = Movie::findOrFail($id);
+
+        $showtimes = Showtime::where('movie_id', $movie->id)
+            ->with('screen.cinema')
+            ->orderBy('start_time')
+            ->get()
+            ->map(function ($showtime) {
+                return [
+                    'id' => $showtime->id,
+                    'cinema_name' => $showtime->screen->cinema->cinema_name ?? '—',
+                    'screen_number' => $showtime->screen->screen_number ?? '—',
+                    'date' => $showtime->start_time->format('Y-m-d'),
+                    'start_time' => $showtime->start_time->format('H:i'),
+                    'end_time' => $showtime->end_time->format('H:i'),
+                    'is_active' => $showtime->is_active,
+                ];
+            });
+
+        return response()->json($showtimes);
+    }
+
+    public function generateShowtimes(Request $request, $id)
+    {
+        $movie = Movie::findOrFail($id);
+
+        $validated = $request->validate([
+            'screen_id' => 'required|exists:screens,id',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+            'days' => 'required|array|min:1',
+            'days.*' => 'integer|between:0,6',
+            'time_slots' => 'required|array|min:1',
+            'time_slots.*' => 'nullable|date_format:H:i',
+        ]);
+
+        $screen = Screen::findOrFail($validated['screen_id']);
+        $durationMinutes = (int) $movie->duration;
+        $created = 0;
+        $skipped = 0;
+
+        $current = Carbon::parse($validated['start_date'])->startOfDay();
+        $end = Carbon::parse($validated['end_date'])->startOfDay();
+
+        while ($current->lte($end)) {
+            $dayOfWeek = (int) $current->format('w');
+
+            if (in_array($dayOfWeek, $validated['days'])) {
+                foreach ($validated['time_slots'] as $slot) {
+                    if (! $slot) continue;
+
+                    $startsAt = Carbon::parse($current->format('Y-m-d') . ' ' . $slot);
+                    $endsAt = $startsAt->copy()->addMinutes($durationMinutes);
+
+                    $alreadyExists = Showtime::where('screen_id', $screen->id)
+                        ->where('start_time', $startsAt)
+                        ->exists();
+
+                    if ($alreadyExists) {
+                        $skipped++;
+                        continue;
+                    }
+
+                    Showtime::create([
+                        'screen_id' => $screen->id,
+                        'movie_id' => $movie->id,
+                        'start_time' => $startsAt,
+                        'end_time' => $endsAt,
+                        'is_active' => true,
+                        'created_by_id' => auth()->id(),
+                    ]);
+
+                    $created++;
+                }
+            }
+
+            $current->addDay();
+        }
+
+        return response()->json([
+            'success' => true,
+            'created' => $created,
+            'skipped' => $skipped,
+            'message' => "{$created} showtime(s) created. {$skipped} skipped (already existed).",
+        ]);
+    }
+
+    public function deleteShowtime($id)
+    {
+        $showtime = Showtime::findOrFail($id);
+        $showtime->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Showtime deleted successfully.',
+        ]);
     }
 
     public function analytics()
