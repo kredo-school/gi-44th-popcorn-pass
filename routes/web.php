@@ -16,24 +16,9 @@ Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name(
 
 Route::get('/movies/search', [HomeController::class, 'search'])->name('movies.search');
 
-////////////// temporary (mirei)
-    Route::get('/seat-selection', function () {
-        return view('reservations.seat-selection');
-    });   
-    Route::get('/ticket-type-selection', function () {
-        return view('reservations.ticket-type');
-    });
-    Route::get('/payment-method' , function() {
-        return view('reservations.payment-method');
-    });
-    Route::get ('/reservation-confirm', function () {
-        return view('reservations.reservation-confirm');
-    });
-Route::get('/reservation-complete', function () {
-    return view('reservations.reservation-complete');
-});
-////////////// Reservation Routes
-
+//--------------------
+// Reservation Routes
+//--------------------
 Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
 
@@ -57,6 +42,13 @@ Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'
 
 Route::get('/reservation-complete', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
+
+
+//--------------------
+// Review Routes
+//--------------------
+Route::get('/movie/{movieId}/reviews', [ReviewController::class, 'index'])->name('revire.index');
+Route::post('/movies/{movieId}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 
 
 // ===========================
