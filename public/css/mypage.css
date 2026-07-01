@@ -215,3 +215,147 @@
     background-color: #3a4068;
     color: #fff;
 }
+
+/* Movies Watched */
+.mypage-watched-row {
+    border-bottom: 1px solid #2a2f4a;
+}
+.mypage-watched-row:last-child { border-bottom: none; }
+
+.mypage-watched-row-poster {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.mypage-sort-select {
+    background-color: #232a47;
+    color: #fff;
+    border: 1px solid #3a4068;
+    width: auto;
+}
+
+.mypage-btn-write-review {
+    background-color: var(--mypage-gold);
+    color: #1a1f36;
+    font-weight: bold;
+    border: none;
+}
+.mypage-btn-write-review:hover {
+    background-color: #e6c200;
+    color: #1a1f36;
+}
+
+.mypage-btn-reviewed {
+    background-color: #2a2f4a;
+    color: #9ca3c4;
+    border: none;
+    cursor: default;
+}
+
+/* Star rating input (radio trick) */
+.mypage-star-input {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 0.25rem;
+}
+.mypage-star-input input {
+    display: none;
+}
+.mypage-star-input label {
+    font-size: 1.6rem;
+    color: #3a4068;
+    cursor: pointer;
+}
+.mypage-star-input input:checked ~ label,
+.mypage-star-input label:hover,
+.mypage-star-input label:hover ~ label {
+    color: var(--mypage-gold);
+}
+
+/* Dark modal */
+.mypage-modal {
+    background-color: var(--mypage-navy-light);
+    color: #fff;
+}
+.mypage-modal .modal-header,
+.mypage-modal .modal-footer {
+    border-color: #2a2f4a;
+}
+.mypage-modal .form-control {
+    background-color: #1a1f36;
+    color: #fff;
+    border-color: #3a4068;
+}
+.mypage-modal .btn-close {
+    filter: invert(1);
+}
+
+/* Poster placeholder (when poster_url is missing) */
+.mypage-poster-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2a2f4a;
+    color: #5a6188;
+    font-size: 1.5rem;
+}
+
+/* Tickets */
+.mypage-tab-switch {
+    display: flex;
+    gap: 0.5rem;
+}
+.mypage-tab {
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    color: #9ca3c4;
+    text-decoration: none;
+    background-color: #232a47;
+}
+.mypage-tab.is-active {
+    background-color: var(--mypage-gold);
+    color: #1a1f36;
+    font-weight: bold;
+}
+
+.mypage-ticket-row {
+    border-bottom: 1px solid #2a2f4a;
+}
+.mypage-ticket-row:last-child { border-bottom: none; }
+
+.mypage-qr-card {
+    background-color: #fff;
+    border-radius: 12px;
+}
+
+.mypage-ticket-details {
+    max-width: 400px;
+    background-color: var(--mypage-navy-light);
+    border-radius: 10px;
+}
+
+/* Profile */
+.mypage-profile-avatar {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 3px solid var(--mypage-gold);
+}
+
+.mypage-profile-avatar-placeholder {
+    width: 100px;
+    height: 100px;
+    background-color: #2a2f4a;
+    color: #5a6188;
+    border: 3px solid var(--mypage-gold);
+}
+
+.mypage-profile-row {
+    border-bottom: 1px solid #2a2f4a;
+}
+
+.mypage-profile-row:last-child {
+    border-bottom: none;
+}

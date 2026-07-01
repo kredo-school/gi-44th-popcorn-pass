@@ -17,7 +17,7 @@
         <strong>{{ $upcomingTicketsCount ?? 0 }}</strong>
     </a>
 
-    <a href="#" class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
+    <a href="{{ route('mypage.movies-watched') }}" class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
         <span><i class="fa-solid fa-film me-2"></i>Movies Watched</span>
         <strong>{{ $moviesWatchedCount ?? 0 }}</strong>
     </a>
