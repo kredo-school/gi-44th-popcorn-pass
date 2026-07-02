@@ -68,7 +68,7 @@
             @endif
         </div>
 
-        {{-- Edit Profile Button (COMPLETE項目、今はリンクのみ設置) --}}
+        {{-- Edit Profile Button (COMPLETE) --}}
         <div class="mt-4 text-center">
             <a href="{{ route('mypage.profile.edit') }}" class="btn mypage-btn-write-review px-4">
                 <i class="fa-solid fa-pen me-2"></i>Edit Profile

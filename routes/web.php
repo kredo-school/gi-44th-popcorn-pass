@@ -11,6 +11,7 @@ use App\Http\Controllers\MyPage\ReviewController;
 use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
+use App\Http\Controllers\MyPage\CancelController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -91,6 +92,9 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
     Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
+    Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
+    Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
+    Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
 });
 
 /**

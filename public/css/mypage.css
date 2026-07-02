@@ -359,3 +359,48 @@
 .mypage-profile-row:last-child {
     border-bottom: none;
 }
+
+/* Cancel */
+.mypage-btn-cancel {
+    background-color: var(--mypage-red);
+    color: #fff;
+    border: none;
+    font-weight: bold;
+}
+
+.mypage-btn-cancel:hover {
+    background-color: #c0303b;
+    color: #fff;
+}
+
+.mypage-cancel-complete {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Cancel */
+.mypage-btn-cancel {
+    background-color: var(--mypage-red);
+    color: #fff;
+    border: none;
+    font-weight: bold;
+}
+
+.mypage-btn-cancel:hover {
+    background-color: #c0303b;
+    color: #fff;
+}
+
+.mypage-cancel-complete {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.mypage-cancel-link {
+    color: #9ca3c4;
+    text-decoration: underline;
+}
+
+.mypage-cancel-link:hover {
+    color: var(--mypage-red);
+}
