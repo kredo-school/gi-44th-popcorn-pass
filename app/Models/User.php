@@ -33,7 +33,6 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, HasUuids;
 
-    // uuid自動生成（既存・変更なし）
     protected static function boot()
     {
         parent::boot();
@@ -43,7 +42,6 @@ class User extends Authenticatable
         });
     }
 
-    // idをuuidとして扱う（既存・変更なし）
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -54,11 +52,6 @@ class User extends Authenticatable
         'age',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -70,9 +63,6 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the name of the password attribute for this model.
-     */
     public function getAuthPassword(): string
     {
         return $this->password_hash;
@@ -116,9 +106,6 @@ class User extends Authenticatable
         return trim("{$this->first_name} {$this->last_name}");
     }
 
-    /**
-     * date_of_birthから年齢を計算（DBに"age"カラムは存在しない）
-     */
     public function getAgeAttribute(): ?int
     {
         return $this->date_of_birth?->age;
