@@ -12,6 +12,8 @@ use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 use App\Http\Controllers\MyPage\CancelController;
+use App\Http\Controllers\MyPage\TicketController;
+use App\Http\Controllers\MyPage\ProfileController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -20,12 +22,34 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 //Movie showtime
-Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
+Route::get('/home/showtime', [HomeController::class, 'showtime_display'])
+    ->name('movie.showtime.display');
+Route::get('/movies/search', [HomeController::class, 'search'])
+    ->name('movies.search');
+Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
+    ->name('reservations.showtime.selection');
 
+////////////// temporary (mirei)
+    Route::get('/seat-selection', function () {
+        return view('reservations.seat-selection');
+    });
+    Route::get('/ticket-type-selection', function () {
+        return view('reservations.ticket-type');
+    });
+    Route::get('/payment-method' , function() {
+        return view('reservations.payment-method');
+    });
+    Route::get ('/reservation-confirm', function () {
+        return view('reservations.reservation-confirm');
+    });
+Route::get('/reservation-complete', function () {
+    return view('reservations.reservation-complete');
+});
 
 ////////////// Reservation Routes
 
-Route::get('/seat-selection', [ReservationController::class, 'seatSelectionPage'])
+
+Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
 
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
@@ -39,6 +63,9 @@ Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
 
 Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
     ->name('reservations.payment-method');
+
+Route::post('/save-payment', [ReservationController::class, 'savePayment'])
+    ->name('reservations.save-payment');
 
 Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
@@ -95,6 +122,8 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
     Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
+    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
 });
 
 /**

@@ -78,4 +78,5 @@ class Movie extends Model
             ->whereDate('end_date', '<', $today)
             ->update(['status' => 'archived']);
     }
-}
+    }
+
