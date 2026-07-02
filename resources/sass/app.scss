@@ -1052,7 +1052,7 @@
 }
 
 .date-item.active{
-    background:#7f7f7f;
+    background:#ff8f8f;
     color:#000000;
     transform:translateY(-3px);
     box-shadow:0 8px 18px rgba(0,0,0,.2);
@@ -1060,10 +1060,9 @@
 }
 
 .date-item:hover{
-
     background:#d9d9d9;
 
-}
+ }
 
 .date-day{
 
@@ -1072,8 +1071,7 @@
     font-weight:700;
 
     font-family:"Helvetica Neue";
-
-}
+ }
 
 .date-week{
 
@@ -1101,6 +1099,7 @@
     transition:.3s;
 }
 
+
 .active .date-week{
     color:#555;
 }
@@ -1124,8 +1123,33 @@
     transform:none;
 }
 
+.date-slider-wrapper{
+    position: relative;
+}
 
+.slider-next{
+    position: absolute;
+    top: 50%;
+    right: 22%;
+    transform: translateY(-50%);
 
+    width: 35px;
+    height: 107px;
+
+    border: none;
+
+    background: rgba(255, 255, 255, 0.7);
+    color: rgb(0, 0, 0);
+
+    font-size: 22px;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 10;
+}
 .movie-tab {
     width: 300px;
     color: white !important;
@@ -1248,6 +1272,32 @@
 .reservation-text{
     font-size:20px;
 }
+
+// showtime SELECT
+.blue-background{
+   background-color:rgba(16, 57, 133, 0.7) ;
+   
+}
+.rating-star{
+    color: #eeff00;
+}
+.synopsis-box{
+    border: 1px solid #ccc;
+    padding: 16px;
+    height: 150px;
+    overflow-y: auto;   
+    overflow-x: hidden; 
+}
+.star-average{
+    font-size: larger;
+}
+.showtime-text{
+    color: #ffffff;
+}
+.select-showtime{
+    width: 75%;
+}
+
 
 /* SEARCH */
 
