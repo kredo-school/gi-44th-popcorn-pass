@@ -12,9 +12,12 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 //Movie showtime
-Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
-
-Route::get('/movies/search', [HomeController::class, 'search'])->name('movies.search');
+Route::get('/home/showtime', [HomeController::class, 'showtime_display'])
+    ->name('movie.showtime.display');
+Route::get('/movies/search', [HomeController::class, 'search'])
+    ->name('movies.search');
+Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
+    ->name('reservations.showtime.selection');
 
 ////////////// temporary (mirei)
     Route::get('/seat-selection', function () {
@@ -33,6 +36,7 @@ Route::get('/reservation-complete', function () {
     return view('reservations.reservation-complete');
 });
 ////////////// Reservation Routes
+
 
 Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');

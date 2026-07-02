@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
+    
     // --------------------
     // Seat Selection Page
     // --------------------
