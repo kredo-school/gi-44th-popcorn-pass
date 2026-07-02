@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
-use App\Models\Movie;
 use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,15 +18,15 @@ class ReviewController extends Controller
 
         $reviews = Review::where('movie_id', $movieId)
             ->with('user')
-            ->lastest()
+            ->latest()
             ->get();
-        $avarageRating = $reviews->avg('rating');
+        $averageRating = $reviews->avg('rating') ?? 0;
         $totalReviews = $reviews->count();
 
         return view('reviews.index', compact(
             'movie',
             'reviews',
-            'avarageRationg',
+            'averageRating',
             'totalReviews'
         ));
     }
