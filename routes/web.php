@@ -48,8 +48,12 @@ Route::get('/reservation-complete', [ReservationController::class, 'complete'])
 //--------------------
 // Review Routes
 //--------------------
-Route::get('/movie/{movieId}/reviews', [ReviewController::class, 'index'])->name('revire.index');
+Route::get('/movie/{movieId}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::post('/movies/{movieId}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+Route::get('/movies/{movieId}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create')->middleware('auth');
+Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'show'])->name('reviews.show');
+Route::get('/movies/{movieId}/reviews/{reviewId}/edit', [ReviewController::class, 'edit'])->name('reviews.edit')->middleware('auth');
+Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
 
 
 // ===========================
