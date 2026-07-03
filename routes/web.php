@@ -12,14 +12,16 @@ use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 use App\Http\Controllers\MyPage\CancelController;
-use App\Http\Controllers\MyPage\TicketController;
-use App\Http\Controllers\MyPage\ProfileController;
 
 Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
 
+// home
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/movie/{movie}/release', [HomeController::class, 'release'])->name('release');
+Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])->name('movie_detail');
+
 
 //Movie showtime
 Route::get('/home/showtime', [HomeController::class, 'showtime_display'])

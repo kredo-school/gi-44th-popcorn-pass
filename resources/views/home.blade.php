@@ -169,8 +169,11 @@
                                     @endif
                                     <div class="top-card {{ $s['class'] }}">
                                         <div class="poster-area" style="height:{{ $s['height'] }}">
-                                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
+                                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
+                                                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
                                                 class="w-100 h-100">
+                                            </a>
+                                            
 
                                             <div class="movie-overlay"></div>
                                         </div>
@@ -191,10 +194,11 @@
                                                     ⏱ {{ floor($movie->duration / 60) }}h {{ $movie->duration % 60 }}m
                                                 </span>
                                             </div>
+                                            <a
+                                                href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
+                                                <button class=" mt-2 w-100 ranking-book-btn">BOOK NOW</button>
+                                            </a>
 
-                                            <button class="ranking-book-btn">
-                                                BOOK NOW
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -241,7 +245,9 @@
                                 @foreach ($movies as $movie)
                                     <div class="flex-shrink-0" style="scroll-snap-align: start; width: 200px;">
                                         <div class="movie-card">
-                                            <img src="{{ asset($movie->poster_url) }}" class="movie-poster w-100">
+                                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
+                                                <img src="{{ asset($movie->poster_url) }}" class="movie-poster w-100">
+                                            </a>
                                             <div class="movie-info" style="background:#081729">
                                                 <h6 class="text-white text-center mb-2 mt-2">
                                                     {{ $movie->title }}
@@ -303,12 +309,12 @@
                             style="overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
 
                             @foreach ($comingSoonMovies as $movie)
-                                <a href="#" class="coming-card text-decoration-none flex-shrink-0 m-4"
+                                <a href="{{ route('release', ['movie' => $movie->id]) }}" class="coming-card text-decoration-none flex-shrink-0 m-4"
                                     style="scroll-snap-align: start; width: 400px;">
                                     <div style="overflow: hidden;">
                                         <img src="{{ $movie->poster_url }}" alt="Movie"
                                             style="width: 100%; height: 360px; object-fit: cover; display: block;">
-                                        <div class="p-2" style="background: rgba(255,255,255,0.85);">
+                                        <div class="" style="background: rgba(255,255,255,0.85);">
                                             <div class="coming-movie-info">
                                                 <p class="mb-0 text-center coming-movie-title">
                                                     {{ $movie->title }}

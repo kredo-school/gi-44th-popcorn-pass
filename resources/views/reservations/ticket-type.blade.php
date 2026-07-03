@@ -136,8 +136,8 @@
     {{-- Button --}}
     <div class="d-flex justify-content-between mt-5">
         <form action="{{ route('reservations.seat-selection') }}" method="GET">
-            <button type="submit" class="back-btn ms-5" id="back-btn">
-                <i class="fa-solid fa-arrow-left"></i>BACK
+            <button type="button" class="back-btn ms-5" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i> BACK
             </button>
         </form>
     

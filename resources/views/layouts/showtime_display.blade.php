@@ -155,7 +155,7 @@
 
                                 <!-- movie poster images -->
                                 <div class="col-2 text-end mt-2">
-                                    <a href="#">
+                                    <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
                                         <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
                                             class="img-showtime">
                                     </a>
@@ -166,7 +166,7 @@
 
                                     <!-- title -->
                                     <div class="mb-4">
-                                        <a href="#" class="showtime-movie-title text-decoration-none">
+                                        <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}" class="showtime-movie-title text-decoration-none">
                                             {{ strtoupper($movie->title) }} >
                                         </a>
                                     </div>
@@ -176,7 +176,7 @@
 
                                         @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
                                             @if ($showtime->start_time->isPast())
-                                                <a href="#"></a>
+                                                
                                                 <div class="showtime-card-closed">
                                                     <div class="showtime-top">
                                                         <div class="showtime-time">
@@ -303,7 +303,7 @@
 
                                         <!-- movie poster images -->
                                         <div class="col-2 text-end mt-2">
-                                            <a href="#">
+                                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
                                                 <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
                                                     class="img-showtime">
                                             </a>
@@ -314,7 +314,7 @@
 
                                             <!-- title -->
                                             <div class="mb-4">
-                                                <a href="#" class="showtime-movie-title text-decoration-none">
+                                                <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}" class="showtime-movie-title text-decoration-none">
                                                     {{ strtoupper($movie->title) }} >
                                                 </a>
                                             </div>
@@ -324,9 +324,7 @@
 
                                                 @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
                                                     @if ($showtime->start_time->isPast())
-                                                        <a href="#">
-
-                                                        </a>
+                           
                                                         <div class="showtime-card-closed">
 
                                                             <div class="showtime-top">

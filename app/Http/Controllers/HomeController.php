@@ -95,22 +95,35 @@ class HomeController extends Controller
 
     // showtime selection
     public function showtime_selection(Movie $movie)
-{
-    $data = $this->commonData();
+    {
+        $data = $this->commonData();
 
-    $selectedDate = request('date', today()->format('Y-m-d'));
+        $selectedDate = request('date', today()->format('Y-m-d'));
 
-    $movie->load([
-        'showtimes' => function ($query) use ($selectedDate) {
-            $query->whereDate('start_time', $selectedDate);
-        },
-        'showtimes.screen.cinema',
-    ]);
+        $movie->load([
+            'showtimes' => function ($query) use ($selectedDate) {
+                $query->whereDate('start_time', $selectedDate);
+            },
+            'showtimes.screen.cinema',
+        ]);
 
-    $data['movie'] = $movie;
-    $data['selectedDate'] = $selectedDate;
-    $data['isSearch'] = false;
+        $data['movie'] = $movie;
+        $data['selectedDate'] = $selectedDate;
+        $data['isSearch'] = false;
 
-    return view('reservations.showtime-selection', $data);
-}
+        return view('reservations.showtime-selection', $data);
+    }
+
+    // Relese display
+    public function release(Movie $movie)
+    {
+        return view('movies.release')->with('movie',$movie);
+    }
+
+    // movie detail
+    public function movie_detail(Movie $movie)
+    {
+        return view('movies.movie_detail')->with('movie',$movie);
+    }
+
 }
