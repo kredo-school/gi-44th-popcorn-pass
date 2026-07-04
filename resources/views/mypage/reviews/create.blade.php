@@ -12,11 +12,10 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="mypage-card p-4" style="max-width: 560px;">
+    <div class="mypage-card p-4 review-form-card">
         <div class="d-flex gap-3 align-items-center mb-4">
             @if ($movie->poster_url)
-                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
-                     style="width: 70px; height: 100px; object-fit: cover; border-radius: 6px;">
+                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="review-form-poster">
             @endif
             <div>
                 <div class="fw-bold fs-5">{{ $movie->title }}</div>
