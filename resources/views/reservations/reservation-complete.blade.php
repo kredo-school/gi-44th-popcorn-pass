@@ -112,18 +112,10 @@
                         <p class="mb-0 fw-bold total-price">${{ $totalPrice }}</p>
                     </div>
                     <hr>
-
-                    {{-- Update later(QR)  --}}
-                    <div class="text-center my-4">
-                        <div class="qr-placeholder">
-                            QR CODE
-                        </div>
-                    </div>
                     
-                    <p class="text-center booking-id">
+                    <p class="text-center booking-id mb-1">
                         Booking ID: 0000-0000
                     </p>
-                    {{-- --- --}}
 
                 </div>
             </div>

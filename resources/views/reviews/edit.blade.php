@@ -4,25 +4,34 @@
 
 <div class="review-page">
 
-    <div class="row align-items-start">
+    {{-- Title --}}
+    <div class="review-title-wrap text-center mb-5">
+        <h2 class="review-main-title">— Movie reviews —</h2>
+        <div class="review-title-deco">◇ ✦ ◇</div>
+    </div>
+
+    <div class="row align-items-start px-4">
 
         {{-- Left: Poster --}}
         <div class="col-lg-4 text-center">
-            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="img-fluid rounded"
-                style="max-width: 200px;">
+            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="review-poster img-fluid rounded mb-4">
         </div>
 
         {{-- Right: Form --}}
-        <div class="col-lg-6">
-            <h3 class="text-white fw-bold mb-4">{{ strtoupper($movie->title) }}</h3>
+        <div class="col-lg-8">
+            <h3 class="review-movie-title mb-4">{{ strtoupper($movie->title) }}</h3>
 
             <div class="review-form-card">
 
                 {{-- User --}}
-                <div class="d-flex align-items-center mb-4">
-                    <i class="fa-solid fa-circle-user fa-2x me-2 text-warning"></i>
-                    <span class="fw-bold fs-5">{{ Auth::user()->name }}</span>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="review-avatar-circle me-3">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <span class="fw-bold fs-5">{{ Auth::user()->username }}</span>
                 </div>
+
+                <hr class="review-divider">
 
                 <form action="{{ route('reviews.update', [$movie->id, $review->id]) }}" method="POST">
                     @csrf
@@ -56,9 +65,7 @@
                     </div>
 
                     <div class="d-flex justify-content-center gap-3">
-                        <a href="{{ route('reviews.show', [$movie->id, $review->id]) }}" class="review-cancel-btn">
-                            Cancel
-                        </a>
+                        <a href="{{ route('reviews.show', [$movie->id, $review->id]) }}" class="review-cancel-btn">Cancel</a>
                         <button type="submit" class="review-update-btn">Update</button>
                     </div>
 

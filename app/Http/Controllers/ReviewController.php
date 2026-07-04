@@ -19,9 +19,10 @@ class ReviewController extends Controller
         $reviews = Review::where('movie_id', $movieId)
             ->with('user')
             ->latest()
-            ->get();
-        $averageRating = $reviews->avg('rating') ?? 0;
-        $totalReviews = $reviews->count();
+            ->paginate(5);
+
+        $averageRating = $reviews->avg('rating');
+        $totalReviews = $reviews->total();
 
         return view('reviews.index', compact(
             'movie',
@@ -87,6 +88,23 @@ class ReviewController extends Controller
         }
 
         return view('reviews.edit', compact('movie', 'review'));
+    }
+
+    //--------------------
+    // Delete Review
+    //--------------------
+    public function destroy($movieId, $reviewId)
+    {
+        $review = Review::findOrFail($reviewId);
+
+        if (Auth::id() !== $review->user_id) {
+            return redirect()->route('reviews.index', $movieId);
+        }
+
+        $review->delete();
+
+        return redirect()->route('reviews.index', $movieId)
+            ->with('success', 'Review deleted successfully!');
     }
 
     //--------------------
