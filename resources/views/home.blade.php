@@ -2,6 +2,30 @@
 
 @section('content')
 
+    {{-- ===========================
+         Location Permission Dialog
+         =========================== --}}
+    <div id="locationPermissionOverlay" class="location-overlay" style="display:none;">
+        <div class="location-dialog">
+            <div class="location-dialog-icon">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <h5 class="mb-2">Would you like to share your location?</h5>
+            <p class="small text-white-50 mb-4">Your location will be used to show nearby cinemas.</p>
+            <div class="d-flex flex-column gap-2">
+                <button type="button" class="btn location-btn location-btn-primary" data-choice="always">
+                    Always Allow
+                </button>
+                <button type="button" class="btn location-btn location-btn-secondary" data-choice="once">
+                    Allow Once
+                </button>
+                <button type="button" class="btn location-btn location-btn-outline" data-choice="deny">
+                    Don't Allow
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active">
@@ -105,6 +129,28 @@
                 <button class="search-btn">
                     SEARCH
                 </button>
+            </div>
+
+            {{-- ===========================
+                 Nearby Cinemas
+                 =========================== --}}
+            <div class="container-fluid section-gap" id="NearbyCinemas">
+                <div class="d-flex justify-content-between align-items-center ms-5 me-5">
+                    <p class="display-5 text-white title-base mb-0">
+                        📍 Nearby Movie Theaters
+                    </p>
+                    <button type="button" id="changeLocationPrefBtn" class="btn btn-sm location-change-btn">
+                        <i class="fa-solid fa-gear me-1"></i> Location Settings
+                    </button>
+                </div>
+
+                <div style="background: rgba(16, 57, 133, 0.5)">
+                    <div id="nearbyCinemasStatus" class="text-white-50 text-center py-4">
+                        <i class="fa-solid fa-spinner fa-spin me-2"></i>Loading nearby theaters...
+                    </div>
+
+                    <div id="nearbyCinemasList" class="row g-3 p-4" style="display:none;"></div>
+                </div>
             </div>
 
 
@@ -226,8 +272,6 @@
                 </div>
 
             </div>
-
-
             <div class="container-fluid px-0 mt-5 section-gap" id="Nowplaying">
                 <p class="display-3 text-white title-base ms-5">
                     🎬 Now Playing
@@ -425,4 +469,249 @@
     </div>
 
     </div>
+
+    {{-- ===========================
+         Location System Styles
+         =========================== --}}
+    <style>
+        .location-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .location-dialog {
+            width: 90%;
+            max-width: 360px;
+            background: #0d1b3d;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            padding: 32px 28px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .location-dialog-icon {
+            font-size: 2.2rem;
+            color: #ffc107;
+            margin-bottom: 12px;
+        }
+
+        .location-btn {
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: 600;
+        }
+
+        .location-btn-primary {
+            background: #ffc107;
+            color: #0d1b3d;
+            border: none;
+        }
+
+        .location-btn-primary:hover {
+            background: #e0a800;
+            color: #0d1b3d;
+        }
+
+        .location-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .location-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+        }
+
+        .location-btn-outline {
+            background: transparent;
+            color: #adb5bd;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .location-btn-outline:hover {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .location-change-btn {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .location-change-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+        }
+
+        .cinema-card {
+            background: rgba(8, 23, 41, 0.9);
+            border-radius: 10px;
+            padding: 16px;
+            height: 100%;
+            color: #fff;
+        }
+
+        .cinema-card-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .cinema-card-meta {
+            font-size: 0.82rem;
+            color: #adb5bd;
+            margin-bottom: 10px;
+        }
+
+        .cinema-card-distance {
+            color: #ffc107;
+            font-weight: 600;
+        }
+    </style>
+
+    {{-- ===========================
+         Location System Script
+         =========================== --}}
+    <script>
+        (function () {
+            const STORAGE_KEY = 'locationPermission';
+            const overlay = document.getElementById('locationPermissionOverlay');
+            const statusEl = document.getElementById('nearbyCinemasStatus');
+            const listEl = document.getElementById('nearbyCinemasList');
+            const changeBtn = document.getElementById('changeLocationPrefBtn');
+
+            function showOverlay() {
+                overlay.style.display = 'flex';
+            }
+
+            function hideOverlay() {
+                overlay.style.display = 'none';
+            }
+
+            function showStatus(message, showSpinner) {
+                statusEl.style.display = 'block';
+                listEl.style.display = 'none';
+                statusEl.innerHTML = (showSpinner ? '<i class="fa-solid fa-spinner fa-spin me-2"></i>' : '') + message;
+            }
+
+            function renderCinemas(payload) {
+                const cinemas = (payload && payload.cinemas) ? payload.cinemas : [];
+
+                if (cinemas.length === 0) {
+                    showStatus('No cinemas found nearby.', false);
+                    return;
+                }
+
+                statusEl.style.display = 'none';
+                listEl.style.display = 'flex';
+                listEl.innerHTML = cinemas.map(function (cinema) {
+                    const distance = cinema.distance_km !== null && cinema.distance_km !== undefined
+                        ? '<div class="cinema-card-distance mb-2">' + cinema.distance_km + ' km away</div>'
+                        : '';
+                    const websiteBtn = cinema.maps_url
+                        ? '<a href="' + cinema.maps_url + '" target="_blank" rel="noopener" class="btn btn-sm location-btn location-btn-primary w-100 mt-2">Visit Website</a>'
+                        : '';
+
+                    return '' +
+                        '<div class="col-md-4 col-lg-3">' +
+                            '<div class="cinema-card">' +
+                                '<div class="cinema-card-name">' + escapeHtml(cinema.name) + '</div>' +
+                                '<div class="cinema-card-meta">' + escapeHtml(cinema.address || '') + '</div>' +
+                                distance +
+                                websiteBtn +
+                            '</div>' +
+                        '</div>';
+                }).join('');
+            }
+
+            function escapeHtml(str) {
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function fetchCinemas(lat, lng) {
+                showStatus('Loading nearby theaters...', true);
+
+                const params = new URLSearchParams();
+                if (lat !== null && lng !== null) {
+                    params.set('lat', lat);
+                    params.set('lng', lng);
+                }
+
+                fetch('/api/nearby-cinemas?' + params.toString())
+                    .then(function (res) { return res.json(); })
+                    .then(renderCinemas)
+                    .catch(function () {
+                        showStatus('Could not load theaters right now.', false);
+                    });
+            }
+
+            function fetchFallback() {
+                fetchCinemas(null, null);
+            }
+
+            function requestLocationAndFetch() {
+                if (!navigator.geolocation) {
+                    fetchFallback();
+                    return;
+                }
+
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        fetchCinemas(position.coords.latitude, position.coords.longitude);
+                    },
+                    function () {
+                        // Permission denied at browser level, or unavailable — fall back.
+                        fetchFallback();
+                    },
+                    { timeout: 8000 }
+                );
+            }
+
+            function handleChoice(choice) {
+                if (choice === 'always') {
+                    localStorage.setItem(STORAGE_KEY, 'always');
+                    hideOverlay();
+                    requestLocationAndFetch();
+                } else if (choice === 'once') {
+                    localStorage.removeItem(STORAGE_KEY);
+                    hideOverlay();
+                    requestLocationAndFetch();
+                } else if (choice === 'deny') {
+                    localStorage.setItem(STORAGE_KEY, 'deny');
+                    hideOverlay();
+                    fetchFallback();
+                }
+            }
+
+            document.querySelectorAll('[data-choice]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    handleChoice(btn.getAttribute('data-choice'));
+                });
+            });
+
+            changeBtn.addEventListener('click', function () {
+                showOverlay();
+            });
+
+            const storedPref = localStorage.getItem(STORAGE_KEY);
+
+            if (storedPref === 'always') {
+                requestLocationAndFetch();
+            } else if (storedPref === 'deny') {
+                fetchFallback();
+            } else {
+                showOverlay();
+            }
+        })();
+    </script>
 @endsection
