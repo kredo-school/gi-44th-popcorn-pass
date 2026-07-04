@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
@@ -29,26 +30,9 @@ Route::get('/movies/search', [HomeController::class, 'search'])
 Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
     ->name('reservations.showtime.selection');
 
-////////////// temporary (mirei)
-    Route::get('/seat-selection', function () {
-        return view('reservations.seat-selection');
-    });
-    Route::get('/ticket-type-selection', function () {
-        return view('reservations.ticket-type');
-    });
-    Route::get('/payment-method' , function() {
-        return view('reservations.payment-method');
-    });
-    Route::get ('/reservation-confirm', function () {
-        return view('reservations.reservation-confirm');
-    });
-Route::get('/reservation-complete', function () {
-    return view('reservations.reservation-complete');
-});
-
-////////////// Reservation Routes
-
-
+//--------------------
+// Reservation Routes
+//--------------------
 Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
 
@@ -72,6 +56,18 @@ Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'
 
 Route::get('/reservation-complete', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
+
+
+//--------------------
+// Review Routes
+//--------------------
+Route::get('/movie/{movieId}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::post('/movies/{movieId}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+Route::get('/movies/{movieId}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create')->middleware('auth');
+Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'show'])->name('reviews.show');
+Route::get('/movies/{movieId}/reviews/{reviewId}/edit', [ReviewController::class, 'edit'])->name('reviews.edit')->middleware('auth');
+Route::delete('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
+Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
 
 
 // ===========================
