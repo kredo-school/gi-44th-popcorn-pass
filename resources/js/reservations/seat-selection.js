@@ -4,12 +4,25 @@ document.addEventListener('DOMContentLoaded', function () {
     const summary = document.getElementById('selected-seats');
     const hiddenInput = document.getElementById('selectedSeatsInput');
     const nextButton = document.querySelector('.next-btn');
+    const limitMsg = document.getElementById('seat-limit-msg');
 
     if (!hiddenInput || !summary || !nextButton) {
         return;
     }
 
     let selectedSeats = [];
+
+    const dataEl = document.getElementById('seat-data');
+    if (dataEl) {
+        const savedSeats = JSON.parse(dataEl.dataset.seats || '[]');
+        savedSeats.forEach(saved => {
+            const seatBtn = document.querySelector(`[data-seat="${saved.seat}"]`);
+            if (seatBtn) {
+                seatBtn.classList.add('selected');
+                selectedSeats.push(saved);
+            }
+        });
+    }
 
     function updateSummary() {
 
@@ -43,7 +56,13 @@ document.addEventListener('DOMContentLoaded', function () {
             if (existingIndex !== -1) {
                 selectedSeats.splice(existingIndex, 1);
                 this.classList.remove('selected');
+                limitMsg.style.display = 'none';
             } else {
+                if (selectedSeats.length >= 6) {
+                    limitMsg.style.display = 'block';
+                    return;
+                }
+                limitMsg.style.display = 'none';
                 selectedSeats.push({
                     seat: seatNumber,
                     premium: isPremium

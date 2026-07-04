@@ -5,7 +5,12 @@
 
     <div class="reservation-page">
 
-        
+        @if(session('error')) 
+            <div class="alert alert-danger text-center">
+                {{ session('error') }}
+            </div>
+        @endif
+
         {{-- Stepper --}}
         <div class="stepper d-flex justify-content-center align-items-center mb-5">
     
@@ -55,6 +60,7 @@
             @csrf
         
             <input type="hidden" name="selectedSeats" id="selectedSeatsInput">
+            <div id="seat-data" data-seats='@json($selectedSeats)'></div>
 
             <div class="row">
                 <div class="fw-bolder fs-2 text-center text-white mb-5">SELECT YOUR SEAT</div>
@@ -96,8 +102,11 @@
                                     {{ $row }}
                                 </span>
             
-                                @for($seat = 1; $seat <= 12; $seat++) @php $isWheelchair=$row==='A' && in_array($seat, [1, 2, 11,
-                                    12]); $isPremium=in_array($row, ['D', 'E' ]); @endphp
+                                @for($seat = 1; $seat <= 12; $seat++)
+                                    @php
+                                        $isWheelchair=$row==='A' && in_array($seat, [1, 2, 11, 12]);
+                                        $isPremium=in_array($row, ['D', 'E' ]);
+                                    @endphp
                                     <button type="button" class="seat mx-1
                                                     {{ $isPremium ? 'premium' : 'available' }}
                                                     {{ $isWheelchair ? 'wheelchair' : '' }}" 
@@ -173,19 +182,22 @@
                                 <small class="">Seats</small>
                                 <div id="selected-seats"></div>
                             </div>
+                            <div id="seat-limit-msg" class="text-danger mt-2 fw-bold fs-5" style="display:none;">
+                                Maximum 6 seats can be selected.
+                            </div>
                         </div>
                     </div>
                 </div>
         
             </div>
 
-            {{-- Button --}}
+            {{-- Button !!!!UPDATE LATER!!!! --}}
             <div class="d-flex justify-content-between mt-5">
                 <button type="button" class="back-btn ms-5">
                     <i class="fa-solid fa-arrow-left"></i>BACK
                 </button>
             
-                <button type="submit" class="next-btn me-5 disabled">
+                <button type="submit" class="next-btn me-5" disabled>
                     NEXT<i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>

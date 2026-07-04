@@ -21,12 +21,34 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 //Movie showtime
-Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
+Route::get('/home/showtime', [HomeController::class, 'showtime_display'])
+    ->name('movie.showtime.display');
+Route::get('/movies/search', [HomeController::class, 'search'])
+    ->name('movies.search');
+Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
+    ->name('reservations.showtime.selection');
 
+////////////// temporary (mirei)
+    Route::get('/seat-selection', function () {
+        return view('reservations.seat-selection');
+    });
+    Route::get('/ticket-type-selection', function () {
+        return view('reservations.ticket-type');
+    });
+    Route::get('/payment-method' , function() {
+        return view('reservations.payment-method');
+    });
+    Route::get ('/reservation-confirm', function () {
+        return view('reservations.reservation-confirm');
+    });
+Route::get('/reservation-complete', function () {
+    return view('reservations.reservation-complete');
+});
 
 ////////////// Reservation Routes
 
-Route::get('/seat-selection', [ReservationController::class, 'seatSelectionPage'])
+
+Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
 
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
@@ -40,6 +62,9 @@ Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
 
 Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
     ->name('reservations.payment-method');
+
+Route::post('/save-payment', [ReservationController::class, 'savePayment'])
+    ->name('reservations.save-payment');
 
 Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
