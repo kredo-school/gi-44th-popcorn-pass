@@ -219,7 +219,7 @@
 
                     <!-- View All -->
                     <div class="d-flex justify-content-end px-4 mb-3">
-                        <a href="#" class="view-all fs-5">View All Showtimes</a>
+                        <a href="{{ route('movie.showtime.display') }}" class="view-all fs-5">View All Showtimes</a>
                     </div>
 
                     <div class="d-flex align-items-center px-3 m-3 gap-2">
@@ -257,7 +257,11 @@
                                                         <span>⭐{{ $movie->review_avarage }}</span>
                                                     </div>
                                                 </div>
-                                                <button class="book-btn mt-2 w-100">BOOK NOW</button>
+                                                <a
+                                                    href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
+                                                    <button class="book-btn mt-2 w-100">BOOK NOW</button>
+                                                </a>
+
                                             </div>
                                         </div>
                                     </div>

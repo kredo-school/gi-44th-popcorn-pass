@@ -1,3 +1,4 @@
+{{-- resources/views/auth/login.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
@@ -12,13 +13,13 @@
                             @csrf
 
                             <div class="row mb-3">
-                                <label for="username"
-                                    class="col-md-4 col-form-label text-md-end">{{ __('Username') }}</label>
+                                <label for="identifier"
+                                    class="col-md-4 col-form-label text-md-end">{{ __('Username / Email / Phone') }}</label>
                                 <div class="col-md-6">
-                                    <input id="username" type="text"
-                                        class="form-control @error('username') is-invalid @enderror" name="username"
-                                        value="{{ old('username') }}" required autocomplete="username" autofocus>
-                                    @error('username')
+                                    <input id="identifier" type="text"
+                                        class="form-control @error('identifier') is-invalid @enderror" name="identifier"
+                                        value="{{ old('identifier') }}" required autocomplete="username" autofocus>
+                                    @error('identifier')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

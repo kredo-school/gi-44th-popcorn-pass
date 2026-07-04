@@ -90,7 +90,11 @@
             ">
         <div class="date-slider-wrapper">
             <div class="w-50 mx-auto">
-                <div class="date-slider">
+                <div class="date-slider" id="dateSlider">
+                    <button class="slider-next" onclick="scrollDateSlider()">
+                        ▶
+                    </button>
+
 
                     @foreach ($dates as $date)
                         @php
@@ -167,7 +171,7 @@
                                         </a>
                                     </div>
 
-                                    <!-- display movies -->
+                                    <!-- display showtime -->
                                     <div class="d-flex gap-3 flex-wrap showtime-list">
 
                                         @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
@@ -412,4 +416,19 @@
 
 
     </div>
+
+
+
+
+
+
+      <script>
+        function scrollDateSlider() {
+            document.getElementById('dateSlider').scrollBy({
+                left: 200,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
 @endsection

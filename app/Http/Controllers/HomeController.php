@@ -22,13 +22,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $movies = Movie::where('status', 'now_playing')
+        $movies = Movie::where('status', 'now_showing')
             ->get();
         $comingSoonMovies = Movie::where('status', 'coming_soon')
             ->whereDate('released_date', '>=', now())
             ->orderBy('released_date', 'asc')
             ->get();
-        $topMovies = Movie::where('status', 'now_playing')
+        $topMovies = Movie::where('status', 'now_showing')
             ->orderBy('review_average', 'desc')
             ->take(3)
             ->get();
@@ -92,4 +92,25 @@ class HomeController extends Controller
 
         return view('layouts.showtime_display', $data);
     }
+
+    // showtime selection
+    public function showtime_selection(Movie $movie)
+{
+    $data = $this->commonData();
+
+    $selectedDate = request('date', today()->format('Y-m-d'));
+
+    $movie->load([
+        'showtimes' => function ($query) use ($selectedDate) {
+            $query->whereDate('start_time', $selectedDate);
+        },
+        'showtimes.screen.cinema',
+    ]);
+
+    $data['movie'] = $movie;
+    $data['selectedDate'] = $selectedDate;
+    $data['isSearch'] = false;
+
+    return view('reservations.showtime-selection', $data);
+}
 }

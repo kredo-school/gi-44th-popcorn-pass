@@ -5,6 +5,16 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\MyPage\DashboardController;
+use App\Http\Controllers\MyPage\RewardsController;
+use App\Http\Controllers\MyPage\MoviesWatchedController;
+use App\Http\Controllers\MyPage\ReviewController;
+use App\Http\Controllers\MyPage\ReviewsWrittenController;
+use App\Http\Controllers\MyPage\TicketController;
+use App\Http\Controllers\MyPage\ProfileController;
+use App\Http\Controllers\MyPage\CancelController;
+use App\Http\Controllers\MyPage\TicketController;
+use App\Http\Controllers\MyPage\ProfileController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -13,9 +23,12 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 //Movie showtime
-Route::get('/home/showtime', [HomeController::class, 'showtime_display'])->name('movie.showtime.display');
-
-Route::get('/movies/search', [HomeController::class, 'search'])->name('movies.search');
+Route::get('/home/showtime', [HomeController::class, 'showtime_display'])
+    ->name('movie.showtime.display');
+Route::get('/movies/search', [HomeController::class, 'search'])
+    ->name('movies.search');
+Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
+    ->name('reservations.showtime.selection');
 
 //--------------------
 // Reservation Routes
@@ -68,6 +81,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])->name('movies.details');
     Route::get('/movies/{id}/edit', [AdminController::class, 'editMovie'])->name('movies.edit');
     Route::put('/movies/{id}', [AdminController::class, 'updateMovie'])->name('movies.update');
+    Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])->name('movies.showtimes');
+    Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])->name('movies.showtimes.generate');
+    Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])->name('showtimes.delete');
     Route::get('/analytics', [AdminController::class, 'analytics'])->name('analytics');
     Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
     Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])->name('reservations.export');
@@ -82,6 +98,28 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
+});
+
+// ===========================
+// My Page Routes
+// ===========================
+Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
+    Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])->name('movies-watched');
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{id}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
+    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
+    Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
+    Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
+    Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
+    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
 });
 
 /**
