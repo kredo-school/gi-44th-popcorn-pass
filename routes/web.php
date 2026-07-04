@@ -12,6 +12,7 @@ use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 use App\Http\Controllers\MyPage\CancelController;
+use App\Http\Controllers\Api\NearByCinemasController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -45,6 +46,12 @@ Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'
 
 Route::get('/reservation-complete', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
+
+
+// ===========================
+// Location / Nearby Cinemas API
+// ===========================
+Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby']);
 
 
 // ===========================
@@ -87,6 +94,8 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
     Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])->name('movies-watched');
+    Route::post('/movies-watched/{reservation}/send-review-email', [MoviesWatchedController::class, 'sendReviewEmail'])->name('movies-watched.send-review-email');
+    Route::get('/reviews/create/{movie}', [ReviewController::class, 'create'])->name('reviews.create');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{id}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
@@ -96,8 +105,3 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
 });
-
-/**
- * Regular routes
- */
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
