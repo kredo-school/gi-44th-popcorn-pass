@@ -61,44 +61,12 @@
                                 <i class="fa-solid fa-check me-1"></i>Reviewed
                             </span>
                         @else
-                            <button type="button" class="btn mypage-btn-write-review"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#reviewModal-{{ $reservation->id }}">
-                                Write a Review
-                            </button>
-
-                            {{-- Review Modal --}}
-                            <div class="modal fade" id="reviewModal-{{ $reservation->id }}" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content mypage-modal">
-                                        <form method="POST" action="{{ route('mypage.reviews.store') }}">
-                                            @csrf
-                                            <input type="hidden" name="movie_id" value="{{ $reservation->movie_id }}">
-
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Review: {{ $reservation->movie->title }}</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <label class="form-label">Your Rating</label>
-                                                <div class="mypage-star-input mb-3">
-                                                    @for ($i = 5; $i >= 1; $i--)
-                                                        <input type="radio" name="rating" id="star{{ $i }}-{{ $reservation->id }}" value="{{ $i }}" {{ $i === 5 ? 'checked' : '' }}>
-                                                        <label for="star{{ $i }}-{{ $reservation->id }}"><i class="fa-solid fa-star"></i></label>
-                                                    @endfor
-                                                </div>
-
-                                                <label class="form-label">Your Review</label>
-                                                <textarea name="body" class="form-control" rows="4" required maxlength="2000" placeholder="What did you think of this movie?"></textarea>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn mypage-btn-back" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="submit" class="btn mypage-btn-write-review">Submit Review</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
+                            <form method="POST" action="{{ route('mypage.movies-watched.send-review-email', $reservation->id) }}">
+                                @csrf
+                                <button type="submit" class="btn mypage-btn-write-review">
+                                    <i class="fa-solid fa-envelope me-1"></i>Email Me a Review Link
+                                </button>
+                            </form>
                         @endif
                     </div>
                 </div>

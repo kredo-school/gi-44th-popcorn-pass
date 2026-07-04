@@ -13,8 +13,7 @@ use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 use App\Http\Controllers\MyPage\CancelController;
-use App\Http\Controllers\MyPage\TicketController;
-use App\Http\Controllers\MyPage\ProfileController;
+use App\Http\Controllers\Api\NearByCinemasController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -71,6 +70,12 @@ Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'up
 
 
 // ===========================
+// Location / Nearby Cinemas API
+// ===========================
+Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby']);
+
+
+// ===========================
 // Admin Routes
 // ===========================
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
@@ -110,6 +115,8 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
     Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])->name('movies-watched');
+    Route::post('/movies-watched/{reservation}/send-review-email', [MoviesWatchedController::class, 'sendReviewEmail'])->name('movies-watched.send-review-email');
+    Route::get('/reviews/create/{movie}', [ReviewController::class, 'create'])->name('reviews.create');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{id}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
@@ -118,11 +125,4 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
     Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
-    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
-    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
 });
-
-/**
- * Regular routes
- */
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

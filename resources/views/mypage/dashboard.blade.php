@@ -13,7 +13,7 @@
     <div class="mypage-card mb-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0"><i class="fa-solid fa-ticket me-2"></i>Upcoming Tickets</h5>
-            <a href="#" class="mypage-view-all">View All &rarr;</a>
+            <a href="{{ route('mypage.tickets') }}" class="mypage-view-all">View All &rarr;</a>
         </div>
 
         @if ($upcomingTickets->isEmpty())
@@ -77,7 +77,7 @@
     <div class="mypage-card p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0"><i class="fa-solid fa-star me-2"></i>My Reviews</h5>
-            <a href="#" class="mypage-view-all">View All &rarr;</a>
+            <a href="{{ route('mypage.reviews-written') }}" class="mypage-view-all">View All &rarr;</a>
         </div>
 
         @if ($myReviews->isEmpty())

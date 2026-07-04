@@ -1,6 +1,5 @@
 <?php
 // app/Models/Review.php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -19,11 +18,18 @@ class Review extends Model
         'user_id',
         'movie_id',
         'rating',
-        'content',
+        'title',
+        'body',
+        'is_verified_purchase',
+        'is_moderated',
+        'is_approved',
     ];
 
     protected $casts = [
         'rating' => 'integer',
+        'is_verified_purchase' => 'boolean',
+        'is_moderated' => 'boolean',
+        'is_approved' => 'boolean',
     ];
 
     public function user(): BelongsTo
