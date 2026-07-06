@@ -8,7 +8,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
-use App\Http\Controllers\MyPage\ReviewController;
+use App\Http\Controllers\MyPage\ReviewController as MyPageReviewController;
 use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
@@ -32,29 +32,14 @@ Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showti
 //--------------------
 // Reservation Routes
 //--------------------
-Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
-    ->name('reservations.seat-selection');
-
-Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
-    ->name('reservations.seat-selection.store');
-
-Route::get('/ticket-type', [ReservationController::class, 'ticketType'])
-    ->name('reservations.ticket-type');
-
-Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
-    ->name('reservations.save-ticket');
-
-Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
-    ->name('reservations.payment-method');
-
-Route::post('/save-payment', [ReservationController::class, 'savePayment'])
-    ->name('reservations.save-payment');
-
-Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
-    ->name('reservations.confirm');
-
-Route::get('/reservation-complete', [ReservationController::class, 'complete'])
-    ->name('reservations.complete');
+Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])->name('reservations.seat-selection');
+Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])->name('reservations.seat-selection.store');
+Route::get('/ticket-type', [ReservationController::class, 'ticketType'])->name('reservations.ticket-type');
+Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])->name('reservations.save-ticket');
+Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])->name('reservations.payment-method');
+Route::post('/save-payment', [ReservationController::class, 'savePayment'])->name('reservations.save-payment');
+Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])->name('reservations.confirm');
+Route::get('/reservation-complete', [ReservationController::class, 'complete'])->name('reservations.complete');
 
 
 //--------------------
@@ -103,6 +88,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
+    Route::get('/reviews', [AdminController::class, 'reviews'])->name('reviews');
+    Route::put('/reviews/{id}/toggle', [AdminController::class, 'toggleReview'])->name('reviews.toggle');
 });
 
 // ===========================

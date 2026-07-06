@@ -16,6 +16,7 @@ use App\Models\User;
 use App\Models\SystemSetting;
 use App\Models\Coupon;
 use App\Models\Promotion;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
@@ -653,5 +654,49 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.coupons-promotions')->with('success', 'Promotion status updated.');
+    }
+
+    // --------------------
+    // Reviews
+    // --------------------
+    public function reviews(Request $request)
+    {
+        $query = Review::with(['user', 'movie'])->latest();
+
+        $status = $request->get('status', 'visible');
+        if ($status === 'visible') {
+            $query->where('is_approved', true);
+        } elseif ($status === 'hidden') {
+            $query->where('is_approved', false);
+        }
+
+        // search
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('movie', function ($mq) use ($search) {
+                    $mq->where('title', 'like', "%{$search}%");
+                })->orWhereHas('user', function ($uq) use ($search) {
+                    $uq->where('username', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // sort
+        $sort = $request->get('sort', 'desc');
+        $query->orderBy('created_at', $sort);
+
+        $reviews = $query->paginate(20)->withQueryString();
+
+        return view('admin.reviews.index', compact('reviews'));
+    }
+
+    public function toggleReview($id)
+    {
+        $review = Review::findOrFail($id);
+        $review->is_approved = !$review->is_approved;
+        $review->save();
+
+        return back()->with('success', 'Review status updated successfully.');
     }
 }
