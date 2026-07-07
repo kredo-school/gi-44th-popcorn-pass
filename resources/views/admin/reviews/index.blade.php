@@ -5,7 +5,6 @@
 
 @section('content')
 
-{{-- Filter --}}
 <form method="GET" action="{{ route('admin.reviews') }}" class="d-flex gap-2 mb-3">
 
     <input type="text" name="search" class="form-control" placeholder="Search by movie or username..."
@@ -27,7 +26,7 @@
 </form>
 
 @if(session('success'))
-<div class="alert alert-success">{{ session('success') }}</div>
+    <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
 <div class="card card-dark p-3">
@@ -38,39 +37,40 @@
                 <th>User</th>
                 <th>Rating</th>
                 <th>Comment</th>
+                <th>Posted At</th>
                 <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
             @forelse($reviews as $review)
-            <tr>
-                <td>{{ $review->movie->title ?? '—' }}</td>
-                <td>{{ $review->user->username ?? '—' }}</td>
-                <td>{{ $review->rating }}/5</td>
-                <td>{{ Str::limit($review->body, 80) }}</td>
-                <td>
-                    @if($review->is_approved)
-                    <span class="badge bg-success">Visible</span>
+                <tr>
+                    <td>{{ $review->movie->title ?? '—' }}</td>
+                    <td>{{ $review->user->username ?? '—' }}</td>
+                    <td>{{ $review->rating }}/5</td>
+                    <td>{{ Str::limit($review->body, 80) }}</td>
+                    <td>{{ $review->created_at->format('Y-m-d') }}</td>
+                    <td>
+                       @if($review->is_approved)
+                        <span class="btn btn-sm btn-success">Visible</span>
                     @else
-                    <span class="badge bg-danger">Hidden</span>
+                        <span class="btn btn-sm btn-danger">Hidden</span>
                     @endif
-                </td>
-                <td>
-                    <form action="{{ route('admin.reviews.toggle', $review->id) }}" method="POST">
-                        @csrf
-                        @method('PUT')
-                        <button type="submit"
-                            class="btn btn-sm {{ $review->is_approved ? 'btn-danger' : 'btn-success' }}">
-                            {{ $review->is_approved ? 'Hide' : 'Show' }}
-                        </button>
-                    </form>
-                </td>
-            </tr>
+                    </td>
+                    <td>
+                        <form action="{{ route('admin.reviews.toggle', $review->id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <button type="submit" class="btn admin-review-action-btn {{ $review->is_approved ? 'btn-danger' : 'btn-success' }}">
+                                {{ $review->is_approved ? 'Hide' : 'Show' }}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
             @empty
-            <tr>
-                <td colspan="6" class="text-center text-secondary py-4">No reviews found.</td>
-            </tr>
+                <tr>
+                    <td colspan="7" class="text-center text-secondary py-4">No reviews found.</td>
+                </tr>
             @endforelse
         </tbody>
     </table>
