@@ -19,6 +19,7 @@ use App\Models\Promotion;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -88,7 +89,7 @@ class AdminController extends Controller
     public function storeMovie(Request $request)
     {
 
-        
+
         $validated = $request->validate($this->movieValidationRules());
 
         $rules = $this->movieValidationRules();
@@ -127,7 +128,7 @@ class AdminController extends Controller
         $durationMinutes = (int) $movie->duration;
 
         foreach ($showtimesInput as $index => $row) {
-         
+
             $screenId = $row['screen_id'] ?? null;
             $date = $row['date'] ?? null;
             $startTime = $row['start_time'] ?? null;
@@ -269,7 +270,7 @@ class AdminController extends Controller
                         continue;
                     }
 
-                    Showtime::create([
+                    $showtime = Showtime::create([
                         'screen_id' => $screen->id,
                         'movie_id' => $movie->id,
                         'start_time' => $startsAt,
@@ -277,6 +278,21 @@ class AdminController extends Controller
                         'is_active' => true,
                         'created_by_id' => auth()->id(),
                     ]);
+
+                    $screenSeats = ScreenSeat::where('screen_id', $screen->id)->get();
+
+                    dd($screenSeats->count());
+
+                    foreach ($screenSeats as $screenSeat) {
+
+                        ShowtimeSeat::create([
+                            'id' => Str::uuid(),
+                            'showtime_id' => $showtime->id,
+                            'screen_seat_id' => $screenSeat->id,
+                            'seat_status' => 'available',
+                            'price_at_showtime' => $screenSeat->price,
+                        ]);
+                    }
 
                     $created++;
                 }
