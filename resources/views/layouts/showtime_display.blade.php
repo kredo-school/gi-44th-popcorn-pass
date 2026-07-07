@@ -142,7 +142,7 @@
             {{-- showtime schedule --}}
 
             <div class="tab-pane col-10 mx-auto fade {{ $isSearch ? '' : 'show active' }}" id="nowPlaying">
-                <div class="tab-pane fade show active" id="nowPlaying">
+
 
                     @php
                         $visibleMovies = $movies->filter(fn($movie) => $movie->showtimes->isNotEmpty());
@@ -166,7 +166,8 @@
 
                                     <!-- title -->
                                     <div class="mb-4">
-                                        <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}" class="showtime-movie-title text-decoration-none">
+                                        <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
+                                            class="showtime-movie-title text-decoration-none">
                                             {{ strtoupper($movie->title) }} >
                                         </a>
                                     </div>
@@ -176,7 +177,6 @@
 
                                         @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
                                             @if ($showtime->start_time->isPast())
-                                                
                                                 <div class="showtime-card-closed">
                                                     <div class="showtime-top">
                                                         <div class="showtime-time">
@@ -213,7 +213,9 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <a href="#" class="text-decoration-none">
+                                                    <a href="{{ route('reservations.showtimeSelection', ['showtime' => $showtime->id]) }}"
+                                                        class="text-decoration-none">
+
                                                         <div class="showtime-bottom pt-2">
                                                             <div class="reservation-icon">⭕️</div>
                                                             <div class="reservation-text">Reservation</div>
@@ -233,7 +235,7 @@
                             No movies available for this date.
                         </h1>
                     @endforelse
-                </div>
+               
             </div>
 
 
@@ -274,12 +276,18 @@
 
                     <div class="movie-search-genres-list text-decoration-none">
 
-                        <a href="?keyword=Action#searchMovie" class="movie-search-chip">Action</a>
-                        <a href="?keyword=Adventure#searchMovie" class="movie-search-chip">Adventure</a>
-                        <a href="?keyword=Animation#searchMovie" class="movie-search-chip">Animation</a>
-                        <a href="?keyword=Comedy#searchMovie" class="movie-search-chip">Comedy</a>
-                        <a href="?keyword=Drama#searchMovie" class="movie-search-chip">Drama</a>
-                        <a href="?keyword=Sci-Fi#searchMovie" class="movie-search-chip">Sci-Fi</a>
+                        <a href="{{ route('movies.search', ['keyword' => 'Action']) }}#searchMovie"
+                            class="movie-search-chip">Action</a>
+                        <a href="{{ route('movies.search', ['keyword' => 'Adventure']) }}#searchMovie"
+                            class="movie-search-chip">Adventure</a>
+                        <a href="{{ route('movies.search', ['keyword' => 'Animation']) }}#searchMovie"
+                            class="movie-search-chip">Animation</a>
+                        <a href="{{ route('movies.search', ['keyword' => 'Comedy']) }}#searchMovie"
+                            class="movie-search-chip">Comedy</a>
+                        <a href="{{ route('movies.search', ['keyword' => 'Drama']) }}#searchMovie"
+                            class="movie-search-chip">Drama</a>
+                        <a href="{{ route('movies.search', ['keyword' => 'Sci-Fi']) }}#searchMovie"
+                            class="movie-search-chip">Sci-Fi</a>
 
                     </div>
 
@@ -314,7 +322,8 @@
 
                                             <!-- title -->
                                             <div class="mb-4">
-                                                <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}" class="showtime-movie-title text-decoration-none">
+                                                <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
+                                                    class="showtime-movie-title text-decoration-none">
                                                     {{ strtoupper($movie->title) }} >
                                                 </a>
                                             </div>
@@ -324,7 +333,6 @@
 
                                                 @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
                                                     @if ($showtime->start_time->isPast())
-                           
                                                         <div class="showtime-card-closed">
 
                                                             <div class="showtime-top">
@@ -377,7 +385,8 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <a href="#" class="text-decoration-none">
+                                                            <a href="{{ route('reservations.showtimeSelection', ['showtime' => $showtime->id]) }}"
+                                                                class="text-decoration-none">
                                                                 <div class="showtime-bottom pt-2">
                                                                     <div class="reservation-icon">⭕️</div>
                                                                     <div class="reservation-text ">
@@ -416,11 +425,7 @@
     </div>
 
 
-
-
-
-
-      <script>
+    <script>
         function scrollDateSlider() {
             document.getElementById('dateSlider').scrollBy({
                 left: 200,

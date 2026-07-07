@@ -115,7 +115,7 @@
 
                     @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
                         @if ($showtime->start_time->isPast())
-                            <a href="#"></a>
+                           
                             <div class="showtime-card-closed">
                                 <div class="showtime-top">
                                     <div class="showtime-time">
@@ -152,7 +152,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#" class="text-decoration-none">
+                                <a href="{{ route('reservations.showtimeSelection', ['showtime' => $showtime->id])}}" class="text-decoration-none">
                                     <div class="showtime-bottom pt-2">
                                         <div class="reservation-icon">⭕️</div>
                                         <div class="reservation-text">Reservation</div>

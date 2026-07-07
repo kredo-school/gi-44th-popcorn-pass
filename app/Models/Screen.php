@@ -30,4 +30,9 @@ class Screen extends Model
     {
         return $this->belongsTo(TheaterLayout::class, 'layout_id');
     }
+
+    public function screenSeats()
+    {
+        return $this->hasMany(ScreenSeat::class);
+    }
 }

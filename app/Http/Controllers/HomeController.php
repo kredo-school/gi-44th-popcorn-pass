@@ -37,29 +37,28 @@ class HomeController extends Controller
             ->with('topMovies', $topMovies);
     }
 
-    private function commonData()
+    private function commonData($selectedDate)
     {
         $dates = collect();
-
         for ($i = 0; $i < 14; $i++) {
             $dates->push(now()->copy()->addDays($i));
         }
 
         return [
-            'movies' => Movie::with('showtimes')->where('status', 'now_playing')->get(),
+            'movies' => Movie::with(['showtimes' => function ($query) use ($selectedDate) {
+                $query->whereDate('start_time', $selectedDate);
+            }, 'showtimes.screen.cinema'])
+                ->where('status', 'now_showing')
+                ->get(),
             'dates' => $dates,
         ];
     }
 
     public function showtime_display()
     {
-        $data = $this->commonData();
-
         $selectedDate = request('date', today()->format('Y-m-d'));
 
-        $data['movies'] = Movie::with(['showtimes' => function ($query) use ($selectedDate) {
-            $query->whereDate('start_time', $selectedDate);
-        }, 'showtimes.screen.cinema'])->get();
+        $data = $this->commonData($selectedDate);
 
         $data['selectedDate'] = $selectedDate;
         $data['isSearch'] = false;
@@ -69,10 +68,11 @@ class HomeController extends Controller
 
     public function search(Request $request)
     {
-        $data = $this->commonData();
+        $selectedDate = request('date', now()->toDateString());
+
+        $data = $this->commonData($selectedDate);
 
         $keyword = $request->keyword;
-        $selectedDate = request('date', now()->toDateString());
 
         $data['searchResults'] = Movie::with(['showtimes' => function ($query) use ($selectedDate) {
             $query->whereDate('start_time', $selectedDate);
@@ -117,13 +117,12 @@ class HomeController extends Controller
     // Relese display
     public function release(Movie $movie)
     {
-        return view('movies.release')->with('movie',$movie);
+        return view('movies.release')->with('movie', $movie);
     }
 
     // movie detail
     public function movie_detail(Movie $movie)
     {
-        return view('movies.movie_detail')->with('movie',$movie);
+        return view('movies.movie_detail')->with('movie', $movie);
     }
-
 }
