@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 use App\Http\Controllers\MyPage\CancelController;
+use App\Http\Controllers\Api\NearByCinemasController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -49,13 +51,17 @@ Route::post('/reservation-confirm', [ReservationController::class, 'confirmBooki
 
 Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
+
 ////////////// Reservation Routes
-
-
 
 Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
     ->name('reservations.showtimeSelection');
 
+//--------------------
+// Reservation Routes
+//--------------------
+Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
+    ->name('reservations.seat-selection');
 
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
     ->name('reservations.seat-selection.store');
@@ -74,6 +80,24 @@ Route::post('/save-payment', [ReservationController::class, 'savePayment'])
 
 Route::get('/reservation-complete', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
+
+
+//--------------------
+// Review Routes
+//--------------------
+Route::get('/movie/{movieId}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::post('/movies/{movieId}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+Route::get('/movies/{movieId}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create')->middleware('auth');
+Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'show'])->name('reviews.show');
+Route::get('/movies/{movieId}/reviews/{reviewId}/edit', [ReviewController::class, 'edit'])->name('reviews.edit')->middleware('auth');
+Route::delete('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
+Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
+
+
+// ===========================
+// Location / Nearby Cinemas API
+// ===========================
+Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby']);
 
 
 // ===========================
@@ -116,6 +140,8 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
     Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])->name('movies-watched');
+    Route::post('/movies-watched/{reservation}/send-review-email', [MoviesWatchedController::class, 'sendReviewEmail'])->name('movies-watched.send-review-email');
+    Route::get('/reviews/create/{movie}', [ReviewController::class, 'create'])->name('reviews.create');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{id}', [ReviewController::class, 'update'])->name('reviews.update');
     Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
@@ -132,3 +158,4 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
  * Regular routes
  */
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});

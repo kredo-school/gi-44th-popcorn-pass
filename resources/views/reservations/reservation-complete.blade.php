@@ -126,6 +126,7 @@
                             <p class="mb-0 fw-bold total-price">${{ $totalPrice }}</p>
                         </div>
                         <hr>
+n
 
                         <p class="text-center booking-id">
                             Booking ID: 0000-0000

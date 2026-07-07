@@ -1,6 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
+    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+
+    {{-- ===========================
+         Location Permission Dialog
+         =========================== --}}
+    <div id="locationPermissionOverlay" class="location-overlay">
+        <div class="location-dialog">
+            <div class="location-dialog-icon">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <h5 class="mb-2">Would you like to share your location?</h5>
+            <p class="small text-white-50 mb-4">Your location will be used to show nearby cinemas.</p>
+            <div class="d-flex flex-column gap-2">
+                <button type="button" class="btn location-btn location-btn-primary" data-choice="always">
+                    Always Allow
+                </button>
+                <button type="button" class="btn location-btn location-btn-secondary" data-choice="once">
+                    Allow Once
+                </button>
+                <button type="button" class="btn location-btn location-btn-outline" data-choice="deny">
+                    Don't Allow
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active">
@@ -66,7 +92,7 @@
                 <img src="{{ asset('images/king2.png') }}" class="hero-image">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <span class="hero-tag" style="color:#ff4040;">
+                    <span class="hero-tag hero-tag-red">
                         TOP RANKING
                     </span>
                     <h1>
@@ -76,7 +102,7 @@
                     <p>
                         Most watched by our audience.
                     </p>
-                    <a href="#" class="btn-book" style="border-color:#ff4040;color:#ff4040;">
+                    <a href="#" class="btn-book btn-book-red">
                         SEE RANKING →
                     </a>
                 </div>
@@ -84,14 +110,7 @@
         </div>
 
     </div>
-    <div class="mt-0"
-        style="
-                background-image: url('{{ asset('images/home_back.png') }}');
-                background-size: cover;
-                background-position: center top;
-                background-repeat: no-repeat;
-                width: 100%;
-            ">
+    <div class="mt-0 home-hero-bg">
         <div>
             {{-- SEARCH --}}
             <div class="search-wrapper w-50 container pt-5 mb-5">
@@ -102,6 +121,28 @@
                 <button class="search-btn">
                     SEARCH
                 </button>
+            </div>
+
+            {{-- ===========================
+                 Nearby Cinemas
+                 =========================== --}}
+            <div class="container-fluid section-gap" id="NearbyCinemas">
+                <div class="d-flex justify-content-between align-items-center ms-5 me-5">
+                    <p class="display-5 text-white title-base mb-0">
+                        📍 Nearby Movie Theaters
+                    </p>
+                    <button type="button" id="changeLocationPrefBtn" class="btn btn-sm location-change-btn">
+                        <i class="fa-solid fa-gear me-1"></i> Location Settings
+                    </button>
+                </div>
+
+                <div class="panel-navy-overlay">
+                    <div id="nearbyCinemasStatus" class="text-white-50 text-center py-4">
+                        <i class="fa-solid fa-spinner fa-spin me-2"></i>Loading nearby theaters...
+                    </div>
+
+                    <div id="nearbyCinemasList" class="row g-3 p-4 is-hidden"></div>
+                </div>
             </div>
 
 
@@ -158,10 +199,7 @@
                     ">
                                 <div class="ranking-card-wrapper">
 
-                                    <div class="rank-number rank-{{ $rankIndex + 1 }}"
-                                        style="
-                            font-size: {{ $s['number'] }};
-                            ">
+                                    <div class="rank-number rank-{{ $rankIndex + 1 }}">
                                         {{ $rankIndex + 1 }}
                                     </div>
                                     @if ($rankIndex == 0)
@@ -171,6 +209,7 @@
                                         <div class="poster-area" style="height:{{ $s['height'] }}">
                                             <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
                                                 <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
+
                                                 class="w-100 h-100">
                                             </a>
                                             
@@ -203,7 +242,8 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
+
+                            @endif
                     @endforeach
                 </div>
             </div>
@@ -219,7 +259,7 @@
                     <div class="section-title-line"></div>
                 </div>
 
-                <div class="w-100 py-4" style="background: rgba(16, 57, 133, 0.5);">
+                <div class="w-100 py-4 panel-navy-overlay">
 
                     <!-- View All -->
                     <div class="d-flex justify-content-end px-4 mb-3">
@@ -230,25 +270,25 @@
 
                         <!-- left button slider-->
                         <button
-                            onclick="document.getElementById('nowPlayingSlider').scrollBy({left: -280, behavior: 'smooth'})"
-                            class="border-0 bg-transparent text-white flex-shrink-0"
-                            style="font-size: 2.5rem; width: 60px; min-width: 60px;">
+                            id="nowPlayingPrevBtn"
+                            type="button"
+                            class="slider-btn slider-btn-left">
                             <i class="fa-solid fa-circle-chevron-left text-secondary"></i>
                         </button>
 
 
                         <!-- Movie Cards scroll -->
-                        <div class="flex-grow-1" style="min-width: 0;">
-                            <div class="d-flex gap-3 pb-2" id="nowPlayingSlider"
-                                style="overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+                        <div class="flex-grow-1 now-playing-track-wrap">
+                            <div class="d-flex gap-3 pb-2 now-playing-track" id="nowPlayingSlider">
 
                                 @foreach ($movies as $movie)
-                                    <div class="flex-shrink-0" style="scroll-snap-align: start; width: 200px;">
+                                    <div class="now-playing-slide">
                                         <div class="movie-card">
                                             <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
                                                 <img src="{{ asset($movie->poster_url) }}" class="movie-poster w-100">
                                             </a>
                                             <div class="movie-info" style="background:#081729">
+
                                                 <h6 class="text-white text-center mb-2 mt-2">
                                                     {{ $movie->title }}
                                                 </h6>
@@ -258,12 +298,11 @@
                                                         <span>{{ $movie->duration }}</span>
                                                     </div>
                                                     <div class="d-flex justify-content-between align-items-center">
-                                                        <span class="text-white-50"
-                                                            style="font-size:0.75rem;">Genre</span>
+                                                        <span class="text-white-50 genre-label">Genre</span>
                                                         <span>⭐{{ $movie->review_avarage }}</span>
                                                     </div>
                                                 </div>
-                                                <a
+                                                
                                                     href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
                                                     <button class="book-btn mt-2 w-100">BOOK NOW</button>
                                                 </a>
@@ -279,9 +318,9 @@
 
                         <!-- right button slider-->
                         <button
-                            onclick="document.getElementById('nowPlayingSlider').scrollBy({left: 280, behavior: 'smooth'})"
-                            class="border-0 bg-transparent text-white flex-shrink-0"
-                            style="font-size: 2.5rem; width: 40px;">
+                            id="nowPlayingNextBtn"
+                            type="button"
+                            class="slider-btn slider-btn-right">
                             <i class="fa-solid fa-circle-chevron-right text-secondary"></i>
                         </button>
 
@@ -301,12 +340,11 @@
                     <div class="coming-title-line"></div>
                 </div>
 
-                <div style="background: rgba(16, 57, 133, 0.5)">
+                <div class="panel-navy-overlay">
 
                     {{-- scroll --}}
                     <div class="position-relative px-3 pt-4">
-                        <div class="d-flex gap-3 pb-2 mt-5 ms-4 me-5" id="comingSoonSlider"
-                            style="overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+                        <div class="d-flex gap-3 pb-2 mt-5 ms-4 me-5 coming-soon-track" id="comingSoonSlider">
 
                             @foreach ($comingSoonMovies as $movie)
                                 <a href="{{ route('release', ['movie' => $movie->id]) }}" class="coming-card text-decoration-none flex-shrink-0 m-4"
@@ -315,6 +353,7 @@
                                         <img src="{{ $movie->poster_url }}" alt="Movie"
                                             style="width: 100%; height: 360px; object-fit: cover; display: block;">
                                         <div class="" style="background: rgba(255,255,255,0.85);">
+
                                             <div class="coming-movie-info">
                                                 <p class="mb-0 text-center coming-movie-title">
                                                     {{ $movie->title }}
@@ -332,17 +371,17 @@
                                         <p class="text-white text-center mt-2">
 
                                             @if ($daysLeft == 0)
-                                                <span class="badge bg-danger">🎉 TODAY</span>
+                                                <span class="badge bg-danger">🔥 TODAY</span>
                                             @elseif ($daysLeft <= 7)
                                                 <span class="badge bg-warning text-dark countdown-badge">
-                                                    🔥 In {{ $daysLeft }} days
+                                                    ⏳ In {{ $daysLeft }} days
                                                 </span><br>
                                                 <span class="display-4 coming-text fw-bold base">
                                                     {{ $releaseDate->format('j.n.Y') }}
                                                 </span>
                                             @elseif ($daysLeft <= 30)
                                                 <span class="coming-badge">
-                                                    ⏳ In {{ $daysLeft }} days
+                                                    📅 In {{ $daysLeft }} days
                                                 </span><br>
                                                 <span class="display-4 text-white fw-bold base">
                                                     {{ $releaseDate->format('j.n.Y') }}
@@ -370,16 +409,9 @@
                         <div class="">
                             {{-- right slider button --}}
                             <button
-                                onclick="document.getElementById('comingSoonSlider').scrollBy({left: 280, behavior: 'smooth'})"
-                                class="position-absolute top-0 end-0 border-0 text-white d-flex align-items-center justify-content-center mt-5 me-2"
-                                style="
-                            height: 85%;
-                            width: 45px;
-                            background: rgba(50, 50, 70, 0.7);
-                            font-size: 2.5rem;
-                            z-index: 10;
-                            backdrop-filter: blur(2px);
-                            border-radius: 8px;">
+                                id="comingSoonNextBtn"
+                                type="button"
+                                class="coming-slider-btn">
                                 <i class="fa-solid fa-chevron-right"></i>
                             </button>
                         </div>
@@ -397,9 +429,8 @@
                     🍿 Food & Drink
                 </p>
 
-                <div class="w-75 mx-auto" style="background: rgba(16, 57, 133, 0.5);">
-                    <img src="{{ asset('images/foodmenu.png') }}" alt="foodmenu" class="w-100"
-                        style="display: block; object-fit: cover;">
+                <div class="w-75 mx-auto panel-navy-overlay">
+                    <img src="{{ asset('images/foodmenu.png') }}" alt="foodmenu" class="w-100 food-menu-img">
                 </div>
 
             </div>
@@ -415,14 +446,13 @@
                     <div class="row g-3">
                         @for ($i = 0; $i < 8; $i++)
                             <div class="col-3 ">
-                                <div class="card rounded-0" style="background: #D9D9D9">
+                                <div class="card rounded-0 news-card">
                                     <div class="card-head text-center">
                                         <div class="w-50 bg-warning mx-auto">
                                             NEWS
                                         </div>
                                     </div>
-                                    <img src="{{ asset('images/news.png') }}" class="card-img-top"
-                                        style="object-fit: cover; height: 200px;">
+                                    <img src="{{ asset('images/news.png') }}" class="card-img-top news-img">
                                     <div class="card-body">
                                         If you're a member, you get great deals every Friday!
                                     </div>
@@ -452,4 +482,5 @@
     </div>
 
     </div>
+    <script src="{{ asset('js/home.js') }}" defer></script>
 @endsection

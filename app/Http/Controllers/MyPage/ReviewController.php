@@ -1,16 +1,33 @@
 <?php
 // app/Http/Controllers/MyPage/ReviewController.php
-
 namespace App\Http\Controllers\MyPage;
 
 use App\Http\Controllers\Controller;
+use App\Models\Movie;
 use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class ReviewController extends Controller
 {
+    /**
+     * Standalone review form page, linked to from the review-request email.
+     */
+    public function create(Movie $movie): View
+    {
+        $user = Auth::user();
+
+        $alreadyReviewed = $user->reviews()->where('movie_id', $movie->id)->exists();
+
+        return view('mypage.reviews.create', [
+            'user' => $user,
+            'movie' => $movie,
+            'alreadyReviewed' => $alreadyReviewed,
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $data = $request->validate([
@@ -28,7 +45,8 @@ class ReviewController extends Controller
             'is_approved' => false,
         ]);
 
-        return back()->with('success', 'Thanks! Your review has been submitted.');
+        return redirect()->route('mypage.movies-watched')
+            ->with('success', 'Thanks! Your review has been submitted.');
     }
 
     public function update(Request $request, string $id): RedirectResponse

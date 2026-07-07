@@ -1,0 +1,246 @@
+.review-page {
+    margin: 0;
+    padding: 50px;
+    min-height: 100vh;
+
+    background: url('/images/review_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Title */
+.review-main-title {
+    font-family: Georgia, serif;
+    font-size: 2.8rem;
+    color: #fff;
+    letter-spacing: 4px;
+    font-weight: 400;
+}
+
+.review-title-deco {
+    color: #F5C126;
+    font-size: 1rem;
+    letter-spacing: 8px;
+    margin-top: 5px;
+}
+
+/* Poster */
+.review-poster {
+    max-width: 200px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Write a Review */
+.review-write-btn {
+    background: #F5C126;
+    color: #000;
+    font-weight: 700;
+    font-size: 0.95rem;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: .3s;
+    display: inline-block;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: 0;
+    text-decoration: none;
+    text-align: center;
+}
+
+/* Movie Title */
+.review-movie-title {
+    font-family: Georgia, serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+}
+
+/* Stars */
+.review-star-lg {
+    color: #F5C126;
+    font-size: 1rem;
+}
+
+.review-star-sm {
+    color: #F5C126;
+    font-size: 0.9rem;
+}
+
+.review-avg-score {
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.review-total-count {
+    color: #F5C126;
+    font-size: 1rem;
+    margin-left: 2px;
+}
+
+/* Review Card */
+.review-card {
+    background: rgba(255, 255, 255, 0.92);
+    color: #000;
+    border-radius: 12px;
+    padding: 12px 18px;
+    transition: .3s;
+    width: 100%;
+}
+
+.review-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(245, 193, 38, 0.5);
+}
+
+/* Avatar */
+.review-avatar-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #555;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.review-username {
+    font-size: 1rem;
+    color: #000;
+}
+
+.review-divider {
+    border-color: #F5C126;
+    opacity: 0.6;
+    margin: 10px 0;
+}
+
+.review-body {
+    color: #333;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.review-arrow {
+    color: #999;
+    text-decoration: none;
+    font-size: 1.4rem;
+    font-weight: 300;
+    padding-left: 15px;
+    flex-shrink: 0;
+}
+
+/* Back Button */
+.review-page .back-btn {
+    background: #000;
+    border: 3px solid #fff;
+    color: #fff;
+    padding: 8px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: .3s;
+    font-size: 1.1rem;
+}
+
+/* Form */
+.review-form-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 30px;
+    color: #000;
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.star-rating input:checked~label,
+.star-rating label:hover,
+.star-rating label:hover~label {
+    color: #F5C126;
+}
+
+.review-textarea {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 12px;
+    resize: none;
+    width: 100%;
+}
+
+.review-save-btn,
+.review-update-btn {
+    background: #1a3a7c;
+    color: #F5C126;
+    border: 3px solid #F5C126;
+    border-radius: 8px;
+    padding: 12px 60px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    transition: .3s;
+}
+
+.review-edit-btn {
+    background: #1a3a7c;
+    color: #F5C126;
+    border: 3px solid #F5C126;
+    border-radius: 8px;
+    padding: 12px 60px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    transition: .3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.review-cancel-btn {
+    background: #888;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    transition: .3s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.review-delete-btn {
+    background: #c0392b;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 40px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    transition: .3s;
+}
+
+.review-show-body {
+    color: #333;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
