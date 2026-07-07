@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
         integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@300;700&display=swap" rel="stylesheet">    
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
     </script>
@@ -45,7 +46,7 @@
                         <ul class="navbar-nav flex-row position-absolute start-50 translate-middle-x">
 
                             <li class="nav-item">
-                                <a href="#Nowplaying" class="text-decoration-none nav-font">
+                                <a href="{{ route('home') }}#Nowplaying" class="text-decoration-none nav-font">
                                     Now Playing
                                 </a>
                             </li>
@@ -57,13 +58,13 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="#Comingsoon" class="text-decoration-none nav-font">
+                                <a href="{{ route('home') }}#Comingsoon" class="text-decoration-none nav-font">
                                     Coming Soon
                                 </a>
                             </li>
 
                             <li class="nav-item">
-                                <a href="#FoodDrink" class="text-decoration-none nav-font">
+                                <a href="{{ route('home') }}#FoodDrink" class="text-decoration-none nav-font">
                                     Food & Drink
                                 </a>
                                 

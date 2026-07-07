@@ -19,7 +19,11 @@ Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
 
+// home
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/movie/{movie}/release', [HomeController::class, 'release'])->name('release');
+Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])->name('movie_detail');
+
 
 //Movie showtime
 Route::get('/home/showtime', [HomeController::class, 'showtime_display'])
@@ -28,6 +32,30 @@ Route::get('/movies/search', [HomeController::class, 'search'])
     ->name('movies.search');
 Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
     ->name('reservations.showtime.selection');
+
+////////////// temporary (mirei)
+Route::get('/seat-selection', function () {
+    return view('reservations.seat-selection');
+});
+Route::get('/ticket-type-selection', function () {
+    return view('reservations.ticket-type');
+});
+Route::get('/payment-method', function () {
+    return view('reservations.payment-method');
+});
+Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
+    ->name('reservations.confirm');
+
+Route::post('/reservation-confirm', [ReservationController::class, 'confirmBooking'])
+    ->name('reservations.confirm-booking');
+
+Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
+    ->name('reservations.complete');
+
+////////////// Reservation Routes
+
+Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
+    ->name('reservations.showtimeSelection');
 
 //--------------------
 // Reservation Routes
@@ -49,9 +77,6 @@ Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
 
 Route::post('/save-payment', [ReservationController::class, 'savePayment'])
     ->name('reservations.save-payment');
-
-Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
-    ->name('reservations.confirm');
 
 Route::get('/reservation-complete', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
@@ -125,4 +150,12 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
     Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
+    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
+});
+
+/**
+ * Regular routes
+ */
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });

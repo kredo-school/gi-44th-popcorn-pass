@@ -206,9 +206,13 @@
                                         <div class="top-crown">👑</div>
                                     @endif
                                     <div class="top-card {{ $s['class'] }}">
-                                        <div class="poster-area {{ $s['class'] }}">
-                                            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
+                                        <div class="poster-area" style="height:{{ $s['height'] }}">
+                                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
+                                                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
+
                                                 class="w-100 h-100">
+                                            </a>
+                                            
 
                                             <div class="movie-overlay"></div>
                                         </div>
@@ -229,10 +233,11 @@
                                                     ⏱ {{ floor($movie->duration / 60) }}h {{ $movie->duration % 60 }}m
                                                 </span>
                                             </div>
+                                            <a
+                                                href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
+                                                <button class=" mt-2 w-100 ranking-book-btn">BOOK NOW</button>
+                                            </a>
 
-                                            <button class="ranking-book-btn">
-                                                BOOK NOW
-                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -279,8 +284,11 @@
                                 @foreach ($movies as $movie)
                                     <div class="now-playing-slide">
                                         <div class="movie-card">
-                                            <img src="{{ asset($movie->poster_url) }}" class="movie-poster w-100">
-                                            <div class="movie-info">
+                                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
+                                                <img src="{{ asset($movie->poster_url) }}" class="movie-poster w-100">
+                                            </a>
+                                            <div class="movie-info" style="background:#081729">
+
                                                 <h6 class="text-white text-center mb-2 mt-2">
                                                     {{ $movie->title }}
                                                 </h6>
@@ -339,10 +347,13 @@
                         <div class="d-flex gap-3 pb-2 mt-5 ms-4 me-5 coming-soon-track" id="comingSoonSlider">
 
                             @foreach ($comingSoonMovies as $movie)
-                                <a href="#" class="coming-card text-decoration-none flex-shrink-0 m-4">
-                                    <div class="coming-card-image-wrap">
-                                        <img src="{{ $movie->poster_url }}" alt="Movie" class="coming-poster">
-                                        <div class="p-2 coming-info-bg">
+                                <a href="{{ route('release', ['movie' => $movie->id]) }}" class="coming-card text-decoration-none flex-shrink-0 m-4"
+                                    style="scroll-snap-align: start; width: 400px;">
+                                    <div style="overflow: hidden;">
+                                        <img src="{{ $movie->poster_url }}" alt="Movie"
+                                            style="width: 100%; height: 360px; object-fit: cover; display: block;">
+                                        <div class="" style="background: rgba(255,255,255,0.85);">
+
                                             <div class="coming-movie-info">
                                                 <p class="mb-0 text-center coming-movie-title">
                                                     {{ $movie->title }}

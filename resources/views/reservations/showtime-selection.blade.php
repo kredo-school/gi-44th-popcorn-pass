@@ -106,7 +106,7 @@
             </div>
         </div>
         <div class="select-showtime mx-auto mt-5">
-            <div class="mt-2 blue-background ">
+            <div class="mt-2 blue-background-2 ">
                 <h1 class="showtime-text p-3">
                     『 Select a showtime 』
                 </h1>
@@ -115,7 +115,7 @@
 
                     @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
                         @if ($showtime->start_time->isPast())
-                            <a href="#"></a>
+                           
                             <div class="showtime-card-closed">
                                 <div class="showtime-top">
                                     <div class="showtime-time">
@@ -152,7 +152,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="#" class="text-decoration-none">
+                                <a href="{{ route('reservations.showtimeSelection', ['showtime' => $showtime->id])}}" class="text-decoration-none">
                                     <div class="showtime-bottom pt-2">
                                         <div class="reservation-icon">⭕️</div>
                                         <div class="reservation-text">Reservation</div>
@@ -169,14 +169,14 @@
 
         {{-- UPDATE LATER --}}
         <div class="d-flex justify-content-between mt-5">
-                <button type="button" class="back-btn ms-5">
-                    <i class="fa-solid fa-arrow-left"></i>BACK
-                </button>
-            
-                <button type="submit" class="next-btn me-5" disabled>
-                    NEXT<i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
+            <button type="button" class="back-btn ms-5" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i> BACK
+            </button>
+
+            <button type="submit" class="next-btn me-5" disabled>
+                NEXT<i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
 
 
 
