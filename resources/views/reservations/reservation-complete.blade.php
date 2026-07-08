@@ -65,6 +65,7 @@
                     </div>
 
                     <div class="card-body">
+
                         <div class="row">
                             <div class="text-center col-6">
                                 <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img ">
@@ -126,9 +127,10 @@
                             <p class="mb-0 fw-bold total-price">${{ $totalPrice }}</p>
                         </div>
                         <hr>
-n
 
-                        <p class="text-center booking-id">
+
+                        <p class="text-center booking-id mb-1">
+
                             Booking ID: 0000-0000
                         </p>
 
@@ -143,9 +145,15 @@ n
             <a href="{{ route('mypage.dashboard') }}" class="go-to-mypage-btn me-5 text-decoration-none">
                 My Page <i class="fa-solid fa-arrow-right"></i>
             </a>
+
         </div>
 
     </div>
-
+    <script>
+        history.pushState(null, null, location.href);
+        window.addEventListener('popstate', function() {
+            history.pushState(null, null, location.href);
+        });
+    </script>
 
 @endsection

@@ -8,7 +8,9 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
+
 use App\Http\Controllers\MyPage\ReviewController as MyPageReviewController;
+ 
 use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
@@ -19,6 +21,9 @@ Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
 
+/**
+ * Regular routes
+ */
 // home
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{movie}/release', [HomeController::class, 'release'])->name('release');
@@ -33,6 +38,28 @@ Route::get('/movies/search', [HomeController::class, 'search'])
 Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
     ->name('reservations.showtime.selection');
 
+
+//--------------------
+// Reservation Routes
+//--------------------
+Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])
+    ->name('reservations.seat-selection');
+
+Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
+    ->name('reservations.seat-selection.store');
+
+Route::get('/ticket-type', [ReservationController::class, 'ticketType'])
+    ->name('reservations.ticket-type');
+
+Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
+    ->name('reservations.save-ticket');
+
+Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
+    ->name('reservations.payment-method');
+
+Route::post('/save-payment', [ReservationController::class, 'savePayment'])
+    ->name('reservations.save-payment');
+
 ////////////// temporary (mirei)
 Route::get('/seat-selection', function () {
     return view('reservations.seat-selection');
@@ -43,6 +70,8 @@ Route::get('/ticket-type-selection', function () {
 Route::get('/payment-method', function () {
     return view('reservations.payment-method');
 });
+
+
 Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
 
@@ -80,7 +109,7 @@ Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'sh
 Route::get('/movies/{movieId}/reviews/{reviewId}/edit', [ReviewController::class, 'edit'])->name('reviews.edit')->middleware('auth');
 Route::delete('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
 Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
-
+Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])->name('reservations.seat-selection');
 
 // ===========================
 // Location / Nearby Cinemas API
@@ -144,8 +173,5 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
 });
 
-/**
- * Regular routes
- */
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-});
+
+

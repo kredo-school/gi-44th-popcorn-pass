@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Reservation;
+use App\Models\Showtime;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,13 +19,41 @@ use App\Models\ShowtimeSeat;
 
 class ReservationController extends Controller
 {
+<<<<<<< HEAD
+
+=======
+>>>>>>> 19493447e0619e6c4c1053e3284a6ed7f939e0a0
     // --------------------
     // Showtime Selection Page
     // --------------------
+<<<<<<< HEAD
+    public function seatSelection(Showtime $showtime)
+=======
     public function showtimeSelection(Showtime $showtime)
+>>>>>>> 19493447e0619e6c4c1053e3284a6ed7f939e0a0
     {
         session(['showtime_id' => $showtime->id]);
 
+<<<<<<< HEAD
+        // 後続画面でも使えるように保存
+        session([
+            'showtime_id' => $showtime->id,
+        ]);
+
+        // 予約済み座席取得
+        $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
+            ->where('showtime_id', $showtime->id)
+            ->get()
+            ->flatMap(fn($reservation) => $reservation->seat_numbers)
+            ->toArray();
+
+
+        return view('reservations.seat-selection', compact(
+            'selectedSeats',
+            'reservedSeats',
+            'showtime'
+        ));
+=======
         $movie = $showtime->movie;
         $screen = $showtime->screen;
 
@@ -33,6 +63,7 @@ class ReservationController extends Controller
             'reservations.seat-selection',
             compact('showtime', 'movie', 'screen', 'selectedSeats')
         );
+>>>>>>> 19493447e0619e6c4c1053e3284a6ed7f939e0a0
     }
     
 
@@ -63,8 +94,23 @@ class ReservationController extends Controller
     // --------------------
     public function ticketType()
     {
+<<<<<<< HEAD
+        if (empty(session('selectedSeats'))) {
+            return redirect()->route('home');
+        }
 
         $selectedSeats = session('selectedSeats', []);
+
+
+        if (empty($selectedSeats)) {
+            return redirect()->route('reservations.seat-selection', [
+                'showtime' => session('showtime_id')
+            ])->with('error', 'Your session has expired. Please start again.');
+        }
+=======
+
+        $selectedSeats = session('selectedSeats', []);
+>>>>>>> 19493447e0619e6c4c1053e3284a6ed7f939e0a0
 
         $totalPrice = collect($selectedSeats)->sum(function ($seat) {
             $price = $seat['price'] ?? 0;
@@ -110,6 +156,10 @@ class ReservationController extends Controller
     // --------------------
     public function paymentMethod()
     {
+        if (empty(session('selectedSeats'))) {
+            return redirect()->route('home');
+        }
+
         $selectedSeats = session('selectedSeats', []);
         $paymentInfo = session('paymentInfo', []);
 
@@ -233,6 +283,10 @@ class ReservationController extends Controller
 
     public function confirmation()
     {
+        if (empty(session('selectedSeats'))) {
+            return redirect()->route('home');
+        }
+
         $selectedSeats = session('selectedSeats', []);
         $paymentInfo = session('paymentInfo', []);
 

@@ -242,8 +242,7 @@
                                     </div>
                                 </div>
                             </div>
-
-                            @endif
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -269,10 +268,7 @@
                     <div class="d-flex align-items-center px-3 m-3 gap-2">
 
                         <!-- left button slider-->
-                        <button
-                            id="nowPlayingPrevBtn"
-                            type="button"
-                            class="slider-btn slider-btn-left">
+                        <button id="nowPlayingPrevBtn" type="button" class="slider-btn slider-btn-left">
                             <i class="fa-solid fa-circle-chevron-left text-secondary"></i>
                         </button>
 
@@ -302,8 +298,9 @@
                                                         <span>⭐{{ $movie->review_avarage }}</span>
                                                     </div>
                                                 </div>
-                                                
-                                                    href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
+
+                                                <a href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}"
+                                                    class="text-decoration-none">
                                                     <button class="book-btn mt-2 w-100">BOOK NOW</button>
                                                 </a>
 
@@ -317,10 +314,7 @@
                         </div>
 
                         <!-- right button slider-->
-                        <button
-                            id="nowPlayingNextBtn"
-                            type="button"
-                            class="slider-btn slider-btn-right">
+                        <button id="nowPlayingNextBtn" type="button" class="slider-btn slider-btn-right">
                             <i class="fa-solid fa-circle-chevron-right text-secondary"></i>
                         </button>
 
@@ -408,10 +402,7 @@
                         </div>
                         <div class="">
                             {{-- right slider button --}}
-                            <button
-                                id="comingSoonNextBtn"
-                                type="button"
-                                class="coming-slider-btn">
+                            <button id="comingSoonNextBtn" type="button" class="coming-slider-btn">
                                 <i class="fa-solid fa-chevron-right"></i>
                             </button>
                         </div>

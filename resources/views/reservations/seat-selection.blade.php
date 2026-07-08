@@ -103,17 +103,25 @@
 
                                 @for ($seat = 1; $seat <= 12; $seat++)
                                     @php
+
+                                        $seatCode = $row . $seat;
+
                                         $isWheelchair = $row === 'A' && in_array($seat, [1, 2, 11, 12]);
                                         $isPremium = in_array($row, ['D', 'E']);
+                                        $isReserved = in_array($seatCode, $reservedSeats);
                                     @endphp
+
                                     <button type="button"
                                         class="seat mx-1
-                                                    {{ $isPremium ? 'premium' : 'available' }}
-                                                    {{ $isWheelchair ? 'wheelchair' : '' }}"
-                                        data-seat="{{ $row }}{{ $seat }}">
+                                        {{ $isReserved ? 'reserved' : ($isPremium ? 'premium' : 'available') }}
+                                        {{ $isWheelchair ? 'wheelchair' : '' }}"
+                                        data-seat="{{ $seatCode }}" {{ $isReserved ? 'disabled' : '' }}>
+
+
                                         @if ($isWheelchair)
                                             <i class="fa-solid fa-wheelchair"></i>
                                         @endif
+
                                     </button>
                                 @endfor
 

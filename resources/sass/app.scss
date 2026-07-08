@@ -1280,6 +1280,10 @@
    background-color:rgba(16, 57, 133, 0.7) ;
    
 }
+.blue-background-list{
+    background-color:rgba(16, 57, 133, 0.7) ;
+    height: 330px;
+}
 .rating-star{
     color: #eeff00;
 }
@@ -1463,6 +1467,13 @@
     color:#fff200;
 }
 
+// seat selection
+.reserved {
+    background-color: #000 !important;
+    border-color: #000;
+    cursor: not-allowed;
+    pointer-events: none;
+}
 // Movie release/detail
 .release-date {
     font-family: 'Bebas Neue', sans-serif;

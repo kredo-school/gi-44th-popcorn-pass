@@ -94,20 +94,23 @@
                     </div>
 
                     <div class="card-body">
+
                         <div class="text-center">
                             <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img">
                         </div>
                         <h5 class="fw-bold mt-3">
-                            The Greatest Showman
                         </h5>
                         <hr>
                         <div class="mb-3">
                             <small class="">Screen</small>
+
                             <p class="mb-0 fw-bold">{{ $showtime->screen->screen_number }}</p>
+
                         </div>
                         <hr>
                         <div class="mb-3">
                             <small class="">Showtime</small>
+
                             <p class="mb-0 fw-bold">
                                 {{ $showtime->start_time->format('F j, Y | H:i') }}
                             </p>
@@ -138,6 +141,7 @@
 
         {{-- Button --}}
         <div class="d-flex justify-content-between mt-5">
+
             
             <form action="{{ route('reservations.showtimeSelection', ['showtime' => session('showtime_id')]) }}" method="GET">
                 <button>
@@ -146,6 +150,7 @@
             </form>
 
             <button type="" id="next-btn" class="next-btn me-5" disabled>
+
                 NEXT<i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>

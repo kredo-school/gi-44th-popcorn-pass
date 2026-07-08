@@ -52,7 +52,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('movie.showtime.display')}}" class="text-decoration-none nav-font">
+                                <a href="{{ route('movie.showtime.display') }}" class="text-decoration-none nav-font">
                                     Showtimes
                                 </a>
                             </li>
@@ -67,15 +67,23 @@
                                 <a href="{{ route('home') }}#FoodDrink" class="text-decoration-none nav-font">
                                     Food & Drink
                                 </a>
-                                
+
                             </li>
+                            <li class="nav-item text-white">
+
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit">Logout</button>
+                                </form>
+                            </li>
+
 
                         </ul>
 
                         <!-- My Page -->
                         <div class="ms-auto me-3">
                             @auth
-                                <a href="#" class="btn btn-color mypage-text pt-0 pb-0">
+                                <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-text pt-0 pb-0">
                                     <img src="{{ asset('images/mypage.png') }}" alt="mypage" width="35"
                                         height="35">
                                     My Page
@@ -88,7 +96,7 @@
                                 </a>
                             @endauth
                         </div>
-                        
+
 
                     </div>
                 </div>
