@@ -437,13 +437,13 @@
 
             <hr class="text-white">
 
-            {{-- Information --}}
+            {{-- Information ここなおす--}}
             <div class="container-fluid px-0 mt-5 section-gap" id="Information">
                 <p class="display-3 text-white title-base ms-5 text-center">
                     Information
                 </p>
                 <div class="container">
-                    <div class="row g-3">
+                    <div class="row g-3">git add resources/views/home.blade.php
                         @for ($i = 0; $i < 8; $i++)
                             <div class="col-3 ">
                                 <div class="card rounded-0 news-card">
