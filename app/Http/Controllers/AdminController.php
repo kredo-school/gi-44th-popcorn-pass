@@ -225,12 +225,28 @@ class AdminController extends Controller
                     'is_active' => $showtime->is_active,
                 ];
             });
+        // 上映時間ごとの座席を作成
+        $screenSeats = ScreenSeat::where('screen_id', $screen->id)->get();
+
+        foreach ($screenSeats as $screenSeat) {
+
+            ShowtimeSeat::create([
+                'id' => Str::uuid(),
+                'showtime_id' => $showtime->id,
+                'screen_seat_id' => $screenSeat->id,
+                'seat_status' => 'available',
+                'available' => true,
+                'price_at_showtime' => $screenSeat->price,
+            ]);
+        }
 
         return response()->json($showtimes);
     }
 
     public function generateShowtimes(Request $request, $id)
     {
+        \Log::info('generateShowtimes開始');
+
         $movie = Movie::findOrFail($id);
 
         $validated = $request->validate([
@@ -244,62 +260,88 @@ class AdminController extends Controller
         ]);
 
         $screen = Screen::findOrFail($validated['screen_id']);
+
         $durationMinutes = (int) $movie->duration;
+
         $created = 0;
         $skipped = 0;
 
         $current = Carbon::parse($validated['start_date'])->startOfDay();
         $end = Carbon::parse($validated['end_date'])->startOfDay();
 
+
         while ($current->lte($end)) {
+
             $dayOfWeek = (int) $current->format('w');
 
+
             if (in_array($dayOfWeek, $validated['days'])) {
+
                 foreach ($validated['time_slots'] as $slot) {
-                    if (! $slot) continue;
 
-                    $startsAt = Carbon::parse($current->format('Y-m-d') . ' ' . $slot);
-                    $endsAt = $startsAt->copy()->addMinutes($durationMinutes);
+                    if (!$slot) continue;
 
-                    $alreadyExists = Showtime::where('screen_id', $screen->id)
+
+                    $startsAt = Carbon::parse(
+                        $current->format('Y-m-d') . ' ' . $slot
+                    );
+
+                    $endsAt = $startsAt->copy()
+                        ->addMinutes($durationMinutes);
+
+
+                    // 既存チェック
+                    $showtime = Showtime::where('screen_id', $screen->id)
                         ->where('start_time', $startsAt)
-                        ->exists();
+                        ->first();
 
-                    if ($alreadyExists) {
+
+                    if ($showtime) {
+
                         $skipped++;
-                        continue;
+                    } else {
+
+                        // showtime作成
+                        $showtime = Showtime::create([
+                            'screen_id' => $screen->id,
+                            'movie_id' => $movie->id,
+                            'start_time' => $startsAt,
+                            'end_time' => $endsAt,
+                            'is_active' => true,
+                            'created_by_id' => auth()->id(),
+                        ]);
+
+                        $created++;
                     }
 
-                    $showtime = Showtime::create([
-                        'screen_id' => $screen->id,
-                        'movie_id' => $movie->id,
-                        'start_time' => $startsAt,
-                        'end_time' => $endsAt,
-                        'is_active' => true,
-                        'created_by_id' => auth()->id(),
-                    ]);
 
-                    $screenSeats = ScreenSeat::where('screen_id', $screen->id)->get();
+                    // showtime_seats作成
+                    $screenSeats = ScreenSeat::where('screen_id', $screen->id)
+                        ->get();
 
-                    dd($screenSeats->count());
 
                     foreach ($screenSeats as $screenSeat) {
 
-                        ShowtimeSeat::create([
-                            'id' => Str::uuid(),
-                            'showtime_id' => $showtime->id,
-                            'screen_seat_id' => $screenSeat->id,
-                            'seat_status' => 'available',
-                            'price_at_showtime' => $screenSeat->price,
-                        ]);
+                        ShowtimeSeat::firstOrCreate(
+                            [
+                                'showtime_id' => $showtime->id,
+                                'screen_seat_id' => $screenSeat->id,
+                            ],
+                            [
+                                'id' => Str::uuid(),
+                                'seat_status' => 'available',
+                                'available' => true,
+                                'price_at_showtime' => $screenSeat->price,
+                            ]
+                        );
                     }
-
-                    $created++;
                 }
             }
 
+
             $current->addDay();
         }
+
 
         return response()->json([
             'success' => true,

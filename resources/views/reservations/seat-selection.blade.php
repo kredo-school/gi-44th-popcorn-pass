@@ -153,7 +153,7 @@
                         </div>
 
                         <div class="d-flex align-items-center">
-                            <div class="legend-seat selected me-2 bg-secondary"></div>
+                            <div class="legend-seat selected me-2 bg-pink"></div>
                             <span>Selected</span>
                         </div>
 
@@ -173,12 +173,12 @@
                                 <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img">
                             </div>
                             <h5 class="fw-bold mt-3">
-                                {{ $movie->title }}
+                                {{ $showtime->movie->title }}
                             </h5>
                             <hr>
                             <div class="mb-3">
                                 <small class="">Screen</small>
-                                <p class="mb-0 fw-bold">{{ $screen->screen_number }}</p>
+                                <p class="mb-0 fw-bold">{{ $showtime->screen->screen_number }}</p>
                             </div>
                             <hr>
                             <div class="mb-3">

@@ -18,7 +18,7 @@
 }
 
 .seat.selected {
-    background-color: #6C757D;
+    background-color: hsl(307, 100%, 63%);
 }
 
 #selected-seats span {
@@ -82,5 +82,10 @@
     background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 10px;
+}
+.bg-pink{
+    background-color: hsl(307, 100%, 63%);
+    color: hsl(307, 100%, 63%);
+    border: 2px solid  hsl(307, 100%, 63%);
 }
 

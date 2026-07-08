@@ -47,6 +47,33 @@ class ReservationController extends Controller
         ));
 
     }
+
+    // --------------------
+    // Seat Selection
+    // --------------------
+    public function seatSelection(Showtime $showtime)
+{
+    $selectedSeats = session('selectedSeats', []);
+    session()->forget('paymentInfo');
+
+ 
+    session([
+        'showtime_id' => $showtime->id,
+    ]);
+
+  
+    $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
+        ->where('showtime_id', $showtime->id)
+        ->get()
+        ->flatMap(fn ($reservation) => $reservation->seat_numbers)
+        ->toArray();
+
+    return view('reservations.seat-selection', compact(
+        'selectedSeats',
+        'reservedSeats',
+        'showtime'
+    ));
+}
     
 
     // --------------------
@@ -222,6 +249,7 @@ class ReservationController extends Controller
             ]);
 
             foreach ($selectedSeats as $seat) {
+                
 
                 $showtimeSeat = ShowtimeSeat::where('showtime_id', $showtime->id)
                     ->whereHas('screenSeat', function ($query) use ($seat) {
