@@ -42,6 +42,12 @@ Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showti
 //--------------------
 // Reservation Routes
 //--------------------
+//--------------------
+// Reservation Routes
+//--------------------
+Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
+    ->name('reservations.showtimeSelection');
+
 Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
 
@@ -60,18 +66,6 @@ Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
 Route::post('/save-payment', [ReservationController::class, 'savePayment'])
     ->name('reservations.save-payment');
 
-////////////// temporary (mirei)
-Route::get('/seat-selection', function () {
-    return view('reservations.seat-selection');
-});
-Route::get('/ticket-type-selection', function () {
-    return view('reservations.ticket-type');
-});
-Route::get('/payment-method', function () {
-    return view('reservations.payment-method');
-});
-
-
 Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
 
@@ -80,24 +74,6 @@ Route::post('/reservation-confirm', [ReservationController::class, 'confirmBooki
 
 Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
-
-////////////// Reservation Routes
-
-Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
-    ->name('reservations.showtimeSelection');
-
-//--------------------
-// Reservation Routes
-//--------------------
-Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])->name('reservations.seat-selection');
-Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])->name('reservations.seat-selection.store');
-Route::get('/ticket-type', [ReservationController::class, 'ticketType'])->name('reservations.ticket-type');
-Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])->name('reservations.save-ticket');
-Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])->name('reservations.payment-method');
-Route::post('/save-payment', [ReservationController::class, 'savePayment'])->name('reservations.save-payment');
-Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])->name('reservations.confirm');
-Route::get('/reservation-complete', [ReservationController::class, 'complete'])->name('reservations.complete');
-
 
 //--------------------
 // Review Routes
@@ -109,7 +85,6 @@ Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'sh
 Route::get('/movies/{movieId}/reviews/{reviewId}/edit', [ReviewController::class, 'edit'])->name('reviews.edit')->middleware('auth');
 Route::delete('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
 Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
-Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])->name('reservations.seat-selection');
 
 // ===========================
 // Location / Nearby Cinemas API

@@ -96,9 +96,9 @@ class HomeController extends Controller
     // showtime selection
     public function showtime_selection(Movie $movie)
     {
-        $data = $this->commonData();
-
         $selectedDate = request('date', today()->format('Y-m-d'));
+
+        $data = $this->commonData($selectedDate);
 
         $movie->load([
             'showtimes' => function ($query) use ($selectedDate) {
