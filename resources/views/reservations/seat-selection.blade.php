@@ -103,6 +103,7 @@
 
                                 @for ($seat = 1; $seat <= 12; $seat++)
                                     @php
+
                                         $seatCode = $row . $seat;
 
                                         $isWheelchair = $row === 'A' && in_array($seat, [1, 2, 11, 12]);
@@ -115,6 +116,7 @@
                                         {{ $isReserved ? 'reserved' : ($isPremium ? 'premium' : 'available') }}
                                         {{ $isWheelchair ? 'wheelchair' : '' }}"
                                         data-seat="{{ $seatCode }}" {{ $isReserved ? 'disabled' : '' }}>
+
 
                                         @if ($isWheelchair)
                                             <i class="fa-solid fa-wheelchair"></i>
@@ -167,20 +169,23 @@
                         </div>
 
                         <div class="card-body">
-                            <img src="{{ asset('images/greatest-showman.jpg') }}" alt="Movie Poster"
-                                class="img-fluid rounded mb-3">
-                            <h5 class="fw-bold">
-                                The Greatest Showman
+                            <div class="text-center">
+                                <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img">
+                            </div>
+                            <h5 class="fw-bold mt-3">
+                                {{ $movie->title }}
                             </h5>
                             <hr>
                             <div class="mb-3">
                                 <small class="">Screen</small>
-                                <p class="mb-0 fw-bold">Screen 3</p>
+                                <p class="mb-0 fw-bold">{{ $screen->screen_number }}</p>
                             </div>
                             <hr>
                             <div class="mb-3">
                                 <small class="">Showtime</small>
-                                <p class="mb-0 fw-bold">Jun 10, 2026 (Wed) 11:25 AM</p>
+                                <p class="mb-0 fw-bold">
+                                    {{ $showtime->start_time->format('F j, Y | H:i') }}
+                                </p>
                             </div>
                             <hr>
                             <div class="mb-3">
@@ -198,8 +203,8 @@
 
             {{-- Button !!!!UPDATE LATER!!!! --}}
             <div class="d-flex justify-content-between mt-5">
-                <button type="button" class="back-btn ms-5">
-                    <i class="fa-solid fa-arrow-left"></i>BACK
+                <button type="button" class="back-btn ms-5" onclick="history.back()">
+                    <i class="fa-solid fa-arrow-left"></i> BACK
                 </button>
 
                 <button type="submit" class="next-btn me-5" disabled>

@@ -10,6 +10,10 @@ class Reservation extends Model
 {
     use HasFactory, HasUuids;
 
+    protected $guarded = [];
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
         'user_id',
         'showtime_id',
@@ -84,4 +88,6 @@ class Reservation extends Model
             ->filter()
             ->values();
     }
+
+    
 }

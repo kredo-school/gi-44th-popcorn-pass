@@ -16,6 +16,12 @@ class ReservationSeat extends Model
      */
     const UPDATED_AT = null;
 
+    protected $guarded = [];
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    public $timestamps = false;
+
     protected $fillable = [
         'reservation_id',
         'showtime_seat_id',

@@ -16,8 +16,10 @@ use App\Models\User;
 use App\Models\SystemSetting;
 use App\Models\Coupon;
 use App\Models\Promotion;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -87,7 +89,7 @@ class AdminController extends Controller
     public function storeMovie(Request $request)
     {
 
-        
+
         $validated = $request->validate($this->movieValidationRules());
 
         $rules = $this->movieValidationRules();
@@ -126,7 +128,7 @@ class AdminController extends Controller
         $durationMinutes = (int) $movie->duration;
 
         foreach ($showtimesInput as $index => $row) {
-         
+
             $screenId = $row['screen_id'] ?? null;
             $date = $row['date'] ?? null;
             $startTime = $row['start_time'] ?? null;
@@ -268,7 +270,7 @@ class AdminController extends Controller
                         continue;
                     }
 
-                    Showtime::create([
+                    $showtime = Showtime::create([
                         'screen_id' => $screen->id,
                         'movie_id' => $movie->id,
                         'start_time' => $startsAt,
@@ -276,6 +278,21 @@ class AdminController extends Controller
                         'is_active' => true,
                         'created_by_id' => auth()->id(),
                     ]);
+
+                    $screenSeats = ScreenSeat::where('screen_id', $screen->id)->get();
+
+                    dd($screenSeats->count());
+
+                    foreach ($screenSeats as $screenSeat) {
+
+                        ShowtimeSeat::create([
+                            'id' => Str::uuid(),
+                            'showtime_id' => $showtime->id,
+                            'screen_seat_id' => $screenSeat->id,
+                            'seat_status' => 'available',
+                            'price_at_showtime' => $screenSeat->price,
+                        ]);
+                    }
 
                     $created++;
                 }
@@ -653,5 +670,49 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.coupons-promotions')->with('success', 'Promotion status updated.');
+    }
+
+    // --------------------
+    // Reviews
+    // --------------------
+    public function reviews(Request $request)
+    {
+        $query = Review::with(['user', 'movie'])->latest();
+
+        $status = $request->get('status', 'visible');
+        if ($status === 'visible') {
+            $query->where('is_approved', true);
+        } elseif ($status === 'hidden') {
+            $query->where('is_approved', false);
+        }
+
+        // search
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('movie', function ($mq) use ($search) {
+                    $mq->where('title', 'like', "%{$search}%");
+                })->orWhereHas('user', function ($uq) use ($search) {
+                    $uq->where('username', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // sort
+        $sort = $request->get('sort', 'desc');
+        $query->orderBy('created_at', $sort);
+
+        $reviews = $query->paginate(20)->withQueryString();
+
+        return view('admin.reviews.index', compact('reviews'));
+    }
+
+    public function toggleReview($id)
+    {
+        $review = Review::findOrFail($id);
+        $review->is_approved = !$review->is_approved;
+        $review->save();
+
+        return back()->with('success', 'Review status updated successfully.');
     }
 }

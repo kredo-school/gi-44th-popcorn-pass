@@ -8,6 +8,9 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
+
+use App\Http\Controllers\MyPage\ReviewController as MyPageReviewController;
+ 
 use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
@@ -18,7 +21,14 @@ Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
 
+/**
+ * Regular routes
+ */
+// home
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/movie/{movie}/release', [HomeController::class, 'release'])->name('release');
+Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])->name('movie_detail');
+
 
 //Movie showtime
 Route::get('/home/showtime', [HomeController::class, 'showtime_display'])
@@ -27,6 +37,7 @@ Route::get('/movies/search', [HomeController::class, 'search'])
     ->name('movies.search');
 Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
     ->name('reservations.showtime.selection');
+
 
 //--------------------
 // Reservation Routes
@@ -49,11 +60,43 @@ Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
 Route::post('/save-payment', [ReservationController::class, 'savePayment'])
     ->name('reservations.save-payment');
 
+////////////// temporary (mirei)
+Route::get('/seat-selection', function () {
+    return view('reservations.seat-selection');
+});
+Route::get('/ticket-type-selection', function () {
+    return view('reservations.ticket-type');
+});
+Route::get('/payment-method', function () {
+    return view('reservations.payment-method');
+});
+
+
 Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
 
-Route::get('/reservation-complete', [ReservationController::class, 'complete'])
+Route::post('/reservation-confirm', [ReservationController::class, 'confirmBooking'])
+    ->name('reservations.confirm-booking');
+
+Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
+
+////////////// Reservation Routes
+
+Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
+    ->name('reservations.showtimeSelection');
+
+//--------------------
+// Reservation Routes
+//--------------------
+Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])->name('reservations.seat-selection');
+Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])->name('reservations.seat-selection.store');
+Route::get('/ticket-type', [ReservationController::class, 'ticketType'])->name('reservations.ticket-type');
+Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])->name('reservations.save-ticket');
+Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])->name('reservations.payment-method');
+Route::post('/save-payment', [ReservationController::class, 'savePayment'])->name('reservations.save-payment');
+Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])->name('reservations.confirm');
+Route::get('/reservation-complete', [ReservationController::class, 'complete'])->name('reservations.complete');
 
 
 //--------------------
@@ -102,6 +145,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
+    Route::get('/reviews', [AdminController::class, 'reviews'])->name('reviews');
+    Route::put('/reviews/{id}/toggle', [AdminController::class, 'toggleReview'])->name('reviews.toggle');
 });
 
 // ===========================
@@ -124,4 +169,9 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
     Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
+    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
 });
+
+
+

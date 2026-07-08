@@ -93,6 +93,8 @@
                 <a href="{{ route('admin.users') }}" class="nav-link d-inline {{ request()->routeIs('admin.users*') ? 'active' : '' }}">Users</a>
                 <a href="{{ route('admin.coupons-promotions') }}" class="nav-link d-inline {{ request()->routeIs('admin.coupons-promotions*') ? 'active' : '' }}">Coupons</a>
                 <a href="{{ route('admin.analytics') }}" class="nav-link d-inline {{ request()->routeIs('admin.analytics') ? 'active' : '' }}">Analytics</a>
+                <a href="{{ route('admin.reviews') }}"
+                    class="nav-link d-inline {{ request()->routeIs('admin.reviews*') ? 'active' : '' }}">Reviews</a>
                 <a href="{{ route('admin.settings') }}" class="nav-link d-inline {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">Settings</a>
             </nav>
         </div>

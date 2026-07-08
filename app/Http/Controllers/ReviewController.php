@@ -17,9 +17,10 @@ class ReviewController extends Controller
         $movie = Movie::findOrFail($movieId);
 
         $reviews = Review::where('movie_id', $movieId)
+            ->where('is_approved', true)
             ->with('user')
             ->latest()
-            ->paginate(5);
+            ->paginate(10);
 
         $averageRating = $reviews->avg('rating');
         $totalReviews = $reviews->total();
@@ -54,11 +55,12 @@ class ReviewController extends Controller
             'body' => 'required|string|max:1000',
         ]);
 
-        Review:: create([
-            'user_id' => Auth::id(),
-            'movie_id' => $movieId,
-            'rating' => $request->rating,
-            'body' => $request->body,
+        Review::create([
+            'user_id'     => Auth::id(),
+            'movie_id'    => $movieId,
+            'rating'      => $request->rating,
+            'body'        => $request->body,
+            'is_approved' => true,
         ]);
 
         return redirect()->route('reviews.index', $movieId)->with('success', 'Review submitted successfully!');

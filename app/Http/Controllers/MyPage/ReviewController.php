@@ -42,7 +42,7 @@ class ReviewController extends Controller
             'body' => $data['body'],
             'is_verified_purchase' => true,
             'is_moderated' => false,
-            'is_approved' => false,
+            'is_approved' => true,
         ]);
 
         return redirect()->route('mypage.movies-watched')

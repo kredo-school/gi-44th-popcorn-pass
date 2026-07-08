@@ -65,11 +65,26 @@
                     </div>
 
                     <div class="card-body">
-                        <img src="{{ asset('images/greatest-showman.jpg') }}" alt="Movie Poster"
-                            class="img-fluid rounded mb-3">
-                        <h5 class="fw-bold">
-                            The Greatest Showman
-                        </h5>
+
+                        <div class="row">
+                            <div class="text-center col-6">
+                                <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img ">
+                            </div>
+                            <div class="col-6">
+                                <div class="text-start mt-5 ">
+                                    <h6>
+                                        < Movie Title>
+                                    </h6>
+                                </div>
+                                <div class="mt-4">
+                                    <h3 class="fw-bold">
+                                        {{ $showtime->movie->title }}
+                                    </h3>
+                                </div>
+
+                            </div>
+
+                        </div>
                         <hr>
                         <div class="mb-3">
                             <small class="">Screen</small>
@@ -113,7 +128,9 @@
                         </div>
                         <hr>
 
+
                         <p class="text-center booking-id mb-1">
+
                             Booking ID: 0000-0000
                         </p>
 
@@ -134,11 +151,9 @@
     </div>
     <script>
         history.pushState(null, null, location.href);
-
         window.addEventListener('popstate', function() {
             history.pushState(null, null, location.href);
         });
     </script>
-
 
 @endsection

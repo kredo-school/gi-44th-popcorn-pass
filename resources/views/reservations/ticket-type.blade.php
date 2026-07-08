@@ -94,20 +94,26 @@
                     </div>
 
                     <div class="card-body">
-                        <img src="{{ asset('images/greatest-showman.jpg') }}" alt="Movie Poster"
-                            class="img-fluid rounded mb-3">
-                        <h5 class="fw-bold">
-                            The Greatest Showman
+
+                        <div class="text-center">
+                            <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img">
+                        </div>
+                        <h5 class="fw-bold mt-3">
                         </h5>
                         <hr>
                         <div class="mb-3">
                             <small class="">Screen</small>
-                            <p class="mb-0 fw-bold">Screen 3</p>
+
+                            <p class="mb-0 fw-bold">{{ $showtime->screen->screen_number }}</p>
+
                         </div>
                         <hr>
                         <div class="mb-3">
                             <small class="">Showtime</small>
-                            <p class="mb-0 fw-bold">Jun 10, 2026 (Wed) 11:25 AM</p>
+
+                            <p class="mb-0 fw-bold">
+                                {{ $showtime->start_time->format('F j, Y | H:i') }}
+                            </p>
                         </div>
                         <hr>
                         <div class="mb-3">
@@ -135,14 +141,16 @@
 
         {{-- Button --}}
         <div class="d-flex justify-content-between mt-5">
-            <form action="{{ route('reservations.seat-selection', ['showtime' => session('showtime_id')]) }}"
-                method="GET">
-                 <button type="submit" class="back-btn ms-5" id="back-btn">
-                    <i class="fa-solid fa-arrow-left"></i>BACK
+
+            
+            <form action="{{ route('reservations.showtimeSelection', ['showtime' => session('showtime_id')]) }}" method="GET">
+                <button>
+                    <i class="fa-solid fa-arrow-left"></i> BACK
                 </button>
             </form>
 
-            <button id="next-btn" class="next-btn me-5" disabled>
+            <button type="" id="next-btn" class="next-btn me-5" disabled>
+
                 NEXT<i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
