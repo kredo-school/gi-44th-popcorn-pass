@@ -60,18 +60,6 @@ Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
 Route::post('/save-payment', [ReservationController::class, 'savePayment'])
     ->name('reservations.save-payment');
 
-////////////// temporary (mirei)
-Route::get('/seat-selection', function () {
-    return view('reservations.seat-selection');
-});
-Route::get('/ticket-type-selection', function () {
-    return view('reservations.ticket-type');
-});
-Route::get('/payment-method', function () {
-    return view('reservations.payment-method');
-});
-
-
 Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
 
