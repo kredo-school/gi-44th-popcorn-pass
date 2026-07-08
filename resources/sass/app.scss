@@ -1281,6 +1281,10 @@
    background-color:rgba(16, 57, 133, 0.7) ;
    
 }
+.blue-background-list{
+    background-color:rgba(16, 57, 133, 0.7) ;
+    height: 330px;
+}
 .rating-star{
     color: #eeff00;
 }
@@ -1457,4 +1461,12 @@
 
 .movie-search-rating{
     color:#fff200;
+}
+
+// seat selection
+.reserved {
+    background-color: #000 !important;
+    border-color: #000;
+    cursor: not-allowed;
+    pointer-events: none;
 }

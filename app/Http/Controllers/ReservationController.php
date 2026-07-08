@@ -3,19 +3,38 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Reservation;
+use App\Models\Showtime;
 
 class ReservationController extends Controller
 {
-    
+
     // --------------------
     // Seat Selection Page
     // --------------------
-    public function seatSelection()
+    public function seatSelection(Showtime $showtime)
     {
         $selectedSeats = session('selectedSeats', []);
         session()->forget('paymentInfo');
 
-        return view('reservations.seat-selection', compact('selectedSeats'));
+        // 後続画面でも使えるように保存
+        session([
+            'showtime_id' => $showtime->id,
+        ]);
+
+        // 予約済み座席取得
+        $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
+            ->where('showtime_id', $showtime->id)
+            ->get()
+            ->flatMap(fn($reservation) => $reservation->seat_numbers)
+            ->toArray();
+
+
+        return view('reservations.seat-selection', compact(
+            'selectedSeats',
+            'reservedSeats',
+            'showtime'
+        ));
     }
 
     // --------------------
@@ -43,11 +62,17 @@ class ReservationController extends Controller
     // --------------------
     public function ticketType()
     {
+        if (empty(session('selectedSeats'))) {
+            return redirect()->route('home');
+        }
+
         $selectedSeats = session('selectedSeats', []);
 
+
         if (empty($selectedSeats)) {
-            return redirect()->route('reservations.seat-selection')
-                ->with('error', 'Your session has expired. Please start again.');
+            return redirect()->route('reservations.seat-selection', [
+                'showtime' => session('showtime_id')
+            ])->with('error', 'Your session has expired. Please start again.');
         }
 
         $totalPrice = collect($selectedSeats)->sum(function ($seat) {
@@ -88,6 +113,10 @@ class ReservationController extends Controller
     // --------------------
     public function paymentMethod()
     {
+        if (empty(session('selectedSeats'))) {
+            return redirect()->route('home');
+        }
+
         $selectedSeats = session('selectedSeats', []);
         $paymentInfo = session('paymentInfo', []);
 
@@ -132,6 +161,10 @@ class ReservationController extends Controller
     // --------------------
     public function confirmation()
     {
+        if (empty(session('selectedSeats'))) {
+            return redirect()->route('home');
+        }
+
         $selectedSeats = session('selectedSeats', []);
         $paymentInfo = session('paymentInfo', []);
 

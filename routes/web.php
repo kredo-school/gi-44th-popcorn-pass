@@ -8,7 +8,6 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
-use App\Http\Controllers\MyPage\ReviewController;
 use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
@@ -32,7 +31,7 @@ Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showti
 //--------------------
 // Reservation Routes
 //--------------------
-Route::get('/seat-selection', [ReservationController::class, 'seatSelection'])
+Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
 
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
@@ -67,7 +66,7 @@ Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'sh
 Route::get('/movies/{movieId}/reviews/{reviewId}/edit', [ReviewController::class, 'edit'])->name('reviews.edit')->middleware('auth');
 Route::delete('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'destroy'])->name('reviews.destroy')->middleware('auth');
 Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
-
+Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])->name('reservations.seat-selection');
 
 // ===========================
 // Location / Nearby Cinemas API
