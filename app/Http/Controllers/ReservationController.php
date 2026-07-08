@@ -5,36 +5,28 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Showtime;
+use App\Models\ReservationSeat;
+use App\Models\ShowtimeSeat;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-use App\Models\Showtime;
-use App\Models\Reservation;
-use App\Models\ReservationSeat;
-use App\Models\ShowtimeSeat;
+
 
 
 
 class ReservationController extends Controller
 {
-<<<<<<< HEAD
 
-=======
->>>>>>> 19493447e0619e6c4c1053e3284a6ed7f939e0a0
     // --------------------
     // Showtime Selection Page
     // --------------------
-<<<<<<< HEAD
-    public function seatSelection(Showtime $showtime)
-=======
+
     public function showtimeSelection(Showtime $showtime)
->>>>>>> 19493447e0619e6c4c1053e3284a6ed7f939e0a0
     {
         session(['showtime_id' => $showtime->id]);
 
-<<<<<<< HEAD
         // 後続画面でも使えるように保存
         session([
             'showtime_id' => $showtime->id,
@@ -53,17 +45,7 @@ class ReservationController extends Controller
             'reservedSeats',
             'showtime'
         ));
-=======
-        $movie = $showtime->movie;
-        $screen = $showtime->screen;
 
-        $selectedSeats = session('selectedSeats', []);
-
-        return view(
-            'reservations.seat-selection',
-            compact('showtime', 'movie', 'screen', 'selectedSeats')
-        );
->>>>>>> 19493447e0619e6c4c1053e3284a6ed7f939e0a0
     }
     
 
@@ -94,7 +76,6 @@ class ReservationController extends Controller
     // --------------------
     public function ticketType()
     {
-<<<<<<< HEAD
         if (empty(session('selectedSeats'))) {
             return redirect()->route('home');
         }
@@ -107,10 +88,7 @@ class ReservationController extends Controller
                 'showtime' => session('showtime_id')
             ])->with('error', 'Your session has expired. Please start again.');
         }
-=======
 
-        $selectedSeats = session('selectedSeats', []);
->>>>>>> 19493447e0619e6c4c1053e3284a6ed7f939e0a0
 
         $totalPrice = collect($selectedSeats)->sum(function ($seat) {
             $price = $seat['price'] ?? 0;
