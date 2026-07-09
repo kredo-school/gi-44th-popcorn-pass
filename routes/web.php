@@ -82,9 +82,10 @@ Route::delete('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 
 Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
 
 // ===========================
-// Location / Nearby Cinemas API
+// API Routes (Public)
 // ===========================
 Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby']);
+Route::get('/api/dynamic-pricing/{showtimeId}', [AdminController::class, 'getDynamicPricingStats']);
 
 
 // ===========================
@@ -104,7 +105,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])->name('movies.showtimes.generate');
     Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])->name('showtimes.delete');
     
-    // Dynamic Pricing Management (★ NEW)
+    // Dynamic Pricing Management
     Route::get('/dynamic-pricing', [AdminController::class, 'showtimeDynamicPricing'])->name('dynamic-pricing');
     Route::get('/dynamic-pricing/{id}/edit', [AdminController::class, 'editShowtimeDynamicPrice'])->name('dynamic-pricing.edit');
     Route::put('/dynamic-pricing/{id}', [AdminController::class, 'updateShowtimeDynamicPrice'])->name('dynamic-pricing.update');
