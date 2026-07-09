@@ -17,6 +17,10 @@ class DatabaseSeeder extends Seeder
             GenreSeeder::class,
             AgeRatingSeeder::class,
             AdminSeeder::class,
+            ScreenSeeder::class,
+            ScreenSeatSeeder::class,
+            SeatCategorySeeder::class,
         ]);
     }
 }
+

@@ -16,8 +16,10 @@ use App\Models\User;
 use App\Models\SystemSetting;
 use App\Models\Coupon;
 use App\Models\Promotion;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -87,7 +89,7 @@ class AdminController extends Controller
     public function storeMovie(Request $request)
     {
 
-        
+
         $validated = $request->validate($this->movieValidationRules());
 
         $rules = $this->movieValidationRules();
@@ -126,7 +128,7 @@ class AdminController extends Controller
         $durationMinutes = (int) $movie->duration;
 
         foreach ($showtimesInput as $index => $row) {
-         
+
             $screenId = $row['screen_id'] ?? null;
             $date = $row['date'] ?? null;
             $startTime = $row['start_time'] ?? null;
@@ -223,12 +225,28 @@ class AdminController extends Controller
                     'is_active' => $showtime->is_active,
                 ];
             });
+        // 上映時間ごとの座席を作成
+        $screenSeats = ScreenSeat::where('screen_id', $screen->id)->get();
+
+        foreach ($screenSeats as $screenSeat) {
+
+            ShowtimeSeat::create([
+                'id' => Str::uuid(),
+                'showtime_id' => $showtime->id,
+                'screen_seat_id' => $screenSeat->id,
+                'seat_status' => 'available',
+                'available' => true,
+                'price_at_showtime' => $screenSeat->price,
+            ]);
+        }
 
         return response()->json($showtimes);
     }
 
     public function generateShowtimes(Request $request, $id)
     {
+        \Log::info('generateShowtimes開始');
+
         $movie = Movie::findOrFail($id);
 
         $validated = $request->validate([
@@ -242,47 +260,88 @@ class AdminController extends Controller
         ]);
 
         $screen = Screen::findOrFail($validated['screen_id']);
+
         $durationMinutes = (int) $movie->duration;
+
         $created = 0;
         $skipped = 0;
 
         $current = Carbon::parse($validated['start_date'])->startOfDay();
         $end = Carbon::parse($validated['end_date'])->startOfDay();
 
+
         while ($current->lte($end)) {
+
             $dayOfWeek = (int) $current->format('w');
 
+
             if (in_array($dayOfWeek, $validated['days'])) {
+
                 foreach ($validated['time_slots'] as $slot) {
-                    if (! $slot) continue;
 
-                    $startsAt = Carbon::parse($current->format('Y-m-d') . ' ' . $slot);
-                    $endsAt = $startsAt->copy()->addMinutes($durationMinutes);
+                    if (!$slot) continue;
 
-                    $alreadyExists = Showtime::where('screen_id', $screen->id)
+
+                    $startsAt = Carbon::parse(
+                        $current->format('Y-m-d') . ' ' . $slot
+                    );
+
+                    $endsAt = $startsAt->copy()
+                        ->addMinutes($durationMinutes);
+
+
+                    // 既存チェック
+                    $showtime = Showtime::where('screen_id', $screen->id)
                         ->where('start_time', $startsAt)
-                        ->exists();
+                        ->first();
 
-                    if ($alreadyExists) {
+
+                    if ($showtime) {
+
                         $skipped++;
-                        continue;
+                    } else {
+
+                        // showtime作成
+                        $showtime = Showtime::create([
+                            'screen_id' => $screen->id,
+                            'movie_id' => $movie->id,
+                            'start_time' => $startsAt,
+                            'end_time' => $endsAt,
+                            'is_active' => true,
+                            'created_by_id' => auth()->id(),
+                        ]);
+
+                        $created++;
                     }
 
-                    Showtime::create([
-                        'screen_id' => $screen->id,
-                        'movie_id' => $movie->id,
-                        'start_time' => $startsAt,
-                        'end_time' => $endsAt,
-                        'is_active' => true,
-                        'created_by_id' => auth()->id(),
-                    ]);
 
-                    $created++;
+                    // showtime_seats作成
+                    $screenSeats = ScreenSeat::where('screen_id', $screen->id)
+                        ->get();
+
+
+                    foreach ($screenSeats as $screenSeat) {
+
+                        ShowtimeSeat::firstOrCreate(
+                            [
+                                'showtime_id' => $showtime->id,
+                                'screen_seat_id' => $screenSeat->id,
+                            ],
+                            [
+                                'id' => Str::uuid(),
+                                'seat_status' => 'available',
+                                'available' => true,
+                                'price_at_showtime' => $screenSeat->price,
+                            ]
+                        );
+                    }
                 }
             }
 
+
             $current->addDay();
         }
+
 
         return response()->json([
             'success' => true,
@@ -653,5 +712,49 @@ class AdminController extends Controller
         ]);
 
         return redirect()->route('admin.coupons-promotions')->with('success', 'Promotion status updated.');
+    }
+
+    // --------------------
+    // Reviews
+    // --------------------
+    public function reviews(Request $request)
+    {
+        $query = Review::with(['user', 'movie'])->latest();
+
+        $status = $request->get('status', 'visible');
+        if ($status === 'visible') {
+            $query->where('is_approved', true);
+        } elseif ($status === 'hidden') {
+            $query->where('is_approved', false);
+        }
+
+        // search
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('movie', function ($mq) use ($search) {
+                    $mq->where('title', 'like', "%{$search}%");
+                })->orWhereHas('user', function ($uq) use ($search) {
+                    $uq->where('username', 'like', "%{$search}%");
+                });
+            });
+        }
+
+        // sort
+        $sort = $request->get('sort', 'desc');
+        $query->orderBy('created_at', $sort);
+
+        $reviews = $query->paginate(20)->withQueryString();
+
+        return view('admin.reviews.index', compact('reviews'));
+    }
+
+    public function toggleReview($id)
+    {
+        $review = Review::findOrFail($id);
+        $review->is_approved = !$review->is_approved;
+        $review->save();
+
+        return back()->with('success', 'Review status updated successfully.');
     }
 }
