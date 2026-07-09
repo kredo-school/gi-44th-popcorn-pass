@@ -114,7 +114,7 @@
                 </h1>
                 <!-- display showtime -->
                 <div class="d-flex justify-content-center gap-3 flex-wrap showtime-list pb-5">
-
+                    
                     @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
                         @if ($showtime->start_time->isPast())
 

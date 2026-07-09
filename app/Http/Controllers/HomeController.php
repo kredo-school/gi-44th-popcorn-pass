@@ -106,6 +106,7 @@ class HomeController extends Controller
             },
             'showtimes.screen.cinema',
         ]);
+        
 
         $data['movie'] = $movie;
         $data['selectedDate'] = $selectedDate;
