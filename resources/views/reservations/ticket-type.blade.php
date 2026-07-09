@@ -104,14 +104,14 @@
                         <div class="mb-3">
                             <small class="">Screen</small>
 
-                            <p class="mb-0 fw-bold">{{ $showtime->screen->screen_number }}</p>
+                            <p class="mb-0 fw-bold fs-5">{{ $showtime->screen->screen_number }}</p>
 
                         </div>
                         <hr>
                         <div class="mb-3">
                             <small class="">Showtime</small>
 
-                            <p class="mb-0 fw-bold">
+                            <p class="mb-0 fw-bold fs-5">
                                 {{ $showtime->start_time->format('F j, Y | H:i') }}
                             </p>
                         </div>

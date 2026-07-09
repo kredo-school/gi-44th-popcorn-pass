@@ -39,42 +39,43 @@ class ReservationController extends Controller
             ->flatMap(fn($reservation) => $reservation->seat_numbers)
             ->toArray();
 
+        $selectedSeats = [];
+
 
         return view('reservations.seat-selection', compact(
             'selectedSeats',
             'reservedSeats',
             'showtime'
         ));
-
     }
 
     // --------------------
     // Seat Selection
     // --------------------
     public function seatSelection(Showtime $showtime)
-{
-    $selectedSeats = session('selectedSeats', []);
-    session()->forget('paymentInfo');
+    {
+        $selectedSeats = session('selectedSeats', []);
+        session()->forget('paymentInfo');
 
- 
-    session([
-        'showtime_id' => $showtime->id,
-    ]);
 
-  
-    $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
-        ->where('showtime_id', $showtime->id)
-        ->get()
-        ->flatMap(fn ($reservation) => $reservation->seat_numbers)
-        ->toArray();
+        session([
+            'showtime_id' => $showtime->id,
+        ]);
 
-    return view('reservations.seat-selection', compact(
-        'selectedSeats',
-        'reservedSeats',
-        'showtime'
-    ));
-}
-    
+
+        $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
+            ->where('showtime_id', $showtime->id)
+            ->get()
+            ->flatMap(fn($reservation) => $reservation->seat_numbers)
+            ->toArray();
+
+        return view('reservations.seat-selection', compact(
+            'selectedSeats',
+            'reservedSeats',
+            'showtime'
+        ));
+    }
+
 
     // --------------------
     // Seat Selection Store
@@ -247,9 +248,14 @@ class ReservationController extends Controller
                 'reservation_reference' => strtoupper(Str::random(10)),
                 'confirmed_at' => now(),
             ]);
+            session()->put(
+                'reservation_reference',
+                $reservation->reservation_reference
+            );
+
 
             foreach ($selectedSeats as $seat) {
-                
+
 
                 $showtimeSeat = ShowtimeSeat::where('showtime_id', $showtime->id)
                     ->whereHas('screenSeat', function ($query) use ($seat) {
@@ -277,6 +283,7 @@ class ReservationController extends Controller
                 ]);
             }
         });
+        
 
         // ★ここ重要：セッションはcompleteの後に消すのが安全
         session()->put('booking_done', true);
@@ -295,6 +302,7 @@ class ReservationController extends Controller
 
         $selectedSeats = session('selectedSeats', []);
         $paymentInfo = session('paymentInfo', []);
+
 
         if (empty($selectedSeats) || empty($paymentInfo)) {
             return redirect()->route('reservations.showtimeSelection', [
@@ -332,11 +340,14 @@ class ReservationController extends Controller
 
         $selectedSeats = session('selectedSeats', []);
         $totalPrice = session('final_price', 0);
+        $reservationReference = session('reservation_reference');
+
 
         return view('reservations.reservation-complete', compact(
             'showtime',
             'selectedSeats',
-            'totalPrice'
+            'totalPrice',
+            'reservationReference'
         ));
     }
 }

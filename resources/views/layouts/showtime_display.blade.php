@@ -144,98 +144,98 @@
             <div class="tab-pane col-10 mx-auto fade {{ $isSearch ? '' : 'show active' }}" id="nowPlaying">
 
 
-                    @php
-                        $visibleMovies = $movies->filter(fn($movie) => $movie->showtimes->isNotEmpty());
-                    @endphp
+                @php
+                    $visibleMovies = $movies->filter(fn($movie) => $movie->showtimes->isNotEmpty());
+                @endphp
 
-                    @forelse ($visibleMovies as $movie)
-                        <div class="movie-row p-4">
+                @forelse ($visibleMovies as $movie)
+                    <div class="movie-row p-4">
 
-                            <div class="row">
+                        <div class="row">
 
-                                <!-- movie poster images -->
-                                <div class="col-2 text-end mt-2">
-                                    <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
-                                        <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
-                                            class="img-showtime">
+                            <!-- movie poster images -->
+                            <div class="col-2 text-end mt-2">
+                                <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
+                                    <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
+                                        class="img-showtime">
+                                </a>
+                            </div>
+
+                            <!-- Right side -->
+                            <div class="col-10">
+
+                                <!-- title -->
+                                <div class="mb-4">
+                                    <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
+                                        class="showtime-movie-title text-decoration-none">
+                                        {{ strtoupper($movie->title) }} >
                                     </a>
                                 </div>
 
-                                <!-- Right side -->
-                                <div class="col-10">
+                                <!-- display showtime -->
+                                <div class="d-flex gap-3 flex-wrap showtime-list">
 
-                                    <!-- title -->
-                                    <div class="mb-4">
-                                        <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
-                                            class="showtime-movie-title text-decoration-none">
-                                            {{ strtoupper($movie->title) }} >
-                                        </a>
-                                    </div>
-
-                                    <!-- display showtime -->
-                                    <div class="d-flex gap-3 flex-wrap showtime-list">
-
-                                        @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
-                                            @if ($showtime->start_time->isPast())
-                                                <div class="showtime-card-closed">
-                                                    <div class="showtime-top">
-                                                        <div class="showtime-time">
-                                                            {{ $showtime->start_time->format('H:i') }}
-                                                            <div class="showtime-end">
-                                                                ～{{ $showtime->end_time->format('H:i') }}
-                                                            </div>
-                                                        </div>
-                                                        <div class="ms-2">
-                                                            <div class="theater-text">Theater</div>
-                                                            <div class="theater-number theater-box">
-                                                                {{ $showtime->screen->screen_number }}
-                                                            </div>
+                                    @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
+                                        @if ($showtime->start_time->isPast())
+                                            <div class="showtime-card-closed">
+                                                <div class="showtime-top">
+                                                    <div class="showtime-time">
+                                                        {{ $showtime->start_time->format('H:i') }}
+                                                        <div class="showtime-end">
+                                                            ～{{ $showtime->end_time->format('H:i') }}
                                                         </div>
                                                     </div>
-                                                    <div class="showtime-bottom">
-                                                        <div class="closed-icon">✖️</div>
-                                                        <div class="closed-text">Closed</div>
+                                                    <div class="ms-2">
+                                                        <div class="theater-text">Theater</div>
+                                                        <div class="theater-number theater-box">
+                                                            {{ $showtime->screen->screen_number }}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            @else
-                                                <div class="showtime-card-reservation">
-                                                    <div class="showtime-top">
-                                                        <div class="showtime-time">
-                                                            {{ $showtime->start_time->format('H:i') }}
-                                                            <div class="showtime-end">
-                                                                ～{{ $showtime->end_time->format('H:i') }}
-                                                            </div>
-                                                        </div>
-                                                        <div class="ms-2">
-                                                            <div class="theater-text">Theater</div>
-                                                            <div class="theater-number theater-box">
-                                                                {{ $showtime->screen->screen_number }}
-                                                            </div>
+                                                <div class="showtime-bottom">
+                                                    <div class="closed-icon">✖️</div>
+                                                    <div class="closed-text">Closed</div>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="showtime-card-reservation">
+                                                <div class="showtime-top">
+                                                    <div class="showtime-time">
+                                                        {{ $showtime->start_time->format('H:i') }}
+                                                        <div class="showtime-end">
+                                                            ～{{ $showtime->end_time->format('H:i') }}
                                                         </div>
                                                     </div>
-                                                    <a href="{{ route('reservations.showtimeSelection', ['showtime' => $showtime->id]) }}"
-                                                        class="text-decoration-none">
-
-                                                        <div class="showtime-bottom pt-2">
-                                                            <div class="reservation-icon">⭕️</div>
-                                                            <div class="reservation-text">Reservation</div>
+                                                    <div class="ms-2">
+                                                        <div class="theater-text">Theater</div>
+                                                        <div class="theater-number theater-box">
+                                                            {{ $showtime->screen->screen_number }}
                                                         </div>
-                                                    </a>
+                                                    </div>
                                                 </div>
-                                            @endif
-                                        @endforeach
-                                    </div>
+                                                <a href="{{ route('reservations.seat-selection', ['showtime' => $showtime->id]) }}"
+                                                    class="text-decoration-none">
 
+                                                    <div class="showtime-bottom pt-2">
+                                                        <div class="reservation-icon">⭕️</div>
+                                                        <div class="reservation-text">Reservation</div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 </div>
+
                             </div>
                         </div>
+                    </div>
 
-                    @empty
-                        <h1 class="text-white text-center mt-5">
-                            No movies available for this date.
-                        </h1>
-                    @endforelse
-               
+                @empty
+                    <h1 class="text-white text-center mt-5">
+                        No movies available for this date.
+                    </h1>
+                @endforelse
+
             </div>
 
 

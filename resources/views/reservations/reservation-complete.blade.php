@@ -88,12 +88,12 @@
                         <hr>
                         <div class="mb-3">
                             <small class="">Screen</small>
-                            <p class="mb-0 fw-bold">Screen 3</p>
+                            <p class="mb-0 fw-bold fs-5">Screen 3</p>
                         </div>
                         <hr>
                         <div class="mb-3">
                             <small class="">Showtime</small>
-                            <p class="mb-0 fw-bold">Jun 10, 2026 (Wed) 11:25 AM</p>
+                            <p class="mb-0 fw-bold fs-5">Jun 10, 2026 (Wed) 11:25 AM</p>
                         </div>
                         <hr>
                         <div class="mb-3">
@@ -131,7 +131,7 @@
 
                         <p class="text-center booking-id mb-1">
 
-                            Booking ID: 0000-0000
+                            Booking ID: {{ $reservationReference }}
                         </p>
 
                     </div>
