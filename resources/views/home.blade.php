@@ -113,15 +113,18 @@
     <div class="mt-0 home-hero-bg">
         <div>
             {{-- SEARCH --}}
-            <div class="search-wrapper w-50 container pt-5 mb-5">
+            <form action="{{ route('movies.search') }}" method="GET" class="search-wrapper w-50 container pt-5 mb-5">
+
                 <i class="fa-solid fa-magnifying-glass search-icon"></i>
 
-                <input type="text" class="search-input mt-3" placeholder="Search movies, genres, or showtimes...">
+                <input type="text" name="keyword" class="search-input mt-3" placeholder="Search by movie title..."
+                    value="{{ request('keyword') }}">
 
                 <button class="search-btn">
                     SEARCH
                 </button>
-            </div>
+
+            </form>
 
             {{-- ===========================
                  Nearby Cinemas
@@ -209,10 +212,9 @@
                                         <div class="poster-area" style="height:{{ $s['height'] }}">
                                             <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
                                                 <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
-
-                                                class="w-100 h-100">
+                                                    class="w-100 h-100">
                                             </a>
-                                            
+
 
                                             <div class="movie-overlay"></div>
                                         </div>
@@ -341,7 +343,8 @@
                         <div class="d-flex gap-3 pb-2 mt-5 ms-4 me-5 coming-soon-track" id="comingSoonSlider">
 
                             @foreach ($comingSoonMovies as $movie)
-                                <a href="{{ route('release', ['movie' => $movie->id]) }}" class="coming-card text-decoration-none flex-shrink-0 m-4"
+                                <a href="{{ route('release', ['movie' => $movie->id]) }}"
+                                    class="coming-card text-decoration-none flex-shrink-0 m-4"
                                     style="scroll-snap-align: start; width: 400px;">
                                     <div style="overflow: hidden;">
                                         <img src="{{ $movie->poster_url }}" alt="Movie"

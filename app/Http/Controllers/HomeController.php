@@ -66,7 +66,7 @@ class HomeController extends Controller
         return view('layouts.showtime_display', $data);
     }
 
-    public function search(Request $request)
+    public function home_search(Request $request)
     {
         $selectedDate = request('date', now()->toDateString());
 
@@ -106,7 +106,7 @@ class HomeController extends Controller
             },
             'showtimes.screen.cinema',
         ]);
-        
+
 
         $data['movie'] = $movie;
         $data['selectedDate'] = $selectedDate;
@@ -125,5 +125,19 @@ class HomeController extends Controller
     public function movie_detail(Movie $movie)
     {
         return view('movies.movie_detail')->with('movie', $movie);
+    }
+
+    // search movie 
+    public function search(Request $request)
+    {
+        $keyword = $request->keyword;
+
+        $movies = Movie::where('title', 'like', "%{$keyword}%")
+            ->get();
+
+        return view('movies.search', compact(
+            'movies',
+            'keyword'
+        ));
     }
 }

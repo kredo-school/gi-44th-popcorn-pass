@@ -26,6 +26,7 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{movie}/release', [HomeController::class, 'release'])->name('release');
 Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])->name('movie_detail');
+Route::get('/movies/search', [HomeController::class, 'home_search'])->name('movies.search');
 
 
 //Movie showtime

@@ -1191,6 +1191,80 @@
 }
 
 
+// home_search
+.card_search {
+    background-color: transparent;
+}
+.search-result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 200px));
+    justify-content: start;
+    gap: 20px;
+}
+
+.search-card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    aspect-ratio: 2 / 3;
+    background: #1a1a1a;
+}
+
+.search-card-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.search-card-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 14px;
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.2) 45%, rgba(0,0,0,0) 70%);
+}
+
+.search-card-title {
+    color: #000;
+    font-size: 20px;
+    font-weight: 600;
+
+    text-shadow:
+        -1px -1px 0 #fff,
+         1px -1px 0 #fff,
+        -1px  1px 0 #fff,
+         1px  1px 0 #fff;
+}
+
+.search-card-director {
+    color: rgba(0, 0, 0, 0.7);
+    font-size: 12px;
+    margin: 0 0 12px;
+}
+
+.search-card-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: rgb(255, 247, 0);
+    color: #000000;
+    font-size: 13px;
+    padding: 8px 0;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.search-card-btn:hover {
+    background: rgba(255,255,255,0.22);
+    color: #fff;
+}
+
+
 
 // showtime scchedule
 .showtime-card-closed{
