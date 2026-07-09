@@ -135,6 +135,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
     Route::get('/reviews', [AdminController::class, 'reviews'])->name('reviews');
     Route::put('/reviews/{id}/toggle', [AdminController::class, 'toggleReview'])->name('reviews.toggle');
+    Route::get('/information', [AdminController::class, 'information'])->name('information');
+    Route::get('/information/create', [AdminController::class, 'createInformation'])->name('information.create');
+    Route::post('/information', [AdminController::class, 'storeInformation'])->name('information.store');
+    Route::get('/information/{id}/edit', [AdminController::class, 'editInformation'])->name('information.edit');
+    Route::put('/information/{id}', [AdminController::class, 'updateInformation'])->name('information.update');
+    Route::get('/information/{id}/details', [AdminController::class, 'informationDetails'])->name('information.details');
+    Route::delete('/information/{id}', [AdminController::class, 'deleteInformation'])->name('information.delete');
+
 });
 
 // ===========================

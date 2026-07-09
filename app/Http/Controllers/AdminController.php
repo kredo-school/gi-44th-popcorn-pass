@@ -17,6 +17,7 @@ use App\Models\SystemSetting;
 use App\Models\Coupon;
 use App\Models\Promotion;
 use App\Models\Review;
+use App\Models\Information;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -680,7 +681,7 @@ class AdminController extends Controller
         $query = Review::with(['user', 'movie'])->latest();
 
         $status = $request->get('status', 'visible');
-        if ($status === 'visible') {
+        if ($status === 'all') {
             $query->where('is_approved', true);
         } elseif ($status === 'hidden') {
             $query->where('is_approved', false);
@@ -715,4 +716,84 @@ class AdminController extends Controller
 
         return back()->with('success', 'Review status updated successfully.');
     }
+
+    // --------------------
+    // Infromations
+    // --------------------
+    public function information()
+    {
+        $information = Information::latest()->paginate(10);
+
+        return view('admin.information.index', compact('information'));
+    }
+
+    public function createInformation()
+    {
+        return view('admin.information.create');
+    }
+
+    public function storeInformation(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'category' => 'required|string|max:100',
+            'status' => 'required|string',
+            'published_at' => 'nullable|date',
+        ]);
+
+        $validated['created_by_id'] = auth()->id();
+
+        Information::create($validated);
+
+        return redirect()
+            ->route('admin.information')
+            ->with('success', 'Information added successfully.');
+    }
+
+    public function editInformation($id)
+    {
+        $information = Information::findOrFail($id);
+
+        return view('admin.information.edit', compact('information'));
+    }
+
+    public function updateInformation(Request $request, $id)
+    {
+        $information = Information::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'category' => 'required|string|max:100',
+            'status' => 'required|string',
+            'published_at' => 'nullable|date',
+        ]);
+
+        $information->update($validated);
+
+        return redirect()
+            ->route('admin.information')
+            ->with('success', 'Information updated successfully.');
+    }
+
+    public function informationDetails($id)
+    {
+        $information = Information::findOrFail($id);
+
+        return response()->json($information);
+    }
+
+    public function deleteInformation($id)
+    {
+        $information = Information::findOrFail($id);
+
+        $information->delete();
+
+        return redirect()
+            ->route('admin.information')
+            ->with('success', 'Information deleted successfully.');
+    }
+
+
 }
