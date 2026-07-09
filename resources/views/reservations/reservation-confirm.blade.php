@@ -85,12 +85,12 @@
                         <hr>
                         <div class="mb-3">
                             <small class="">Screen</small>
-                            <p class="mb-0 fw-bold">{{ $showtime->screen->screen_number }}</p>
+                            <p class="mb-0 fw-bold fs-5">{{ $showtime->screen->screen_number }}</p>
                         </div>
                         <hr>
                         <div class="mb-3">
                             <small class="">Showtime</small>
-                            <p class="mb-0 fw-bold">{{ $showtime->start_time->format('M j, Y (D) H:i') }}</p>
+                            <p class="mb-0 fw-bold fs-5">{{ $showtime->start_time->format('M j, Y (D) H:i') }}</p>
                         </div>
                         <hr>
                         <div class="mb-3">
@@ -107,7 +107,7 @@
                                                 @if ($seat['premium'])
                                                     <p class="mb-0 text-warning fw-bold">(Premium +$10)</p>
                                                 @endif
-                                                <p class="mb-0 fw-bold">
+                                                <p class="mb-0 fw-bold fs-5">
                                                     ${{ $seat['price'] + ($seat['premium'] ? 10 : 0) }}
                                                 </p>
                                             </div>
