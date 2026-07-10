@@ -67,7 +67,7 @@
             {{-- COMING SOON --}}
             <div class="carousel-item">
 
-                <img src="{{ asset('images/king.png') }}" class="hero-image">
+                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
 
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
@@ -76,12 +76,10 @@
                     </span>
                     <h1>
                         UPCOMING<br>
-                        BLOCKBUSTERS
+                        BLOCKBUSTERS 
                     </h1>
-                    <p>
-                        Discover the most anticipated movies.
-                    </p>
-                    <a href="#" class="btn-book">
+                    
+                    <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
                         VIEW MORE →
                     </a>
                 </div>
@@ -89,7 +87,7 @@
             {{-- TOP RANKING --}}
             <div class="carousel-item">
 
-                <img src="{{ asset('images/king2.png') }}" class="hero-image">
+                <img src="{{ $topMovie->banner_image_url }}" class="hero-image">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
                     <span class="hero-tag hero-tag-red">
@@ -102,8 +100,8 @@
                     <p>
                         Most watched by our audience.
                     </p>
-                    <a href="#" class="btn-book btn-book-red">
-                        SEE RANKING →
+                    <a href="{{ route('movie_detail', $topMovie->id) }}" class="btn-book btn-book-red">
+                        SEE MOVIE DETAIL →
                     </a>
                 </div>
             </div>
@@ -209,10 +207,9 @@
                                         <div class="poster-area" style="height:{{ $s['height'] }}">
                                             <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
                                                 <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
-
-                                                class="w-100 h-100">
+                                                    class="w-100 h-100">
                                             </a>
-                                            
+
 
                                             <div class="movie-overlay"></div>
                                         </div>
@@ -341,7 +338,8 @@
                         <div class="d-flex gap-3 pb-2 mt-5 ms-4 me-5 coming-soon-track" id="comingSoonSlider">
 
                             @foreach ($comingSoonMovies as $movie)
-                                <a href="{{ route('release', ['movie' => $movie->id]) }}" class="coming-card text-decoration-none flex-shrink-0 m-4"
+                                <a href="{{ route('release', ['movie' => $movie->id]) }}"
+                                    class="coming-card text-decoration-none flex-shrink-0 m-4"
                                     style="scroll-snap-align: start; width: 400px;">
                                     <div style="overflow: hidden;">
                                         <img src="{{ $movie->poster_url }}" alt="Movie"

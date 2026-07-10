@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Movie;
 use Carbon\Carbon;
 
+
 class HomeController extends Controller
 {
     /**
@@ -32,9 +33,21 @@ class HomeController extends Controller
             ->orderBy('review_average', 'desc')
             ->take(3)
             ->get();
+        $heroMovie = Movie::where('status', 'coming_soon')
+            ->inRandomOrder()
+            ->first();
+       $topMovie = Movie::withAvg([
+    'reviews as weekly_average' => function ($query) {
+        $query->where('created_at', '>=', Carbon::now()->subWeek());
+    }
+], 'rating')
+->orderByDesc('weekly_average')
+->first();
         return view('home')->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
-            ->with('topMovies', $topMovies);
+            ->with('topMovies', $topMovies)
+            ->with('heroMovie', $heroMovie)
+            ->with('topMovie', $topMovie);
     }
 
     private function commonData($selectedDate)
@@ -106,7 +119,7 @@ class HomeController extends Controller
             },
             'showtimes.screen.cinema',
         ]);
-        
+
 
         $data['movie'] = $movie;
         $data['selectedDate'] = $selectedDate;

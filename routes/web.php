@@ -42,9 +42,6 @@ Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showti
 //--------------------
 // Reservation Routes
 //--------------------
-//--------------------
-// Reservation Routes
-//--------------------
 Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
     ->name('reservations.showtimeSelection');
 

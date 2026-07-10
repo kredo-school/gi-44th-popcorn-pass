@@ -78,5 +78,9 @@ class Movie extends Model
             ->whereDate('end_date', '<', $today)
             ->update(['status' => 'archived']);
     }
+    public function reviews()
+{
+    return $this->hasMany(Review::class);
+}
     }
 
