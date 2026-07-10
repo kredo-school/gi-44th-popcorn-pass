@@ -35,7 +35,7 @@
             {{-- COMING SOON --}}
             <div class="carousel-item">
 
-                <img src="{{ asset('images/king.png') }}" class="hero-image">
+                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
 
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
@@ -44,35 +44,32 @@
                     </span>
                     <h1>
                         UPCOMING<br>
-                        BLOCKBUSTERS
+                        BLOCKBUSTERS 
                     </h1>
-                    <p>
-                        Discover the most anticipated movies.
-                    </p>
-                    <a href="#" class="btn-book">
+                    
+                    <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
                         VIEW MORE →
                     </a>
                 </div>
             </div>
-
             {{-- TOP RANKING --}}
             <div class="carousel-item">
 
-                <img src="{{ asset('images/king2.png') }}" class="hero-image">
+                <img src="{{ $topMovie->banner_image_url }}" class="hero-image">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
-                    <span class="hero-tag" style="color:#ff4040;">
+                    <span class="hero-tag hero-tag-red">
                         TOP RANKING
                     </span>
                     <h1>
-                        No.1 MOVIE<br>
+                        #1 MOVIE<br>
                         OF THE WEEK
                     </h1>
                     <p>
                         Most watched by our audience.
                     </p>
-                    <a href="#" class="btn-book" style="border-color:#ff4040;color:#ff4040;">
-                        SEE RANKING →
+                    <a href="{{ route('movie_detail', $topMovie->id) }}" class="btn-book btn-book-red">
+                        SEE MOVIE DETAIL →
                     </a>
                 </div>
             </div>

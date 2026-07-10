@@ -29,20 +29,20 @@ class HomeController extends Controller
             ->whereDate('released_date', '>=', now())
             ->orderBy('released_date', 'asc')
             ->get();
-        $topMovies = Movie::where('status', 'now_showing')
-            ->orderBy('review_average', 'desc')
-            ->take(3)
+        $topMovies = Movie::withAvg('reviews', 'rating')
+            ->orderByDesc('review_average')
+            ->take(10)
             ->get();
         $heroMovie = Movie::where('status', 'coming_soon')
             ->inRandomOrder()
             ->first();
-       $topMovie = Movie::withAvg([
-    'reviews as weekly_average' => function ($query) {
-        $query->where('created_at', '>=', Carbon::now()->subWeek());
-    }
-], 'rating')
-->orderByDesc('weekly_average')
-->first();
+        $topMovie = Movie::withAvg([
+            'reviews as weekly_average' => function ($query) {
+                $query->where('created_at', '>=', Carbon::now()->subWeek());
+            }
+        ], 'rating')
+            ->orderByDesc('weekly_average')
+            ->first();
         return view('home')->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
             ->with('topMovies', $topMovies)
@@ -76,7 +76,20 @@ class HomeController extends Controller
         $data['selectedDate'] = $selectedDate;
         $data['isSearch'] = false;
 
-        return view('layouts.showtime_display', $data);
+        $heroMovie = Movie::where('status', 'coming_soon')
+            ->inRandomOrder()
+            ->first();
+        $topMovie = Movie::withAvg([
+            'reviews as weekly_average' => function ($query) {
+                $query->where('created_at', '>=', Carbon::now()->subWeek());
+            }
+        ], 'rating')
+            ->orderByDesc('weekly_average')
+            ->first();
+
+        return view('layouts.showtime_display', $data)
+            ->with('heroMovie', $heroMovie)
+            ->with('topMovie', $topMovie);
     }
 
     public function search(Request $request)

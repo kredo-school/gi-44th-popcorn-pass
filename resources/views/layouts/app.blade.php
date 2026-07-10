@@ -31,7 +31,7 @@
 
 <body id="top">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm py-0">
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm py-0 sticky-top">
             <div class="container-fluid bg-black">
 
                 <!-- Logo -->
