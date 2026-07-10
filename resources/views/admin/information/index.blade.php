@@ -11,34 +11,47 @@
     </div>
 @endif
 
-<div class="d-flex gap-2 mb-3">
-    <input type="text" class="form-control" placeholder="Search information..." style="max-width: 250px;">
-
-    <select class="form-select" style="max-width: 150px;">
-        <option>Status: All</option>
-        <option>Published</option>
-        <option>Draft</option>
-    </select>
-
-    <div class="ms-auto d-flex gap-2">
-        <a href="{{ route('admin.information.create') }}" class="btn btn-outline-warning">
-            + Add Information
-        </a>
-
-        <a href="#" id="edit-information-btn" class="btn btn-outline-light disabled">
-            Edit Information
-        </a>
-
-        <form id="delete-information-form" method="POST" style="display:inline;">
-            @csrf
-            @method('DELETE')
-        
-            <button type="submit" id="delete-information-btn" class="btn btn-outline-danger disabled"
+<div class="gap-2 mb-3">
+    <form method="GET" action="{{ route('admin.information') }}" class="d-flex gap-2 mb-3 align-items-center">
+    
+        <input type="text" name="search" class="form-control" placeholder="Search information..." style="max-width: 250px;"
+            value="{{ request('search') }}">
+    
+        <select name="category" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
+            <option value="all" {{ request('category', 'all' )=='all' ? 'selected' : '' }}>Category: All</option>
+            @foreach($categories as $cat)
+            <option value="{{ $cat }}" {{ request('category')==$cat ? 'selected' : '' }}>{{ $cat }}</option>
+            @endforeach
+        </select>
+    
+        <select name="status" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
+            <option value="all" {{ request('status', 'all' )=='all' ? 'selected' : '' }}>Status: All</option>
+            <option value="published" {{ request('status')=='published' ? 'selected' : '' }}>Published</option>
+            <option value="draft" {{ request('status')=='draft' ? 'selected' : '' }}>Draft</option>
+        </select>
+    
+        <button type="submit" class="btn btn-outline-warning">Search</button>
+    
+        <div class="ms-auto d-flex gap-2">
+            <a href="{{ route('admin.information.create') }}" class="btn btn-outline-warning">
+                + Add Information
+            </a>
+            <a href="#" id="edit-information-btn" class="btn btn-outline-light disabled">
+                Edit Information
+            </a>
+            <button type="button" id="delete-information-btn" class="btn btn-outline-danger disabled"
                 onclick="return confirm('Are you sure you want to delete this information?')">
                 Delete Information
             </button>
-        </form>
-    </div>
+        </div>
+    </form>
+        
+    <form id="delete-information-form" method="POST">
+        @csrf
+        @method('DELETE')
+    </form>
+    
+
 </div>
 
 <div class="row g-3">
@@ -121,7 +134,7 @@
                     Title
                 </label>
 
-                <div class="form-control bg-transparent" id="detail-title">
+                <div class="form-control bg-transparent text-white" id="detail-title">
                     —
                 </div>
             </div>
@@ -131,7 +144,7 @@
                     Category
                 </label>
 
-                <div class="form-control bg-transparent" id="detail-category">
+                <div class="form-control bg-transparent text-white" id="detail-category">
                     —
                 </div>
             </div>
@@ -141,7 +154,7 @@
                     Status
                 </label>
 
-                <div class="form-control bg-transparent" id="detail-status">
+                <div class="form-control bg-transparent text-white" id="detail-status">
                     —
                 </div>
             </div>
@@ -151,7 +164,7 @@
                     Published Date
                 </label>
 
-                <div class="form-control bg-transparent" id="detail-published-at">
+                <div class="form-control bg-transparent text-white" id="detail-published-at">
                     —
                 </div>
             </div>
@@ -161,7 +174,7 @@
                     Content
                 </label>
 
-                <div class="form-control bg-transparent" id="detail-content" style="min-height:220px;">
+                <div class="form-control bg-transparent text-white" id="detail-content" style="min-height:220px;">
                     —
                 </div>
             </div>
@@ -177,52 +190,48 @@
 
 @section('scripts')
 <script>
-    const editButton = document.querySelector('#edit-information-btn');
-const deleteForm = document.querySelector('#delete-information-form');
-const deleteButton = document.querySelector('#delete-information-btn');
+    document.addEventListener('DOMContentLoaded', function () {
 
-document.querySelectorAll('.information-row').forEach(function (row) {
+        const editButton = document.querySelector('#edit-information-btn');
+        const deleteForm = document.querySelector('#delete-information-form');
+        const deleteButton = document.querySelector('#delete-information-btn');
 
-    row.addEventListener('click', function () {
+        document.querySelectorAll('.information-row').forEach(function (row) {
+            row.addEventListener('click', function (e) {
+                if (e.target.type === 'checkbox') return;
 
-        const informationId = this.dataset.informationId;
+                const informationId = this.dataset.informationId;
 
+                if (editButton) {
+                    editButton.href = `/admin/information/${informationId}/edit`;
+                    editButton.classList.remove('disabled');
+                }
 
-        if (editButton) {
-            editButton.href = `/admin/information/${informationId}/edit`;
-            editButton.classList.remove('disabled');
-        }
+                if (deleteForm && deleteButton) {
+                    deleteForm.action = `/admin/information/${informationId}`;
+                    deleteButton.classList.remove('disabled');
+                }
 
-
-        if (deleteForm && deleteButton) {
-            deleteForm.action = `/admin/information/${informationId}`;
-            deleteButton.classList.remove('disabled');
-        }
-
-        fetch(`/admin/information/${informationId}/details`)
-            .then(response => response.json())
-            .then(data => {
-
-                document.querySelector('#detail-title').textContent =
-                    data.title || '—';
-
-                document.querySelector('#detail-category').textContent =
-                    data.category || '—';
-
-                document.querySelector('#detail-status').textContent =
-                    data.status || '—';
-
-                document.querySelector('#detail-content').textContent =
-                    data.content || '—';
-
-                document.querySelector('#detail-published-at').textContent =
-                    data.published_at
-                        ? data.published_at.substring(0, 10)
-                        : '—';
+                fetch(`/admin/information/${informationId}/details`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.querySelector('#detail-title').textContent = data.title || '—';
+                        document.querySelector('#detail-category').textContent = data.category || '—';
+                        document.querySelector('#detail-status').textContent = data.status || '—';
+                        document.querySelector('#detail-content').textContent = data.content || '—';
+                        document.querySelector('#detail-published-at').textContent = data.published_at
+                            ? data.published_at.substring(0, 10) : '—';
+                    });
             });
+        });
 
     });
 
-});
+    function confirmDelete() {
+        if (confirm('Are you sure you want to delete this information?')) {
+            document.getElementById('delete-information-form').submit();
+        }
+    }
+
 </script>
 @endsection

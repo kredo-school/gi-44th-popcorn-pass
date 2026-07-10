@@ -678,16 +678,15 @@ class AdminController extends Controller
     // --------------------
     public function reviews(Request $request)
     {
-        $query = Review::with(['user', 'movie'])->latest();
+        $query = Review::with(['user', 'movie']);
 
-        $status = $request->get('status', 'visible');
-        if ($status === 'all') {
+        $status = $request->get('status', 'all');
+        if ($status === 'visible') {
             $query->where('is_approved', true);
         } elseif ($status === 'hidden') {
             $query->where('is_approved', false);
         }
 
-        // search
         if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
@@ -699,7 +698,6 @@ class AdminController extends Controller
             });
         }
 
-        // sort
         $sort = $request->get('sort', 'desc');
         $query->orderBy('created_at', $sort);
 
@@ -720,11 +718,29 @@ class AdminController extends Controller
     // --------------------
     // Infromations
     // --------------------
-    public function information()
+    public function information(Request $request)
     {
-        $information = Information::latest()->paginate(10);
+        $query = Information::latest();
 
-        return view('admin.information.index', compact('information'));
+        if ($request->filled('search')) {
+            $query->where('title', 'like', "%{$request->search}%");
+        }
+
+        $status = $request->get('status', 'all');
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $category = $request->get('category', 'all');
+        if ($category !== 'all') {
+            $query->where('category', $category);
+        }
+
+        $categories = Information::distinct()->pluck('category')->filter()->sort()->values();
+
+        $information = $query->paginate(10)->withQueryString();
+
+        return view('admin.information.index', compact('information', 'categories'));
     }
 
     public function createInformation()
