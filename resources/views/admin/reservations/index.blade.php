@@ -81,47 +81,47 @@
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Booking ID</label>
-                    <div class="form-control bg-transparent" id="detail-booking-id">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-booking-id">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Customer</label>
-                    <div class="form-control bg-transparent" id="detail-customer">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-customer">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Movie / Cinema / Screen</label>
-                    <div class="form-control bg-transparent" id="detail-movie-cinema">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-movie-cinema">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Showtime</label>
-                    <div class="form-control bg-transparent" id="detail-showtime">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-showtime">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Seats</label>
-                    <div class="form-control bg-transparent" id="detail-seats">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-seats">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Subtotal / Discount / Final</label>
-                    <div class="form-control bg-transparent" id="detail-amount">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-amount">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Payment</label>
-                    <div class="form-control bg-transparent" id="detail-payment">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-payment">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Reservation Status</label>
-                    <div class="form-control bg-transparent" id="detail-status">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-status">—</div>
                 </div>
 
                 <div class="mb-0">
                     <label class="form-label text-secondary small">QR Code</label>
-                    <div class="form-control bg-transparent" id="detail-qr" style="word-break: break-all;">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-qr" style="word-break: break-all;">—</div>
                 </div>
             </div>
         </div>

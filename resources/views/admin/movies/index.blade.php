@@ -72,27 +72,27 @@
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Title</label>
-                    <div class="form-control bg-transparent" id="detail-title">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-title">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Synopsis</label>
-                    <div class="form-control bg-transparent" id="detail-synopsis" style="min-height: 60px;">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-synopsis" style="min-height: 60px;">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Director</label>
-                    <div class="form-control bg-transparent" id="detail-director">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-director">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Cast</label>
-                    <div class="form-control bg-transparent" id="detail-cast">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-cast">—</div>
                 </div>
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Trailer URL</label>
-                    <div class="form-control bg-transparent" id="detail-trailer">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-trailer">—</div>
                 </div>
 
                 <div class="mb-3">
