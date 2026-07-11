@@ -84,10 +84,30 @@
 }
 // home
 
+.heroSwiper{
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+}
+
+.heroSwiper .swiper-wrapper{
+    margin: 0;
+    padding: 0;
+}
+
+.heroSwiper .swiper-slide{
+    position: relative;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.hero-image,
 .hero-image-welcome{
-    height:70vh;
-    width:100%;
-    
+    display: block;
+    width: 100%;
+    height: 60vh;
+    object-fit: cover;
 }
 .hero-content-welcome{
     position:absolute;
@@ -102,11 +122,7 @@
     font-size:1.4rem;
     margin-bottom:20px;
 }
-.hero-image{
-    height:70vh;
-    width:100%;
-    object-fit:cover;
-}
+
 
 .hero-overlay{
     position:absolute;
@@ -167,6 +183,17 @@
     margin-bottom:40px;
 }
 
+.swiper-button-next,
+.swiper-button-prev{
+    color:#fff;
+}
+.swiper-pagination-bullet{
+    background:#fff;
+}
+
+.swiper-pagination-bullet-active{
+    background:#f2b84b;
+}
 
 .btn-book{
     display:inline-flex;
@@ -269,7 +296,7 @@
 // search input
 .search-wrapper{
     position: sticky;
-    top:20px;      /* Navbarの高さ */
+    top:50px;      /* Navbarの高さ */
     z-index: 999;
 
     width: 100%;
@@ -293,7 +320,7 @@
 .search-icon{
     position: absolute;
     left: 20px;
-    top: 65.5%;
+    top: 55.5%;
     transform: translateY(-50%);
 
     color: #F5C126;
@@ -302,7 +329,7 @@
 .search-btn{
     position: absolute;
     right: 20px;
-    top: 65.5%;
+    top: 55.5%;
     transform: translateY(-50%);
 
     width: 120px;
@@ -336,9 +363,9 @@
 
     background:linear-gradient(
         180deg,
-        #fff8d6 0%,
-        #f5c126 40%,
-        #d89c00 100%
+        #ffffff 0%,
+        #ffffff 40%,
+        #ffeab7 100%
     );
 
     -webkit-background-clip:text;
@@ -379,7 +406,7 @@
 .ranking-sub-title{
     margin-top:8px;
 
-    color:#c9a34f;
+    color:#ffe5ac;
 
     letter-spacing:10px;
     font-size:1rem;
@@ -880,12 +907,40 @@
     background: rgba(242, 184, 75, .35);
 }
 
+/* Google FontsからPlayfair Displayを読み込む場合はHTMLの<head>に追加 */
+/* <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"> */
+
 .marquee-title {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family: 'Playfair Display', serif;
+    font-weight: 1000;
     font-size: clamp(2rem, 4vw, 3.4rem);
     letter-spacing: 10px;
-    color: #f2b84b;
+    color: #ffffff;
     margin: 0;
+    opacity: 0;
+    animation: fadeInGlow 2s ease-out forwards, shimmer 4s ease-in-out infinite 2s;
+}
+
+@keyframes fadeInGlow {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+        letter-spacing: 4px;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        letter-spacing: 10px;
+    }
+}
+
+@keyframes shimmer {
+    0%, 100% {
+        text-shadow: 0 0 8px rgba(242, 184, 75, 0.3);
+    }
+    50% {
+        text-shadow: 0 0 20px rgba(242, 184, 75, 0.7), 0 0 30px rgba(242, 184, 75, 0.4);
+    }
 }
 
 // ==== poster card ====
@@ -990,21 +1045,21 @@
     text-overflow: ellipsis;
 }
 
-// スライダーボタン
 .coming-slider-btn {
     position: absolute;
-    top: 50%;
-    right: 8px;
-    transform: translateY(-50%);
+    right:20px;
+    bottom: 35px; 
 
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
-
-    background: rgba(8, 23, 41, .7);
-    border: 1px solid rgba(242, 184, 75, .4);
-    color: #f2b84b;
 }
+
+.coming-soon-track {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
 
 
 // home-showtime.blade.php

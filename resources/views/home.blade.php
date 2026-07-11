@@ -27,53 +27,43 @@
         </div>
     </div>
 
-    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active">
-            </button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1">
-            </button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2">
-            </button>
-        </div>
+    <div class="swiper heroSwiper">
 
-        <div class="carousel-inner">
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+        <div class="swiper-wrapper">
 
             {{-- WELCOME --}}
-            <div class="carousel-item active">
+            <div class="swiper-slide">
                 <img src="{{ asset('images/welcome.png') }}" class="hero-image-welcome">
+
                 <div class="hero-content-welcome">
                     <p>
                         Experience the Magic of Movies
                     </p>
+
                     @auth
-                        <a href="#" class="btn btn-white">
+                        <a href="{{ route('mypage.dashboard') }}" class="btn btn-book">
                             My Page
                         </a>
                     @else
-                        <a href="/login" class="btn btn-white">
+                        <a href="/login" class="btn btn-book">
                             Log in
                         </a>
                     @endauth
                 </div>
             </div>
+
             {{-- COMING SOON --}}
-            <div class="carousel-item">
+            <div class="swiper-slide">
 
                 <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
 
                 <div class="hero-overlay"></div>
+
                 <div class="hero-content">
                     <span class="hero-tag">
                         COMING SOON
                     </span>
+
                     <h1>
                         UPCOMING<br>
                         BLOCKBUSTERS
@@ -83,29 +73,49 @@
                         VIEW MORE →
                     </a>
                 </div>
+
             </div>
+
             {{-- TOP RANKING --}}
-            <div class="carousel-item">
+            <div class="swiper-slide">
 
                 <img src="{{ $topMovie->banner_image_url }}" class="hero-image">
+
                 <div class="hero-overlay"></div>
+
                 <div class="hero-content">
+
                     <span class="hero-tag hero-tag-red">
                         TOP RANKING
                     </span>
+
                     <h1>
                         #1 MOVIE<br>
                         OF THE WEEK
                     </h1>
+
                     <p>
                         Most watched by our audience.
                     </p>
+
                     <a href="{{ route('movie_detail', $topMovie->id) }}" class="btn-book btn-book-red">
+
                         SEE MOVIE DETAIL →
+
                     </a>
+
                 </div>
+
             </div>
+
         </div>
+
+        <!-- 矢印 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- 下の丸 -->
+        <div class="swiper-pagination"></div>
 
     </div>
 
@@ -117,22 +127,13 @@
         <div class="">
 
 
-            {{-- SEARCH --}}
-            <div class="search-wrapper w-50 container pt-5 mb-5">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
 
-                <input type="text" class="search-input mt-3" placeholder="Search movies, genres, or showtimes...">
-
-                <button class="search-btn">
-                    SEARCH
-                </button>
-            </div>
 
             {{-- ===========================
                     Nearby Cinemas
                     =========================== --}}
-            <div class="container-fluid section-gap" id="NearbyCinemas">
-                <div class="d-flex justify-content-between align-items-center ms-5 me-5">
+            <div class="container-fluid" id="NearbyCinemas">
+                <div class="d-flex justify-content-between align-items-center ms-5 me-5 pt-5">
                     <p class="display-5 text-white title-base mb-0">
                         📍 Nearby Movie Theaters
                     </p>
@@ -148,6 +149,17 @@
 
                     <div id="nearbyCinemasList" class="row g-3 p-4 is-hidden"></div>
                 </div>
+            </div>
+
+            {{-- SEARCH --}}
+            <div class="search-wrapper w-50 container mt-5 mb-5">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+                <input type="text" class="search-input mt-3" placeholder="Search movies, genres, or showtimes...">
+
+                <button class="search-btn">
+                    SEARCH
+                </button>
             </div>
 
 
@@ -360,22 +372,22 @@
 
             </div>
 
-
+            {{-- Coming soon --}}
             <div class="row" id="Comingsoon">
                 <div class="col-1"></div>
                 <div class="col-10">
-                    {{-- Coming soon --}}
+
                     <div class="container-fluid px-0 section-gap" id="Comingsoon">
-                        <div class="marquee-header">
-                            <span class="marquee-header-line"></span>
-                            <h1 class="marquee-title">Coming Soon</h1>
-                            <span class="marquee-header-line"></span>
-                        </div>
+
 
                         <div class="panel-navy-overlay">
-                            <div class="position-relative px-3 pt-4">
+                            <div class="marquee-header">
+                                <span class="marquee-header-line"></span>
+                                <h1 class="marquee-title">Coming Soon</h1>
+                                <span class="marquee-header-line"></span>
+                            </div>
+                            <div class="position-relative px-3 pt-3">
                                 <div class="d-flex gap-4 pb-2 mt-5 ms-4 me-5 coming-soon-track" id="comingSoonSlider">
-
                                     @foreach ($comingSoonMovies as $movie)
                                         @php
                                             $releaseDate = \Carbon\Carbon::parse($movie->released_date);
@@ -412,7 +424,7 @@
 
                                 </div>
 
-                                <button id="comingSoonNextBtn" type="button" class="coming-slider-btn">
+                                <button id="comingSoonNextBtn" type="button" class="coming-slider-btn ">
                                     <i class="fa-solid fa-chevron-right"></i>
                                 </button>
                             </div>
@@ -493,4 +505,5 @@
 
     </div>
     <script src="{{ asset('js/home.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 @endsection
