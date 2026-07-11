@@ -20,9 +20,9 @@
                 value="{{ old('title', $information->title) }}" required>
 
             @error('title')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
             @enderror
         </div>
 
@@ -35,9 +35,9 @@
                 required>{{ old('content', $information->content) }}</textarea>
 
             @error('content')
-            <div class="invalid-feedback">
-                {{ $message }}
-            </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
             @enderror
         </div>
 
@@ -45,32 +45,17 @@
 
             <div class="col-md-6 mb-3">
                 <label class="form-label">Category</label>
-
-                <select name="category" class="form-select @error('category') is-invalid @enderror">
-                    <option value="General" {{ old('category', $information->category) == 'General' ? 'selected' : ''
-                        }}>
-                        General
-                    </option>
-
-                    <option value="Promotion" {{ old('category', $information->category) == 'Promotion' ? 'selected' :
-                        '' }}>
-                        Promotion
-                    </option>
-
-                    <option value="Maintenance" {{ old('category', $information->category) == 'Maintenance' ? 'selected'
-                        : '' }}>
-                        Maintenance
-                    </option>
-
-                    <option value="Event" {{ old('category', $information->category) == 'Event' ? 'selected' : '' }}>
-                        Event
-                    </option>
+                <select name="category_id" class="form-select @error('category_id') is-invalid @enderror">
+                    <option value="">-- Select Category --</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ old('category_id', $information->category_id) == $cat->id ? 'selected' : ''
+                            }}>
+                            {{ $cat->name }}
+                        </option>
+                    @endforeach
                 </select>
-
-                @error('category')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+                @error('category_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
@@ -89,26 +74,42 @@
                 </select>
 
                 @error('status')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
                 @enderror
             </div>
 
         </div>
 
-        <div class="mb-4">
-            <label class="form-label">Published Date</label>
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label class="form-label">Published Date</label>
 
-            <input type="datetime-local" name="published_at"
-                class="form-control @error('published_at') is-invalid @enderror"
-                value="{{ old('published_at', optional($information->published_at)->format('Y-m-d\TH:i')) }}">
+                <input type="datetime-local" name="published_at"
+                    class="form-control @error('published_at') is-invalid @enderror"
+                    value="{{ old('published_at', optional($information->published_at)->format('Y-m-d\TH:i')) }}">
 
-            @error('published_at')
-            <div class="invalid-feedback">
-                {{ $message }}
+                @error('published_at')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
             </div>
-            @enderror
+
+            <div class="col-md-6 mb-4">
+                <label class="form-label">Image URL</label>
+            
+                <input type="text" name="image_url" class="form-control @error('image_url') is-invalid @enderror"
+                    value="{{ old('image_url', $information->image_url) }}">
+            
+                @error('image_url')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
         </div>
 
         <div class="d-flex justify-content-end gap-2">
