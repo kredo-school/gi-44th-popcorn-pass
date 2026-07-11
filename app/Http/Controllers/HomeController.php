@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
+use App\Models\Information;
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -32,9 +33,15 @@ class HomeController extends Controller
             ->orderBy('review_average', 'desc')
             ->take(3)
             ->get();
+        $information = Information::where('status', 'published')
+            ->latest('published_at')
+            ->take(8)
+            ->get();
+
         return view('home')->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
-            ->with('topMovies', $topMovies);
+            ->with('topMovies', $topMovies)
+            ->with('information', $information);
     }
 
     private function commonData($selectedDate)
@@ -139,5 +146,22 @@ class HomeController extends Controller
             'movies',
             'keyword'
         ));
+    }
+
+    //information index
+    public function informationIndex()
+    {
+        $information = Information::where('status', 'published')
+            ->latest('published_at')
+            ->paginate(20);
+
+        return view('information.index', compact('information'));
+    }
+
+    //information detail
+    public function informationDetail($id)
+    {
+        $information = Information::with('category')->findOrFail($id);
+        return view('information.information-detail', compact('information'));
     }
 }

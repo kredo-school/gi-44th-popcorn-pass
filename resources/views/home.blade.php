@@ -431,35 +431,56 @@
 
             <hr class="text-white">
 
-            {{-- Information ここなおす--}}
+            {{-- Information --}}
             <div class="container-fluid px-0 mt-5 section-gap" id="Information">
                 <p class="display-3 text-white title-base ms-5 text-center">
                     Information
                 </p>
                 <div class="container">
-                    <div class="row g-3">git add resources/views/home.blade.php
-                        @for ($i = 0; $i < 8; $i++)
-                            <div class="col-3 ">
-                                <div class="card rounded-0 news-card">
-                                    <div class="card-head text-center">
-                                        <div class="w-50 bg-warning mx-auto">
-                                            NEWS
+                    <div class="row g-3">
+                        @forelse($information as $info)
+                            <div class="col-md-3">
+                                <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
+                                    <div class="card rounded-0 news-card h-100">
+                
+                                        <div class="card-head text-center py-1">
+                                            <span class="badge px-3 py-1" style="background-color: {{ $info->category->color }}">
+                                                {{ $info->category->name }}
+                                            </span>
                                         </div>
+                
+                                        @if($info->image_url)
+                                            <img src="{{ $info->image_url }}" alt="{{ $info->title }}" class="card-img-top info-list-img">
+                                        @else
+                                            <div
+                                                class="card-img-top info-list-img d-flex align-items-center justify-content-center bg-white text-dark fw-bold">
+                                                INFORMATION
+                                            </div>
+                                        @endif
+                
+                                        <div class="card-body d-flex flex-column">
+                                            <h6 class="fw-bold">{{ $info->title }}</h6>
+                                            <p class="small mb-0">{{ Str::limit($info->content, 80) }}</p>
+                                        </div>
+                
                                     </div>
-                                    <img src="{{ asset('images/news.png') }}" class="card-img-top news-img">
-                                    <div class="card-body">
-                                        If you're a member, you get great deals every Friday!
-                                    </div>
-                                </div>
+                                </a>
                             </div>
-                        @endfor
+                        @empty
+                            <p class="text-white text-center">No information available.</p>
+                        @endforelse
                     </div>
+            
+                    {{-- View All Button --}}
+                    <div class="text-center mt-4">
+                        <a href="{{ route('information.index') }}" class="btn btn-outline-warning px-5 py-2">
+                            View All Information
+                        </a>
+                    </div>
+            
                 </div>
-
-
-
             </div>
-
+            
             <div class="back-to-top mb-5">
                 <a href="#top" class="back-to-top-link">
                     <div class="arrow">
@@ -475,6 +496,6 @@
 
     </div>
 
-    </div>
     <script src="{{ asset('js/home.js') }}" defer></script>
+
 @endsection

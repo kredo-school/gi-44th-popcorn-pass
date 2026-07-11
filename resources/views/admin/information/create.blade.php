@@ -25,38 +25,42 @@
                 required>{{ old('content') }}</textarea>
 
             @error('content')
-            <div class="invalid-feedback">{{ $message }}</div>
+                <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
 
         <div class="row">
-
             <div class="col-md-6 mb-3">
                 <label class="form-label">Category</label>
-
-                <select name="category" class="form-select">
-                    <option value="General">General</option>
-                    <option value="Promotion">Promotion</option>
-                    <option value="Maintenance">Maintenance</option>
-                    <option value="Event">Event</option>
+                <select name="category_id" class="form-select">
+                    <option value="">-- Select Category --</option>
+                    @foreach($categories as $cat)
+                        <option value="{{ $cat->id }}" {{ old('category_id')==$cat->id ? 'selected' : '' }}>
+                            {{ $cat->name }}
+                        </option>
+                    @endforeach
                 </select>
             </div>
-
+        
             <div class="col-md-6 mb-3">
                 <label class="form-label">Status</label>
-
                 <select name="status" class="form-select">
                     <option value="Draft">Draft</option>
                     <option value="Published">Published</option>
                 </select>
             </div>
-
         </div>
-
-        <div class="mb-4">
-            <label class="form-label">Published Date</label>
-
-            <input type="datetime-local" name="published_at" class="form-control" value="{{ old('published_at') }}">
+        
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <label class="form-label">Published Date</label>
+                <input type="datetime-local" name="published_at" class="form-control" value="{{ old('published_at') }}">
+            </div>
+        
+            <div class="col-md-6 mb-4">
+                <label class="form-label">Image URL</label>
+                <input type="text" name="image_url" class="form-control" value="{{ old('image_url') }}">
+            </div>
         </div>
 
         <div class="d-flex justify-content-end gap-2">

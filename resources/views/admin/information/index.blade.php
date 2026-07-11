@@ -20,14 +20,14 @@
         <select name="category" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
             <option value="all" {{ request('category', 'all' )=='all' ? 'selected' : '' }}>Category: All</option>
             @foreach($categories as $cat)
-            <option value="{{ $cat }}" {{ request('category')==$cat ? 'selected' : '' }}>{{ $cat }}</option>
+                <option value="{{ $cat->id }}" {{ request('category')==$cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
             @endforeach
         </select>
     
         <select name="status" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
             <option value="all" {{ request('status', 'all' )=='all' ? 'selected' : '' }}>Status: All</option>
-            <option value="published" {{ request('status')=='published' ? 'selected' : '' }}>Published</option>
-            <option value="draft" {{ request('status')=='draft' ? 'selected' : '' }}>Draft</option>
+            <option value="Published" {{ request('status')=='Published' ? 'selected' : '' }}>Published</option>
+            <option value="Draft" {{ request('status')=='Draft' ? 'selected' : '' }}>Draft</option>
         </select>
     
         <button type="submit" class="btn btn-outline-warning">Search</button>
@@ -40,12 +40,13 @@
                 Edit Information
             </a>
             <button type="button" id="delete-information-btn" class="btn btn-outline-danger disabled"
-                onclick="return confirm('Are you sure you want to delete this information?')">
+                onclick="confirmDelete()">
                 Delete Information
             </button>
         </div>
+    
     </form>
-        
+    
     <form id="delete-information-form" method="POST">
         @csrf
         @method('DELETE')
@@ -77,41 +78,30 @@
 
                     @forelse ($information as $info)
 
-                    <tr class="information-row" data-information-id="{{ $info->id }}" style="cursor:pointer;">
-                        <td>
-                            <input type="checkbox">
-                        </td>
-
-                        <td>{{ $info->title }}</td>
-
-                        <td>{{ $info->category ?? 'General' }}</td>
-
-                        <td>
-                            <span class="badge bg-secondary">
-                                {{ $info->status }}
-                            </span>
-                        </td>
-
-                        <td>
-                            {{ $info->published_at ? $info->published_at->format('Y-m-d') : '—' }}
-                        </td>
-
-                    </tr>
-
+                        <tr class="information-row" data-information-id="{{ $info->id }}" style="cursor:pointer;">
+                            <td>
+                                <input type="checkbox">
+                            </td>
+                            <td>{{ $info->title }}</td>
+                            <td>{{ $info->category->name }}</td>
+                            <td>
+                                <span class="badge {{ $info->status === 'Published' ? 'bg-success' : 'bg-secondary' }}">
+                                    {{ $info->status }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ $info->published_at ? $info->published_at->format('Y-m-d') : '—' }}
+                            </td>
+                        </tr>
                     @empty
-
-                    <tr>
-                        <td colspan="5" class="text-center text-secondary py-4">
-                            No information found.
-                        </td>
-                    </tr>
-
+                        <tr>
+                            <td colspan="5" class="text-center text-secondary py-4">
+                                No information found.
+                            </td>
+                        </tr>
                     @endforelse
-
                 </tbody>
-
             </table>
-
         </div>
 
         <div class="mt-3">
@@ -122,9 +112,7 @@
 
     {{-- Information Details --}}
     <div class="col-md-4">
-
         <div class="card card-dark p-3">
-
             <div class="text-warning fw-bold mb-3">
                 Information Details
             </div>
@@ -179,6 +167,57 @@
                 </div>
             </div>
 
+        </div>
+
+        {{-- Category Management --}}
+        <div class="card card-dark p-3">
+            <div class="text-warning fw-bold mb-3">Manage Categories</div>
+        
+            @if(session('error'))
+                <div class="alert alert-danger py-1 small">{{ session('error') }}</div>
+            @endif
+        
+            {{-- Add Category Form --}}
+            <form action="{{ route('admin.information.categories.store') }}" method="POST" class="mb-3">
+                @csrf
+                <div class="d-flex gap-2 mb-2">
+                    <input type="text" name="name" class="form-control form-control-sm" placeholder="Category name" required>
+                    <input type="color" name="color" class="form-control form-control-color form-control-sm" value="#6C757D"
+                        title="Pick color">
+                    <button type="submit" class="btn btn-warning btn-sm">Add</button>
+                </div>
+                @error('name')
+                    <div class="text-danger small">{{ $message }}</div>
+                @enderror
+            </form>
+        
+            {{-- Category List --}}
+            <table class="table table-dark table-sm align-middle mb-0">
+                <tbody>
+                    @forelse($categories as $cat)
+                        <tr>
+                            <td>
+                                <span class="badge" style="background-color: {{ $cat->color }}">
+                                    {{ $cat->name }}
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <form action="{{ route('admin.information.categories.delete', $cat->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                        Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="2" class="text-center text-secondary py-2">No categories.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
     </div>

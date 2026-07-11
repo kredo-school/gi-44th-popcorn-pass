@@ -762,7 +762,7 @@ class AdminController extends Controller
     // --------------------
     public function information(Request $request)
     {
-        $query = Information::latest();
+        $query = Information::with('category')->latest();
 
         if ($request->filled('search')) {
             $query->where('title', 'like', "%{$request->search}%");
@@ -775,10 +775,10 @@ class AdminController extends Controller
 
         $category = $request->get('category', 'all');
         if ($category !== 'all') {
-            $query->where('category', $category);
+            $query->where('category_id', $category);
         }
 
-        $categories = Information::distinct()->pluck('category')->filter()->sort()->values();
+        $categories = \App\Models\InformationCategory::orderBy('name')->get();
 
         $information = $query->paginate(10)->withQueryString();
 
@@ -787,17 +787,19 @@ class AdminController extends Controller
 
     public function createInformation()
     {
-        return view('admin.information.create');
+        $categories = \App\Models\InformationCategory::orderBy('name')->get();
+        return view('admin.information.create', compact('categories'));
     }
 
     public function storeInformation(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'category' => 'required|string|max:100',
-            'status' => 'required|string',
+            'title'        => 'required|string|max:255',
+            'content'      => 'required|string',
+            'category_id'  => 'required|exists:information_categories,id',
+            'status'       => 'required|string',
             'published_at' => 'nullable|date',
+            'image_url'    => 'nullable|string|max:500',
         ]);
 
         $validated['created_by_id'] = auth()->id();
@@ -812,8 +814,8 @@ class AdminController extends Controller
     public function editInformation($id)
     {
         $information = Information::findOrFail($id);
-
-        return view('admin.information.edit', compact('information'));
+        $categories = \App\Models\InformationCategory::orderBy('name')->get();
+        return view('admin.information.edit', compact('information', 'categories'));
     }
 
     public function updateInformation(Request $request, $id)
@@ -821,11 +823,12 @@ class AdminController extends Controller
         $information = Information::findOrFail($id);
 
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-            'category' => 'required|string|max:100',
-            'status' => 'required|string',
+            'title'        => 'required|string|max:255',
+            'content'      => 'required|string',
+            'category_id'  => 'required|exists:information_categories,id',
+            'status'       => 'required|string',
             'published_at' => 'nullable|date',
+            'image_url'    => 'nullable|string|max:500',
         ]);
 
         $information->update($validated);
@@ -837,9 +840,15 @@ class AdminController extends Controller
 
     public function informationDetails($id)
     {
-        $information = Information::findOrFail($id);
+        $information = Information::with('category')->findOrFail($id);
 
-        return response()->json($information);
+        return response()->json([
+            'title'        => $information->title,
+            'category'     => $information->category->name ?? '—',
+            'status'       => $information->status,
+            'content'      => $information->content,
+            'published_at' => $information->published_at,
+        ]);
     }
 
     public function deleteInformation($id)
@@ -851,6 +860,40 @@ class AdminController extends Controller
         return redirect()
             ->route('admin.information')
             ->with('success', 'Information deleted successfully.');
+    }
+
+    //Information Category
+    public function informationCategories()
+    {
+        $categories = \App\Models\InformationCategory::orderBy('name')->get();
+        return view('admin.information.categories', compact('categories'));
+    }
+
+    public function storeInformationCategory(Request $request)
+    {
+        $request->validate([
+            'name'  => 'required|string|max:100|unique:information_categories,name',
+            'color' => 'required|string|max:20',
+        ]);
+
+        \App\Models\InformationCategory::create([
+            'name'  => $request->name,
+            'color' => $request->color,
+        ]);
+
+        return back()->with('success', 'Category added successfully.');
+    }
+
+    public function deleteInformationCategory($id)
+    {
+        $category = \App\Models\InformationCategory::findOrFail($id);
+
+        if ($category->informations()->count() > 0) {
+            return back()->with('error', 'This category is in use and cannot be deleted.');
+        }
+
+        $category->delete();
+        return back()->with('success', 'Category deleted successfully.');
     }
 
 

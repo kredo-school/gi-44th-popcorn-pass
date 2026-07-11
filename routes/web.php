@@ -27,6 +27,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{movie}/release', [HomeController::class, 'release'])->name('release');
 Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])->name('movie_detail');
 Route::get('/movies/search', [HomeController::class, 'home_search'])->name('movies.search');
+Route::get('/information', [HomeController::class, 'informationIndex'])->name('information.index');
+Route::get('/information/{id}', [HomeController::class, 'informationDetail'])->name('information.detail');
 
 
 //Movie showtime
@@ -139,12 +141,18 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/reviews', [AdminController::class, 'reviews'])->name('reviews');
     Route::put('/reviews/{id}/toggle', [AdminController::class, 'toggleReview'])->name('reviews.toggle');
     Route::get('/information', [AdminController::class, 'information'])->name('information');
+
+    //Information
     Route::get('/information/create', [AdminController::class, 'createInformation'])->name('information.create');
     Route::post('/information', [AdminController::class, 'storeInformation'])->name('information.store');
     Route::get('/information/{id}/edit', [AdminController::class, 'editInformation'])->name('information.edit');
     Route::put('/information/{id}', [AdminController::class, 'updateInformation'])->name('information.update');
     Route::get('/information/{id}/details', [AdminController::class, 'informationDetails'])->name('information.details');
     Route::delete('/information/{id}', [AdminController::class, 'deleteInformation'])->name('information.delete');
+    //Information Category
+    Route::get('/information/categories', [AdminController::class, 'informationCategories'])->name('information.categories');
+    Route::post('/information/categories', [AdminController::class, 'storeInformationCategory'])->name('information.categories.store');
+    Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])->name('information.categories.delete');
 
 });
 
