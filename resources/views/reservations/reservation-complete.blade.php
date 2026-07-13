@@ -142,6 +142,9 @@
 
         {{-- Button !!!!UPDATE LATER!!!! --}}
         <div class="mt-5 text-center">
+            <a href="{{ route('home') }}" class="go-to-mypage-btn me-5 text-decoration-none">
+                HOME <i class="fa-solid fa-arrow-right"></i>
+            </a>
             <a href="{{ route('mypage.dashboard') }}" class="go-to-mypage-btn me-5 text-decoration-none">
                 My Page <i class="fa-solid fa-arrow-right"></i>
             </a>

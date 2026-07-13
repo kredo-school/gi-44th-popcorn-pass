@@ -17,6 +17,7 @@ use App\Models\SystemSetting;
 use App\Models\Coupon;
 use App\Models\Promotion;
 use App\Models\Review;
+use App\Models\Information;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -719,16 +720,15 @@ class AdminController extends Controller
     // --------------------
     public function reviews(Request $request)
     {
-        $query = Review::with(['user', 'movie'])->latest();
+        $query = Review::with(['user', 'movie']);
 
-        $status = $request->get('status', 'visible');
+        $status = $request->get('status', 'all');
         if ($status === 'visible') {
             $query->where('is_approved', true);
         } elseif ($status === 'hidden') {
             $query->where('is_approved', false);
         }
 
-        // search
         if ($request->filled('search')) {
             $search = $request->get('search');
             $query->where(function ($q) use ($search) {
@@ -740,7 +740,6 @@ class AdminController extends Controller
             });
         }
 
-        // sort
         $sort = $request->get('sort', 'desc');
         $query->orderBy('created_at', $sort);
 
@@ -757,4 +756,145 @@ class AdminController extends Controller
 
         return back()->with('success', 'Review status updated successfully.');
     }
+
+    // --------------------
+    // Infromations
+    // --------------------
+    public function information(Request $request)
+    {
+        $query = Information::with('category')->latest();
+
+        if ($request->filled('search')) {
+            $query->where('title', 'like', "%{$request->search}%");
+        }
+
+        $status = $request->get('status', 'all');
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $category = $request->get('category', 'all');
+        if ($category !== 'all') {
+            $query->where('category_id', $category);
+        }
+
+        $categories = \App\Models\InformationCategory::orderBy('name')->get();
+
+        $information = $query->paginate(10)->withQueryString();
+
+        return view('admin.information.index', compact('information', 'categories'));
+    }
+
+    public function createInformation()
+    {
+        $categories = \App\Models\InformationCategory::orderBy('name')->get();
+        return view('admin.information.create', compact('categories'));
+    }
+
+    public function storeInformation(Request $request)
+    {
+        $validated = $request->validate([
+            'title'        => 'required|string|max:255',
+            'content'      => 'required|string',
+            'category_id'  => 'required|exists:information_categories,id',
+            'status'       => 'required|string',
+            'published_at' => 'nullable|date',
+            'image_url'    => 'nullable|string|max:500',
+        ]);
+
+        $validated['created_by_id'] = auth()->id();
+
+        Information::create($validated);
+
+        return redirect()
+            ->route('admin.information')
+            ->with('success', 'Information added successfully.');
+    }
+
+    public function editInformation($id)
+    {
+        $information = Information::findOrFail($id);
+        $categories = \App\Models\InformationCategory::orderBy('name')->get();
+        return view('admin.information.edit', compact('information', 'categories'));
+    }
+
+    public function updateInformation(Request $request, $id)
+    {
+        $information = Information::findOrFail($id);
+
+        $validated = $request->validate([
+            'title'        => 'required|string|max:255',
+            'content'      => 'required|string',
+            'category_id'  => 'required|exists:information_categories,id',
+            'status'       => 'required|string',
+            'published_at' => 'nullable|date',
+            'image_url'    => 'nullable|string|max:500',
+        ]);
+
+        $information->update($validated);
+
+        return redirect()
+            ->route('admin.information')
+            ->with('success', 'Information updated successfully.');
+    }
+
+    public function informationDetails($id)
+    {
+        $information = Information::with('category')->findOrFail($id);
+
+        return response()->json([
+            'title'        => $information->title,
+            'category'     => $information->category->name ?? '—',
+            'status'       => $information->status,
+            'content'      => $information->content,
+            'published_at' => $information->published_at,
+        ]);
+    }
+
+    public function deleteInformation($id)
+    {
+        $information = Information::findOrFail($id);
+
+        $information->delete();
+
+        return redirect()
+            ->route('admin.information')
+            ->with('success', 'Information deleted successfully.');
+    }
+
+    //Information Category
+    public function informationCategories()
+    {
+        $categories = \App\Models\InformationCategory::orderBy('name')->get();
+        return view('admin.information.categories', compact('categories'));
+    }
+
+    public function storeInformationCategory(Request $request)
+    {
+        $request->validate([
+            'name'  => 'required|string|max:100|unique:information_categories,name',
+            'color' => 'required|string|max:20',
+        ]);
+
+        \App\Models\InformationCategory::create([
+            'name'  => $request->name,
+            'color' => $request->color,
+        ]);
+
+        return back()->with('success', 'Category added successfully.');
+    }
+
+    public function deleteInformationCategory($id)
+    {
+        $category = \App\Models\InformationCategory::findOrFail($id);
+
+        if ($category->informations()->count() > 0) {
+            return back()->with('error', 'This category is in use and cannot be deleted.');
+        }
+
+        $category->delete();
+        return back()->with('success', 'Category deleted successfully.');
+    }
+
+
 }

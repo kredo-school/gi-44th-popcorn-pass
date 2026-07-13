@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Popcorn Pass') }}</title>
+    <title>@yield('title', config('app.name', 'Popcorn Pass'))</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
@@ -70,6 +70,12 @@
                                     Food & Drink
                                 </a>
 
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('home') }}#Information" class="text-decoration-none nav-font">
+                                    Information
+                                </a>
+                            
                             </li>
                             <li class="nav-item text-white">
 
