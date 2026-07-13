@@ -27,13 +27,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
+
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 
 <body id="top">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm py-0 sticky-top">
+        {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm py-0 sticky-top">
             <div class="container-fluid bg-black">
 
                 <!-- Logo -->
@@ -108,7 +109,8 @@
 
                     </div>
                 </div>
-        </nav>
+        </nav> --}}
+        @include('templates.navbar_main')
 
         <main class="">
             <div class="container-fluid px-0">

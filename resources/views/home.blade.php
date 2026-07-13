@@ -121,7 +121,7 @@
 
     <div class="mt-0 home-hero-bg">
 
-        <<<<<<< HEAD <div class="">
+         <div class="">
 
 
 
