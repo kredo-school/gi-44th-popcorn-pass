@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
+use App\Models\Information;
 use Carbon\Carbon;
 
 
@@ -33,6 +34,7 @@ class HomeController extends Controller
             ->orderByDesc('review_average')
             ->take(10)
             ->get();
+
         $heroMovie = Movie::where('status', 'coming_soon')
             ->inRandomOrder()
             ->first();
@@ -43,11 +45,17 @@ class HomeController extends Controller
         ], 'rating')
             ->orderByDesc('weekly_average')
             ->first();
+      $information = Information::where('status', 'published')
+            ->latest('published_at')
+            ->take(8)
+            ->get();
         return view('home')->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
             ->with('topMovies', $topMovies)
             ->with('heroMovie', $heroMovie)
-            ->with('topMovie', $topMovie);
+            ->with('topMovie', $topMovie)
+            ->with('information', $information);
+
     }
 
     private function commonData($selectedDate)
@@ -92,7 +100,7 @@ class HomeController extends Controller
             ->with('topMovie', $topMovie);
     }
 
-    public function search(Request $request)
+    public function home_search(Request $request)
     {
         $selectedDate = request('date', now()->toDateString());
 
@@ -151,5 +159,36 @@ class HomeController extends Controller
     public function movie_detail(Movie $movie)
     {
         return view('movies.movie_detail')->with('movie', $movie);
+    }
+
+    // search movie 
+    public function search(Request $request)
+    {
+        $keyword = $request->keyword;
+
+        $movies = Movie::where('title', 'like', "%{$keyword}%")
+            ->get();
+
+        return view('movies.search', compact(
+            'movies',
+            'keyword'
+        ));
+    }
+
+    //information index
+    public function informationIndex()
+    {
+        $information = Information::where('status', 'published')
+            ->latest('published_at')
+            ->paginate(20);
+
+        return view('information.index', compact('information'));
+    }
+
+    //information detail
+    public function informationDetail($id)
+    {
+        $information = Information::with('category')->findOrFail($id);
+        return view('information.information-detail', compact('information'));
     }
 }

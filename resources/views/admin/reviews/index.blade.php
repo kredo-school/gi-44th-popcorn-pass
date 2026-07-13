@@ -11,9 +11,9 @@
         style="max-width: 250px;" value="{{ request('search') }}">
 
     <select name="status" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
-        <option value="all" {{ request('status', 'visible' )=='all' ? 'selected' : '' }}>Status: All</option>
-        <option value="visible" {{ request('status', 'visible' )=='visible' ? 'selected' : '' }}>Visible</option>
-        <option value="hidden" {{ request('status', 'visible' )=='hidden' ? 'selected' : '' }}>Hidden</option>
+        <option value="all" {{ request('status', 'all' )=='all' ? 'selected' : '' }}>Status: All</option>
+        <option value="visible" {{ request('status', 'all' )=='visible' ? 'selected' : '' }}>Visible</option>
+        <option value="hidden" {{ request('status', 'all' )=='hidden' ? 'selected' : '' }}>Hidden</option>
     </select>
 
     <select name="sort" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
@@ -52,9 +52,9 @@
                     <td>{{ $review->created_at->format('Y-m-d') }}</td>
                     <td>
                        @if($review->is_approved)
-                        <span class="btn btn-sm btn-success">Visible</span>
+                        <span class="badge bg-success">Visible</span>
                     @else
-                        <span class="btn btn-sm btn-danger">Hidden</span>
+                        <span class="badge bg-secondary">Hidden</span>
                     @endif
                     </td>
                     <td>

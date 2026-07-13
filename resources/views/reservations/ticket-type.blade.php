@@ -144,7 +144,7 @@
 
             
             <form action="{{ route('reservations.showtimeSelection', ['showtime' => session('showtime_id')]) }}" method="GET">
-                <button>
+                <button  type="button" class="back-btn ms-5" onclick="history.back()">
                     <i class="fa-solid fa-arrow-left"></i> BACK
                 </button>
             </form>

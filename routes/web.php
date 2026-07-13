@@ -8,9 +8,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
-
 use App\Http\Controllers\MyPage\ReviewController as MyPageReviewController;
- 
 use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
@@ -28,6 +26,9 @@ Auth::routes();
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{movie}/release', [HomeController::class, 'release'])->name('release');
 Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])->name('movie_detail');
+Route::get('/movies/search', [HomeController::class, 'home_search'])->name('movies.search');
+Route::get('/information', [HomeController::class, 'informationIndex'])->name('information.index');
+Route::get('/information/{id}', [HomeController::class, 'informationDetail'])->name('information.detail');
 
 
 //Movie showtime
@@ -84,9 +85,10 @@ Route::delete('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 
 Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])->name('reviews.update')->middleware('auth');
 
 // ===========================
-// Location / Nearby Cinemas API
+// API Routes (Public)
 // ===========================
 Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby']);
+Route::get('/api/dynamic-pricing/{showtimeId}', [AdminController::class, 'getDynamicPricingStats']);
 
 
 // ===========================
@@ -94,6 +96,8 @@ Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby'])
 // ===========================
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+    
+    // Movies Management
     Route::get('/movies', [AdminController::class, 'movies'])->name('movies');
     Route::get('/movies/create', [AdminController::class, 'createMovie'])->name('movies.create');
     Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');
@@ -103,22 +107,53 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])->name('movies.showtimes');
     Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])->name('movies.showtimes.generate');
     Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])->name('showtimes.delete');
+    
+    // Dynamic Pricing Management
+    Route::get('/dynamic-pricing', [AdminController::class, 'showtimeDynamicPricing'])->name('dynamic-pricing');
+    Route::get('/dynamic-pricing/{id}/edit', [AdminController::class, 'editShowtimeDynamicPrice'])->name('dynamic-pricing.edit');
+    Route::put('/dynamic-pricing/{id}', [AdminController::class, 'updateShowtimeDynamicPrice'])->name('dynamic-pricing.update');
+    
+    // Analytics & Reports
     Route::get('/analytics', [AdminController::class, 'analytics'])->name('analytics');
+    
+    // Reservations Management
     Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
     Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])->name('reservations.export');
     Route::get('/reservations/{id}/details', [AdminController::class, 'reservationDetails'])->name('reservations.details');
+    
+    // Users Management
     Route::get('/users', [AdminController::class, 'users'])->name('users');
     Route::get('/users/{id}/details', [AdminController::class, 'userDetails'])->name('users.details');
     Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
+    
+    // Settings
     Route::get('/settings', [AdminController::class, 'settings'])->name('settings');
     Route::put('/settings', [AdminController::class, 'updateSettings'])->name('settings.update');
+    
+    // Coupons & Promotions
     Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])->name('coupons-promotions');
     Route::post('/coupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
+    
+    // Reviews Management
     Route::get('/reviews', [AdminController::class, 'reviews'])->name('reviews');
     Route::put('/reviews/{id}/toggle', [AdminController::class, 'toggleReview'])->name('reviews.toggle');
+    Route::get('/information', [AdminController::class, 'information'])->name('information');
+
+    //Information
+    Route::get('/information/create', [AdminController::class, 'createInformation'])->name('information.create');
+    Route::post('/information', [AdminController::class, 'storeInformation'])->name('information.store');
+    Route::get('/information/{id}/edit', [AdminController::class, 'editInformation'])->name('information.edit');
+    Route::put('/information/{id}', [AdminController::class, 'updateInformation'])->name('information.update');
+    Route::get('/information/{id}/details', [AdminController::class, 'informationDetails'])->name('information.details');
+    Route::delete('/information/{id}', [AdminController::class, 'deleteInformation'])->name('information.delete');
+    //Information Category
+    Route::get('/information/categories', [AdminController::class, 'informationCategories'])->name('information.categories');
+    Route::post('/information/categories', [AdminController::class, 'storeInformationCategory'])->name('information.categories.store');
+    Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])->name('information.categories.delete');
+
 });
 
 // ===========================
@@ -132,18 +167,13 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
     Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])->name('movies-watched');
     Route::post('/movies-watched/{reservation}/send-review-email', [MoviesWatchedController::class, 'sendReviewEmail'])->name('movies-watched.send-review-email');
-    Route::get('/reviews/create/{movie}', [ReviewController::class, 'create'])->name('reviews.create');
-    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
-    Route::put('/reviews/{id}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])->name('reviews.create');
+    Route::post('/reviews', [MyPageReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])->name('reviews.update');
     Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
     Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
     Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
     Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
     Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
-    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
-    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
 });
-
-
-

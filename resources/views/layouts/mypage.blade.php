@@ -27,6 +27,7 @@
             <li class="nav-item"><a href="{{ route('movie.showtime.display') }}" class="mypage-nav-link">Showtimes</a></li>
             <li class="nav-item"><a href="#Comingsoon" class="mypage-nav-link">Coming Soon</a></li>
             <li class="nav-item"><a href="#FoodDrink" class="mypage-nav-link">Food &amp; Drink</a></li>
+            <li class="nav-item"><a href="#Informaion" class="mypage-nav-link">Information</a></li>
         </ul>
 
         <span class="mypage-nav-badge">My Page</span>

@@ -124,9 +124,26 @@
 
 
 
+
         <div class="">
 
 
+
+
+        <div>
+            {{-- SEARCH --}}
+            <form action="{{ route('movies.search') }}" method="GET" class="search-wrapper w-50 container pt-5 mb-5">
+
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+                <input type="text" name="keyword" class="search-input mt-3" placeholder="Search by movie title..."
+                    value="{{ request('keyword') }}">
+
+                <button class="search-btn">
+                    SEARCH
+                </button>
+
+            </form>
 
 
             {{-- ===========================
@@ -151,16 +168,58 @@
                 </div>
             </div>
 
-            {{-- SEARCH --}}
-            <div class="search-wrapper w-50 container mt-5 mb-5">
-                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                @php
+                    $order = [1, 0, 2];
 
-                <input type="text" class="search-input mt-3" placeholder="Search movies, genres, or showtimes...">
+                    $sizes = [
+                        0 => [
+                            'height' => '400px',
+                            'number' => '20rem',
+                            'class' => 'first',
+                        ],
+                        1 => [
+                            'height' => '300px',
+                            'number' => '12rem',
+                            'class' => 'second',
+                        ],
+                        2 => [
+                            'height' => '300px',
+                            'number' => '12rem',
+                            'class' => 'third',
+                        ],
+                    ];
+                @endphp
 
-                <button class="search-btn">
-                    SEARCH
-                </button>
-            </div>
+                <div class="row justify-content-center align-items-end gx-5">
+                    @foreach ($order as $rankIndex)
+                        @if (isset($topMovies[$rankIndex]))
+                            @php
+                                $movie = $topMovies[$rankIndex];
+                                $s = $sizes[$rankIndex];
+                            @endphp
+
+                            <div
+                                class="
+                    col-md-3
+                    {{ $rankIndex == 0 ? 'order-md-2' : '' }}
+                    {{ $rankIndex == 1 ? 'order-md-1' : '' }}
+                    {{ $rankIndex == 2 ? 'order-md-3' : '' }}
+                    ">
+                                <div class="ranking-card-wrapper">
+
+                                    <div class="rank-number rank-{{ $rankIndex + 1 }}">
+                                        {{ $rankIndex + 1 }}
+                                    </div>
+                                    @if ($rankIndex == 0)
+                                        <div class="top-crown">👑</div>
+                                    @endif
+                                    <div class="top-card {{ $s['class'] }}">
+                                        <div class="poster-area" style="height:{{ $s['height'] }}">
+                                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
+                                                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
+                                                    class="w-100 h-100">
+                                            </a>
+
 
 
             {{-- Nowplaying --}}
@@ -388,6 +447,7 @@
                             </div>
                             <div class="position-relative px-3 pt-3">
                                 <div class="d-flex gap-4 pb-2 mt-5 ms-4 me-5 coming-soon-track" id="comingSoonSlider">
+                                
                                     @foreach ($comingSoonMovies as $movie)
                                         @php
                                             $releaseDate = \Carbon\Carbon::parse($movie->released_date);
@@ -466,28 +526,49 @@
                 </p>
                 <div class="container">
                     <div class="row g-3">
-                        @for ($i = 0; $i < 8; $i++)
-                            <div class="col-3 ">
-                                <div class="card rounded-0 news-card">
-                                    <div class="card-head text-center">
-                                        <div class="w-50 bg-warning mx-auto">
-                                            NEWS
+                        @forelse($information as $info)
+                            <div class="col-md-3">
+                                <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
+                                    <div class="card rounded-0 news-card h-100">
+                
+                                        <div class="card-head text-center py-1">
+                                            <span class="badge px-3 py-1" style="background-color: {{ $info->category->color }}">
+                                                {{ $info->category->name }}
+                                            </span>
                                         </div>
+                
+                                        @if($info->image_url)
+                                            <img src="{{ $info->image_url }}" alt="{{ $info->title }}" class="card-img-top info-list-img">
+                                        @else
+                                            <div
+                                                class="card-img-top info-list-img d-flex align-items-center justify-content-center bg-white text-dark fw-bold">
+                                                INFORMATION
+                                            </div>
+                                        @endif
+                
+                                        <div class="card-body d-flex flex-column">
+                                            <h6 class="fw-bold">{{ $info->title }}</h6>
+                                            <p class="small mb-0">{{ Str::limit($info->content, 80) }}</p>
+                                        </div>
+                
                                     </div>
-                                    <img src="{{ asset('images/news.png') }}" class="card-img-top news-img">
-                                    <div class="card-body">
-                                        If you're a member, you get great deals every Friday!
-                                    </div>
-                                </div>
+                                </a>
                             </div>
-                        @endfor
+                        @empty
+                            <p class="text-white text-center">No information available.</p>
+                        @endforelse
                     </div>
+            
+                    {{-- View All Button --}}
+                    <div class="text-center mt-4">
+                        <a href="{{ route('information.index') }}" class="btn btn-outline-warning px-5 py-2">
+                            View All Information
+                        </a>
+                    </div>
+            
                 </div>
-
-
-
             </div>
-
+            
             <div class="back-to-top mb-5">
                 <a href="#top" class="back-to-top-link">
                     <div class="arrow">
@@ -503,7 +584,8 @@
 
 
 
-    </div>
     <script src="{{ asset('js/home.js') }}" defer></script>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
 @endsection
