@@ -56,7 +56,8 @@ class ReservationController extends Controller
     public function seatSelection(Showtime $showtime)
     {
         $selectedSeats = session('selectedSeats', []);
-        session()->forget('paymentInfo');
+        session()->forget(['selectedSeats', 'paymentInfo',]);
+
 
         session([
             'showtime_id' => $showtime->id,
@@ -348,6 +349,11 @@ class ReservationController extends Controller
         $selectedSeats = session('selectedSeats', []);
         $totalPrice = session('final_price', 0);
         $reservationReference = session('reservation_reference');
+        session()->forget([
+            'selectedSeats',
+            'paymentInfo',
+            'showtime_id',
+        ]);
 
         return view('reservations.reservation-complete', compact(
             'showtime',
