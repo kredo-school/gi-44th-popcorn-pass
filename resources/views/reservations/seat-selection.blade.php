@@ -1,251 +1,222 @@
 @extends('layouts.app')
-
+@section('title', 'Select Seat')
 @section('content')
-<div class="container-fluid mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="mb-4">Select Your Seats</h1>
+
+
+    <div class="reservation-page">
+
+        @if (session('error'))
+            <div class="alert alert-danger text-center">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        {{-- Stepper --}}
+        <div class="stepper d-flex justify-content-center align-items-center mb-5">
+
+            <div class="step current">
+                <div class="step-circle d-flex justify-content-center align-items-center fw-semibold">
+                    1
+                </div>
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step upcoming">
+                <div class="step-circle d-flex justify-content-center align-items-center fw-semibold">
+                    2
+                </div>
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step upcoming">
+                <div class="step-circle d-flex justify-content-center align-items-center fw-semibold">
+                    3
+                </div>
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step upcoming">
+                <div class="step-circle d-flex justify-content-center align-items-center fw-semibold">
+                    4
+                </div>
+            </div>
+
+            <div class="step-line"></div>
+
+            <div class="step upcoming">
+                <div class="step-circle d-flex justify-content-center align-items-center fw-semibold">
+                    5
+                </div>
+            </div>
+
         </div>
-    </div>
 
-    <div class="row">
-        <!-- Showtime Info & Price Card -->
-        <div class="col-md-3 mb-4">
-            <div class="card border-0 shadow-sm sticky-top">
-                <div class="card-body">
-                    <!-- Movie & Screen Info -->
-                    <h5 class="card-title">{{ $showtime->movie->title }}</h5>
-                    <p class="text-muted small mb-3">
-                        <strong>Screen:</strong> {{ $showtime->screen->screen_name }}<br>
-                        <strong>Cinema:</strong> {{ $showtime->screen->cinema->cinema_name }}<br>
-                        <strong>Time:</strong> {{ $showtime->start_time->format('M d, Y H:i') }}
-                    </p>
 
-                    <hr>
+        {{-- Main --}}
+        <form id="seat-form" action="{{ route('reservations.seat-selection.store') }}" method="POST">
+            @csrf
 
-                    <!-- Price Section (★ DYNAMIC) -->
-                    <div class="mb-4">
-                        <h6 class="text-muted mb-3">Ticket Price</h6>
-                        
-                        <!-- Base Price -->
-                        <div class="mb-2">
-                            <small class="text-muted d-block">Base Price</small>
-                            <span class="small text-decoration-line-through">
-                                ¥<span id="base-price-display">{{ $showtime->base_price }}</span>
-                            </span>
-                        </div>
+            <input type="hidden" name="selectedSeats" id="selectedSeatsInput">
+            <div id="seat-data" data-seats='@json($selectedSeats)'></div>
 
-                        <!-- Current Dynamic Price -->
-                        <div class="mb-3">
-                            <small class="text-muted d-block">Current Price</small>
-                            <h3 class="mb-0" id="current-price-display">
-                                ¥<span id="current-price-value">{{ $showtime->current_dynamic_price }}</span>
-                            </h3>
-                            <small class="text-muted">
-                                <span id="price-change-badge" class="badge bg-secondary">
-                                    No change yet
+            <div class="row">
+                <div class="fw-bolder fs-2 text-center text-white mb-5">SELECT YOUR SEAT</div>
+
+                {{-- Seat Area --}}
+                <div class="col-lg-8 seat-bg">
+
+                    {{-- Screen --}}
+                    <div class="screen w-75 mx-auto py-1 rounded text-center text-white bg-primary mb-4">
+                        SCREEN
+                    </div>
+
+                    <div class="seat-map">
+
+                        {{-- Seat Numbers --}}
+                        <div class="seat-header d-flex justify-content-center align-items-center mb-3">
+                            <span class="row-label"></span>
+                            @for ($seat = 1; $seat <= 12; $seat++)
+                                <span class="seat-number text-center fw-bold">
+                                    {{ $seat }}
                                 </span>
-                            </small>
+                            @endfor
+                            <span class="row-label"></span>
                         </div>
 
-                        <!-- Occupancy Rate -->
-                        <div class="mb-3">
-                            <small class="text-muted d-block mb-2">Occupancy</small>
-                            <div class="progress" style="height: 20px;">
-                                <div id="occupancy-bar" class="progress-bar" role="progressbar" 
-                                    style="width: 0%"
-                                    aria-valuenow="0" 
-                                    aria-valuemin="0" 
-                                    aria-valuemax="100">
-                                    <span id="occupancy-percent">0%</span>
-                                </div>
+                        {{-- Seat Rows --}}
+                        @foreach (range('A', 'J') as $row)
+                            {{-- Premium Seats Header --}}
+                            @if ($row == 'D')
+                                <hr class="premium-divider">
+                                <p class="text-center fw-bold text-black my-1">
+                                    PREMIUM SEATS <span class="pay-extra">(+$10)</span>
+                                </p>
+                            @endif
+
+                            <div class="seat-row d-flex justify-content-center align-items-center mb-2">
+                                <span class="row-label fw-bold text-center">
+                                    {{ $row }}
+                                </span>
+
+                                @for ($seat = 1; $seat <= 12; $seat++)
+                                    @php
+
+                                        $seatCode = $row . $seat;
+
+                                        $isWheelchair = $row === 'A' && in_array($seat, [1, 2, 11, 12]);
+                                        $isPremium = in_array($row, ['D', 'E']);
+                                        $isReserved = in_array($seatCode, $reservedSeats);
+                                    @endphp
+
+                                    <button type="button"
+                                        class="seat mx-1
+                                        {{ $isReserved ? 'reserved' : ($isPremium ? 'premium' : 'available') }}
+                                        {{ $isWheelchair ? 'wheelchair' : '' }}"
+                                        data-seat="{{ $seatCode }}" {{ $isReserved ? 'disabled' : '' }}>
+
+
+                                        @if ($isWheelchair)
+                                            <i class="fa-solid fa-wheelchair"></i>
+                                        @endif
+
+                                    </button>
+                                @endfor
+
+                                <span class="row-label fw-bold text-center">
+                                    {{ $row }}
+                                </span>
                             </div>
-                            <small class="text-muted" id="occupancy-text">0 seats booked</small>
-                        </div>
 
-                        <!-- Price Info -->
-                        <div class="alert alert-info small mb-0">
-                            <strong>💡 Price Update:</strong>
-                            <span id="price-info-text">Loading price information...</span>
-                        </div>
+                            {{-- Premium Seats Footer --}}
+                            @if ($row == 'E')
+                                <hr class="premium-divider mb-2">
+                            @endif
+                        @endforeach
+
                     </div>
 
-                    <hr>
+                    {{-- Seat Legend --}}
+                    <div class="d-flex justify-content-center gap-4 mt-4">
 
-                    <!-- Selected Seats Summary -->
-                    <div class="mb-3">
-                        <h6 class="text-muted mb-2">Selected Seats</h6>
-                        <div id="selected-seats-list" class="small">
-                            <span class="text-muted">None selected yet</span>
+                        <div class="d-flex align-items-center">
+                            <div class="legend-seat available me-2"></div>
+                            <div class="legend-seat available premium me-2"></div>
+                            <span>Available</span>
                         </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="legend-seat reserved me-2 bg-black"></div>
+                            <span>Reserved</span>
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="legend-seat selected me-2 bg-pink"></div>
+                            <span>Selected</span>
+                        </div>
+
                     </div>
 
-                    <!-- Total Price -->
-                    <div class="bg-light p-3 rounded mb-3">
-                        <small class="text-muted d-block">Total Price</small>
-                        <h4 class="mb-0">¥<span id="total-price">0</span></h4>
-                    </div>
-
-                    <!-- Next Button -->
-                    <form action="{{ route('reservations.seat-selection.store') }}" method="POST" id="seat-form">
-                        @csrf
-                        <input type="hidden" name="selectedSeats" id="selectedSeatsInput" value="[]">
-                        <button type="submit" class="btn btn-primary w-100" id="next-button" disabled>
-                            Next → Ticket Type
-                        </button>
-                    </form>
                 </div>
-            </div>
-        </div>
 
-        <!-- Seat Selection Grid -->
-        <div class="col-md-9">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h6 class="mb-4">Choose Your Seats</h6>
-                    
-                    <!-- Seat Grid (from original template) -->
-                    <div class="seat-selection-grid">
-                        <!-- Original seat grid HTML goes here -->
-                        <!-- Your existing seat selection code -->
+                {{-- Reservation Summary --}}
+                <div class="col-lg-4">
+                    <div class="card summary">
+                        <div class="card-header text-center border-0 ">
+                            <h5 class="mb-0">YOUR SELECTION</h5>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="text-center">
+                                <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img">
+                            </div>
+                            <h5 class="fw-bold mt-3">
+                                {{ $showtime->movie->title }}
+                            </h5>
+                            <hr>
+                            <div class="mb-3">
+                                <small class="">Screen</small>
+                                <p class="mb-0 fw-bold fs-5">{{ $showtime->screen->screen_number }}</p>
+                            </div>
+                            <hr>
+                            <div class="mb-3">
+                                <small class="">Showtime</small>
+                                <p class="mb-0 fw-bold fs-5">
+                                    {{ $showtime->start_time->format('F j, Y | H:i') }}
+                                </p>
+                            </div>
+                            <hr>
+                            <div class="mb-3">
+                                <small class="">Seats</small>
+                                <div id="selected-seats"></div>
+                            </div>
+                            <div id="seat-limit-msg" class="text-danger mt-2 fw-bold fs-5" style="display:none;">
+                                Maximum 6 seats can be selected.
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
-        </div>
+
+            {{-- Button !!!!UPDATE LATER!!!! --}}
+            <div class="d-flex justify-content-between mt-5">
+                <button type="button" class="back-btn ms-5" onclick="history.back()">
+                    <i class="fa-solid fa-arrow-left"></i> BACK
+                </button>
+
+                <button type="submit" class="next-btn me-5" disabled>
+                    NEXT<i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+        </form>
+
+
     </div>
-</div>
 
-<!-- JavaScript: Real-time Dynamic Pricing -->
-<script>
-const SHOWTIME_ID = '{{ $showtime->id }}';
-const API_ENDPOINT = `/api/dynamic-pricing/${SHOWTIME_ID}`;
-const UPDATE_INTERVAL = 5000; // 5 seconds
 
-let pricingData = null;
-let selectedSeats = [];
-
-// Fetch dynamic pricing data from API
-async function fetchDynamicPricing() {
-    try {
-        const response = await fetch(API_ENDPOINT);
-        if (!response.ok) throw new Error('Failed to fetch pricing');
-        
-        pricingData = await response.json();
-        updatePricingDisplay();
-    } catch (error) {
-        console.error('Error fetching dynamic pricing:', error);
-        document.getElementById('price-info-text').textContent = 'Unable to load price info';
-    }
-}
-
-// Update display with latest pricing data
-function updatePricingDisplay() {
-    if (!pricingData) return;
-
-    // Update prices
-    document.getElementById('base-price-display').textContent = Math.round(pricingData.base_price);
-    document.getElementById('current-price-value').textContent = Math.round(pricingData.current_dynamic_price);
-
-    // Update occupancy bar
-    const occupancyPercent = Math.round(pricingData.occupancy_percent);
-    document.getElementById('occupancy-bar').style.width = occupancyPercent + '%';
-    document.getElementById('occupancy-bar').setAttribute('aria-valuenow', occupancyPercent);
-    document.getElementById('occupancy-percent').textContent = occupancyPercent + '%';
-    document.getElementById('occupancy-text').textContent = 
-        `${pricingData.booked_seats} seats booked out of ${pricingData.capacity}`;
-
-    // Update price change badge
-    const changeBadge = document.getElementById('price-change-badge');
-    const changePercent = pricingData.price_change_percent;
-    const badgeClass = changePercent < -5 ? 'bg-success' : 
-                       changePercent > 5 ? 'bg-danger' : 'bg-secondary';
-    changeBadge.className = 'badge ' + badgeClass;
-    changeBadge.textContent = (changePercent >= 0 ? '+' : '') + changePercent.toFixed(1) + '%';
-
-    // Update price info text
-    const indicator = pricingData.price_indicator.toUpperCase();
-    const infoText = `Occupancy: ${occupancyPercent}% | Price: ${indicator} | Elasticity: ${pricingData.elasticity_factor.toFixed(2)}`;
-    document.getElementById('price-info-text').textContent = infoText;
-
-    // Recalculate total
-    updateTotalPrice();
-}
-
-// Update total price based on selected seats
-function updateTotalPrice() {
-    if (!pricingData) return;
-
-    const currentPrice = pricingData.current_dynamic_price;
-    const totalPrice = selectedSeats.length * currentPrice;
-    
-    document.getElementById('total-price').textContent = Math.round(totalPrice);
-
-    // Enable/disable next button
-    const nextButton = document.getElementById('next-button');
-    nextButton.disabled = selectedSeats.length === 0;
-}
-
-// Handle seat selection (integrate with your existing seat selection logic)
-function onSeatSelect(seatNumber, seatPrice, isPremium = false) {
-    selectedSeats.push({
-        seat: seatNumber,
-        price: pricingData.current_dynamic_price, // Use dynamic price!
-        premium: isPremium
-    });
-
-    document.getElementById('selectedSeatsInput').value = JSON.stringify(selectedSeats);
-    updateSeatsList();
-    updateTotalPrice();
-}
-
-function onSeatDeselect(seatNumber) {
-    selectedSeats = selectedSeats.filter(s => s.seat !== seatNumber);
-    document.getElementById('selectedSeatsInput').value = JSON.stringify(selectedSeats);
-    updateSeatsList();
-    updateTotalPrice();
-}
-
-function updateSeatsList() {
-    const listEl = document.getElementById('selected-seats-list');
-    if (selectedSeats.length === 0) {
-        listEl.innerHTML = '<span class="text-muted">None selected yet</span>';
-    } else {
-        const seats = selectedSeats.map(s => s.seat).join(', ');
-        listEl.innerHTML = `<strong>${seats}</strong>`;
-    }
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    // Initial fetch
-    fetchDynamicPricing();
-
-    // Refresh every 5 seconds
-    setInterval(fetchDynamicPricing, UPDATE_INTERVAL);
-
-    // Handle form submission
-    document.getElementById('seat-form').addEventListener('submit', function(e) {
-        if (selectedSeats.length === 0) {
-            e.preventDefault();
-            alert('Please select at least one seat');
-        }
-    });
-});
-</script>
-
-<style>
-#current-price-display {
-    color: #0d6efd;
-    font-weight: 600;
-}
-
-.sticky-top {
-    top: 100px;
-}
-
-.seat-selection-grid {
-    /* Your existing seat grid styles */
-}
-</style>
 
 @endsection
