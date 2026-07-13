@@ -129,9 +129,7 @@
 
 
 
-            {{-- ===========================
-                    Nearby Cinemas
-                    =========================== --}}
+            {{-- Nearby Cinemas  --}}
             <div class="container-fluid" id="NearbyCinemas">
                 <div class="d-flex justify-content-between align-items-center ms-5 me-5 pt-5">
                     <p class="display-5 text-white title-base mb-0">
