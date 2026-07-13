@@ -27,90 +27,109 @@
         </div>
     </div>
 
-    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active">
-            </button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1">
-            </button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2">
-            </button>
-        </div>
+    <div class="swiper heroSwiper">
 
-        <div class="carousel-inner">
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
-
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
+        <div class="swiper-wrapper">
 
             {{-- WELCOME --}}
-            <div class="carousel-item active">
+            <div class="swiper-slide">
                 <img src="{{ asset('images/welcome.png') }}" class="hero-image-welcome">
+
                 <div class="hero-content-welcome">
                     <p>
                         Experience the Magic of Movies
                     </p>
+
                     @auth
-                        <a href="#" class="btn btn-white">
+                        <a href="{{ route('mypage.dashboard') }}" class="btn btn-book">
                             My Page
                         </a>
                     @else
-                        <a href="/login" class="btn btn-white">
+                        <a href="/login" class="btn btn-book">
                             Log in
                         </a>
                     @endauth
                 </div>
             </div>
-            {{-- COMING SOON --}}
-            <div class="carousel-item">
 
-                <img src="{{ asset('images/king.png') }}" class="hero-image">
+            {{-- COMING SOON --}}
+            <div class="swiper-slide">
+
+                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
 
                 <div class="hero-overlay"></div>
+
                 <div class="hero-content">
                     <span class="hero-tag">
                         COMING SOON
                     </span>
+
                     <h1>
                         UPCOMING<br>
                         BLOCKBUSTERS
                     </h1>
-                    <p>
-                        Discover the most anticipated movies.
-                    </p>
-                    <a href="#" class="btn-book">
+
+                    <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
                         VIEW MORE →
                     </a>
                 </div>
-            </div>
-            {{-- TOP RANKING --}}
-            <div class="carousel-item">
 
-                <img src="{{ asset('images/king2.png') }}" class="hero-image">
+            </div>
+
+            {{-- TOP RANKING --}}
+            <div class="swiper-slide">
+
+                <img src="{{ $topMovie->banner_image_url }}" class="hero-image">
+
                 <div class="hero-overlay"></div>
+
                 <div class="hero-content">
+
                     <span class="hero-tag hero-tag-red">
                         TOP RANKING
                     </span>
+
                     <h1>
                         #1 MOVIE<br>
                         OF THE WEEK
                     </h1>
+
                     <p>
                         Most watched by our audience.
                     </p>
-                    <a href="#" class="btn-book btn-book-red">
-                        SEE RANKING →
+
+                    <a href="{{ route('movie_detail', $topMovie->id) }}" class="btn-book btn-book-red">
+
+                        SEE MOVIE DETAIL →
+
                     </a>
+
                 </div>
+
             </div>
+
         </div>
 
+        <!-- 矢印 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- 下の丸 -->
+        <div class="swiper-pagination"></div>
+
     </div>
+
     <div class="mt-0 home-hero-bg">
+
+
+
+
+
+        <div class="">
+
+
+
+
         <div>
             {{-- SEARCH --}}
             <form action="{{ route('movies.search') }}" method="GET" class="search-wrapper w-50 container pt-5 mb-5">
@@ -126,11 +145,12 @@
 
             </form>
 
+
             {{-- ===========================
-                 Nearby Cinemas
-                 =========================== --}}
-            <div class="container-fluid section-gap" id="NearbyCinemas">
-                <div class="d-flex justify-content-between align-items-center ms-5 me-5">
+                    Nearby Cinemas
+                    =========================== --}}
+            <div class="container-fluid" id="NearbyCinemas">
+                <div class="d-flex justify-content-between align-items-center ms-5 me-5 pt-5">
                     <p class="display-5 text-white title-base mb-0">
                         📍 Nearby Movie Theaters
                     </p>
@@ -147,21 +167,6 @@
                     <div id="nearbyCinemasList" class="row g-3 p-4 is-hidden"></div>
                 </div>
             </div>
-
-
-            {{-- Top Ranking --}}
-            <div class="">
-
-                <div class="ranking-header">
-                    <hr class="ranking-line w-50 mx-auto">
-                    <div class="ranking-main-title">
-                        👑 TOP 3 MOVIES
-                    </div>
-                    <div class="ranking-sub-title">
-                        WEEKLY RANKING
-                    </div>
-                    <hr class="ranking-line w-50 mx-auto">
-                </div>
 
                 @php
                     $order = [1, 0, 2];
@@ -216,218 +221,301 @@
                                             </a>
 
 
-                                            <div class="movie-overlay"></div>
+
+            {{-- Nowplaying --}}
+            <div class="container-fluid px-0 " id="Nowplaying">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <div class="col-10">
+                        <div class="section-title-wrap">
+                            <div class="section-title-line"></div>
+                            <h2 class="section-title">
+                                <span class="title-icon">🎬</span>
+                                NOW PLAYING
+                            </h2>
+                            <div class="section-title-line"></div>
+                        </div>
+
+                        <div class="w-100 py-4 panel-navy-overlay">
+
+                            <!-- View All -->
+                            <div class="d-flex justify-content-end px-4 mb-3">
+                                <a href="{{ route('movie.showtime.display') }}" class="view-all fs-5">View All
+                                    Showtimes</a>
+                            </div>
+
+                            <div class="d-flex align-items-center px-3 m-3 gap-2">
+
+                                <!-- left button slider-->
+                                <button id="nowPlayingPrevBtn" type="button" class="slider-btn slider-btn-left">
+                                    <i class="fa-solid fa-circle-chevron-left text-secondary"></i>
+                                </button>
+
+
+                                <!-- Movie Cards scroll -->
+                                <div class="flex-grow-1 now-playing-track-wrap">
+                                    <div class="d-flex gap-3 pb-2 now-playing-track" id="nowPlayingSlider">
+
+                                        @foreach ($movies as $movie)
+                                            <div class="now-playing-slide">
+                                                <div class="movie-card">
+                                                    <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
+                                                        <img src="{{ asset($movie->poster_url) }}"
+                                                            class="movie-poster w-100">
+                                                    </a>
+                                                    <div class="movie-info" style="background:#081729">
+
+                                                        <h6 class="text-white text-center mb-2 mt-2">
+                                                            {{ $movie->title }}
+                                                        </h6>
+                                                        <div class="movie-meta text-white small px-2">
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <span class="text-white-50">Adventure</span>
+                                                                <span>{{ $movie->duration }}</span>
+                                                            </div>
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <span class="text-white-50 genre-label">Genre</span>
+                                                                <span>⭐{{ $movie->review_avarage }}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <a href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}"
+                                                            class="text-decoration-none">
+                                                            <button class="book-btn mt-2 w-100">BOOK NOW</button>
+                                                        </a>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+
+
+                                    </div>
+                                </div>
+
+                                <!-- right button slider-->
+                                <button id="nowPlayingNextBtn" type="button" class="slider-btn slider-btn-right">
+                                    <i class="fa-solid fa-circle-chevron-right text-secondary"></i>
+                                </button>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-1"></div>
+                </div>
+
+
+            </div>
+
+
+            <div class="row mt-5">
+                <div class="col-1"></div>
+
+                {{-- Top Ranking --}}
+                <div class="col-12 col-lg-7">
+
+                    <div class="ranking-header">
+                        <hr class="ranking-line w-50 mx-auto">
+                        <div class="ranking-main-title">
+                            👑 TOP 3 MOVIES
+                        </div>
+                        <div class="ranking-sub-title">
+                            WEEKLY RANKING
+                        </div>
+                        <hr class="ranking-line w-50 mx-auto">
+                    </div>
+                    @php
+                        $order = [1, 0, 2];
+
+                        $sizes = [
+                            0 => [
+                                'number' => '20rem',
+                                'class' => 'first',
+                            ],
+                            1 => [
+                                'number' => '12rem',
+                                'class' => 'second',
+                            ],
+                            2 => [
+                                'number' => '12rem',
+                                'class' => 'third',
+                            ],
+                        ];
+                    @endphp
+
+                    <div class="row justify-content-center align-items-end gx-3 gx-lg-5">
+                        @foreach ($order as $rankIndex)
+                            @if (isset($topMovies[$rankIndex]))
+                                @php
+                                    $movie = $topMovies[$rankIndex];
+                                    $s = $sizes[$rankIndex];
+                                @endphp
+
+                                <div class="col-4">
+                                    <div class="ranking-card-wrapper">
+
+                                        <div class="rank-number rank-{{ $rankIndex + 1 }}">
+                                            {{ $rankIndex + 1 }}
                                         </div>
 
-                                        <div class="movie-info-box">
-                                            <div class="movie-title">
-                                                {{ $movie->title }}
+                                        <div class="top-card {{ $s['class'] }}">
+                                            <div class="poster-area">
+                                                <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
+                                                    <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
+                                                        class="w-100 h-100">
+                                                </a>
+
+                                                <div class="movie-overlay"></div>
                                             </div>
 
-                                            <div class="movie-meta">
-                                                <span class="movie-rating">
-                                                    ⭐ {{ $movie->review_average }}
-                                                </span>
+                                            <div class="movie-info-box">
+                                                <div class="movie-title">
+                                                    {{ $movie->title }}
+                                                </div>
 
-                                                <span class="meta-divider">|</span>
+                                                <div class="movie-meta">
+                                                    <span class="movie-rating">
+                                                        ⭐ {{ $movie->review_average }}
+                                                    </span>
 
-                                                <span class="movie-duration">
-                                                    ⏱ {{ floor($movie->duration / 60) }}h {{ $movie->duration % 60 }}m
-                                                </span>
+                                                    <span class="meta-divider">|</span>
+
+                                                    <span class="movie-duration">
+                                                        ⏱ {{ floor($movie->duration / 60) }}h
+                                                        {{ $movie->duration % 60 }}m
+                                                    </span>
+                                                </div>
+
+                                                <a
+                                                    href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
+                                                    <button class="mt-2 w-100 ranking-book-btn">
+                                                        BOOK NOW
+                                                    </button>
+                                                </a>
                                             </div>
-                                            <a
-                                                href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
-                                                <button class=" mt-2 w-100 ranking-book-btn">BOOK NOW</button>
-                                            </a>
 
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- Nowplaying --}}
-            <div class="container-fluid px-0 section-gap" id="Nowplaying">
-                <div class="section-title-wrap">
-                    <div class="section-title-line"></div>
-                    <h2 class="section-title">
-                        <span class="title-icon">🎬</span>
-                        NOW PLAYING
-                    </h2>
-                    <div class="section-title-line"></div>
-                </div>
-
-                <div class="w-100 py-4 panel-navy-overlay">
-
-                    <!-- View All -->
-                    <div class="d-flex justify-content-end px-4 mb-3">
-                        <a href="{{ route('movie.showtime.display') }}" class="view-all fs-5">View All Showtimes</a>
+                            @endif
+                        @endforeach
                     </div>
-
-                    <div class="d-flex align-items-center px-3 m-3 gap-2">
-
-                        <!-- left button slider-->
-                        <button id="nowPlayingPrevBtn" type="button" class="slider-btn slider-btn-left">
-                            <i class="fa-solid fa-circle-chevron-left text-secondary"></i>
-                        </button>
-
-
-                        <!-- Movie Cards scroll -->
-                        <div class="flex-grow-1 now-playing-track-wrap">
-                            <div class="d-flex gap-3 pb-2 now-playing-track" id="nowPlayingSlider">
-
-                                @foreach ($movies as $movie)
-                                    <div class="now-playing-slide">
-                                        <div class="movie-card">
-                                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
-                                                <img src="{{ asset($movie->poster_url) }}" class="movie-poster w-100">
-                                            </a>
-                                            <div class="movie-info" style="background:#081729">
-
-                                                <h6 class="text-white text-center mb-2 mt-2">
-                                                    {{ $movie->title }}
-                                                </h6>
-                                                <div class="movie-meta text-white small px-2">
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <span class="text-white-50">Adventure</span>
-                                                        <span>{{ $movie->duration }}</span>
-                                                    </div>
-                                                    <div class="d-flex justify-content-between align-items-center">
-                                                        <span class="text-white-50 genre-label">Genre</span>
-                                                        <span>⭐{{ $movie->review_avarage }}</span>
-                                                    </div>
-                                                </div>
-
-                                                <a href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}"
-                                                    class="text-decoration-none">
-                                                    <button class="book-btn mt-2 w-100">BOOK NOW</button>
-                                                </a>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-
-
-                            </div>
-                        </div>
-
-                        <!-- right button slider-->
-                        <button id="nowPlayingNextBtn" type="button" class="slider-btn slider-btn-right">
-                            <i class="fa-solid fa-circle-chevron-right text-secondary"></i>
-                        </button>
-
-                    </div>
-
                 </div>
+
+
+                <div class="col-3">
+                    <div class="side-ranking ranking-side-background mt-5">
+
+
+                        @foreach ($topMovies->slice(3, 7)->values() as $index => $movie)
+                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}" class="ranking-list-item">
+
+                                <span class="ranking-position">
+                                    {{ $index + 4 }}
+                                </span>
+
+                                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="ranking-thumb">
+
+                                <span class="ranking-title">
+                                    {{ $movie->title }}
+                                </span>
+
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="col-1"></div>
+
 
             </div>
 
-            {{-- Coming sooon --}}
-            <div class="container-fluid px-0 section-gap" id="Comingsoon">
-                <div class="section-title-wrap">
-                    <div class="coming-title-line"></div>
-                    <h1 class="coming-title">
-                        🎞️ COMING SOON
-                    </h1>
-                    <div class="coming-title-line"></div>
-                </div>
+            {{-- Coming soon --}}
+            <div class="row" id="Comingsoon">
+                <div class="col-1"></div>
+                <div class="col-10">
 
-                <div class="panel-navy-overlay">
+                    <div class="container-fluid px-0 section-gap" id="Comingsoon">
 
-                    {{-- scroll --}}
-                    <div class="position-relative px-3 pt-4">
-                        <div class="d-flex gap-3 pb-2 mt-5 ms-4 me-5 coming-soon-track" id="comingSoonSlider">
 
-                            @foreach ($comingSoonMovies as $movie)
-                                <a href="{{ route('release', ['movie' => $movie->id]) }}"
-                                    class="coming-card text-decoration-none flex-shrink-0 m-4"
-                                    style="scroll-snap-align: start; width: 400px;">
-                                    <div style="overflow: hidden;">
-                                        <img src="{{ $movie->poster_url }}" alt="Movie"
-                                            style="width: 100%; height: 360px; object-fit: cover; display: block;">
-                                        <div class="" style="background: rgba(255,255,255,0.85);">
-
-                                            <div class="coming-movie-info">
-                                                <p class="mb-0 text-center coming-movie-title">
-                                                    {{ $movie->title }}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-
+                        <div class="panel-navy-overlay">
+                            <div class="marquee-header">
+                                <span class="marquee-header-line"></span>
+                                <h1 class="marquee-title">Coming Soon</h1>
+                                <span class="marquee-header-line"></span>
+                            </div>
+                            <div class="position-relative px-3 pt-3">
+                                <div class="d-flex gap-4 pb-2 mt-5 ms-4 me-5 coming-soon-track" id="comingSoonSlider">
+                                
+                                    @foreach ($comingSoonMovies as $movie)
                                         @php
                                             $releaseDate = \Carbon\Carbon::parse($movie->released_date);
                                             $daysLeft = (int) now()->diffInDays($releaseDate, false);
                                         @endphp
 
-                                        <p class="text-white text-center mt-2">
+                                        <a href="{{ route('release', ['movie' => $movie->id]) }}"
+                                            class="coming-card text-decoration-none flex-shrink-0"
+                                            style="scroll-snap-align: start;">
 
-                                            @if ($daysLeft == 0)
-                                                <span class="badge bg-danger">🔥 TODAY</span>
-                                            @elseif ($daysLeft <= 7)
-                                                <span class="badge bg-warning text-dark countdown-badge">
-                                                    ⏳ In {{ $daysLeft }} days
-                                                </span><br>
-                                                <span class="display-4 coming-text fw-bold base">
-                                                    {{ $releaseDate->format('j.n.Y') }}
-                                                </span>
-                                            @elseif ($daysLeft <= 30)
-                                                <span class="coming-badge">
-                                                    📅 In {{ $daysLeft }} days
-                                                </span><br>
-                                                <span class="display-4 text-white fw-bold base">
-                                                    {{ $releaseDate->format('j.n.Y') }}
-                                                </span>
-                                            @else
-                                                <span class="text-secondary">
-                                                    Published on
-                                                </span><br>
-                                                <span class="display-4 text-white fw-bold base">
-                                                    {{ $releaseDate->format('j.n.Y') }}
-                                                </span>
-                                            @endif
+                                            <div class="coming-poster-wrap">
+                                                <div class="film-sprockets"></div>
+                                                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}"
+                                                    class="coming-poster">
 
-                                            <br>
-                                        </p>
-                                        <div class="coming-title-line"></div>
-                                    </div>
+                                                <div class="ticket-stub {{ $daysLeft <= 0 ? 'ticket-stub-today' : '' }}">
+                                                    <span class="ticket-stub-label">
+                                                        @if ($daysLeft <= 0)
+                                                            Now showing
+                                                        @elseif ($daysLeft == 1)
+                                                            Tomorrow
+                                                        @else
+                                                            {{ $daysLeft }} days
+                                                        @endif
+                                                    </span>
+                                                    <span
+                                                        class="ticket-stub-date">{{ $releaseDate->format('M j') }}</span>
+                                                </div>
+                                            </div>
 
+                                            <p class="coming-movie-title text-center">{{ $movie->title }}</p>
+                                        </a>
+                                    @endforeach
 
-                                </a>
-                            @endforeach
+                                </div>
 
-
+                                <button id="comingSoonNextBtn" type="button" class="coming-slider-btn ">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                            </div>
                         </div>
-                        <div class="">
-                            {{-- right slider button --}}
-                            <button id="comingSoonNextBtn" type="button" class="coming-slider-btn">
-                                <i class="fa-solid fa-chevron-right"></i>
-                            </button>
-                        </div>
-
-
                     </div>
                 </div>
+                <div class="col-1"></div>
+
+
+            </div>
+
+            <div class="col-6">
+                {{-- food & Drink --}}
+
+                <div class="container-fluid px-0 mt-5 section-gap " id="Food&drink">
+                    <p class="display-3 text-white title-base ms-5 text-center">
+
+                    </p>
+
+                    <div class="w-75 mx-auto panel-navy-overlay">
+                        <img src="{{ asset('images/foodmenu.png') }}" alt="foodmenu" class="w-100 food-menu-img">
+                    </div>
+
+                </div>
+
+
             </div>
 
             <hr class="text-white">
 
-            {{-- food & Drink --}}
-            <div class="container-fluid px-0 mt-5 section-gap" id="Food&drink">
-                <p class="display-3 text-white title-base ms-5">
-                    🍿 Food & Drink
-                </p>
 
-                <div class="w-75 mx-auto panel-navy-overlay">
-                    <img src="{{ asset('images/foodmenu.png') }}" alt="foodmenu" class="w-100 food-menu-img">
-                </div>
-
-            </div>
 
             <hr class="text-white">
 
@@ -492,10 +580,12 @@
                 </a>
             </div>
         </div>
-
-
     </div>
 
+
+
     <script src="{{ asset('js/home.js') }}" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
 @endsection
