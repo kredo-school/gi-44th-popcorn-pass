@@ -61,17 +61,45 @@ class HomeController extends Controller
     private function commonData($selectedDate)
     {
         $dates = collect();
+
         for ($i = 0; $i < 14; $i++) {
             $dates->push(now()->copy()->addDays($i));
         }
 
         return [
-            'movies' => Movie::with(['showtimes' => function ($query) use ($selectedDate) {
-                $query->whereDate('start_time', $selectedDate);
-            }, 'showtimes.screen.cinema'])
+            'movies' => Movie::with([
+                'showtimes' => function ($query) use ($selectedDate) {
+                    $query->whereDate('start_time', $selectedDate);
+                },
+                'showtimes.screen.cinema'
+            ])
                 ->where('status', 'now_showing')
                 ->get(),
+
+            'comingSoonMovies' => Movie::where('status', 'coming_soon')
+                ->whereDate('released_date', '>=', now())
+                ->orderBy('released_date')
+                ->get(),
+
+            'heroMovie' => Movie::where('status', 'coming_soon')
+                ->inRandomOrder()
+                ->first(),
+
+            'topMovie' => Movie::withAvg([
+                'reviews as weekly_average' => function ($query) {
+                    $query->where('created_at', '>=', now()->subWeek());
+                }
+            ], 'rating')
+                ->orderByDesc('weekly_average')
+                ->first(),
+
+            'information' => Information::where('status', 'published')
+                ->latest('published_at')
+                ->take(8)
+                ->get(),
+
             'dates' => $dates,
+            'selectedDate' => $selectedDate,
         ];
     }
 
@@ -127,6 +155,36 @@ class HomeController extends Controller
         return view('layouts.showtime_display', $data);
     }
 
+    public function showtime_search(Request $request)
+    {
+        $selectedDate = $request->get('date', now()->toDateString());
+        $keyword = $request->keyword;
+
+        $data = $this->commonData($selectedDate);
+
+        $data['searchResults'] = Movie::with([
+            'showtimes' => function ($query) use ($selectedDate) {
+                $query->whereDate('start_time', $selectedDate);
+            },
+            'showtimes.screen.cinema',
+            'genre',
+        ])
+            ->where(function ($query) use ($keyword) {
+                $query->where('title', 'like', "%{$keyword}%")
+                    ->orWhere('director', 'like', "%{$keyword}%")
+                    ->orWhere('synopsis', 'like', "%{$keyword}%")
+                    ->orWhereHas('genre', function ($q) use ($keyword) {
+                        $q->where('title', 'like', "%{$keyword}%");
+                    });
+            })
+            ->get();
+
+        $data['selectedDate'] = $selectedDate;
+        $data['isSearch'] = true;
+
+        return view('layouts.showtime_display', $data);
+    }
+
     // showtime selection
     public function showtime_selection(Movie $movie)
     {
@@ -166,8 +224,15 @@ class HomeController extends Controller
     {
         $keyword = $request->keyword;
 
-        $movies = Movie::where('title', 'like', "%{$keyword}%")
-            ->get();
+        $movies = Movie::where(function ($query) use ($keyword) {
+            $query->where('title', 'like', "%{$keyword}%")
+                ->orWhere('director', 'like', "%{$keyword}%")
+                ->orWhere('synopsis', 'like', "%{$keyword}%")
+                ->orWhereHas('genre', function ($q) use ($keyword) {
+                    $q->where('title', 'like', "%{$keyword}%");
+                })
+                ->orWhereJsonContains('search_keywords', $keyword);
+        })->get();
 
         return view('movies.search', compact(
             'movies',

@@ -27,6 +27,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/movie/{movie}/release', [HomeController::class, 'release'])->name('release');
 Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])->name('movie_detail');
 Route::get('/movies/search', [HomeController::class, 'home_search'])->name('movies.search');
+Route::get('/movies/search_showtime', [HomeController::class, 'showtime_search'])->name('movies.search_showtime');
 Route::get('/information', [HomeController::class, 'informationIndex'])->name('information.index');
 Route::get('/information/{id}', [HomeController::class, 'informationDetail'])->name('information.detail');
 

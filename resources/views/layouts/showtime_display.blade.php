@@ -253,7 +253,7 @@
             <div class="tab-pane fade {{ $isSearch ? 'show active' : '' }}" id="searchMovie">
                 {{-- SEARCH FORM --}}
                 <div class="">
-                    <form action="{{ route('movies.search') }}#searchMovie" method="GET">
+                    <form action="{{ route('movies.search_showtime') }}#searchMovie" method="GET">
 
                         <div class="movie-search-wrapper">
 

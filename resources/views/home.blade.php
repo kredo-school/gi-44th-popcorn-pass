@@ -242,7 +242,10 @@
                                                                 <div
                                                                     class="d-flex justify-content-between align-items-center">
                                                                     <span class="text-white-50 genre-label">Genre</span>
-                                                                    <span>⭐{{ $movie->review_avarage }}</span>
+                                                                    <a href="{{ route('reviews.index', ['movieId' => $movie->id]) }}"
+                                                                        class="text-decoration-none text-white">
+                                                                        ⭐ {{ number_format($movie->review_average, 1) }}
+                                                                    </a>
                                                                 </div>
                                                             </div>
 
@@ -344,7 +347,10 @@
 
                                                     <div class="movie-meta">
                                                         <span class="movie-rating">
-                                                            ⭐ {{ $movie->review_average }}
+                                                            <a href="{{ route('reviews.index', ['movieId' => $movie->id]) }}"
+                                                                class="text-decoration-none text-white">
+                                                                ⭐ {{ number_format($movie->review_average, 1) }}
+                                                            </a>
                                                         </span>
 
                                                         <span class="meta-divider">|</span>
