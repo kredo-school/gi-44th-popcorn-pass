@@ -54,7 +54,6 @@
 
             {{-- COMING SOON --}}
             <div class="swiper-slide">
-
                 <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
 
                 <div class="hero-overlay"></div>
@@ -121,7 +120,7 @@
 
     <div class="mt-0 home-hero-bg">
 
-         <div class="">
+        <div class="">
 
 
 
@@ -147,7 +146,7 @@
             </div>
 
             {{-- SEARCH --}}
-            <div class="search-wrapper w-100 container mt-5 mb-5">
+            <div class="search-wrapper w-100 container ">
 
                 <form action="{{ route('movies.search') }}" method="GET" class="search-wrapper w-50 container pt-5 mb-5">
 
@@ -163,27 +162,6 @@
             </div>
 
 
-            {{-- ===========================
-                    Nearby Cinemas
-                    =========================== --}}
-            <div class="container-fluid" id="NearbyCinemas">
-                <div class="d-flex justify-content-between align-items-center ms-5 me-5 pt-5">
-                    <p class="display-5 text-white title-base mb-0">
-                        📍 Nearby Movie Theaters
-                    </p>
-                    <button type="button" id="changeLocationPrefBtn" class="btn btn-sm location-change-btn">
-                        <i class="fa-solid fa-gear me-1"></i> Location Settings
-                    </button>
-                </div>
-
-                <div class="panel-navy-overlay">
-                    <div id="nearbyCinemasStatus" class="text-white-50 text-center py-4">
-                        <i class="fa-solid fa-spinner fa-spin me-2"></i>Loading nearby theaters...
-                    </div>
-
-                    <div id="nearbyCinemasList" class="row g-3 p-4 is-hidden"></div>
-                </div>
-            </div>
 
             @php
                 $order = [1, 0, 2];
@@ -231,13 +209,13 @@
                                         Showtimes</a>
                                 </div>
 
-                                <div class="d-flex align-items-center px-3 m-3 gap-2">
+                                <div class="d-flex align-items-center px-3 m-3 gap-2 position-relative">
 
                                     <!-- left button slider-->
-                                    <button id="nowPlayingPrevBtn" type="button" class="slider-btn slider-btn-left">
-                                        <i class="fa-solid fa-circle-chevron-left text-secondary"></i>
-                                    </button>
 
+                                    <button id="nowPlayingNextBtn" type="button" class="nowplaying-btn">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </button>
 
                                     <!-- Movie Cards scroll -->
                                     <div class="flex-grow-1 now-playing-track-wrap">
@@ -284,8 +262,8 @@
                                     </div>
 
                                     <!-- right button slider-->
-                                    <button id="nowPlayingNextBtn" type="button" class="slider-btn slider-btn-right">
-                                        <i class="fa-solid fa-circle-chevron-right text-secondary"></i>
+                                    <button id="nowPlayingPrevBtn" type="button" class="nowplaying-btn">
+                                        <i class="fa-solid fa-chevron-left"></i>
                                     </button>
 
                                 </div>
@@ -577,11 +555,11 @@
                     </a>
                 </div>
             </div>
-    </div>
+        </div>
 
 
 
-    <script src="{{ asset('js/home.js') }}" defer></script>
+        <script src="{{ asset('js/home.js') }}" defer></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-@endsection
+        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    @endsection

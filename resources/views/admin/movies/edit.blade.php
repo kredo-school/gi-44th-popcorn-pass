@@ -210,7 +210,7 @@
                         <select class="form-select" id="gen-screen">
                             <option value="">Select screen...</option>
                             @foreach ($screens as $screen)
-                                <option value="{{ $screen->id }}">{{ $screen->cinema->cinema_name }} - Screen {{ $screen->screen_number }}</option>
+                                <option value="{{ $screen->id }}">{{ $screen->cinema->cinema_name }} - Screen {{ $screen->screen_number }} - {{$screen->screen_type }}</option>
                             @endforeach
                         </select>
                     </div>

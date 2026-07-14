@@ -238,9 +238,12 @@
                                     @foreach ($screens as $screen)
                                         <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}"
                                             {{ old('showtimes.' . $i . '.screen_id') == $screen->id ? 'selected' : '' }}>
-                                            {{ $screen->cinema->cinema_name }} - Screen {{ $screen->screen_number }}
+                                            {{ $screen->cinema->cinema_name }}
+                                            - {{ $screen->screen_type }}
+                                            (Screen {{ $screen->screen_number }})
                                         </option>
                                     @endforeach
+                                    
                                 </select>
                             </div>
                             <div class="col-md-3">
