@@ -77,7 +77,11 @@
                         </div>
 
                         <span>{{ number_format($movie->review_average, 1) }}/5 </span>
-                        <span class="ms-2">( {{ $movie->total_reviews }} reviews)</span>
+                        <a href="{{ route('reviews.index', ['movieId' => $movie->id]) }}"
+                            class="text-decoration-none text-white">
+                            <span class="ms-2">( {{ $movie->total_reviews }} reviews)</span>
+                        </a>
+
                     </div>
                 </div>
                 <div class="synopsis-box mt-4 mb-3">
@@ -112,7 +116,7 @@
                     <h1 class="showtime-text p-3">
                         『 Select a showtime 』<br>
                         <span class="fs-4">
-                              Screen Type【 {{ $movie->showtimes->pluck('screen.screen_type')->unique()->implode(' / ') }} 】
+                            Screen Type【 {{ $movie->showtimes->pluck('screen.screen_type')->unique()->implode(' / ') }} 】
                         </span>
                     </h1>
                 </div>
