@@ -108,16 +108,22 @@
         <div class="select-showtime mx-auto mt-5">
 
             <div class="mt-2 blue-background-list ">
+                <div>
+                    <h1 class="showtime-text p-3">
+                        『 Select a showtime 』<br>
+                        <span class="fs-4">
+                              Screen Type【 {{ $movie->showtimes->pluck('screen.screen_type')->unique()->implode(' / ') }} 】
+                        </span>
+                    </h1>
+                </div>
+                <div class="">
 
-                <h1 class="showtime-text p-3">
-                    『 Select a showtime 』
-                </h1>
+                </div>
                 <!-- display showtime -->
                 <div class="d-flex justify-content-center gap-3 flex-wrap showtime-list pb-5">
-                    
+
                     @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
                         @if ($showtime->start_time->isPast())
-
                             <div class="showtime-card-closed">
                                 <div class="showtime-top">
                                     <div class="showtime-time">

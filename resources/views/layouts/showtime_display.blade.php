@@ -44,9 +44,9 @@
                     </span>
                     <h1>
                         UPCOMING<br>
-                        BLOCKBUSTERS 
+                        BLOCKBUSTERS
                     </h1>
-                    
+
                     <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
                         VIEW MORE →
                     </a>
@@ -163,11 +163,20 @@
 
                                 <!-- title -->
                                 <div class="mb-4">
-                                    <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
-                                        class="showtime-movie-title text-decoration-none">
-                                        {{ strtoupper($movie->title) }} >
-                                    </a>
+                                    <div>
+                                        <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
+                                            class="showtime-movie-title text-decoration-none">
+                                            {{ strtoupper($movie->title) }} >
+                                        </a>
+                                    </div>
+
+                                    <div class="">
+                                        <p>
+                                           Screen Type【 {{ $movie->showtimes->pluck('screen.screen_type')->unique()->implode(' / ') }} 】
+                                        </p>
+                                    </div>
                                 </div>
+
 
                                 <!-- display showtime -->
                                 <div class="d-flex gap-3 flex-wrap showtime-list">
@@ -183,10 +192,11 @@
                                                         </div>
                                                     </div>
                                                     <div class="ms-2">
-                                                        <div class="theater-text">Theater</div>
+                                                        <div class="theater-text">Screen</div>
                                                         <div class="theater-number theater-box">
                                                             {{ $showtime->screen->screen_number }}
                                                         </div>
+
                                                     </div>
                                                 </div>
                                                 <div class="showtime-bottom">

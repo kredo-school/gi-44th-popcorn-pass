@@ -17,10 +17,12 @@ class DatabaseSeeder extends Seeder
             GenreSeeder::class,
             AgeRatingSeeder::class,
             AdminSeeder::class,
+
+            CinemaSeeder::class,
+            TheaterLayoutSeeder::class,
             ScreenSeeder::class,
             ScreenSeatSeeder::class,
             SeatCategorySeeder::class,
         ]);
     }
 }
-

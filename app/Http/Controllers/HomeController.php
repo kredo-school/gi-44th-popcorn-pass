@@ -31,6 +31,7 @@ class HomeController extends Controller
             ->orderBy('released_date', 'asc')
             ->get();
         $topMovies = Movie::withAvg('reviews', 'rating')
+            ->where('status', 'now_showing')
             ->orderByDesc('review_average')
             ->take(10)
             ->get();
@@ -45,7 +46,7 @@ class HomeController extends Controller
         ], 'rating')
             ->orderByDesc('weekly_average')
             ->first();
-      $information = Information::where('status', 'published')
+        $information = Information::where('status', 'published')
             ->latest('published_at')
             ->take(8)
             ->get();
@@ -55,7 +56,6 @@ class HomeController extends Controller
             ->with('heroMovie', $heroMovie)
             ->with('topMovie', $topMovie)
             ->with('information', $information);
-
     }
 
     private function commonData($selectedDate)

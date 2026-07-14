@@ -5,20 +5,74 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Models\TheaterLayout;
 
 class ScreenSeeder extends Seeder
 {
     public function run(): void
     {
+        $layout = TheaterLayout::first();
         DB::table('screens')->insert([
             [
                 'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2', // NAGOYA
+                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
                 'screen_number' => 1,
                 'screen_name' => 'Screen 1',
                 'screen_type' => 'Standard',
-                'layout_id' => '13743dde-1517-4603-8e4f-66dac766af1c',
+                'layout_id' => $layout->id,
                 'total_seats' => 100,
+                'is_active' => true,
+                'created_by_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => (string) Str::uuid(),
+                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
+                'screen_number' => 2,
+                'screen_name' => 'Screen 2',
+                'screen_type' => 'Standard',
+                'layout_id' => $layout->id,
+                'total_seats' => 100,
+                'is_active' => true,
+                'created_by_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => (string) Str::uuid(),
+                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
+                'screen_number' => 3,
+                'screen_name' => 'Screen 3',
+                'screen_type' => 'IMAX',
+                'layout_id' => $layout->id,
+                'total_seats' => 150,
+                'is_active' => true,
+                'created_by_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => (string) Str::uuid(),
+                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
+                'screen_number' => 4,
+                'screen_name' => 'Screen 4',
+                'screen_type' => '4DX',
+                'layout_id' => $layout->id,
+                'total_seats' => 80,
+                'is_active' => true,
+                'created_by_id' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'id' => (string) Str::uuid(),
+                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
+                'screen_number' => 5,
+                'screen_name' => 'Screen 5',
+                'screen_type' => 'Dolby Cinema',
+                'layout_id' => $layout->id,
+                'total_seats' => 120,
                 'is_active' => true,
                 'created_by_id' => null,
                 'created_at' => now(),
