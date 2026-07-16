@@ -292,6 +292,7 @@ class ReservationController extends Controller
             // Create reservation seats
             foreach ($selectedSeats as $seat) {
                 $showtimeSeat = ShowtimeSeat::where('showtime_id', $showtime->id)
+                
                     ->whereHas('screenSeat', function ($query) use ($seat) {
                         preg_match('/([A-Z]+)(\d+)/', $seat['seat'], $matches);
 

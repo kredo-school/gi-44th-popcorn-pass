@@ -12,17 +12,20 @@ class DatabaseSeeder extends Seeder
     use WithoutModelEvents;
 
     public function run(): void
-    {
-        $this->call([
-            GenreSeeder::class,
-            AgeRatingSeeder::class,
-            AdminSeeder::class,
+{
+    $this->call([
+        GenreSeeder::class,
+        AgeRatingSeeder::class,
+        AdminSeeder::class,
 
-            CinemaSeeder::class,
-            TheaterLayoutSeeder::class,
-            ScreenSeeder::class,
-            ScreenSeatSeeder::class,
-            SeatCategorySeeder::class,
-        ]);
-    }
+        CinemaSeeder::class,
+        TheaterLayoutSeeder::class,
+
+        SeatCategorySeeder::class, 
+
+        ScreenSeeder::class,
+        ScreenSeatSeeder::class,
+        ShowtimeSeatSeeder::class,
+    ]);
+}
 }
