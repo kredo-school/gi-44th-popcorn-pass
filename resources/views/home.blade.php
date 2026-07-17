@@ -27,104 +27,59 @@
         </div>
     </div>
 
-    <div class="swiper heroSwiper">
 
+    <div class="home-hero-bg">
+
+        {{-- Swiper section --}}
         <div class="swiper-wrapper">
+            <div class="swiper-slide w-75 mx-auto">
+                <div class="row g-0">
 
-            {{-- WELCOME --}}
-            <div class="swiper-slide">
-                <img src="{{ asset('images/welcome.png') }}" class="hero-image-welcome">
+                    <!-- lift side -->
+                    <div class="col-6 position-relative">
 
-                <div class="hero-content-welcome">
-                    <p>
-                        Experience the Magic of Movies
-                    </p>
+                        <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
 
-                    @auth
-                        <a href="{{ route('mypage.dashboard') }}" class="btn btn-book">
-                            My Page
-                        </a>
-                    @else
-                        <a href="/login" class="btn btn-book">
-                            Log in
-                        </a>
-                    @endauth
-                </div>
-            </div>
+                        <div class="hero-overlay"></div>
 
-            {{-- COMING SOON --}}
-            <div class="swiper-slide">
-                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
+                        <div class="hero-content">
+                            <span class="hero-tag">
+                                COMING SOON
+                            </span>
 
-                <div class="hero-overlay"></div>
+                            <h1>
+                                UPCOMING<br>
+                                BLOCKBUSTERS
+                            </h1>
 
-                <div class="hero-content">
-                    <span class="hero-tag">
-                        COMING SOON
-                    </span>
+                            <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
+                                VIEW MORE →
+                            </a>
+                        </div>
 
-                    <h1>
-                        UPCOMING<br>
-                        BLOCKBUSTERS
-                    </h1>
+                    </div>
 
-                    <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
-                        VIEW MORE →
-                    </a>
-                </div>
+                    <!-- right side -->
+                    <div class="col-6 row">
+                        <div class="col-9 mx-auto">
+                            <iframe class="hero-video"
+                                src="https://www.youtube.com/embed/動画ID?autoplay=1&mute=1&loop=1&playlist=動画ID"
+                                allow="autoplay; encrypted-media" allowfullscreen>
+                            </iframe>
+                        </div>
 
-            </div>
 
-            {{-- TOP RANKING --}}
-            <div class="swiper-slide">
 
-                <img src="{{ $topMovie->banner_image_url }}" class="hero-image">
-
-                <div class="hero-overlay"></div>
-
-                <div class="hero-content">
-
-                    <span class="hero-tag hero-tag-red">
-                        TOP RANKING
-                    </span>
-
-                    <h1>
-                        #1 MOVIE<br>
-                        OF THE WEEK
-                    </h1>
-
-                    <p>
-                        Most watched by our audience.
-                    </p>
-
-                    <a href="{{ route('movie_detail', $topMovie->id) }}" class="btn-book btn-book-red">
-
-                        SEE MOVIE DETAIL →
-
-                    </a>
+                    </div>
 
                 </div>
-
             </div>
-
         </div>
 
-        <!-- 矢印 -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-
-        <!-- 下の丸 -->
-        <div class="swiper-pagination"></div>
-
-    </div>
-
-    <div class="mt-0 home-hero-bg">
-
-        <div class="">
 
 
 
-
+        <div class="mt-0 ">
             {{-- Nearby Cinemas  --}}
             <div class="container-fluid" id="NearbyCinemas">
                 <div class="d-flex justify-content-between align-items-center ms-5 me-5 pt-5">
@@ -493,10 +448,6 @@
 
                 <hr class="text-white">
 
-
-
-                <hr class="text-white">
-
                 {{-- Information --}}
                 <div class="container-fluid px-0 mt-5 section-gap" id="Information">
                     <p class="display-3 text-white title-base ms-5 text-center">
@@ -562,10 +513,13 @@
                 </div>
             </div>
         </div>
+    </div>
 
 
 
-        <script src="{{ asset('js/home.js') }}" defer></script>
 
-        <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    @endsection
+
+    <script src="{{ asset('js/home.js') }}" defer></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+@endsection
