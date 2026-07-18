@@ -52,7 +52,7 @@ class ReviewController extends Controller
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'body' => 'required|string|max:1000',
+            'body' => 'nullable|string|max:1000',
         ]);
 
         Review::create([
@@ -116,7 +116,7 @@ class ReviewController extends Controller
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'body'   => 'required|string|max:1000',
+            'body'   => 'nullable|string|max:1000',
         ]);
 
         $review = Review::findOrFail($reviewId);

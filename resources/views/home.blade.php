@@ -474,27 +474,6 @@
 
                 </div>
 
-                <div class="col-6">
-                    {{-- food & Drink --}}
-
-                    <div class="container-fluid px-0 mt-5 section-gap " id="Food&drink">
-                        <p class="display-3 text-white title-base ms-5 text-center">
-
-                        </p>
-
-                        <div class="w-75 mx-auto panel-navy-overlay">
-                            <img src="{{ asset('images/foodmenu.png') }}" alt="foodmenu" class="w-100 food-menu-img">
-                        </div>
-
-                    </div>
-
-
-                </div>
-
-                <hr class="text-white">
-
-
-
                 <hr class="text-white">
 
                 {{-- Information --}}

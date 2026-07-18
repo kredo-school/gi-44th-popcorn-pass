@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="reservation-page" style="background-image: url('{{ asset('images/background.png') }}');">
+    <div class="reservation-page" style="background-image: url('{{ asset('images/layouts/background.png') }}');">
         <h2 class="text-white text-center mb-4">Search Result</h2>
 
         <div class="container">

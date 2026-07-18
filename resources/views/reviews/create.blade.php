@@ -55,7 +55,7 @@
 
                     {{-- Comment --}}
                     <div class="mb-4">
-                        <label class="form-label fw-bold">Comment</label>
+                        <label class="form-label fw-bold">Comment (Optional)</label>
                         <textarea name="body" class="form-control review-textarea" placeholder="Enter your comment..."
                             rows="5">{{ old('body') }}</textarea>
                         @error('body')

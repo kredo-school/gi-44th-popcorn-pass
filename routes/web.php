@@ -77,7 +77,7 @@ Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'c
 //--------------------
 // Review Routes
 //--------------------
-Route::get('/movie/{movieId}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('/movies/{movieId}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::post('/movies/{movieId}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 Route::get('/movies/{movieId}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create')->middleware('auth');
 Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'show'])->name('reviews.show');
