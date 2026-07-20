@@ -31,50 +31,132 @@
     <div class="home-hero-bg">
 
         {{-- Swiper section --}}
-        <div class="swiper-wrapper">
-            <div class="swiper-slide w-75 mx-auto">
-                <div class="row g-0">
+        <div class="swiper heroSwiper">
+            <div class="swiper-wrapper">
 
-                    <!-- lift side -->
-                    <div class="col-6 position-relative">
+                {{-- Slide 1 --}}
+                <div class="swiper-slide">
+                    <div class="w-75 mx-auto">
+                        <div class="row g-0 align-items-center">
 
-                        <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
+                            {{-- Left --}}
+                            <div class=" position-relative">
 
-                        <div class="hero-overlay"></div>
+                                <img src="{{ asset('images/welcome.png') }}" class="hero-image-welcome">
 
-                        <div class="hero-content">
-                            <span class="hero-tag">
-                                COMING SOON
-                            </span>
+                                <div class="hero-content-welcome">
+                                    <p>Experience the Magic of Movies</p>
 
-                            <h1>
-                                UPCOMING<br>
-                                BLOCKBUSTERS
-                            </h1>
+                                    @auth
+                                        <a href="{{ route('mypage.dashboard') }}" class="btn btn-book">
+                                            My Page
+                                        </a>
+                                    @else
+                                        <a href="{{ route('login') }}" class="btn btn-book">
+                                            Log in
+                                        </a>
+                                    @endauth
+                                </div>
 
-                            <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
-                                VIEW MORE →
-                            </a>
+                            </div>
+
                         </div>
-
                     </div>
-
-                    <!-- right side -->
-                    <div class="col-6 row">
-                        <div class="col-9 mx-auto">
-                            <iframe class="hero-video"
-                                src="https://www.youtube.com/embed/動画ID?autoplay=1&mute=1&loop=1&playlist=動画ID"
-                                allow="autoplay; encrypted-media" allowfullscreen>
-                            </iframe>
-                        </div>
-
-
-
-                    </div>
-
                 </div>
+
+                {{-- Slide 2 --}}
+                <div class="swiper-slide">
+                    <div class="w-75 mx-auto">
+                        <div class="row g-0 align-items-center">
+
+                            <div class="col-lg-6 position-relative">
+
+                                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
+
+                                <div class="hero-overlay"></div>
+
+                                <div class="hero-content">
+                                    <span class="hero-tag">
+                                        COMING SOON
+                                    </span>
+
+                                    <h1>
+                                        UPCOMING<br>
+                                        BLOCKBUSTERS
+                                    </h1>
+
+                                    <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
+                                        VIEW MORE →
+                                    </a>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6 text-center">
+                                <iframe class="hero-video"
+                                    src="https://www.youtube.com/embed/jSGmZ85krBs?autoplay=1&mute=1&loop=1&playlist=jSGmZ85krBs"
+                                    allow="autoplay; encrypted-media" allowfullscreen>
+                                </iframe>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Slide 3 --}}
+                <div class="swiper-slide">
+                    <div class="w-75 mx-auto">
+                        <div class="row g-0 align-items-center">
+
+                            <div class="col-lg-6 position-relative">
+
+                                <img src="{{ $topMovie->banner_image_url }}" class="hero-image">
+
+                                <div class="hero-overlay"></div>
+
+                                <div class="hero-content">
+
+                                    <span class="hero-tag hero-tag-red">
+                                        TOP RANKING
+                                    </span>
+
+                                    <h1>
+                                        #1 MOVIE<br>
+                                        OF THE WEEK
+                                    </h1>
+
+                                    <p>
+                                        Most watched by our audience.
+                                    </p>
+
+                                    <a href="{{ route('movie_detail', $topMovie->id) }}" class="btn-book btn-book-red">
+                                        SEE MOVIE DETAIL →
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6 text-center">
+                                <iframe class="hero-video" src="{{ $topMovie->trailer_url }}"
+                                    allow="autoplay; encrypted-media" allowfullscreen>
+                                </iframe>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
+            {{-- Navigation --}}
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+            {{-- Pagination --}}
+            <div class="swiper-pagination"></div>
         </div>
+
 
 
 
@@ -199,7 +281,8 @@
                                                                     <span class="text-white-50 genre-label">Genre</span>
                                                                     <a href="{{ route('reviews.index', ['movieId' => $movie->id]) }}"
                                                                         class="text-decoration-none text-white">
-                                                                        ⭐ {{ number_format($movie->review_average, 1) }}
+                                                                        ⭐
+                                                                        {{ number_format($movie->review_average, 1) }}
                                                                     </a>
                                                                 </div>
                                                             </div>
