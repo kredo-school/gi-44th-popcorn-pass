@@ -1,5 +1,5 @@
 .info-detail-page {
-    background: url('/images/review_bg.png') center center / cover no-repeat;
+    background: url('/images/layouts/review_bg.png') center center / cover no-repeat;
     min-height: 100vh;
     padding: 60px 40px;
     color: white;

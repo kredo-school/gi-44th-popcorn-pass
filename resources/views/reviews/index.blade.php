@@ -55,7 +55,11 @@
                         <div class="review-card mb-3">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="review-avatar-circle me-3">
-                                    <i class="fa-solid fa-user"></i>
+                                    @if ($review->user->avatar)
+                                        <img src="{{ $review->user->avatar }}" alt="{{ $review->user->username }}" class="review-avatar-img">
+                                    @else
+                                        <i class="fa-solid fa-user"></i>
+                                    @endif
                                 </div>
                                 <span class="review-username fw-bold me-auto">{{ $review->user->username }}</span>
                                 <div class="d-flex gap-1">
@@ -90,7 +94,7 @@
 
         </div>
 
-        {{-- Back Button !!!!!!UPDATE LATER!!!!! --}}
+        {{-- Back Button --}}
         <button type="button" class="back-btn ms-5" onclick="history.back()">
             <i class="fa-solid fa-arrow-left"></i> BACK
         </button>

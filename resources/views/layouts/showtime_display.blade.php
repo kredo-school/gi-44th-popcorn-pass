@@ -24,12 +24,12 @@
             </button>
             {{-- Seatimage --}}
             <div class="carousel-item active">
-                <img src="{{ asset('images/seatimage.png') }}" class="hero-image-welcome">
+                <img src="{{ asset('images/layuouts/seatimage.png') }}" class="hero-image-welcome">
             </div>
 
             {{-- Screen --}}
             <div class="carousel-item ">
-                <img src="{{ asset('images/screen.png') }}" class="hero-image-welcome">
+                <img src="{{ asset('images/layouts/screen.png') }}" class="hero-image-welcome">
             </div>
 
             {{-- COMING SOON --}}
@@ -79,7 +79,7 @@
 
     <div id="showtƒimes" class="pt-5 "
         style="
-                background-image: url('{{ asset('images/home_back.png') }}');
+                background-image: url('{{ asset('images/layouts/home_back.png') }}');
                 background-size: cover;
                 background-position: center top;
                 background-repeat: no-repeat;

@@ -3,7 +3,7 @@
     padding: 50px;
     min-height: 100vh;
 
-    background: url('/images/review_bg.png');
+    background: url('/images/layouts/review_bg.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -99,16 +99,20 @@
 
 /* Avatar */
 .review-avatar-circle {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    background: #555;
-    color: #fff;
+    overflow: hidden;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
-    flex-shrink: 0;
+    align-items: center;
+    background: #ddd;
+}
+
+.review-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .review-username {
@@ -126,6 +130,12 @@
     color: #333;
     font-size: 0.85rem;
     line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
 }
 
 .review-arrow {

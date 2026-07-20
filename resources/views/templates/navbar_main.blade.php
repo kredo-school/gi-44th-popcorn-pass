@@ -3,7 +3,7 @@
 
         <!-- Logo -->
         <a class="navbar-brand m-0 p-0" href="{{ url('/') }}">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" width="70" height="70">
+            <img src="{{ asset('images/layouts/logo.png') }}" alt="Logo" width="70" height="70">
         </a>
 
         <!-- home button -->
@@ -70,12 +70,12 @@
 
                     <!-- My Page -->
                     <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-text">
-                        <img src="{{ asset('images/mypage.png') }}" width="35" height="35">
+                        <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
                         My Page
                     </a>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-color mypage-text">
-                        <img src="{{ asset('images/mypage.png') }}" width="35" height="35">
+                        <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
                         Log in
                     </a>
 

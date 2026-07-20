@@ -33,7 +33,7 @@
 
             {{-- WELCOME --}}
             <div class="swiper-slide">
-                <img src="{{ asset('images/welcome.png') }}" class="hero-image-welcome">
+                <img src="{{ asset('images/layouts/welcome.png') }}" class="hero-image-welcome">
 
                 <div class="hero-content-welcome">
                     <p>

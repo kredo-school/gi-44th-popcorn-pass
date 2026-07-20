@@ -26,7 +26,11 @@
                 {{-- User --}}
                 <div class="d-flex align-items-center mb-3">
                     <div class="review-avatar-circle me-3">
-                        <i class="fa-solid fa-user"></i>
+                        @if (Auth::user()->avatar)
+                            <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->username }}" class="review-avatar-img">
+                        @else
+                            <i class="fa-solid fa-user"></i>
+                        @endif
                     </div>
                     <span class="fw-bold fs-5">{{ Auth::user()->username }}</span>
                 </div>

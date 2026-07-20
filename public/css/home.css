@@ -16,7 +16,7 @@
    Home background section
    =========================== */
 .home-hero-bg {
-    background-image: url('../images/home_back.png');
+    background-image: url('../images/layouts/home_back.png');
     background-size: cover;
     background-position: center top;
     background-repeat: no-repeat;
