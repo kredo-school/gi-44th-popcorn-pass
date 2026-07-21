@@ -1,0 +1,13 @@
+@import "bootstrap";
+
+//admin information
+@import "../css/admin/information.css";
+//admin reviews
+@import "../css/admin/reviews.css";
+
+.card-dark {
+    background-color: var(--navy-light);
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+}

@@ -743,7 +743,7 @@ class AdminController extends Controller
         $sort = $request->get('sort', 'desc');
         $query->orderBy('created_at', $sort);
 
-        $reviews = $query->paginate(20)->withQueryString();
+        $reviews = $query->paginate(10)->withQueryString();
 
         return view('admin.reviews.index', compact('reviews'));
     }

@@ -7,16 +7,16 @@
 
 <form method="GET" action="{{ route('admin.reviews') }}" class="d-flex gap-2 mb-3">
 
-    <input type="text" name="search" class="form-control" placeholder="Search by movie or username..."
-        style="max-width: 250px;" value="{{ request('search') }}">
+    <input type="text" name="search" class="form-control review-search" placeholder="Search by movie or username..."
+        value="{{ request('search') }}">
 
-    <select name="status" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
+    <select name="status" class="form-select review-select" onchange="this.form.submit()">
         <option value="all" {{ request('status', 'all' )=='all' ? 'selected' : '' }}>Status: All</option>
         <option value="visible" {{ request('status', 'all' )=='visible' ? 'selected' : '' }}>Visible</option>
         <option value="hidden" {{ request('status', 'all' )=='hidden' ? 'selected' : '' }}>Hidden</option>
     </select>
 
-    <select name="sort" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
+    <select name="sort" class="form-select review-select" onchange="this.form.submit()">
         <option value="desc" {{ request('sort', 'desc' )=='desc' ? 'selected' : '' }}>Newest</option>
         <option value="asc" {{ request('sort', 'desc' )=='asc' ? 'selected' : '' }}>Oldest</option>
     </select>
@@ -61,7 +61,7 @@
                         <form action="{{ route('admin.reviews.toggle', $review->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <button type="submit" class="btn admin-review-action-btn {{ $review->is_approved ? 'btn-danger' : 'btn-success' }}">
+                            <button type="submit" class="btn btn-sm admin-review-action-btn {{ $review->is_approved ? 'btn-danger' : 'btn-success' }}">
                                 {{ $review->is_approved ? 'Hide' : 'Show' }}
                             </button>
                         </form>

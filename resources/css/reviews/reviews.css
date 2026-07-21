@@ -254,3 +254,29 @@
     font-size: 0.95rem;
     line-height: 1.6;
 }
+
+/* Review List */
+.review-list-scroll {
+    max-height: 550px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+/* Scrollbar */
+.review-list-scroll::-webkit-scrollbar {
+    width: 8px;
+}
+
+.review-list-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+}
+
+.review-list-scroll::-webkit-scrollbar-thumb {
+    background: #F5C126;
+    border-radius: 10px;
+}
+
+.review-list-scroll::-webkit-scrollbar-thumb:hover {
+    background: #d4a514;
+}

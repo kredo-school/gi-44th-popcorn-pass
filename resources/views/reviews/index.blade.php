@@ -49,8 +49,8 @@
                         </a>
                     @endauth
                 </div>
-
-                <div class="">
+                
+                <div class="review-list-scroll">
                     @forelse ($reviews as $review)
                         <div class="review-card mb-3">
                             <div class="d-flex align-items-center mb-2">
@@ -61,10 +61,14 @@
                                         <i class="fa-solid fa-user"></i>
                                     @endif
                                 </div>
-                                <span class="review-username fw-bold me-auto">{{ $review->user->username }}</span>
+                    
+                                <span class="review-username fw-bold me-auto">
+                                    {{ $review->user->username }}
+                                </span>
+                    
                                 <div class="d-flex gap-1">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= $review->rating)
+                                    @for ($i = 1; $i <= 5; $i++) 
+                                        @if ($i <=$review->rating)
                                             <i class="fa-solid fa-star review-star-sm"></i>
                                         @else
                                             <i class="fa-regular fa-star review-star-sm"></i>
@@ -72,9 +76,14 @@
                                     @endfor
                                 </div>
                             </div>
+                    
                             <hr class="review-divider">
+                    
                             <div class="d-flex align-items-center justify-content-between">
-                                <p class="mb-0 review-body">{!! nl2br(e($review->body)) !!}</p>
+                                <p class="mb-0 review-body">
+                                    {!! nl2br(e($review->body)) !!}
+                                </p>
+                    
                                 <a href="{{ route('reviews.show', [$movie->id, $review->id]) }}" class="review-arrow">
                                     ›
                                 </a>
@@ -83,11 +92,6 @@
                     @empty
                         <p class="text-white">No reviews yet.</p>
                     @endforelse
-
-                    {{-- Pagination --}}
-                    <div class="mt-4 d-flex justify-content-center">
-                        {{ $reviews->links() }}
-                    </div>
                 </div>
 
             </div>

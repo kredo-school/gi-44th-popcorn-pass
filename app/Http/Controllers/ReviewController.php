@@ -20,10 +20,10 @@ class ReviewController extends Controller
             ->where('is_approved', true)
             ->with('user')
             ->latest()
-            ->paginate(10);
+            ->get();
 
         $averageRating = $reviews->avg('rating');
-        $totalReviews = $reviews->total();
+        $totalReviews = $reviews->count();
 
         return view('reviews.index', compact(
             'movie',

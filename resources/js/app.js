@@ -9,6 +9,7 @@ import './reservations/payment-method';
 // import './reservations/reservation-confirm';
 // import './reservations/reservation-complete';
 
+
 new Swiper(".heroSwiper",{
 
     loop:true,
