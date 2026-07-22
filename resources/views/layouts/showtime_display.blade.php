@@ -2,89 +2,9 @@
 
 @section('content')
 
-    <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active">
-            </button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1">
-            </button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2">
-            </button>
-            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3">
-            </button>
-        </div>
 
-        <div class="carousel-inner">
-            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </button>
 
-            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
-            {{-- Seatimage --}}
-            <div class="carousel-item active">
-                <img src="{{ asset('images/seatimage.png') }}" class="hero-image-welcome">
-            </div>
-
-            {{-- Screen --}}
-            <div class="carousel-item ">
-                <img src="{{ asset('images/screen.png') }}" class="hero-image-welcome">
-            </div>
-
-            {{-- COMING SOON --}}
-            <div class="carousel-item">
-
-                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
-
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span class="hero-tag">
-                        COMING SOON
-                    </span>
-                    <h1>
-                        UPCOMING<br>
-                        BLOCKBUSTERS
-                    </h1>
-
-                    <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">
-                        VIEW MORE →
-                    </a>
-                </div>
-            </div>
-            {{-- TOP RANKING --}}
-            <div class="carousel-item">
-
-                <img src="{{ $topMovie->banner_image_url }}" class="hero-image">
-                <div class="hero-overlay"></div>
-                <div class="hero-content">
-                    <span class="hero-tag hero-tag-red">
-                        TOP RANKING
-                    </span>
-                    <h1>
-                        #1 MOVIE<br>
-                        OF THE WEEK
-                    </h1>
-                    <p>
-                        Most watched by our audience.
-                    </p>
-                    <a href="{{ route('movie_detail', $topMovie->id) }}" class="btn-book btn-book-red">
-                        SEE MOVIE DETAIL →
-                    </a>
-                </div>
-            </div>
-        </div>
-
-    </div>
-
-    <div id="showtƒimes" class="pt-5 "
-        style="
-                background-image: url('{{ asset('images/home_back.png') }}');
-                background-size: cover;
-                background-position: center top;
-                background-repeat: no-repeat;
-                width: 100%;
-            ">
+    <div id="showtimes" class="pt-5 showtimes-bg">
         <div class="date-slider-wrapper">
             <div class="w-50 mx-auto">
                 <div class="date-slider" id="dateSlider">
@@ -172,7 +92,9 @@
 
                                     <div class="">
                                         <p>
-                                           Screen Type【 {{ $movie->showtimes->pluck('screen.screen_type')->unique()->implode(' / ') }} 】
+                                            Screen Type【
+                                            {{ $movie->showtimes->pluck('screen.screen_type')->unique()->implode(' / ') }}
+                                            】
                                         </p>
                                     </div>
                                 </div>
@@ -278,23 +200,40 @@
                 <div class="movie-search-genres">
 
                     <p class="movie-search-genres-title">
-                        Popular Genres
+                        < Popular Genres>
                     </p>
 
                     <div class="movie-search-genres-list text-decoration-none">
 
-                        <a href="{{ route('movies.search', ['keyword' => 'Action']) }}#searchMovie"
-                            class="movie-search-chip">Action</a>
-                        <a href="{{ route('movies.search', ['keyword' => 'Adventure']) }}#searchMovie"
-                            class="movie-search-chip">Adventure</a>
-                        <a href="{{ route('movies.search', ['keyword' => 'Animation']) }}#searchMovie"
-                            class="movie-search-chip">Animation</a>
-                        <a href="{{ route('movies.search', ['keyword' => 'Comedy']) }}#searchMovie"
-                            class="movie-search-chip">Comedy</a>
-                        <a href="{{ route('movies.search', ['keyword' => 'Drama']) }}#searchMovie"
-                            class="movie-search-chip">Drama</a>
-                        <a href="{{ route('movies.search', ['keyword' => 'Sci-Fi']) }}#searchMovie"
-                            class="movie-search-chip">Sci-Fi</a>
+                        <a href="{{ route('movies.search_showtime', ['keyword' => 'Action']) }}#searchMovie"
+                            class="movie-search-chip">
+                            Action
+                        </a>
+
+                        <a href="{{ route('movies.search_showtime', ['keyword' => 'Adventure']) }}#searchMovie"
+                            class="movie-search-chip">
+                            Adventure
+                        </a>
+
+                        <a href="{{ route('movies.search_showtime', ['keyword' => 'Animation']) }}#searchMovie"
+                            class="movie-search-chip">
+                            Animation
+                        </a>
+
+                        <a href="{{ route('movies.search_showtime', ['keyword' => 'Comedy']) }}#searchMovie"
+                            class="movie-search-chip">
+                            Comedy
+                        </a>
+
+                        <a href="{{ route('movies.search_showtime', ['keyword' => 'Drama']) }}#searchMovie"
+                            class="movie-search-chip">
+                            Drama
+                        </a>
+
+                        <a href="{{ route('movies.search_showtime', ['keyword' => 'Sci-Fi']) }}#searchMovie"
+                            class="movie-search-chip">
+                            Sci-Fi
+                        </a>
 
                     </div>
 
@@ -304,9 +243,13 @@
                 @isset($searchResults)
                     <div class="container">
 
-                        <h3 class="text-white mb-4">
-                            Search Results
-                        </h3>
+                        <div class="search-results-title">
+                            <hr>
+                            <h2>
+                                < Search Results>
+                            </h2>
+                            <hr>
+                        </div>
 
                         <div class="row">
 
