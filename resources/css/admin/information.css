@@ -20,3 +20,8 @@
     border-radius: 8px;
     color: #fff;
 }
+
+.category-list-scroll {
+    max-height: 250px;
+    overflow-y: auto;
+}

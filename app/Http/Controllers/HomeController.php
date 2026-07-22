@@ -46,9 +46,11 @@ class HomeController extends Controller
         ], 'rating')
             ->orderByDesc('weekly_average')
             ->first();
-        $information = Information::where('status', 'published')
+        $information = Information::where('status', 'Published')
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
             ->latest('published_at')
-            ->take(8)
+            ->take(5)
             ->get();
         return view('home')->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
@@ -93,9 +95,11 @@ class HomeController extends Controller
                 ->orderByDesc('weekly_average')
                 ->first(),
 
-            'information' => Information::where('status', 'published')
+            'information' => Information::where('status', 'Published')
+                ->whereNotNull('published_at')
+                ->where('published_at', '<=', now())
                 ->latest('published_at')
-                ->take(8)
+                ->take(5)
                 ->get(),
 
             'dates' => $dates,
@@ -243,7 +247,9 @@ class HomeController extends Controller
     //information index
     public function informationIndex()
     {
-        $information = Information::where('status', 'published')
+        $information = Information::where('status', 'Published')
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
             ->latest('published_at')
             ->paginate(20);
 
@@ -253,7 +259,11 @@ class HomeController extends Controller
     //information detail
     public function informationDetail($id)
     {
-        $information = Information::with('category')->findOrFail($id);
+        $information = Information::with('category')
+            ->where('status', 'Published')
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->findOrFail($id);
         return view('information.information-detail', compact('information'));
     }
 }

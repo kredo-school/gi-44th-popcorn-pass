@@ -28,6 +28,7 @@
             <option value="all" {{ request('status', 'all' )=='all' ? 'selected' : '' }}>Status: All</option>
             <option value="Published" {{ request('status')=='Published' ? 'selected' : '' }}>Published</option>
             <option value="Draft" {{ request('status')=='Draft' ? 'selected' : '' }}>Draft</option>
+            <option value="Archived" {{ request('status')=='Archived' ? 'selected' : '' }}>Archived</option>
         </select>
     
         <button type="submit" class="btn btn-outline-warning">Search</button>
@@ -85,7 +86,7 @@
                             <td>{{ $info->title }}</td>
                             <td>{{ $info->category->name }}</td>
                             <td>
-                                <span class="badge {{ $info->status === 'Published' ? 'bg-success' : 'bg-secondary' }}">
+                                <span class="badge {{ $info->status_badge_class }}">
                                     {{ $info->status }}
                                 </span>
                             </td>
@@ -190,34 +191,42 @@
                     <div class="text-danger small">{{ $message }}</div>
                 @enderror
             </form>
-        
+
             {{-- Category List --}}
-            <table class="table table-dark table-sm align-middle mb-0">
-                <tbody>
-                    @forelse($categories as $cat)
-                        <tr>
-                            <td>
-                                <span class="badge" style="background-color: {{ $cat->color }}">
-                                    {{ $cat->name }}
-                                </span>
-                            </td>
-                            <td class="text-end">
-                                <form action="{{ route('admin.information.categories.delete', $cat->id) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
-                                        Delete
+            <div class="category-list-scroll">
+                <table class="table table-dark table-sm align-middle mb-0">
+                    <tbody>
+                        @forelse($categories as $cat)
+                            <tr>
+                                <td>
+                                    <span class="badge" style="background-color: {{ $cat->color }}; color: {{ $cat->text_color }}">
+                                        {{ $cat->name }}
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $cat->id }}">
+                                        Edit
                                     </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="2" class="text-center text-secondary py-2">No categories.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                
+                                    <form action="{{ route('admin.information.categories.delete', $cat->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                            Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @include('admin.information.modals.edit-category', ['category' => $cat])
+                        @empty
+                            <tr>
+                                <td colspan="2" class="text-center text-secondary py-2">No categories.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
 
     </div>

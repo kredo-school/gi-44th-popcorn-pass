@@ -30,5 +30,14 @@ class Information extends Model
     {
         return $this->belongsTo(InformationCategory::class);
     }
+
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return match ($this->status) {
+            'Draft' => 'bg-secondary',
+            'Published' => 'bg-success',
+            'Archived' => 'bg-warning text-dark',
+        };
+    }
     
 }

@@ -48,7 +48,7 @@
                     <td>{{ $review->movie->title ?? '—' }}</td>
                     <td>{{ $review->user->username ?? '—' }}</td>
                     <td>{{ $review->rating }}/5</td>
-                    <td>{{ Str::limit($review->body, 80) }}</td>
+                    <td>{{ Str::limit($review->body, 50) }}</td>
                     <td>{{ $review->created_at->format('Y-m-d') }}</td>
                     <td>
                        @if($review->is_approved)

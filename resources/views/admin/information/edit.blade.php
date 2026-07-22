@@ -44,7 +44,7 @@
         <div class="row">
 
             <div class="col-md-6 mb-3">
-                <label class="form-label">Category</label>
+                <label class="form-label">Category <span class="text-danger">*</span></label>
                 <select name="category_id" class="form-select @error('category_id') is-invalid @enderror">
                     <option value="">-- Select Category --</option>
                     @foreach($categories as $cat)
@@ -60,7 +60,7 @@
             </div>
 
             <div class="col-md-6 mb-3">
-                <label class="form-label">Status</label>
+                <label class="form-label">Status <span class="text-danger">*</span></label>
 
                 <select name="status" class="form-select @error('status') is-invalid @enderror">
                     <option value="Draft" {{ old('status', $information->status) == 'Draft' ? 'selected' : '' }}>
@@ -70,6 +70,10 @@
                     <option value="Published" {{ old('status', $information->status) == 'Published' ? 'selected' : ''
                         }}>
                         Published
+                    </option>
+
+                    <option value="Archived" {{ old('status', $information->status) == 'Archived' ? 'selected' : '' }}>
+                        Archived
                     </option>
                 </select>
 
@@ -89,6 +93,9 @@
                 <input type="datetime-local" name="published_at"
                     class="form-control @error('published_at') is-invalid @enderror"
                     value="{{ old('published_at', optional($information->published_at)->format('Y-m-d\TH:i')) }}">
+                    <div class="form-text text-light">
+                        This information will be published automatically on the selected date only if the status is set to <strong>Published</strong>.
+                    </div>
 
                 @error('published_at')
                     <div class="invalid-feedback">

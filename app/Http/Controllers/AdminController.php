@@ -18,9 +18,11 @@ use App\Models\Coupon;
 use App\Models\Promotion;
 use App\Models\Review;
 use App\Models\Information;
+use App\Models\InformationCategory;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+
 
 class AdminController extends Controller
 {
@@ -797,8 +799,8 @@ class AdminController extends Controller
             'title'        => 'required|string|max:255',
             'content'      => 'required|string',
             'category_id'  => 'required|exists:information_categories,id',
-            'status'       => 'required|string',
-            'published_at' => 'nullable|date',
+            'status'       => 'required|in:Draft,Published,Archived',
+            'published_at' => 'required_if:status,Published|nullable|date',
             'image_url'    => 'nullable|string|max:500',
         ]);
 
@@ -826,8 +828,8 @@ class AdminController extends Controller
             'title'        => 'required|string|max:255',
             'content'      => 'required|string',
             'category_id'  => 'required|exists:information_categories,id',
-            'status'       => 'required|string',
-            'published_at' => 'nullable|date',
+            'status'       => 'required|in:Draft,Published,Archived',
+            'published_at' => 'required_if:status,Published|nullable|date',
             'image_url'    => 'nullable|string|max:500',
         ]);
 
@@ -894,6 +896,21 @@ class AdminController extends Controller
 
         $category->delete();
         return back()->with('success', 'Category deleted successfully.');
+    }
+
+    public function updateInformationCategory(Request $request, InformationCategory $category)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100|unique:information_categories,name,' . $category->id,
+            'color' => 'required|string|max:20',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'color' => $request->color,
+        ]);
+
+        return back()->with('success', 'Category updated successfully.');
     }
 
 

@@ -31,7 +31,7 @@
 
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label class="form-label">Category</label>
+                <label class="form-label">Category <span class="text-danger">*</span></label>
                 <select name="category_id" class="form-select">
                     <option value="">-- Select Category --</option>
                     @foreach($categories as $cat)
@@ -43,10 +43,11 @@
             </div>
         
             <div class="col-md-6 mb-3">
-                <label class="form-label">Status</label>
+                <label class="form-label">Status <span class="text-danger">*</span></label>
                 <select name="status" class="form-select">
                     <option value="Draft">Draft</option>
                     <option value="Published">Published</option>
+                    <option value="Archived">Archived</option>
                 </select>
             </div>
         </div>
@@ -55,6 +56,9 @@
             <div class="col-md-6 mb-4">
                 <label class="form-label">Published Date</label>
                 <input type="datetime-local" name="published_at" class="form-control" value="{{ old('published_at') }}">
+                <div class="form-text text-light">
+                    This information will be published automatically on the selected date only if the status is set to <strong>Published</strong>.
+                </div>
             </div>
         
             <div class="col-md-6 mb-4">
