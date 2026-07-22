@@ -87,16 +87,35 @@ class AdminController extends Controller
         ];
     }
 
+    private function convertYoutubeUrl(?string $url): ?string
+    {
+        if (!$url) {
+            return null;
+        }
+
+        preg_match('/(?:youtu\.be\/|v=)([^?&]+)/', $url, $matches);
+
+        if (!isset($matches[1])) {
+            return $url;
+        }
+
+        $videoId = $matches[1];
+
+        return "https://www.youtube.com/embed/{$videoId}?autoplay=1&mute=1&loop=1&playlist={$videoId}";
+    }
+
     public function storeMovie(Request $request)
     {
 
 
         $validated = $request->validate($this->movieValidationRules());
 
+
         $rules = $this->movieValidationRules();
         $rules['showtimes'] = 'nullable|array|max:6';
         $rules['showtimes.*.cinema_id'] = 'nullable|exists:cinemas,id';
         $rules['showtimes.*.screen_id'] = 'nullable|exists:screens,id';
+        
         $rules['showtimes.*.date'] = 'nullable|date';
         $rules['showtimes.*.start_time'] = 'nullable';
 
@@ -108,6 +127,7 @@ class AdminController extends Controller
         $validated['duration'] = (int) $validated['duration'];
         $validated['cast'] = $validated['cast'] ?? null;
         $validated['search_keywords'] = $validated['search_keywords'] ?? null;
+        $validated['trailer_url'] = $this->convertYoutubeUrl($validated['trailer_url'] ?? null);
         $validated['is_featured'] = $request->has('is_featured');
         $validated['created_by_id'] = auth()->id();
 
@@ -200,6 +220,8 @@ class AdminController extends Controller
         $validated['duration'] = (int) $validated['duration'];
         $validated['cast'] = $validated['cast'] ?? null;
         $validated['search_keywords'] = $validated['search_keywords'] ?? null;
+        $validated['trailer_url'] = $this->convertYoutubeUrl($validated['trailer_url'] ?? null);
+
         $validated['is_featured'] = $request->has('is_featured');
 
         $movie->update($validated);
@@ -895,6 +917,4 @@ class AdminController extends Controller
         $category->delete();
         return back()->with('success', 'Category deleted successfully.');
     }
-
-
 }

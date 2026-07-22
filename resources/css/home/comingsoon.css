@@ -1,0 +1,172 @@
+
+.marquee-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+.marquee-header-line {
+    width: 100px;
+    height: 1px;
+    background: rgba(242, 184, 75, .35);
+}
+
+/* Google FontsからPlayfair Displayを読み込む場合はHTMLの<head>に追加 */
+/* <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"> */
+
+.marquee-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 1000;
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    letter-spacing: 10px;
+    color: #ffffff;
+    margin: 0;
+    opacity: 0;
+    animation: fadeInGlow 2s ease-out forwards, shimmer 4s ease-in-out infinite 2s;
+}
+
+@keyframes fadeInGlow {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+        letter-spacing: 4px;
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        letter-spacing: 10px;
+    }
+}
+
+
+.coming-card {
+    width: 220px;
+    transition: transform .35s ease;
+}
+
+.coming-card:hover {
+    transform: translateY(-6px);
+}
+
+.coming-poster-wrap {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #081729;
+}
+
+.coming-poster {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    display: block;
+    filter: brightness(.92);
+    transition: filter .35s ease, transform .5s ease;
+}
+
+.coming-card:hover .coming-poster {
+    filter: brightness(1);
+    transform: scale(1.03);
+}
+
+.film-sprockets {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    z-index: 2;
+    background: #ddd;
+    -webkit-mask-image: repeating-linear-gradient(90deg, transparent 0 4px, #000 4px 12px);
+    mask-image: repeating-linear-gradient(90deg, transparent 0 4px, #000 4px 12px);
+}
+
+.ticket-stub {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    padding: 8px 14px;
+    min-width: 76px;
+
+    background: #f2b84b;
+    color: #1a1305;
+    border-radius: 6px 0 0 6px;
+    border-right: 2px dashed rgba(26, 19, 5, .35);
+
+    transform: rotate(-3deg);
+    transition: transform .3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, .35);
+}
+
+.coming-card:hover .ticket-stub {
+    transform: rotate(2deg);
+}
+
+.ticket-stub-label {
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+}
+
+.ticket-stub-date {
+    font-size: .65rem;
+    font-weight: 600;
+    opacity: .75;
+}
+
+.ticket-stub-today {
+    background: #e0592f;
+    color: #2a0d02;
+}
+
+.coming-movie-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    color: #000000;
+    background-color: #ddd;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.coming-slider-btn {
+    position: absolute;
+    right:20px; 
+    width: 45px;
+    height: 80%;
+    border-radius: 5%;
+    margin-top: 3%;
+}
+
+.coming-soon-track {
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+.coming-detal-btn{
+    margin-top:15px;
+    width:100%;
+    border:1px solid #f5c126;
+    background:transparent;
+    color:#f5c126;
+    padding:10px;
+    border-radius:8px;
+    transition:.3s;
+
+}
+
+
+.coming-detail-btn:hover{
+    background:#f5c126;
+    color:#000;
+}

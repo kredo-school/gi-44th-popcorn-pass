@@ -1,0 +1,139 @@
+.section-title-wrap{
+    margin: 0 0 0 40px;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+    font-family:'Times New Roman', serif;
+    font-size:clamp(1rem,3vw,3rem);
+    font-weight:700;
+    letter-spacing:3px;
+
+    color:rgba(16, 57, 133, 1);
+
+     opacity: 0;
+    animation:
+        fadeInGlow 2s ease-out forwards,
+        shimmer 4s ease-in-out infinite 2s;
+
+}
+
+
+.title-icon{
+    animation: pulseMovie 3s ease-in-out infinite;
+}
+
+
+
+@keyframes pulseMovie{
+
+    0%,100%{
+        transform:scale(1);
+        opacity:1;
+    }
+
+    50%{
+        transform:scale(1.08);
+        opacity:.8;
+    }
+}
+
+.movie-section{
+    background: rgba(16,57,133,.5);
+    padding: 30px;
+}
+
+.movie-card{
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.movie-card:hover{
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(245, 193, 38, 0.3);
+}
+
+.movie-poster{
+    width:100%;
+    height:200px;
+    object-fit:cover;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.movie-info{
+    padding:10px;
+    color:white;
+}
+
+.movie-info h6{
+    font-size:14px;
+}
+
+.movie-meta{
+    display:flex;
+    justify-content:space-between;
+    font-size:11px;
+    margin:10px 0;
+}
+
+.book-btn{
+    width:100%;
+    border:none;
+    border-radius:8px;
+    background:#F5C126;
+    padding:8px;
+}
+
+.view-all{
+    color:#000000;
+    font-size:32px;
+    text-decoration: underline;
+}
+
+
+.slider-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:50px;
+    height:50px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.2);
+    color:white;
+    z-index:10;
+}
+
+.nowplaying-btn{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:58px;
+    height:58px;
+    border:none;
+    border-radius:50%;
+    background:rgba(0,0,0,.65);
+    color:#fff;
+    font-size:22px;
+    transition:.3s;
+    z-index:20;
+}
+
+.nowplaying-btn:hover{
+    background:#e50914;
+    transform:translateY(-50%) scale(1.08);
+    box-shadow:0 0 18px rgba(229,9,20,.6);
+}
+
+#nowPlayingPrevBtn{
+    left:-28px;
+}
+
+#nowPlayingNextBtn{
+    right:-28px;
+}

@@ -1,11 +1,17 @@
 @extends('layouts.app')
 @section('content')
     <div class="reservation-page" style="background-image: url('{{ asset('images/background.png') }}');">
-        <h2 class="text-white text-center mb-4">Search Result</h2>
+        <div class="section-title-line mb-4">
+            <hr>
+            <h2 class="text-white">
+                < Search Result >
+            </h2>
+            <hr>
+        </div>
 
         <div class="container">
             @if ($movies->isEmpty())
-                <p class="text-white text-center">No movies found.</p>
+                <h1 class="text-white text-center">No movies found.</h1>
             @else
                 <div class="search-result-grid">
                     @foreach ($movies as $movie)

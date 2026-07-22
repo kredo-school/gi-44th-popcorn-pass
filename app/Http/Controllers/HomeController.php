@@ -50,12 +50,16 @@ class HomeController extends Controller
             ->latest('published_at')
             ->take(8)
             ->get();
+        $information_slide = Information::where('status', 'published')
+            ->inRandomOrder()
+            ->first();    
         return view('home')->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
             ->with('topMovies', $topMovies)
             ->with('heroMovie', $heroMovie)
             ->with('topMovie', $topMovie)
-            ->with('information', $information);
+            ->with('information', $information)
+            ->with('information_slide',$information_slide);
     }
 
     private function commonData($selectedDate)
