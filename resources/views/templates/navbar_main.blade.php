@@ -1,72 +1,31 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-black shadow-sm py-0 sticky-top">
     <div class="container-fluid bg-black">
 
-        <!-- Logo -->
-        <a class="navbar-brand m-0 p-0" href="{{ url('/') }}">
-            <img src="{{ asset('images/logo.png') }}" alt="Logo" width="70" height="70">
-        </a>
 
-        <!-- home button -->
-        <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
 
         <!-- mennu -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-            <!-- center menu -->
-            <ul class="navbar-nav mx-auto align-items-lg-center">
+            <!-- menu bar-->
+            <button id="menuBtn" class="menu-btn me-3">
+                <i class="fa-solid fa-bars"></i>
+                <span class="menu-text">MENU</span>
+            </button>
 
-                <li class="nav-item">
-                    <a href="{{ route('home') }}#Nowplaying" class="nav-link nav-font">
-                        Now Playing
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('movie.showtime.display') }}" class="nav-link nav-font">
-                        Showtimes
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('home') }}#Comingsoon" class="nav-link nav-font">
-                        Coming Soon
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('home') }}#Information" class="nav-link nav-font">
-                        Information
-                    </a>
-                </li>
-
-
-                <li class="nav-item text-white">
-                    <form method="POST" action="{{ route('logout') }}"> @csrf <button type="submit">Logout</button>
-                    </form>
-                </li>
-
-            </ul>
+            <!-- Logo -->
+            <a class="navbar-brand m-0 p-0" href="{{ url('/') }}">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" width="70" height="70">
+            </a>
 
             <!-- right button -->
             <div class="ms-lg-auto d-flex align-items-center gap-2">
 
                 @auth
 
-                     {{-- Notification button  
-                    <a href="{{ route('notifications.index') }}" class="btn btn-outline-light position-relative">
-                        <i class="bi bi-bell"></i>
-
-                        未読件数がある場合
-                        @if (isset($unreadCount) && $unreadCount > 0)
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                {{ $unreadCount }}
-                            </span>
-                        @endif
-                    </a> --}}
+                   {{-- notification --}}
+                   <a href="#" id="" class="notification-icon">
+                    <i class="fa-solid fa-bell"></i>
+                   </a>
 
                     <!-- My Page -->
                     <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-text">
@@ -87,3 +46,73 @@
 
     </div>
 </nav>
+
+
+<!-- Sidebar -->
+<div id="sidebar" class="sidebar">
+
+    <button id="closeBtn" class="close-btn">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <a href="{{ route('home') }}" class="bar-item">
+        <i class="fa-solid fa-house"></i>
+        Top Page
+    </a>
+
+   
+    <div class="row">
+        <div class="col-lg-6 text-center">
+            <a href="#" class="sidebar-search-item">
+                <i class="fa-solid fa-map-location"></i><br>
+                Location
+            </a>
+        </div>
+
+        <div class="col-lg-6 text-center">
+            <a href="{{ route('home') }}#Nowplaying" class="sidebar-search-item">
+                <i class="fa-solid fa-film"></i><br>
+                Movie
+            </a>
+        </div>
+    </div>
+
+
+    <a href="{{ route('movie.showtime.display') }}" class="bar-item">
+        <i class="fa-solid fa-calendar-check"></i>
+        Showtimes
+    </a>
+
+    <a href="#" class="bar-item">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        Information
+    </a>
+    <a href="#" class="bar-item">
+        <i class="fa-solid fa-circle-question"></i>
+        Contact
+    </a>
+
+    @auth
+        <a href="{{ route('mypage.dashboard') }}" class="bar-item">
+            <i class="fa-solid fa-user"></i>
+            My Page
+        </a>
+
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button class="sidebar-btn text-dark">
+                Logout
+            </button>
+        </form>
+    @else
+        <a href="{{ route('login') }}" class="sidebar-btn">
+            Log in
+        </a>
+
+    @endauth
+
+
+
+</div>
+
+<div id="overlay" class="overlay"></div>

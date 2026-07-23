@@ -334,7 +334,7 @@
                                     {{-- Side Ranking --}}
                                     <div class="col-lg-4">
 
-                                        <div class="side-ranking ranking-side-background mt-5">
+                                        <div class="side-ranking ranking-side-background mt-1">
 
                                             @foreach ($topMovies->slice(3, 7)->values() as $index => $movie)
                                                 <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
