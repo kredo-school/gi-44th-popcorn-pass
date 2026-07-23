@@ -36,6 +36,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         data.published_at
                             ? data.published_at.substring(0, 10)
                             : '—';
+                            
+                    const imageContainer = document.querySelector('#detail-image');
+
+                    if (data.image) {
+                        imageContainer.innerHTML = `
+                            <img src="/${data.image}"
+                                alt="${data.title}"
+                                class="img-fluid rounded"
+                                style="max-width: 220px;">
+                        `;
+                    } else {
+                        imageContainer.innerHTML = '—';
+                    }
                 });
         });
     });

@@ -482,44 +482,43 @@
                         Information
                     </p>
                     <div class="container">
-                        <div class="row g-3">
+                        <div class="info-home-list">
+                        
                             @forelse($information as $info)
-                                <div class="col-md-3">
-                                    <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
-                                        <div class="card rounded-0 news-card h-100">
-
-                                            <div class="card-head text-center py-1">
-                                                <span class="badge px-3 py-1"
-                                                    style="background-color: {{ $info->category->color }}">
-                                                    {{ $info->category->name }}
-                                                </span>
-                                            </div>
-
-                                            @if ($info->image_url)
-                                                <img src="{{ $info->image_url }}" alt="{{ $info->title }}"
-                                                    class="card-img-top info-list-img">
-                                            @else
-                                                <div
-                                                    class="card-img-top info-list-img d-flex align-items-center justify-content-center bg-white text-dark fw-bold">
-                                                    INFORMATION
-                                                </div>
-                                            @endif
-
-                                            <div class="card-body d-flex flex-column">
-                                                <h6 class="fw-bold">{{ $info->title }}</h6>
-                                                <p class="small mb-0">
-                                                    {{ Str::limit($info->content, 80) }}</p>
-                                            </div>
-
-                                        </div>
-                                    </a>
-                                </div>
+                                <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
+                            
+                                    <div class="info-list-item">
+                            
+                                        {{-- Category --}}
+                                        <span class="info-list-badge" style="background-color: {{ $info->category->color }};
+                                                    color: {{ $info->category->text_color }};">
+                                            {{ $info->category->name }}
+                                        </span>
+                            
+                                        {{-- Title --}}
+                                        <span class="info-list-title">
+                                            {{ $info->title }}
+                                        </span>
+                            
+                                        {{-- Published Date --}}
+                                        <span class="info-list-date">
+                                            {{ $info->published_at->format('Y.m.d') }}
+                                        </span>
+                            
+                                        {{-- Arrow --}}
+                                        <span class="info-list-arrow">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </span>
+                            
+                                    </div>
+                            
+                                </a>
                             @empty
                                 <p class="text-white text-center">No information available.</p>
                             @endforelse
+                        
                         </div>
-
-                        {{-- View All Button --}}
+                        
                         <div class="text-center mt-4">
                             <a href="{{ route('information.index') }}" class="btn btn-outline-warning px-5 py-2">
                                 View All Information

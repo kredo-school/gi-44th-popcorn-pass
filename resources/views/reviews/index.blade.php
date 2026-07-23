@@ -6,7 +6,7 @@
 
         {{-- Title --}}
         <div class="review-title-wrap text-center mb-5">
-            <h2 class="review-main-title">— Movie Reviews —</h2>
+            <h2 class="review-main-title">— Reviews —</h2>
             <div class="review-title-deco">◇ ✦ ◇</div>
         </div>
 
@@ -37,7 +37,7 @@
                             <i class="fa-regular fa-star review-star-lg"></i>
                         @endif
                     @endfor
-                    <span class="review-avg-score ms-2">{{ number_format($averageRating, 1) }} / 5</span>
+                    <span class="review-avg-score ms-2">{{ number_format($averageRating, 1) }}</span>
                     <span class="review-total-count ms-2">({{ number_format($totalReviews) }} reviews)</span>
                 </div>
 

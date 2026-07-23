@@ -1,42 +1,105 @@
 .info-detail-page {
-    background: url('/images/layouts/review_bg.png') center center / cover no-repeat;
+    background-color: #03142D;
     min-height: 100vh;
     padding: 60px 40px;
     color: white;
 }
 
+
+/* Category */
+.info-detail-category {
+    display: inline-block;
+    padding: 8px 24px;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+
+/* Detail Card */
+.info-detail-card {
+    max-width: 900px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, .05);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .4);
+}
+
+
+/* Image */
+.info-detail-image-wrap {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.info-detail-img {
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .6);
+    border: 2px solid rgba(255, 255, 255, .15);
+    border-radius: 12px;
+}
+
+
+/* Title */
 .info-detail-title,
-.info-title  {
+.info-title {
     font-family: Georgia, serif;
     font-size: 3rem;
     color: #fff;
-    text-shadow: 0 0 20px rgba(245, 193, 38, 0.5);
+    text-shadow: 0 0 20px rgba(245, 193, 38, .5);
     letter-spacing: 3px;
 }
+
 
 .info-detail-heading {
     font-size: 2rem;
     font-weight: 900;
     color: #fff;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
     letter-spacing: 2px;
 }
 
-.info-detail-img {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    max-width: 280px;
+
+/* Date */
+.info-detail-date {
+    color: #ADB5BD;
+    font-size: .9rem;
 }
 
+/* Image */
+.info-detail-image-wrap{
+    text-align: center;
+}
+
+.info-detail-img {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .4);
+}
+
+.info-detail-body{
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.9;
+    font-size: 1.05rem;
+}
+
+
+/* Content */
 .info-detail-body {
     font-size: 1.1rem;
     line-height: 1.8;
     color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, .1);
+    padding: 25px;
+    border-radius: 12px;
 }
 
+
+/* Back Button */
 .info-back-btn {
     background: #000;
     border: 3px solid #fff;
@@ -54,99 +117,78 @@
     color: #000;
 }
 
-/* ///// */
-.news-card .card-img-top {
-    border-radius: 0;
-}
+
+/* =====================
+   Information List
+===================== */
 
 .info-list-item {
+    width: 70%;
+    margin: 0 auto;
     display: flex;
     align-items: center;
     gap: 16px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    padding: 8px 16px;
-    transition: .3s;
-    color: #fff;
-    max-width: 800px;
-    margin: 0 auto;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, .15);
+    transition: .2s;
 }
+
 
 .info-list-item:hover {
-    background: rgba(245, 193, 38, 0.15);
-    border-color: #F5C126;
+    background: rgba(255, 255, 255, .05);
 }
+
 
 .info-list-badge {
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    width: 100px;
+    min-width: 120px;
     text-align: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 600;
 }
+
 
 .info-list-title {
-    font-size: 0.95rem;
-    font-weight: 700;
+    flex: 1;
     color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 200px;
-    flex-shrink: 0;
+    font-weight: 600;
 }
 
-.info-list-body {
-    flex: 1;
-    font-size: 0.85rem;
-    color: #ccc;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+.info-list-date {
+    color: #ADB5BD;
+    font-size: .9rem;
     white-space: nowrap;
 }
+
 
 .info-list-arrow {
-    color: #aaa;
-    font-size: 1.2rem;
-    flex-shrink: 0;
+    color: #F5C126;
+    font-size: 1rem;
 }
 
-.info-list-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-}
 
-.info-list-img.bg-secondary {
-    font-size: 1.2rem;
-    letter-spacing: 2px;
-}
-
-.info-list-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-}
-
-.info-list-img.bg-secondary {
-    font-size: 1.2rem;
-    letter-spacing: 2px;
-}
+/* =====================
+   Information Card Image
+===================== */
 
 .news-card {
     height: 100%;
 }
 
+
+.news-card .card-img-top {
+    border-radius: 0;
+}
+
+
 .info-list-img {
     width: 100%;
     height: 220px;
     object-fit: cover;
 }
+
 
 .info-list-img.bg-secondary {
     display: flex;

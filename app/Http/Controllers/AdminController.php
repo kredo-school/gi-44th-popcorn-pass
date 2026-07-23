@@ -782,7 +782,7 @@ class AdminController extends Controller
 
         $categories = \App\Models\InformationCategory::orderBy('name')->get();
 
-        $information = $query->paginate(10)->withQueryString();
+        $information = $query->paginate(20)->withQueryString();
 
         return view('admin.information.index', compact('information', 'categories'));
     }
@@ -801,11 +801,22 @@ class AdminController extends Controller
             'category_id'  => 'required|exists:information_categories,id',
             'status'       => 'required|in:Draft,Published,Archived',
             'published_at' => 'required_if:status,Published|nullable|date',
-            'image_url'    => 'nullable|string|max:500',
+            'image'        => 'nullable|image|max:2048',
         ]);
 
-        $validated['created_by_id'] = auth()->id();
+        // upload image
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(
+                public_path('images/information'),
+                $filename
+            );
+            $validated['image'] = 'images/information/' . $filename;
+        }
 
+
+        $validated['created_by_id'] = auth()->id();
         Information::create($validated);
 
         return redirect()
@@ -830,8 +841,25 @@ class AdminController extends Controller
             'category_id'  => 'required|exists:information_categories,id',
             'status'       => 'required|in:Draft,Published,Archived',
             'published_at' => 'required_if:status,Published|nullable|date',
-            'image_url'    => 'nullable|string|max:500',
+            'image'        => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+
+            // delete previous image
+            if ($information->image && file_exists(public_path($information->image))) {
+                unlink(public_path($information->image));
+            }
+
+            // save new image
+            $image = $request->file('image');
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(
+                public_path('images/information'),
+                $filename
+            );
+            $validated['image'] = 'images/information/' . $filename;
+        }
 
         $information->update($validated);
 
@@ -850,6 +878,7 @@ class AdminController extends Controller
             'status'       => $information->status,
             'content'      => $information->content,
             'published_at' => $information->published_at,
+            'image'        => $information->image,
         ]);
     }
 

@@ -7,7 +7,7 @@
 
 <div class="card card-dark p-4">
 
-    <form action="{{ route('admin.information.update', $information->id) }}" method="POST">
+    <form action="{{ route('admin.information.update', $information->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -105,12 +105,23 @@
             </div>
 
             <div class="col-md-6 mb-4">
-                <label class="form-label">Image URL</label>
+                <label class="form-label">Image</label>
             
-                <input type="text" name="image_url" class="form-control @error('image_url') is-invalid @enderror"
-                    value="{{ old('image_url', $information->image_url) }}">
+                {{-- Current Image --}}
+                @if($information->image)
+                    <div class="mb-2">
+                        <img src="{{ asset($information->image) }}" alt="Current Image" class="img-thumbnail" style="max-width: 200px;">
+                    </div>
+                @endif
             
-                @error('image_url')
+                {{-- Upload New Image --}}
+                <input type="file" name="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">
+            
+                <div class="form-text text-light">
+                    Leave empty to keep the current image.
+                </div>
+            
+                @error('image')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>

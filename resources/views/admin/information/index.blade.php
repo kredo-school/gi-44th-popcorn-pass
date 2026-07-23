@@ -114,11 +114,11 @@
     {{-- Information Details --}}
     <div class="col-md-4">
         <div class="card card-dark p-3">
-            <div class="text-warning fw-bold mb-3">
+            <div class="text-warning fw-bold mb-2">
                 Information Details
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label text-secondary small">
                     Title
                 </label>
@@ -128,7 +128,7 @@
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label text-secondary small">
                     Category
                 </label>
@@ -138,7 +138,7 @@
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label text-secondary small">
                     Status
                 </label>
@@ -148,13 +148,23 @@
                 </div>
             </div>
 
-            <div class="mb-3">
+            <div class="mb-2">
                 <label class="form-label text-secondary small">
                     Published Date
                 </label>
 
                 <div class="form-control bg-transparent text-white" id="detail-published-at">
                     —
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <label class="form-label text-secondary small">
+                    Image
+                </label>
+            
+                <div id="detail-image" class="text-center">
+                    <span class="text-white">No Image</span>
                 </div>
             </div>
 
@@ -171,7 +181,7 @@
         </div>
 
         {{-- Category Management --}}
-        <div class="card card-dark p-3">
+        <div class="card card-dark p-3 mt-1">
             <div class="text-warning fw-bold mb-3">Manage Categories</div>
         
             @if(session('error'))
@@ -234,4 +244,3 @@
 </div>
 
 @endsection
-

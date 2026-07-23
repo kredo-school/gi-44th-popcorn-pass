@@ -18,7 +18,7 @@ class Information extends Model
         'category_id',
         'status',
         'published_at',
-        'image_url',
+        'image',
         'created_by_id',
     ];
 

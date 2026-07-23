@@ -52,6 +52,7 @@ class HomeController extends Controller
             ->latest('published_at')
             ->take(5)
             ->get();
+
         return view('home')->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
             ->with('topMovies', $topMovies)
@@ -251,7 +252,7 @@ class HomeController extends Controller
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now())
             ->latest('published_at')
-            ->paginate(20);
+            ->paginate(10);
 
         return view('information.index', compact('information'));
     }

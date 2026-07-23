@@ -6,7 +6,7 @@
 
     {{-- Title --}}
     <div class="review-title-wrap text-center mb-5">
-        <h2 class="review-main-title">— Movie reviews —</h2>
+        <h2 class="review-main-title">— Reviews —</h2>
         <div class="review-title-deco">◇ ✦ ◇</div>
     </div>
 

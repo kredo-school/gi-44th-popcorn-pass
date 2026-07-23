@@ -1,37 +1,57 @@
 @extends('layouts.app')
 @section('title', $information->title)
+
 @section('content')
 
 <div class="info-detail-page">
 
-    <h2 class="info-detail-title text-center mb-5" style="color: {{ $information->category->color }}">
-        {{ $information->category->name }}
-    </h2>
-    <div class="container">
-        <div class="row align-items-start">
+    {{-- Category --}}
+    <div class="text-center mb-4">
+        <span class="info-detail-category" style="
+                background-color: {{ $information->category->color }};
+                color: {{ $information->category->text_color }};
+            ">
+            {{ $information->category->name }}
+        </span>
+    </div>
 
-            {{-- Left: Image --}}
-            <div class="col-lg-4 text-center">
-                @if($information->image_url)
-                    <img src="{{ $information->image_url }}" alt="{{ $information->title }}"
-                        class="img-fluid rounded info-detail-img">
-                @endif
+    {{-- Detail Card --}}
+    <div class="info-detail-card">
+
+        {{-- Image --}}
+        @if($information->image)
+        <div class="info-detail-image-wrap">
+            <img src="{{ asset($information->image) }}" alt="{{ $information->title }}"
+                class="rounded info-detail-img">
+        </div>
+        @endif
+
+
+        {{-- Content --}}
+        <div class="info-detail-content">
+
+            <h3 class="info-detail-heading mb-3">
+                {{ strtoupper($information->title) }}
+            </h3>
+
+            <div class="info-detail-date mb-4">
+                {{ $information->published_at->format('Y.m.d') }}
             </div>
 
-            {{-- Right: Content --}}
-            <div class="col-lg-8">
-                <h3 class="info-detail-heading mb-4">{{ strtoupper($information->title) }}</h3>
-                <p class="info-detail-body">{!! nl2br(e($information->content)) !!}</p>
-            </div>
+            <p class="info-detail-body">
+                {!! nl2br(e($information->content)) !!}
+            </p>
 
         </div>
+
     </div>
+
 
     {{-- Back Button --}}
     <div class="mt-5">
-        <a href="{{ route('information.index') }}" class="info-back-btn">
+        <button type="button" class="info-back-btn" onclick="history.back()">
             <i class="fa-solid fa-arrow-left"></i> BACK
-        </a>
+        </button>
     </div>
 
 </div>

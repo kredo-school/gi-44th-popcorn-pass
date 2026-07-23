@@ -7,7 +7,7 @@
 
 <div class="card card-dark p-4">
 
-    <form action="{{ route('admin.information.store') }}" method="POST">
+    <form action="{{ route('admin.information.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="mb-3">
@@ -62,8 +62,8 @@
             </div>
         
             <div class="col-md-6 mb-4">
-                <label class="form-label">Image URL</label>
-                <input type="text" name="image_url" class="form-control" value="{{ old('image_url') }}">
+                <label class="form-label">Image</label>
+                <input type="file" name="image" class="form-control">
             </div>
         </div>
 
