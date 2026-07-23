@@ -156,7 +156,7 @@
 }
 .movie-tab {
     width: 300px;
-    color: white !important;
+    color: rgb(0, 0, 0) !important;
     background-color: transparent;
     border: 1px solid white !important; 
     font-weight: bold;
@@ -164,7 +164,7 @@
 }
 .movie-tab.active {
     background: rgba(217, 217, 217, 0.7) !important;
-    color: rgb(255, 255, 255) !important;
+    color: rgb(0, 0, 0) !important;
 
     border: 2px solid white !important;
     border-bottom: 2px solid white !important;

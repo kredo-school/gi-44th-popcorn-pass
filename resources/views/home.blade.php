@@ -58,9 +58,9 @@
                                         <div class="hero-content-welcome">
                                             <p>Experience the Magic of Movies</p>
                                             @auth
-                                                <a href="{{ route('mypage.dashboard') }}" class="btn btn-book">My Page</a>
+                                                <a href="{{ route('mypage.dashboard') }}" class="btn text-white border">My Page</a>
                                             @else
-                                                <a href="{{ route('login') }}" class="btn btn-book">Log in</a>
+                                                <a href="{{ route('login') }}" class="btn text-white border">Log in</a>
                                             @endauth
                                         </div>
                                     </div>
@@ -77,7 +77,7 @@
                                             <div class="hero-content">
                                                 <span class="hero-tag">COMING SOON</span>
                                                 <h1>UPCOMING<br>BLOCKBUSTERS</h1>
-                                                <a href="{{ route('release', $heroMovie->id) }}" class="btn-book">VIEW MORE
+                                                <a href="{{ route('release', $heroMovie->id) }}" class="btn-book btn-book-yellow">VIEW MORE
                                                     →</a>
                                             </div>
                                         </div>
@@ -141,7 +141,7 @@
                                                 </p>
 
                                                 <a href="{{ route('information.detail', $information_slide->id) }}"
-                                                    class="btn-book btn-book-blue">
+                                                    class="btn-book-black ">
                                                     VIEW MORE →
                                                 </a>
 

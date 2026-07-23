@@ -4,9 +4,9 @@
     background: linear-gradient(
         to bottom,
         #e3ebfa 0%,
-        #abceff 40%,
+        #7d9fcf 20%,
         #7d9fcf 80%,
-        #1b2f55 100%
+        #2a4a85 100%
     );
 }
 .home-hero {
@@ -177,6 +177,27 @@
     border-color: #ff4040;
     color: #ff4040;
 }
+.btn-book-yellow {
+    border-color: #f7ff88;
+    color: #fff30f;
+}
+.btn-book-black {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.35rem 1rem;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    color: #000000;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+.btn-book-black:hover {
+    background: rgba(255,255,255,0.15);
+    color: #ffa6a6;
+}
+
+
 
 .hero-video {
     width: 100%;
