@@ -1,7 +1,23 @@
 @extends('layouts.app')
 @section('content')
     <div class="reservation-page" style="background-image: url('{{ asset('images/background.png') }}');">
-        <div class="section-title-line mb-4">
+        
+        {{-- SEARCH --}}
+            <div class="search-wrapper">
+                <form action="{{ route('movies.search') }}" method="GET">
+
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+                    <input type="text" name="keyword" class="search-input" placeholder="Search by movie title..."
+                        value="{{ request('keyword') }}">
+
+                    <button class="search-btn">
+                        SEARCH
+                    </button>
+                </form>
+            </div>
+        
+        <div class="section-title-line mb-4 mt-5">
             <hr>
             <h2 class="text-white">
                 < Search Result >
