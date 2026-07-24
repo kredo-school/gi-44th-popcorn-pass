@@ -148,7 +148,7 @@ class HomeController extends Controller
                 $query->where('title', 'like', "%{$keyword}%")
                     ->orWhere('director', 'like', "%{$keyword}%")
                     ->orWhere('synopsis', 'like', "%{$keyword}%")
-                    ->orWhereHas('genre', function ($q) use ($keyword) {
+                    ->orWhereHas('genres', function ($q) use ($keyword) {
                         $q->where('title', 'like', "%{$keyword}%");
                     })
                     ->orWhereJsonContains('search_keywords', $keyword);
@@ -172,13 +172,13 @@ class HomeController extends Controller
                 $query->whereDate('start_time', $selectedDate);
             },
             'showtimes.screen.cinema',
-            'genre',
+            'genres',
         ])
             ->where(function ($query) use ($keyword) {
                 $query->where('title', 'like', "%{$keyword}%")
                     ->orWhere('director', 'like', "%{$keyword}%")
                     ->orWhere('synopsis', 'like', "%{$keyword}%")
-                    ->orWhereHas('genre', function ($q) use ($keyword) {
+                    ->orWhereHas('genres', function ($q) use ($keyword) {
                         $q->where('title', 'like', "%{$keyword}%");
                     });
             })
@@ -246,7 +246,7 @@ class HomeController extends Controller
             $query->where('title', 'like', "%{$keyword}%")
                 ->orWhere('director', 'like', "%{$keyword}%")
                 ->orWhere('synopsis', 'like', "%{$keyword}%")
-                ->orWhereHas('genre', function ($q) use ($keyword) {
+                ->orWhereHas('genres', function ($q) use ($keyword) {
                     $q->where('title', 'like', "%{$keyword}%");
                 })
                 ->orWhereJsonContains('search_keywords', $keyword);

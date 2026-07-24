@@ -54,7 +54,7 @@
                             <p class="">PG</p>
                         </div>
                         <div class="col-6">
-                            <p>{{ $movie->genre->title }}</p>
+                            <p>{{ $movie->genres->pluck('title')->join(', ') }}</p>
                         </div>
                     </div>
 

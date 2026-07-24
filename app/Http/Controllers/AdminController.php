@@ -128,7 +128,7 @@ class AdminController extends Controller
     {
         Movie::syncStatuses();
 
-        $movies = Movie::with(['genre', 'ageRating'])
+        $movies = Movie::with(['genres', 'ageRating'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
@@ -162,7 +162,8 @@ class AdminController extends Controller
     {
         return [
             'title' => 'required|string|max:255',
-            'genre_id' => 'required|exists:genres,id',
+            'genre_ids' => 'required|array|min:1|max:3',
+            'genre_ids.*' => 'required|exists:genres,id',
             'duration' => 'required|integer|min:1',
             'age_rating_id' => 'nullable|exists:age_ratings,id',
             'released_date' => 'nullable|date',
