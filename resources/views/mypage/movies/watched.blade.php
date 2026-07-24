@@ -63,7 +63,7 @@
                         @else
                             <form method="POST" action="{{ route('mypage.movies-watched.send-review-email', $reservation->id) }}">
                                 @csrf
-                                <button type="submit" class="btn mypage-btn-write-review">
+                                <button type="submit" class="btn text-warning border-warning">
                                     <i class="fa-solid fa-envelope me-1"></i>Email Me a Review Link
                                 </button>
                             </form>
@@ -81,7 +81,7 @@
     @endif
 
     <div class="mt-4">
-        <a href="{{ route('mypage.dashboard') }}" class="btn mypage-btn-back">
+        <a href="{{ route('mypage.dashboard') }}" class="btn border-white text-white">
             <i class="fa-solid fa-arrow-left me-1"></i> Back
         </a>
     </div>

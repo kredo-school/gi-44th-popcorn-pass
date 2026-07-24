@@ -70,16 +70,15 @@
 
         {{-- Edit Profile Button (COMPLETE) --}}
         <div class="mt-4 text-center">
-            <a href="{{ route('mypage.profile.edit') }}" class="btn mypage-btn-write-review px-4">
+            <a href="{{ route('mypage.profile.edit') }}" class="btn text-warning border-warning px-4">
                 <i class="fa-solid fa-pen me-2"></i>Edit Profile
             </a>
         </div>
     </div>
 
     <div class="mt-4">
-        <a href="{{ route('mypage.dashboard') }}" class="btn mypage-btn-back">
+        <a href="{{ route('mypage.dashboard') }}" class="btn text-white border-white">
             <i class="fa-solid fa-arrow-left me-1"></i> Back
         </a>
     </div>
 @endsection
-

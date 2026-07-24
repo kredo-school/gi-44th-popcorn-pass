@@ -1,19 +1,24 @@
 {{-- resources/views/mypage/components/sidebar.blade.php --}}
-<div class="mypage-sidebar-profile text-center mb-4">
-    <img src="{{ $user->avatar ?? asset('images/default-avatar.png') }}"
-         alt="{{ $user->full_name }}"
-         class="mypage-sidebar-avatar rounded-circle mb-2">
+<a href="{{ route('mypage.profile') }}"
+   class="d-block text-decoration-none text-white">
 
-    <div class="mb-1">
-        <a href="{{ route('mypage.profile') }}" class="mypage-sidebar-name text-decoration-none text-white">
-            {{ $user->full_name }}
-        </a>
+    <div class="mypage-sidebar-profile text-center mb-4">
+        <img src="{{ $user->avatar ?? asset('images/default-avatar.png') }}"
+             alt="{{ $user->full_name }}"
+             class="mypage-sidebar-avatar rounded-circle mb-2">
+
+        <div class="mb-1">
+            <span class="mypage-sidebar-name">
+                {{ $user->full_name }}
+            </span>
+        </div>
+
+        <span class="mypage-tier-badge mypage-tier-{{ $user->tier }}">
+            {{ $user->tier_label }} Member
+        </span>
     </div>
 
-    <span class="mypage-tier-badge mypage-tier-{{ $user->tier }}">
-        {{ $user->tier_label }} Member
-    </span>
-</div>
+</a>
 
 <div class="mypage-sidebar-stats d-flex flex-column gap-3">
     <a href="{{ route('mypage.tickets') }}" class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
