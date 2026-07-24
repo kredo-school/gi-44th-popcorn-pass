@@ -9,6 +9,9 @@ import './reservations/seat-selection';
 import './reservations/ticket-type';
 import './reservations/payment-method';
 
+//admin dashboard
+import './admin/chart.js';
+
 
 new Swiper(".heroSwiper", {
     loop: true,

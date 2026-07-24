@@ -21,12 +21,107 @@ use App\Models\Information;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+
 
 class AdminController extends Controller
 {
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $thisYear = now()->year;
+
+        // ===== Revenue（this year）=====
+        $thisYearRevenue = Payment::whereYear('created_at', now()->year)->sum('amount');
+        $lastYearRevenue = Payment::whereYear('created_at', now()->subYear()->year)->sum('amount');
+
+        $revenueChange = $lastYearRevenue > 0
+            ? (($thisYearRevenue - $lastYearRevenue) / $lastYearRevenue) * 100
+            : 0;
+
+
+        // ===== Users（今年登録したユーザー）=====
+        $totalUsers = User::whereYear('created_at', now()->year)->count();
+        $lastYearUsers = User::whereYear('created_at', now()->subYear()->year)->count();
+
+        $userChange = $lastYearUsers > 0
+            ? (($totalUsers - $lastYearUsers) / $lastYearUsers) * 100
+            : 0;
+
+
+        // ===== Movies（今年登録した映画）=====
+        $activeMovies = Movie::whereYear('created_at', now()->year)->count();
+        $lastYearMovies = Movie::whereYear('created_at', now()->subYear()->year)->count();
+
+        $movieChange = $lastYearMovies > 0
+            ? (($activeMovies - $lastYearMovies) / $lastYearMovies) * 100
+            : 0;
+
+
+        // ===== Reservations（今年の予約件数）=====
+        $totalReservations = Reservation::whereYear('created_at', now()->year)->count();
+        $lastYearReservations = Reservation::whereYear('created_at', now()->subYear()->year)->count();
+
+        $reservationChange = $lastYearReservations > 0
+            ? (($totalReservations - $lastYearReservations) / $lastYearReservations) * 100
+            : 0;
+
+
+        //Revenue Trend
+        $monthlyRevenue = Payment::selectRaw('
+        MONTH(created_at) as month,
+        SUM(amount) as total')
+            ->whereYear('created_at', now()->year)
+            ->groupByRaw('MONTH(created_at)')
+            ->orderByRaw('MONTH(created_at)')
+            ->get();
+
+
+        $revenueData = array_fill(0, 12, 0);
+
+        foreach ($monthlyRevenue as $item) {
+            $revenueData[$item->month - 1] = $item->total;
+        }
+
+        // top peforming movies
+
+        $movieSalesRanking = Payment::join('reservations', 'payments.reservation_id', '=', 'reservations.id')
+            ->join('movies', 'reservations.movie_id', '=', 'movies.id')
+            ->select(
+                'movies.title',
+                DB::raw('SUM(payments.amount) as total_sales')
+            )
+            ->groupBy('movies.id', 'movies.title')
+            ->orderByDesc('total_sales')
+            ->take(5)
+            ->get();
+
+        //Recent Reservation
+        $recentReservations = Reservation::with([
+            'user',
+            'movie',
+            'screen',
+            'showtime'
+        ])
+            ->latest('created_at')
+            ->take(5)
+            ->get();
+
+
+
+        return view('admin.dashboard', compact(
+            'thisYearRevenue',
+            'revenueChange',
+            'totalUsers',
+            'userChange',
+            'activeMovies',
+            'movieChange',
+            'totalReservations',
+            'reservationChange',
+            'thisYear',
+            'movieSalesRanking',
+            'recentReservations',
+            'revenueData'
+        ));
     }
 
     public function movies()
@@ -115,7 +210,7 @@ class AdminController extends Controller
         $rules['showtimes'] = 'nullable|array|max:6';
         $rules['showtimes.*.cinema_id'] = 'nullable|exists:cinemas,id';
         $rules['showtimes.*.screen_id'] = 'nullable|exists:screens,id';
-        
+
         $rules['showtimes.*.date'] = 'nullable|date';
         $rules['showtimes.*.start_time'] = 'nullable';
 

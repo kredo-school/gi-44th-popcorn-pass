@@ -7,6 +7,7 @@ use App\Models\Reservation;
 use App\Models\Showtime;
 use App\Models\ReservationSeat;
 use App\Models\ShowtimeSeat;
+use App\Models\Payment;
 use App\Services\DynamicPricingService;
 
 use Illuminate\Support\Facades\Auth;
@@ -284,6 +285,29 @@ class ReservationController extends Controller
                 'confirmed_at' => now(),
             ]);
 
+            // ★ Create Payment
+            Payment::create([
+                'reservation_id' => $reservation->id,
+
+                'coupon_id' => null,
+                'promotion_id' => null,
+
+                'subtotal' => $totalPrice,
+                'discount_amount' => 0,
+                'tax' => 0,
+                'amount' => $totalPrice,
+
+                'payment_status' => 'paid',
+                'payment_method' => $paymentInfo['payment_method'] ?? 'credit_card',
+
+                'transaction_id' => null,
+                'stripe_payment_intent_id' => null,
+
+                'paid_at' => now(),
+                'refunded_at' => null,
+                'refund_amount' => 0,
+            ]);
+
             session()->put(
                 'reservation_reference',
                 $reservation->reservation_reference
@@ -292,7 +316,7 @@ class ReservationController extends Controller
             // Create reservation seats
             foreach ($selectedSeats as $seat) {
                 $showtimeSeat = ShowtimeSeat::where('showtime_id', $showtime->id)
-                
+
                     ->whereHas('screenSeat', function ($query) use ($seat) {
                         preg_match('/([A-Z]+)(\d+)/', $seat['seat'], $matches);
 
