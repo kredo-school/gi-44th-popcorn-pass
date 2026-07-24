@@ -19,12 +19,48 @@
         <div class="row align-items-start px-4">
 
             {{-- Left --}}
-            <div class="col-lg-4 text-center">
-                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="review-poster img-fluid rounded mb-4">
+            <div class="col-lg-6 text-center">
+                {{-- Poster --}}
+                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="review-poster img-fluid rounded mb-0">
+
+                {{-- Movie Info --}}
+                <div class="review-movie-info-card mx-auto">
+                
+                    <div class="review-info-item">
+                        <span class="review-info-label">
+                            <i class="fa-solid fa-film me-2"></i>Genre
+                        </span>
+                        <span class="review-info-value">{{ $movie->genre->title }}</span>
+                    </div>
+                
+                    <div class="review-info-item">
+                        <span class="review-info-label">
+                            <i class="fa-regular fa-clock me-2"></i>Runtime
+                        </span>
+                        <span class="review-info-value">{{ $movie->duration }} min</span>
+                    </div>
+                
+                    <div class="review-info-item">
+                        <span class="review-info-label">
+                            <i class="fa-regular fa-calendar me-2"></i>Released Date
+                        </span>
+                        <span class="review-info-value">
+                            {{ $movie->released_date->format('M d, Y') }}
+                        </span>
+                    </div>
+                
+                    <div class="review-info-item">
+                        <span class="review-info-label">
+                            <i class="fa-solid fa-circle-exclamation me-2"></i>Age Rating
+                        </span>
+                        <span class="review-info-value">{{ $movie->ageRating->title }}</span>
+                    </div>
+                
+                </div>
             </div>
 
             {{-- Right --}}
-            <div class="col-lg-8">
+            <div class="col-lg-6">
 
                 <h3 class="review-movie-title mb-2">{{ strtoupper($movie->title) }}</h3>
 
@@ -41,7 +77,6 @@
                     <span class="review-total-count ms-2">({{ number_format($totalReviews) }} reviews)</span>
                 </div>
 
-                {{-- Review List --}}
                 <div class="d-flex justify-content-end mb-4">
                     @auth
                         <a href="{{ route('reviews.create', $movie->id) }}" class="review-write-btn">
@@ -50,6 +85,7 @@
                     @endauth
                 </div>
                 
+                {{-- Review List --}}
                 <div class="review-list-scroll">
                     @forelse ($reviews as $review)
                         <div class="review-card mb-3">
@@ -85,12 +121,12 @@
                                 </p>
                     
                                 <a href="{{ route('reviews.show', [$movie->id, $review->id]) }}" class="review-arrow">
-                                    ›
+                                    <i class="fa-solid fa-chevron-right fs-6"></i>
                                 </a>
                             </div>
                         </div>
                     @empty
-                        <p class="text-white">No reviews yet.</p>
+                        <p class="no-review fs-5">No reviews yet.</p>
                     @endforelse
                 </div>
 
