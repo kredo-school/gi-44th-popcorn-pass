@@ -43,14 +43,34 @@
                                 value="{{ old('title') }}" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-secondary small">Genre</label>
-                            <select name="genre_id" class="form-select" required>
-                                <option value="">Select genre...</option>
+                            <label class="form-label text-secondary small">
+                                Genre <span class="text-muted">(Select up to 3)</span>
+                            </label>
+
+                            <div class="row">
                                 @foreach ($genres as $genre)
-                                    <option value="{{ $genre->id }}"
-                                        {{ old('genre_id') == $genre->id ? 'selected' : '' }}>{{ $genre->title }}</option>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input genre-checkbox" type="checkbox"
+                                                name="genre_ids[]" value="{{ $genre->id }}" id="genre{{ $genre->id }}"
+                                                {{ in_array($genre->id, old('genre_ids', [])) ? 'checked' : '' }}>
+
+                                            <label class="form-check-label" for="genre{{ $genre->id }}">
+                                                {{ $genre->title }}
+                                            </label>
+                                        </div>
+                                    </div>
                                 @endforeach
-                            </select>
+                            </div>
+
+                            <div class="form-text">
+                                You can select up to <strong>3</strong> genres.
+                            </div>
+
+                            <div class="form-text">
+                                Hold <strong>Ctrl</strong> (Windows) or <strong>⌘ Command</strong> (Mac) to select multiple
+                                genres.
+                            </div>
                         </div>
 
                         <div class="col-md-6">
@@ -116,13 +136,13 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">Director</label>
-                            <input type="text" name="director" class="form-control" placeholder="Enter director name..."
-                                value="{{ old('director') }}">
+                            <input type="text" name="director" class="form-control"
+                                placeholder="Enter director name..." value="{{ old('director') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">Cast Members</label>
-                            <input type="text" name="cast" class="form-control" placeholder="Enter cast members..."
-                                value="{{ old('cast') }}">
+                            <input type="text" name="cast" class="form-control"
+                                placeholder="Enter cast members..." value="{{ old('cast') }}">
                         </div>
 
                         <div class="col-md-6">
@@ -203,60 +223,141 @@
 
         <div class="row g-3 mt-1">
             <div class="col-12">
+
                 <div class="card card-dark p-3">
-                    <div class="text-warning fw-bold mb-1">Showtimes</div>
-                    <div class="text-secondary small mb-3">
-                        Optional — add up to 6 showtimes for this movie. Leave a row completely blank to skip it.
-                        The end time is calculated automatically from the movie's duration.
+
+                    <div class="text-warning fw-bold mb-3">
+                        Generate Showtimes
                     </div>
 
-                    @for ($i = 0; $i < 6; $i++)
-                        @php
-                            $oldDate = old('showtimes.' . $i . '.date');
-                            $oldStartTime = old('showtimes.' . $i . '.start_time');
-                            $oldCinemaId = old('showtimes.' . $i . '.cinema_id');
-                            $oldScreenId = old('showtimes.' . $i . '.screen_id');
-                        @endphp
-                        <div class="row g-2 mb-2 align-items-center">
-                            <div class="col-md-1 text-secondary small text-center">#{{ $i + 1 }}</div>
-                            <div class="col-md-3">
-                                <select name="showtimes[{{ $i }}][cinema_id]"
-                                    class="form-select showtime-cinema" data-index="{{ $i }}">
-                                    <option value="">Cinema...</option>
-                                    @foreach ($cinemas as $cinema)
-                                        <option value="{{ $cinema->id }}"
-                                            {{ old('showtimes.' . $i . '.cinema_id') == $cinema->id ? 'selected' : '' }}>
-                                            {{ $cinema->cinema_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <select name="showtimes[{{ $i }}][screen_id]"
-                                    class="form-select showtime-screen" data-index="{{ $i }}">
-                                    <option value="">Screen...</option>
-                                    @foreach ($screens as $screen)
-                                        <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}"
-                                            {{ old('showtimes.' . $i . '.screen_id') == $screen->id ? 'selected' : '' }}>
-                                            {{ $screen->cinema->cinema_name }}
-                                            - {{ $screen->screen_type }}
-                                            (Screen {{ $screen->screen_number }})
-                                        </option>
-                                    @endforeach
-                                    
-                                </select>
-                            </div>
-                            <div class="col-md-3">
-                                <input type="date" name="showtimes[{{ $i }}][date]" class="form-control"
-                                    value="{{ $oldDate }}">
-                            </div>
-                            <div class="col-md-2">
-                                <input type="time" name="showtimes[{{ $i }}][start_time]"
-                                    class="form-control" value="{{ $oldStartTime }}">
+                    <div class="text-secondary small mb-3">
+                        Set a recurrence pattern to automatically generate showtimes for this movie.
+                    </div>
+
+                    <div class="row g-3">
+
+                        {{-- Cinema --}}
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary small">
+                                Cinema
+                            </label>
+
+                            <select name="showtime_generate[cinema_id]" class="form-select showtime-generate-cinema">
+
+                                <option value="">Select Cinema...</option>
+
+                                @foreach ($cinemas as $cinema)
+                                    <option value="{{ $cinema->id }}"
+                                        {{ old('showtime_generate.cinema_id') == $cinema->id ? 'selected' : '' }}>
+                                        {{ $cinema->cinema_name }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                        {{-- Screen --}}
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary small">
+                                Screen
+                            </label>
+
+                            <select name="showtime_generate[screen_id]" class="form-select showtime-generate-screen">
+
+                                <option value="">Select Screen...</option>
+
+                                @foreach ($screens as $screen)
+                                    <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}"
+                                        {{ old('showtime_generate.screen_id') == $screen->id ? 'selected' : '' }}>
+
+                                        Screen {{ $screen->screen_number }}
+                                        - {{ $screen->screen_type }}
+
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+
+                        {{-- Start Date --}}
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary small">
+                                Start Date
+                            </label>
+
+                            <input type="date" name="showtime_generate[start_date]" class="form-control"
+                                value="{{ old('showtime_generate.start_date') }}">
+                        </div>
+
+                        {{-- End Date --}}
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary small">
+                                End Date
+                            </label>
+
+                            <input type="date" name="showtime_generate[end_date]" class="form-control"
+                                value="{{ old('showtime_generate.end_date') }}">
+                        </div>
+
+                        {{-- Days --}}
+                        <div class="col-12">
+                            <label class="form-label text-secondary small">
+                                Days of Week
+                            </label>
+
+                            <div class="d-flex gap-3 flex-wrap">
+
+                                @foreach ([
+            'Sun' => 0,
+            'Mon' => 1,
+            'Tue' => 2,
+            'Wed' => 3,
+            'Thu' => 4,
+            'Fri' => 5,
+            'Sat' => 6,
+        ] as $label => $value)
+                                    <div class="form-check">
+
+                                        <input class="form-check-input" type="checkbox" name="showtime_generate[days][]"
+                                            value="{{ $value }}" id="day{{ $value }}"
+                                            {{ in_array($value, old('showtime_generate.days', [])) ? 'checked' : '' }}>
+
+                                        <label class="form-check-label" for="day{{ $value }}">
+                                            {{ $label }}
+                                        </label>
+
+                                    </div>
+                                @endforeach
+
                             </div>
                         </div>
-                    @endfor
+
+                        {{-- Time Slots --}}
+                        <div class="col-12">
+
+                            <label class="form-label text-secondary small">
+                                Time Slots (Max 6)
+                            </label>
+
+                            <div class="row g-2">
+
+                                @for ($i = 0; $i < 6; $i++)
+                                    <div class="col-md-2">
+
+                                        <input type="time" name="showtime_generate[slots][]" class="form-control"
+                                            value="{{ old('showtime_generate.slots.' . $i) }}">
+
+                                    </div>
+                                @endfor
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
+
             </div>
         </div>
 
@@ -312,6 +413,22 @@
             if (cinemaSelect.value) {
                 filterScreensForRow(cinemaSelect);
             }
+        });
+    </script>
+    {{-- select multiple genres --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const genreSelect = document.querySelector('select[name="genre_ids[]"]');
+
+            genreSelect.addEventListener('change', function() {
+                const selected = [...this.selectedOptions];
+
+                if (selected.length > 3) {
+                    alert('You can select up to 3 genres.');
+
+                    selected[selected.length - 1].selected = false;
+                }
+            });
         });
     </script>
 @endsection

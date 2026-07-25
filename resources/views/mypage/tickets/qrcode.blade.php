@@ -9,9 +9,7 @@
         <p class="text-muted mb-4">{{ $reservation->movie->title }}</p>
 
         <div class="mypage-qr-card d-inline-block p-4 mb-3">
-            {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(220)
-                ->errorCorrection('M')
-                ->generate($reservation->reservation_reference ?? $reservation->id) !!}
+            {!! \SimpleSoftwareIO\QrCode\Facades\QrCode::size(220)->errorCorrection('M')->generate($reservation->reservation_reference ?? $reservation->id) !!}
         </div>
 
         <p class="small text-muted mb-4">
@@ -39,9 +37,46 @@
                 <span>{{ $reservation->reservation_reference ?? $reservation->id }}</span>
             </div>
         </div>
+        <div class="d-l"></div>
 
-        <a href="{{ route('mypage.tickets') }}" class="btn mypage-btn-back">
+        <a href="{{ route('mypage.tickets') }}" class="btn text-white border-white me-3">
             <i class="fa-solid fa-arrow-left me-1"></i> Back to My Tickets
         </a>
+        <button type="button" class="btn text-danger border-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">
+            <i class="fa-solid fa-xmark"></i>Cancel
+        </button>
+    </div>
+
+    {{-- Candel Modal --}}
+    <div class="modal fade" id="cancelModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content mypage-modal">
+                <div class="modal-header">
+                    <h5>
+                        ⚠️Cancel Reservation⚠️
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    Are you sure you want to cancel this reservation?
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn border-dark" data-bs-dismiss="modal">
+                        Back
+                    </button>
+
+                    <form action="{{ route('mypage.reservations.cancel', $reservation) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+
+                        <button type="submit" class="btn  text-danger border-danger">
+                            Cancel Reservation
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection

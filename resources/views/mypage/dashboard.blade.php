@@ -86,7 +86,8 @@
         @else
             @foreach ($myReviews as $review)
                 <div class="mypage-review-row d-flex justify-content-between align-items-start py-2">
-                    <div>
+                    <div class="text-center">
+                        <img src="{{$review->movie->poster_url}}" alt="{{ $review->movie->title }}" class="mypage-watched-poster mb-2">
                         <div class="fw-bold">{{ $review->movie->title }}</div>
                         <div class="mypage-stars">
                             @for ($i = 1; $i <= 5; $i++)

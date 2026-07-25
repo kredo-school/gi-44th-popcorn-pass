@@ -14,22 +14,34 @@ class TicketController extends Controller
     public function index(Request $request): View
     {
         $user = Auth::user();
-        $tab = $request->query('tab', 'upcoming'); // 'upcoming' or 'past'
+        $tab = $request->query('tab', 'upcoming');
 
         $startTimeSub = Showtime::select('start_time')
             ->whereColumn('showtimes.id', 'reservations.showtime_id');
 
         $query = $user->reservations()
-            ->where('reservation_status', 'confirmed')
             ->with(['movie', 'showtime', 'screen', 'reservationSeats.showtimeSeat.screenSeat']);
 
-        if ($tab === 'past') {
-            $tickets = $query->whereHas('showtime', fn ($q) => $q->where('start_time', '<=', now()))
+        if ($tab === 'cancelled') {
+
+            $tickets = $query
+                ->where('reservation_status', 'cancelled')
+                ->orderByDesc('cancelled_at')
+                ->paginate(5)
+                ->withQueryString();
+        } elseif ($tab === 'past') {
+
+            $tickets = $query
+                ->where('reservation_status', 'confirmed')
+                ->whereHas('showtime', fn($q) => $q->where('start_time', '<=', now()))
                 ->orderByDesc($startTimeSub)
                 ->paginate(5)
                 ->withQueryString();
         } else {
-            $tickets = $query->whereHas('showtime', fn ($q) => $q->where('start_time', '>', now()))
+
+            $tickets = $query
+                ->where('reservation_status', 'confirmed')
+                ->whereHas('showtime', fn($q) => $q->where('start_time', '>', now()))
                 ->orderBy($startTimeSub)
                 ->paginate(5)
                 ->withQueryString();
@@ -37,12 +49,12 @@ class TicketController extends Controller
 
         $upcomingTicketsCount = $user->reservations()
             ->where('reservation_status', 'confirmed')
-            ->whereHas('showtime', fn ($q) => $q->where('start_time', '>', now()))
+            ->whereHas('showtime', fn($q) => $q->where('start_time', '>', now()))
             ->count();
 
         $moviesWatchedCount = $user->reservations()
             ->where('reservation_status', 'confirmed')
-            ->whereHas('showtime', fn ($q) => $q->where('start_time', '<=', now()))
+            ->whereHas('showtime', fn($q) => $q->where('start_time', '<=', now()))
             ->count();
 
         $reviewsWrittenCount = $user->reviews()->count();
@@ -67,12 +79,12 @@ class TicketController extends Controller
 
         $upcomingTicketsCount = $user->reservations()
             ->where('reservation_status', 'confirmed')
-            ->whereHas('showtime', fn ($q) => $q->where('start_time', '>', now()))
+            ->whereHas('showtime', fn($q) => $q->where('start_time', '>', now()))
             ->count();
 
         $moviesWatchedCount = $user->reservations()
             ->where('reservation_status', 'confirmed')
-            ->whereHas('showtime', fn ($q) => $q->where('start_time', '<=', now()))
+            ->whereHas('showtime', fn($q) => $q->where('start_time', '<=', now()))
             ->count();
 
         $reviewsWrittenCount = $user->reviews()->count();

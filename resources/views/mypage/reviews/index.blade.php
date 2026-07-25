@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="ms-3 flex-shrink-0">
-                        <button type="button" class="btn mypage-btn-back btn-sm"
+                        <button type="button" class="btn border-warning text-warning btn-sm"
                                 data-bs-toggle="modal"
                                 data-bs-target="#editReviewModal-{{ $review->id }}">
                             <i class="fa-solid fa-pen me-1"></i>Edit Review
@@ -89,8 +89,8 @@
                                                       required maxlength="2000">{{ $review->body }}</textarea>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn mypage-btn-back" data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn mypage-btn-write-review">Save Changes</button>
+                                            <button type="button" class="btn border-danger text-danger" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn border-dark text-dark">Save Changes</button>
                                         </div>
                                     </form>
                                 </div>
@@ -109,7 +109,7 @@
     @endif
 
     <div class="mt-4">
-        <a href="{{ route('mypage.dashboard') }}" class="btn mypage-btn-back">
+        <a href="{{ route('mypage.dashboard') }}" class="btn border-white text-white">
             <i class="fa-solid fa-arrow-left me-1"></i> Back
         </a>
     </div>

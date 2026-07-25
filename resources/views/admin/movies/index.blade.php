@@ -45,7 +45,9 @@
                             <tr class="movie-row" data-movie-id="{{ $movie->id }}" style="cursor: pointer;">
                                 <td><input type="checkbox"></td>
                                 <td>{{ $movie->title }}</td>
-                                <td>{{ $movie->genre->title ?? '—' }}</td>
+                                <td>
+                                    {{ $movie->genres->pluck('title')->join(', ') ?: '—' }}
+                                </td>
                                 <td>{{ $movie->duration }} min</td>
                                 <td class="text-warning">{{ $movie->review_average ?? '—' }}</td>
                                 <td>
@@ -78,7 +80,8 @@
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Synopsis</label>
-                    <div class="form-control bg-transparent text-white" id="detail-synopsis" style="min-height: 60px;">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-synopsis" style="min-height: 60px;">—
+                    </div>
                 </div>
 
                 <div class="mb-3">
@@ -116,28 +119,6 @@
 @endsection
 
 @section('scripts')
-<script>
-const editButton = document.querySelector('#edit-movie-btn');
-
-document.querySelectorAll('.movie-row').forEach(function (row) {
-    row.addEventListener('click', function () {
-        const movieId = this.dataset.movieId;
-
-        if (editButton) {
-            editButton.href = `/admin/movies/${movieId}/edit`;
-            editButton.classList.remove('disabled');
-        }
-
-        fetch(`/admin/movies/${movieId}/details`)
-            .then(response => response.json())
-            .then(data => {
-                document.querySelector('#detail-title').textContent = data.title || '—';
-                document.querySelector('#detail-synopsis').textContent = data.synopsis || '—';
-                document.querySelector('#detail-director').textContent = data.director || '—';
-                document.querySelector('#detail-cast').textContent = data.cast || '—';
-                document.querySelector('#detail-trailer').textContent = data.trailer_url || '—';
-            });
-    });
-});
-</script>
+    @vite('resources/js/admin/dashboard.js')
 @endsection
+

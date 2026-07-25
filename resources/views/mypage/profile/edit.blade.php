@@ -28,7 +28,7 @@
                         </div>
                     @endif
                 </div>
-                <label for="avatar" class="btn mypage-btn-back btn-sm">
+                <label for="avatar" class="btn text-warning border-warning btn-sm">
                     <i class="fa-solid fa-camera me-1"></i>Change Photo
                 </label>
                 <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*"
@@ -98,10 +98,10 @@
             </div>
 
             <div class="d-flex gap-3 justify-content-center">
-                <a href="{{ route('mypage.profile') }}" class="btn mypage-btn-back px-4">
+                <a href="{{ route('mypage.profile') }}" class="btn text-danger border-danger px-4">
                     Cancel
                 </a>
-                <button type="submit" class="btn mypage-btn-write-review px-4">
+                <button type="submit" class="btn text-warning border-warning px-4">
                     <i class="fa-solid fa-check me-1"></i>Update
                 </button>
             </div>
@@ -109,7 +109,7 @@
     </div>
 
     <div class="mt-4">
-        <a href="{{ route('mypage.profile') }}" class="btn mypage-btn-back">
+        <a href="{{ route('mypage.profile') }}" class="btn text-white border-white">
             <i class="fa-solid fa-arrow-left me-1"></i> Back
         </a>
     </div>

@@ -55,7 +55,7 @@
 
                         <div class="col-4 fw-bold">Genre</div>
                         <div class="col-8 ">
-                            {{ $movie->genre->title }}
+                            {{ $movie->genres->pluck('title')->join(', ') }}
                         </div>
                         <div class="col-4 fw-bold">RELEASE DATE</div>
                         <div class="col-8">

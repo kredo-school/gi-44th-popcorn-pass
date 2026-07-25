@@ -12,7 +12,6 @@ class Movie extends Model
 
     protected $fillable = [
         'title',
-        'genre_id',
         'duration',
         'synopsis',
         'director',
@@ -43,9 +42,9 @@ class Movie extends Model
         'end_date' => 'date',
     ];
 
-    public function genre()
+    public function genres()
     {
-        return $this->belongsTo(Genre::class);
+        return $this->belongsToMany(Genre::class);
     }
 
     public function ageRating()
@@ -79,8 +78,7 @@ class Movie extends Model
             ->update(['status' => 'archived']);
     }
     public function reviews()
-{
-    return $this->hasMany(Review::class);
-}
+    {
+        return $this->hasMany(Review::class);
     }
-
+}
