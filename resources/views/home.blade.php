@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+    @vite(['resources/js/app.js'])
 
     {{-- ===========================
          Location Permission Dialog
@@ -54,7 +54,7 @@
                             <div class="swiper-slide">
                                 <div class="w-75 mx-auto row justify-content-center h-100">
                                     <div class="position-relative h-100 col-10">
-                                        <img src="{{ asset('images/welcome.png') }}" class="hero-image-welcome">
+                                        <img src="{{ asset('images/layouts/welcome.png') }}" class="hero-image-welcome">
                                         <div class="hero-content-welcome">
                                             <p>Experience the Magic of Movies</p>
                                             @auth
@@ -123,7 +123,7 @@
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
                                         <div class="col-lg-4 position-relative h-100">
-                                            <img src="{{ $information_slide->image_url }}" class="hero-image">
+                                            <img src="{{ $information_slide->image }}" class="hero-image">
                                             <div class="hero-overlay"></div>
                                         </div>
 

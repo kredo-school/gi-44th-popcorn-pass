@@ -1,4 +1,5 @@
 import '../sass/app.scss';
+import '../css/home/home.css';
 import 'bootstrap';
 
 import Swiper from 'swiper/bundle';
