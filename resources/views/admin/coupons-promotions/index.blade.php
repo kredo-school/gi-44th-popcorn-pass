@@ -19,10 +19,10 @@
     @endif
 
     <ul class="nav nav-tabs mb-3" role="tablist">
-        <li class="nav-item" role="presentation">
+        <li class="nav-item text-white" role="presentation">
             <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-coupons" type="button">Coupons</button>
         </li>
-        <li class="nav-item" role="presentation">
+        <li class="nav-item text-white" role="presentation">
             <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-promotions" type="button">Promotions</button>
         </li>
     </ul>
