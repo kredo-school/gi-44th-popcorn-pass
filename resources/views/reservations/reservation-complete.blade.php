@@ -140,7 +140,7 @@
 
         </div>
 
-        {{-- Button !!!!UPDATE LATER!!!! --}}
+        {{-- Button --}}
         <div class="mt-5 text-center">
             <a href="{{ route('home') }}" class="go-to-mypage-btn me-5 text-decoration-none">
                 HOME <i class="fa-solid fa-arrow-right"></i>

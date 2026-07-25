@@ -17,6 +17,7 @@
         <select class="form-select" style="max-width: 150px;">
             <option>Status: All</option>
         </select>
+        <button type="submit" class="btn btn-outline-warning">Search</button>
         <div class="ms-auto d-flex gap-2">
             <a href="{{ route('admin.movies.create') }}" class="btn btn-outline-warning">+ Add Movie</a>
             <a href="#" id="edit-movie-btn" class="btn btn-outline-light disabled">Edit Movie</a>

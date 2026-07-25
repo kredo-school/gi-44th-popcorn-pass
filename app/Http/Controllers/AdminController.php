@@ -18,9 +18,11 @@ use App\Models\Coupon;
 use App\Models\Promotion;
 use App\Models\Review;
 use App\Models\Information;
+use App\Models\InformationCategory;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+
 use Illuminate\Support\Facades\DB;
 
 
@@ -861,7 +863,7 @@ class AdminController extends Controller
         $sort = $request->get('sort', 'desc');
         $query->orderBy('created_at', $sort);
 
-        $reviews = $query->paginate(20)->withQueryString();
+        $reviews = $query->paginate(10)->withQueryString();
 
         return view('admin.reviews.index', compact('reviews'));
     }
@@ -898,7 +900,7 @@ class AdminController extends Controller
 
         $categories = \App\Models\InformationCategory::orderBy('name')->get();
 
-        $information = $query->paginate(10)->withQueryString();
+        $information = $query->paginate(20)->withQueryString();
 
         return view('admin.information.index', compact('information', 'categories'));
     }
@@ -915,13 +917,24 @@ class AdminController extends Controller
             'title'        => 'required|string|max:255',
             'content'      => 'required|string',
             'category_id'  => 'required|exists:information_categories,id',
-            'status'       => 'required|string',
-            'published_at' => 'nullable|date',
-            'image_url'    => 'nullable|string|max:500',
+            'status'       => 'required|in:Draft,Published,Archived',
+            'published_at' => 'required_if:status,Published|nullable|date',
+            'image'        => 'nullable|image|max:2048',
         ]);
 
-        $validated['created_by_id'] = auth()->id();
+        // upload image
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(
+                public_path('images/information'),
+                $filename
+            );
+            $validated['image'] = 'images/information/' . $filename;
+        }
 
+
+        $validated['created_by_id'] = auth()->id();
         Information::create($validated);
 
         return redirect()
@@ -944,10 +957,27 @@ class AdminController extends Controller
             'title'        => 'required|string|max:255',
             'content'      => 'required|string',
             'category_id'  => 'required|exists:information_categories,id',
-            'status'       => 'required|string',
-            'published_at' => 'nullable|date',
-            'image_url'    => 'nullable|string|max:500',
+            'status'       => 'required|in:Draft,Published,Archived',
+            'published_at' => 'required_if:status,Published|nullable|date',
+            'image'        => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+
+            // delete previous image
+            if ($information->image && file_exists(public_path($information->image))) {
+                unlink(public_path($information->image));
+            }
+
+            // save new image
+            $image = $request->file('image');
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(
+                public_path('images/information'),
+                $filename
+            );
+            $validated['image'] = 'images/information/' . $filename;
+        }
 
         $information->update($validated);
 
@@ -966,6 +996,7 @@ class AdminController extends Controller
             'status'       => $information->status,
             'content'      => $information->content,
             'published_at' => $information->published_at,
+            'image'        => $information->image,
         ]);
     }
 
@@ -1013,4 +1044,21 @@ class AdminController extends Controller
         $category->delete();
         return back()->with('success', 'Category deleted successfully.');
     }
+
+    public function updateInformationCategory(Request $request, InformationCategory $category)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100|unique:information_categories,name,' . $category->id,
+            'color' => 'required|string|max:20',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'color' => $request->color,
+        ]);
+
+        return back()->with('success', 'Category updated successfully.');
+    }
+
+
 }

@@ -20,10 +20,10 @@ class ReviewController extends Controller
             ->where('is_approved', true)
             ->with('user')
             ->latest()
-            ->paginate(10);
+            ->get();
 
         $averageRating = $reviews->avg('rating');
-        $totalReviews = $reviews->total();
+        $totalReviews = $reviews->count();
 
         return view('reviews.index', compact(
             'movie',
@@ -52,7 +52,7 @@ class ReviewController extends Controller
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'body' => 'required|string|max:1000',
+            'body' => 'nullable|string|max:1000',
         ]);
 
         Review::create([
@@ -116,7 +116,7 @@ class ReviewController extends Controller
     {
         $request->validate([
             'rating' => 'required|integer|min:1|max:5',
-            'body'   => 'required|string|max:1000',
+            'body'   => 'nullable|string|max:1000',
         ]);
 
         $review = Review::findOrFail($reviewId);

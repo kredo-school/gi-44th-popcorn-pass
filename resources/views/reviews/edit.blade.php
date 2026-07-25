@@ -6,19 +6,55 @@
 
     {{-- Title --}}
     <div class="review-title-wrap text-center mb-5">
-        <h2 class="review-main-title">— Movie reviews —</h2>
+        <h2 class="review-main-title">— Reviews —</h2>
         <div class="review-title-deco">◇ ✦ ◇</div>
     </div>
 
     <div class="row align-items-start px-4">
 
-        {{-- Left: Poster --}}
-        <div class="col-lg-4 text-center">
-            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="review-poster img-fluid rounded mb-4">
+        {{-- Left --}}
+        <div class="col-lg-6 text-center">
+            {{-- Poster --}}
+            <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="review-poster img-fluid rounded mb-0">
+        
+            {{-- Movie Info --}}
+            <div class="review-movie-info-card mx-auto">
+        
+                <div class="review-info-item">
+                    <span class="review-info-label">
+                        <i class="fa-solid fa-film me-2"></i>Genre
+                    </span>
+                    <span class="review-info-value">{{ $movie->genre->title }}</span>
+                </div>
+        
+                <div class="review-info-item">
+                    <span class="review-info-label">
+                        <i class="fa-regular fa-clock me-2"></i>Runtime
+                    </span>
+                    <span class="review-info-value">{{ $movie->duration }} min</span>
+                </div>
+        
+                <div class="review-info-item">
+                    <span class="review-info-label">
+                        <i class="fa-regular fa-calendar me-2"></i>Released Date
+                    </span>
+                    <span class="review-info-value">
+                        {{ $movie->released_date->format('M d, Y') }}
+                    </span>
+                </div>
+        
+                <div class="review-info-item">
+                    <span class="review-info-label">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i>Age Rating
+                    </span>
+                    <span class="review-info-value">{{ $movie->ageRating->title }}</span>
+                </div>
+        
+            </div>
         </div>
 
         {{-- Right: Form --}}
-        <div class="col-lg-8">
+        <div class="col-lg-6">
             <h3 class="review-movie-title mb-4">{{ strtoupper($movie->title) }}</h3>
 
             <div class="review-form-card">
@@ -26,7 +62,11 @@
                 {{-- User --}}
                 <div class="d-flex align-items-center mb-3">
                     <div class="review-avatar-circle me-3">
-                        <i class="fa-solid fa-user"></i>
+                        @if ($review->user->avatar)
+                            <img src="{{ $review->user->avatar }}" alt="{{ $review->user->username }}" class="review-avatar-img">
+                        @else
+                            <i class="fa-solid fa-user"></i>
+                        @endif
                     </div>
                     <span class="fw-bold fs-5">{{ Auth::user()->username }}</span>
                 </div>
@@ -56,7 +96,7 @@
 
                     {{-- Comment --}}
                     <div class="mb-4">
-                        <label class="form-label fw-bold">Comment</label>
+                        <label class="form-label fw-bold">Comment (Optional)</label>
                         <textarea name="body" class="form-control review-textarea" placeholder="Enter your comment..."
                             rows="5">{{ old('body', $review->body) }}</textarea>
                         @error('body')

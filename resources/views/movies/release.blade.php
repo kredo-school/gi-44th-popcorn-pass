@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="reservation-page" style="background-image: url('{{ asset('images/background.png') }}');">
+    <div class="reservation-page" style="background-image: url('{{ asset('images/layouts/background.png') }}');">
 
         <div class="text-center">
             <div class="release-date">
@@ -65,8 +65,6 @@
         </div>
 
 
-
-        {{-- UPDATE LATER --}}
         <div class="d-flex justify-content-between mt-5">
             <a href="{{ route('home') }}#Comingsoon" class="back-btn ms-5">
                 <i class="fa-solid fa-arrow-left"></i> BACK

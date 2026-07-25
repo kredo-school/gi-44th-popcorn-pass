@@ -1,0 +1,27 @@
+.information-search {
+    max-width: 250px;
+}
+
+.information-select {
+    max-width: 150px;
+}
+
+.detail-content {
+    min-height: 100px;
+}
+
+.information-row {
+    cursor: pointer;
+}
+
+.card-dark {
+    background-color: #232a47;
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.category-list-scroll {
+    max-height: 200px;
+    overflow-y: auto;
+}
