@@ -61,22 +61,12 @@
 
                     <div class="card-body">
                         <div class="row">
-                            <div class="text-center col-6">
+                            <div class="text-center">
                                 <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img ">
                             </div>
-                            <div class="col-6">
-                                <div class="text-start mt-5 ">
-                                    <h6>
-                                        < Movie Title>
-                                    </h6>
-                                </div>
-                                <div class="mt-4">
-                                    <h3 class="fw-bold">
-                                        {{ $showtime->movie->title }}
-                                    </h3>
-                                </div>
-
-                            </div>
+                            <h3 class="fw-bold text-center mt-3">
+                                {{ $showtime->movie->title }}
+                            </h3>
 
                         </div>
 
@@ -90,7 +80,7 @@
                         <hr>
                         <div class="mb-3">
                             <small class="">Showtime</small>
-                            <p class="mb-0 fw-bold fs-5">{{ $showtime->start_time->format('M j, Y (D) H:i') }}</p>
+                            <p class="mb-0 fw-bold fs-5">{{ $showtime->start_time->format('F j, Y | H:i') }}</p>
                         </div>
                         <hr>
                         <div class="mb-3">
@@ -105,7 +95,7 @@
                                                 </span>
                                                 <p class="mb-0">{{ $seat['ticket'] }}</p>
                                                 @if ($seat['premium'])
-                                                    <p class="mb-0 text-warning fw-bold">(Premium +$10)</p>
+                                                    <p class="mb-0 premium-text fw-bold">(+$10)</p>
                                                 @endif
                                                 <p class="mb-0 fw-bold fs-5">
                                                     ${{ $seat['price'] + ($seat['premium'] ? 10 : 0) }}

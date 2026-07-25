@@ -52,6 +52,14 @@ class ReservationController extends Controller
     }
 
     // --------------------
+    // Checkout
+    // --------------------
+    public function checkout(Showtime $showtime)
+    { 
+        
+    }
+
+    // --------------------
     // Seat Selection
     // --------------------
     public function seatSelection(Showtime $showtime)

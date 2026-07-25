@@ -46,6 +46,8 @@ Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showti
 //--------------------
 Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
     ->name('reservations.showtimeSelection');
+Route::get('/checkout/{showtime}', [ReservationController::class, 'checkout'])
+    ->name('reservations.checkout');
 Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])

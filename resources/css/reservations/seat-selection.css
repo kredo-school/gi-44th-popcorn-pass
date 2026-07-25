@@ -1,5 +1,10 @@
 @import './reservation-common.css';
 
+
+.reservation-page .page-title {
+    color: #1B2F55;
+}
+
 /* Seat */
 .row-label {
     width: 40px;
@@ -12,80 +17,122 @@
 .seat {
     width: 40px;
     height: 40px;
-    background-color: #ccc;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
+    border: 1px solid #1B2F55;
+    transition: .2s;
+}
+
+.seat:hover:not(:disabled) {
+    transform: scale(1.08);
 }
 
 .seat.selected {
-    background-color: hsl(307, 100%, 63%);
+    background-color: #1B2F55;
+    border: 3px solid #7D9FCF;
 }
 
+/* Seat Tags */
 #selected-seats span {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 6px 12px;
     margin: 3px;
     border-radius: 6px;
 }
 
 .seat-tag {
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 5px 10px;
+    border-radius: 6px;
     display: inline-block;
-    margin-right: 4px;
+    margin-right: 5px;
     font-weight: bold;
 }
 
 .seat-tag.normal {
-    background-color: #103985;
+    background-color: #7D9FCF;
     color: #fff;
-    border: 2px solid #fff;
+    border: 2px solid #1B2F55;
 }
 
 .seat-tag.premium {
+    /* background-color: #B8A7E8;
+    color: #1B2F55;
+    border: 2px solid #5B4B8A; */
     background-color: #F5C126;
-    color: #000;
-    border: 2px solid #fff;
+        color: #1B2F55;
+        border: 2px solid #1B2F55;
 }
 
+/* Seat Color */
 .available,
 .wheelchair {
-    background-color: #103985;
+    background-color: #7D9FCF;
 }
 
 .wheelchair {
-    color: #FFF;
+    color: #fff;
 }
 
 .premium {
+    /* background-color: #B8A7E8;
+    border: 3px solid #5B4B8A; */
     background-color: #F5C126;
+        border: 1px solid #1B2F55;
 }
 
+.seat.reserved {
+    background-color: #888;
+    border-color: #888;
+    cursor: not-allowed;
+}
+
+/* Premium */
 .premium-divider {
     width: 75%;
-    margin: 0 auto;
+    margin: 10px auto;
     border: 0;
-    border-top: 5px solid #000;
+    border-top: 4px solid #1B2F55;
 }
 
-.pay-extra{
+.pay-extra {
+    /* color: #8B6FD1;
+    font-weight: bold; */
     color: #9C022F;
+    font-weight: bold;
 }
 
+/* Legend */
 .legend-seat {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
 }
 
-.seat-bg{
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-}
-.bg-pink{
-    background-color: hsl(307, 100%, 63%);
-    color: hsl(307, 100%, 63%);
-    border: 2px solid  hsl(307, 100%, 63%);
+.legend-seat.available {
+    background-color: #7D9FCF;
 }
 
+.legend-seat.premium {
+    /* background-color: #B8A7E8;
+    border: 2px solid #5B4B8A; */
+    background-color: #F5C126;
+    border: none;
+}
+
+.legend-seat.selected {
+    background-color: #1B2F55;
+    border: 3px solid #7D9FCF;
+}
+
+.legend-seat.reserved {
+    background-color: #888;
+}
+
+/* Seat Area */
+.seat-bg {
+    background-color: #F7FBFF;
+    padding: 25px;
+    border-radius: 14px;
+    border: 1px solid #7D9FCF;
+    box-shadow: 0 8px 20px rgba(27, 47, 85, .08);
+}

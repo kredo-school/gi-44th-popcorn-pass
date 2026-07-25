@@ -51,8 +51,8 @@
 
         {{-- Main --}}
         <div class="text-center">
-            <h3 class="confirm-title">Booking Confirmed!</h3>
-            <p class="confirm-message">Your ticket is ready! Enjoy the Movie.</p>
+            <h3 class="confirmed-title">Booking Confirmed!</h3>
+            <p class="confirmed-message">Your ticket is ready! Enjoy the Movie.</p>
         </div>
 
         <div class="row">
@@ -67,33 +67,24 @@
                     <div class="card-body">
 
                         <div class="row">
-                            <div class="text-center col-6">
+                            <div class="text-center">
                                 <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img ">
                             </div>
-                            <div class="col-6">
-                                <div class="text-start mt-5 ">
-                                    <h6>
-                                        < Movie Title>
-                                    </h6>
-                                </div>
-                                <div class="mt-4">
-                                    <h3 class="fw-bold">
-                                        {{ $showtime->movie->title }}
-                                    </h3>
-                                </div>
-
-                            </div>
-
+                            <h3 class="fw-bold text-center mt-3">
+                                {{ $showtime->movie->title }}
+                            </h3>
+                        
                         </div>
+
                         <hr>
                         <div class="mb-3">
                             <small class="">Screen</small>
-                            <p class="mb-0 fw-bold fs-5">Screen 3</p>
+                            <p class="mb-0 fw-bold fs-5">{{ $showtime->screen->screen_number }}</p>
                         </div>
                         <hr>
                         <div class="mb-3">
                             <small class="">Showtime</small>
-                            <p class="mb-0 fw-bold fs-5">Jun 10, 2026 (Wed) 11:25 AM</p>
+                            <p class="mb-0 fw-bold fs-5">{{ $showtime->start_time->format('F j, Y | H:i') }}</p>
                         </div>
                         <hr>
                         <div class="mb-3">
@@ -108,7 +99,7 @@
                                                 </span>
                                                 <p class="mb-0">{{ $seat['ticket'] }}</p>
                                                 @if ($seat['premium'])
-                                                    <p class="mb-0 text-warning fw-bold">(Premium +$10)</p>
+                                                    <p class="mb-0 premium-text fw-bold">(+$10)</p>
                                                 @endif
                                                 <p class="mb-0 fw-bold">
                                                     ${{ $seat['price'] + ($seat['premium'] ? 10 : 0) }}
@@ -142,8 +133,8 @@
 
         {{-- Button --}}
         <div class="mt-5 text-center">
-            <a href="{{ route('home') }}" class="go-to-mypage-btn me-5 text-decoration-none">
-                HOME <i class="fa-solid fa-arrow-right"></i>
+            <a href="{{ route('home') }}" class="go-to-home-btn me-5 text-decoration-none">
+                <i class="fa-solid fa-arrow-left"></i> HOME
             </a>
             <a href="{{ route('mypage.dashboard') }}" class="go-to-mypage-btn me-5 text-decoration-none">
                 My Page <i class="fa-solid fa-arrow-right"></i>

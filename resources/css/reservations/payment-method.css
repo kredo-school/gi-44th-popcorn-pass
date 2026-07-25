@@ -17,7 +17,7 @@
 .payment-title {
     margin-bottom: 35px;
 
-    color: #000;
+    color: #1D3761;
     font-size: 2rem;
     font-weight: 700;
 }
@@ -59,4 +59,8 @@
 
 .payment-btn.active {
     border: 3px solid #F5C126;
+}
+
+.premium-text {
+    color: #9C022F;
 }

@@ -62,10 +62,10 @@
 
                     <div class="payment-options">
 
-                        <button class="payment-btn {{ ($paymentInfo['method'] ?? 'card') === 'card' ? 'active' : '' }}"
+                        {{-- <button class="payment-btn {{ ($paymentInfo['method'] ?? 'card') === 'card' ? 'active' : '' }}"
                             data-method="card">
                             Credit Card
-                        </button>
+                        </button> --}}
 
                         <button class="payment-btn {{ ($paymentInfo['method'] ?? '') === 'paypal' ? 'active' : '' }}"
                             data-method="paypal">
@@ -131,7 +131,7 @@
                         <div class="text-center">
                             <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img">
                         </div>
-                        <h5 class="fw-bold mt-3">
+                        <h5 class="fw-bold text-center mt-3">
                             {{ $showtime->movie->title }}
                         </h5>
                         <hr>
@@ -143,7 +143,7 @@
                         <div class="mb-3">
                             <small class="">Showtime</small>
                             <p class="mb-0 fw-bold fs-5">
-                                {{ $showtime->start_time->format('M j, Y (D) H:i') }}
+                                {{ $showtime->start_time->format('F j, Y | H:i') }}
                             </p>
                         </div>
                         <hr>
@@ -159,7 +159,7 @@
                                                 </span>
                                                 <p class="mb-0">{{ $seat['ticket'] }}</p>
                                                 @if ($seat['premium'])
-                                                    <p class="mb-0 text-warning fw-bold">(Premium +$10)</p>
+                                                    <p class="mb-0 premium-text fw-bold">(+$10)</p>
                                                 @endif
                                                 <p class="mb-0 fw-bold">
                                                     ${{ $seat['price'] + ($seat['premium'] ? 10 : 0) }}

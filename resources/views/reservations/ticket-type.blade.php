@@ -98,7 +98,8 @@
                         <div class="text-center">
                             <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img">
                         </div>
-                        <h5 class="fw-bold mt-3">
+                        <h5 class="fw-bold text-center mt-3">
+                            {{ $showtime->movie->title }}
                         </h5>
                         <hr>
                         <div class="mb-3">
