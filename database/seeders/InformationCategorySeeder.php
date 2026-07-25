@@ -31,5 +31,10 @@ class InformationCategorySeeder extends Seeder
             'name' => 'Event',
             'color' => '#198754',
         ]);
+
+        InformationCategory::create([
+            'name' => 'Food & Drink',
+            'color' => '#FD7E14',
+        ]);
     }
 }

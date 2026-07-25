@@ -77,7 +77,7 @@ Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'c
 //--------------------
 // Review Routes
 //--------------------
-Route::get('/movie/{movieId}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('/movies/{movieId}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::post('/movies/{movieId}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 Route::get('/movies/{movieId}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create')->middleware('auth');
 Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'show'])->name('reviews.show');
@@ -154,6 +154,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/information/categories', [AdminController::class, 'informationCategories'])->name('information.categories');
     Route::post('/information/categories', [AdminController::class, 'storeInformationCategory'])->name('information.categories.store');
     Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])->name('information.categories.delete');
+    Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])->name('information.categories.update');
 
 });
 

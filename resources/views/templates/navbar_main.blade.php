@@ -29,12 +29,12 @@
 
                     <!-- My Page -->
                     <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-text">
-                        <img src="{{ asset('images/mypage.png') }}" width="35" height="35">
+                        <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
                         My Page
                     </a>
                 @else
                     <a href="{{ route('login') }}" class="btn btn-color mypage-text">
-                        <img src="{{ asset('images/mypage.png') }}" width="35" height="35">
+                        <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
                         Log in
                     </a>
 
