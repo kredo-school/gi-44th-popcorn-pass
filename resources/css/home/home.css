@@ -1,0 +1,601 @@
+/* public/css/home.css */
+
+.home-hero-bg {
+    background: linear-gradient(
+        to bottom,
+        #e3ebfa 0%,
+        #7d9fcf 20%,
+        #7d9fcf 80%,
+        #2a4a85 100%
+    );
+}
+.home-hero {
+    background: #e3ebfa; 
+    padding-top: 80px;
+}
+
+
+
+/* Search */
+.search-wrapper {
+    position: fixed;      
+    top: 65px;
+    left: 0;
+    z-index: 999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    padding: 20px 0;
+
+    background: transparent;
+}
+
+.search-wrapper form {
+    position: relative;
+    width: 50%;
+}
+
+.search-input {
+    width: 100%;
+    height: 60px;
+
+    padding: 0 140px 0 60px;
+
+    border: 2px solid rgba(245, 193, 38, 0.4);
+    border-radius: 15px;
+
+    background: rgba(24, 36, 90, 0.8);
+}
+
+.search-icon,
+.search-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.search-icon {
+    left: 20px;
+    color: #F5C126;
+    font-size: 22px;
+}
+
+.search-btn {
+    right: 20px;
+    width: 120px;
+    height: 42px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #F5C126;
+    font-weight: bold;
+}
+.heroSwiper {
+    width: 100%;
+    height: 350px;
+    padding-bottom: 35px;
+}
+.heroSwiper .swiper-pagination {
+    bottom: 0px ;
+}
+
+.swiper-bg .swiper-pagination-bullet-active {
+    background: #ff4040;
+}
+.heroSwiper .swiper-wrapper {
+    height: 90%;
+}
+.heroSwiper .swiper-slide {
+    height: 90%;
+}
+.heroSwiper .swiper-slide > div {
+    height: 90%;
+}
+.heroSwiper .w-75 {
+    height: 90%;
+}
+.heroSwiper .row {
+    height: 100%;
+}
+.heroSwiper .col-lg-6 {
+    height: 100%;
+}
+.hero-image,
+.hero-image-welcome,
+.hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    display: block;
+    border-radius: 8px;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0) 60%);
+    border-radius: 8px;
+}
+
+.hero-content {
+    position: absolute;
+    left: 1.25rem;
+    bottom: 1.25rem;
+    color: #fff;
+    max-width: 90%;
+}
+
+.hero-content h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0.35rem 0;
+}
+
+.hero-content p {
+    font-size: 0.85rem;
+    margin: 0.25rem 0 0.5rem;
+}
+
+.hero-tag {
+    display: inline-block;
+    padding: 0.15rem 0.6rem;
+    border: 1px solid #fff;
+    border-radius: 999px;
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+}
+
+.hero-tag-red {
+    color: #ff4040;
+    border-color: #ff4040;
+}
+
+.btn-book {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.35rem 1rem;
+    border: 1px solid #fff;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.btn-book:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+.btn-book-red {
+    border-color: #ff4040;
+    color: #ff4040;
+}
+.btn-book-yellow {
+    border-color: #f7ff88;
+    color: #fff30f;
+}
+.btn-book-black {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.35rem 1rem;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    color: #000000;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+.btn-book-black:hover {
+    background: rgba(255,255,255,0.15);
+    color: #ffa6a6;
+}
+
+
+
+.hero-video {
+    width: 100%;
+    height: 260px;
+    border: 0;
+    border-radius: 8px;
+}
+
+/* Welocome slide */
+.hero-content-welcome {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    color: #fff;
+    text-align: right;
+
+    background: rgba(0, 0, 0, 0.45);
+    padding: 12px 16px;
+    border-radius: 8px;
+}
+
+.hero-content-welcome p {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.hero-content-welcome .btn-book {
+    margin-top: 0;
+    font-size: 0.8rem;
+    padding: 6px 14px;
+}
+
+/* iphone */
+@media (max-width: 767.98px) {
+    .hero-image,
+    .hero-image-welcome,
+    .hero-video {
+        height: 180px;
+    }
+    .hero-content h1 {
+        font-size: 1rem;
+    }
+    .hero-content-welcome p {
+        font-size: 0.95rem;
+    }
+}
+
+
+.swiper-bg {
+    position: relative;
+}
+
+.swiper-bg .swiper-button-prev,
+.swiper-bg .swiper-button-next {
+    width: 52px;
+    height: 52px;
+
+    top: 40%;
+    transform: translateY(-50%);
+
+    color: #fff;
+    --swiper-navigation-size: 15px;
+
+    background: rgba(16, 57, 133, 0.75);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 50%;
+
+    backdrop-filter: blur(8px);
+
+    transition: all .3s ease;
+}
+
+.swiper-bg .swiper-button-prev:hover,
+.swiper-bg .swiper-button-next:hover {
+    background: rgba(16, 57, 133, 1);
+    transform: translateY(-50%) scale(1.1);
+
+    box-shadow:
+        0 0 15px rgba(101,111,255,.5);
+}
+
+.swiper-button-next svg,
+.swiper-button-prev svg {
+    display: none !important;
+}
+
+.swiper-bg .swiper-button-prev {
+    left: 15% !important;
+}
+
+.swiper-bg .swiper-button-next {
+    right: 15% !important;
+}
+
+
+.swiper-bg {
+    padding: 5px;
+}
+
+.panel-navy-overlay {
+    background: rgba(183, 183, 183, 0.3);
+}
+
+.is-hidden {
+    display: none !important;
+}
+
+.rank-number.rank-1 {
+    font-size: 20rem;
+}
+
+.rank-number.rank-2,
+.rank-number.rank-3 {
+    font-size: 12rem;
+}
+
+.poster-area.first {
+    height: 400px;
+}
+
+.poster-area.second,
+.poster-area.third {
+    height: 300px;
+}
+
+.slider-btn {
+    border: 0;
+    background: transparent;
+    color: #fff;
+    flex-shrink: 0;
+    font-size: 2.5rem;
+}
+
+.slider-btn-left {
+    width: 60px;
+    min-width: 60px;
+}
+
+.slider-btn-right {
+    width: 40px;
+}
+
+.now-playing-track-wrap {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.now-playing-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.now-playing-slide {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    width: 200px;
+}
+
+.movie-info {
+    background: #081729;
+}
+
+.genre-label {
+    font-size: 0.75rem;
+}
+
+.coming-soon-track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.coming-card {
+    scroll-snap-align: start;
+    width: 400px;
+}
+
+.coming-card-image-wrap {
+    overflow: hidden;
+}
+
+.coming-poster {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    display: block;
+}
+
+.coming-info-bg {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+.coming-slider-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 85%;
+    width: 45px;
+    background: rgba(50, 50, 70, 0.7);
+    font-size: 2.5rem;
+    z-index: 10;
+    backdrop-filter: blur(2px);
+    border-radius: 8px;
+    border: 0;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===========================
+   Food & Drink
+   =========================== */
+.food-menu-img {
+    display: block;
+    object-fit: cover;
+}
+
+/* ===========================
+   Information / News
+   =========================== */
+.news-card {
+    background: #d9d9d9;
+}
+
+.news-img {
+    object-fit: cover;
+    height: 200px;
+}
+
+/* ===========================
+   Location Permission Dialog
+   =========================== */
+.location-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 2000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.location-overlay.is-visible {
+    display: flex;
+}
+
+.location-dialog {
+    width: 90%;
+    max-width: 360px;
+    background: #0d1b3d;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 32px 28px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.location-dialog-icon {
+    font-size: 2.2rem;
+    color: #ffc107;
+    margin-bottom: 12px;
+}
+
+.location-btn {
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: 600;
+}
+
+.location-btn-primary {
+    background: #ffc107;
+    color: #0d1b3d;
+    border: none;
+}
+
+.location-btn-primary:hover {
+    background: #e0a800;
+    color: #0d1b3d;
+}
+
+.location-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.location-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+}
+
+.location-btn-outline {
+    background: transparent;
+    color: #adb5bd;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.location-btn-outline:hover {
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+.location-change-btn {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.location-change-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+}
+
+.cinema-card {
+    background: rgba(8, 23, 41, 0.9);
+    border-radius: 10px;
+    padding: 16px;
+    height: 100%;
+    color: #fff;
+}
+
+.cinema-card-name {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.cinema-card-meta {
+    font-size: 0.82rem;
+    color: #adb5bd;
+    margin-bottom: 10px;
+}
+
+.cinema-card-distance {
+    color: #ffc107;
+    font-weight: 600;
+}
+/* ===========================
+   Information スライド
+   =========================== */
+.hero-tag-blue {
+    color: #1a56db;
+    border-color: #1a56db;
+}
+
+.info-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 1.5rem 1.75rem;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.info-card-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #0b1b33;
+    margin: 0.6rem 0 0.5rem;
+    line-height: 1.3;
+}
+
+.info-card-content {
+    font-size: 0.85rem;
+    color: #445066;
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.btn-book-blue {
+    border-color: #1a56db;
+    color: #1a56db;
+}
+
+@media (max-width: 767.98px) {
+    .info-card {
+        padding: 1.1rem 1.25rem;
+        max-width: 100%;
+    }
+    .info-card-title {
+        font-size: 1rem;
+    }
+    .info-card-content {
+        font-size: 0.8rem;
+        -webkit-line-clamp: 3;
+    }
+}

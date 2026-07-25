@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
+use App\Models\Review;
 use App\Models\Information;
 use Carbon\Carbon;
 
@@ -53,12 +54,20 @@ class HomeController extends Controller
             ->take(5)
             ->get();
 
-        return view('home')->with('movies', $movies)
+        $information_slide = Information::where('status', 'Published')
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->inRandomOrder()
+            ->first();
+
+        return view('home')
+            ->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
             ->with('topMovies', $topMovies)
             ->with('heroMovie', $heroMovie)
             ->with('topMovie', $topMovie)
-            ->with('information', $information);
+            ->with('information', $information)
+            ->with('information_slide', $information_slide);
     }
 
     private function commonData($selectedDate)
@@ -221,7 +230,20 @@ class HomeController extends Controller
     // movie detail
     public function movie_detail(Movie $movie)
     {
-        return view('movies.movie_detail')->with('movie', $movie);
+        $movie->load([
+            'reviews' => function ($query) {
+                $query->where('is_approved', true);
+            }
+        ]);
+
+        $averageRating = $movie->reviews->avg('rating') ?? 0;
+        $totalReviews = $movie->reviews->count();
+
+        return view('movies.movie_detail', compact(
+            'movie',
+            'averageRating',
+            'totalReviews'
+        ));
     }
 
     // search movie 

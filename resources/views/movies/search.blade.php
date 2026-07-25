@@ -1,11 +1,33 @@
 @extends('layouts.app')
 @section('content')
-    <div class="reservation-page" style="background-image: url('{{ asset('images/layouts/background.png') }}');">
-        <h2 class="text-white text-center mb-4">Search Result</h2>
+    <div class="reservation-page" style="background-image: url('{{ asset('images/background.png') }}');">
+        
+        {{-- SEARCH --}}
+            <div class="search-wrapper">
+                <form action="{{ route('movies.search') }}" method="GET">
+
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+                    <input type="text" name="keyword" class="search-input" placeholder="Search by movie title..."
+                        value="{{ request('keyword') }}">
+
+                    <button class="search-btn">
+                        SEARCH
+                    </button>
+                </form>
+            </div>
+        
+        <div class="section-title-line mb-4 mt-5">
+            <hr>
+            <h2 class="text-white">
+                < Search Result >
+            </h2>
+            <hr>
+        </div>
 
         <div class="container">
             @if ($movies->isEmpty())
-                <p class="text-white text-center">No movies found.</p>
+                <h1 class="text-white text-center">No movies found.</h1>
             @else
                 <div class="search-result-grid">
                     @foreach ($movies as $movie)

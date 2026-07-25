@@ -33,6 +33,26 @@
                         {{ $movie->synopsis }}
                     </div>
                     <div class="row p-3">
+                        <div class="col-4 fw-bold">Review Average</div>
+                        <div class="col-8">
+                            <a href="{{ route('reviews.index', ['movieId' => $movie->id]) }}"
+                                class="text-decoration-none text-white text-small">
+
+                                ⭐️
+                                <span class=" ms-2">
+                                    {{ number_format($averageRating, 1) }} / 5
+                                </span>
+
+                                <span class="review-total-count ms-2">
+                                    ({{ number_format($totalReviews) }} reviews)
+                                </span>
+
+                            </a>
+                        </div>
+
+
+
+
                         <div class="col-4 fw-bold">Genre</div>
                         <div class="col-8 ">
                             {{ $movie->genre->title }}
