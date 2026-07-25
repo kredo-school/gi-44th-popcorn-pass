@@ -70,6 +70,7 @@
                                 @endif
                             </div>
 
+
                             <div class="small text-muted">
                                 <i class="fa-solid fa-calendar"></i>
                                 {{ $reservation->showtime->start_time->format('M d, Y (D)') }}
@@ -115,4 +116,4 @@
             <i class="fa-solid fa-arrow-left me-1"></i> Back
         </a>
     </div>
-    @endsection{{-- resources/views/mypage/tickets/index.blade.php --}}
+    @endsection

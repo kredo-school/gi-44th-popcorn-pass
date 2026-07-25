@@ -16,10 +16,15 @@
             --red: #E63946;
         }
 
-        body {
+        /* body {
             background-color: var(--navy);
             color: #ffffff;
             font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+        } */
+         body {
+        background-color: #1a1f36 !important;
+        color: #ffffff;
+        font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
         }
 
         .admin-header {
@@ -78,6 +83,10 @@
     </style>
 
     @yield('styles')
+    @vite([
+    'resources/sass/admin.scss',
+    'resources/js/admin.js'
+    ])
 </head>
 <body>
 

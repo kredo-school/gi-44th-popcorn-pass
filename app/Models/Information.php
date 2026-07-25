@@ -18,7 +18,7 @@ class Information extends Model
         'category_id',
         'status',
         'published_at',
-        'image_url',
+        'image',
         'created_by_id',
     ];
 
@@ -29,6 +29,15 @@ class Information extends Model
     public function category()
     {
         return $this->belongsTo(InformationCategory::class);
+    }
+
+    public function getStatusBadgeClassAttribute(): string
+    {
+        return match ($this->status) {
+            'Draft' => 'bg-secondary',
+            'Published' => 'bg-success',
+            'Archived' => 'bg-warning text-dark',
+        };
     }
     
 }

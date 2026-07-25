@@ -1,157 +1,425 @@
+/* ==========================================================
+   Information Page
+========================================================== */
+.info-page,
 .info-detail-page {
-    background: url('/images/review_bg.png') center center / cover no-repeat;
     min-height: 100vh;
+    background: #E3EBFA;
     padding: 60px 40px;
-    color: white;
 }
 
-.info-detail-title,
-.info-title  {
+
+/* ==========================================================
+   Page Title
+========================================================== */
+.info-title,
+.info-detail-title {
     font-family: Georgia, serif;
     font-size: 3rem;
-    color: #fff;
-    text-shadow: 0 0 20px rgba(245, 193, 38, 0.5);
+    font-weight: 700;
+    color: #1B2F55;
     letter-spacing: 3px;
+    text-align: center;
 }
 
-.info-detail-heading {
-    font-size: 2rem;
-    font-weight: 900;
-    color: #fff;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-    letter-spacing: 2px;
+
+/* ==========================================================
+   Information List
+========================================================== */
+.info-list-item {
+    width: 75%;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 24px;
+    background: #F7FBFF;
+    border: 1px solid #7D9FCF;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(27, 47, 85, .08);
+    transition: .25s;
+}
+
+.info-list-item:hover {
+    transform: translateY(-3px);
+    border-color: #1B2F55;
+    box-shadow: 0 12px 28px rgba(27, 47, 85, .18);
+}
+
+
+/* ==========================================================
+   Category Badge
+========================================================== */
+.info-list-badge {
+    min-width: 120px;
+    text-align: center;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: .82rem;
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   Title
+========================================================== */
+.info-list-title {
+    flex: 1;
+    color: #1B2F55;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+
+/* ==========================================================
+   Date
+========================================================== */
+.info-list-date {
+    color: #5C7194;
+    font-size: .9rem;
+    white-space: nowrap;
+}
+
+
+/* ==========================================================
+   Arrow
+========================================================== */
+.info-list-arrow {
+    color: #1B2F55;
+    font-size: 1rem;
+    transition: .25s;
+}
+
+.info-list-item:hover .info-list-arrow {
+    transform: translateX(4px);
+    color: #F5C126;
+}
+
+/* ==========================================================
+   Detail Page
+========================================================== */
+.info-detail-card {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #F7FBFF;
+    border: 1px solid #7D9FCF;
+    border-radius: 18px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(27, 47, 85, .10);
+}
+
+
+/* ==========================================================
+   Category
+========================================================== */
+.info-detail-category {
+    display: inline-block;
+    padding: 8px 24px;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
+}
+
+
+/* ==========================================================
+   Image
+========================================================== */
+.info-detail-image-wrap {
+    text-align: center;
+    margin-bottom: 35px;
 }
 
 .info-detail-img {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    max-width: 280px;
-}
-
-.info-detail-body {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 8px;
-}
-
-.info-back-btn {
-    background: #000;
-    border: 3px solid #fff;
-    color: #fff;
-    padding: 8px 24px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: bold;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 14px;
+    border: 4px solid #fff;
+    box-shadow: 0 10px 30px rgba(27, 47, 85, .18);
     transition: .3s;
-    font-size: 1rem;
+}
+
+.info-detail-img:hover {
+    transform: scale(1.02);
+}
+
+
+/* ==========================================================
+   Heading
+========================================================== */
+.info-detail-heading {
+    color: #1B2F55;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+
+/* ==========================================================
+   Date
+========================================================== */
+.info-detail-date {
+    color: #5C7194;
+    font-size: .95rem;
+    margin-bottom: 25px;
+}
+
+
+/* ==========================================================
+   Content
+========================================================== */
+.info-detail-body {
+    color: #444;
+    background: #fff;
+    border: 1px solid #D6E5F8;
+    border-radius: 12px;
+    padding: 28px;
+    line-height: 1.9;
+    font-size: 1.05rem;
+    white-space: pre-wrap;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, .03);
+}
+
+/* ==========================================================
+   Back Button
+========================================================== */
+.info-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 24px;
+    background: #1B2F55;
+    color: #fff;
+    border: 2px solid #1B2F55;
+    border-radius: 8px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: .25s;
 }
 
 .info-back-btn:hover {
     background: #fff;
-    color: #000;
+    color: #1B2F55;
+    text-decoration: none;
 }
 
-/* ///// */
-.news-card .card-img-top {
-    border-radius: 0;
+
+/* ==========================================================
+   Pagination
+========================================================== */
+.pagination {
+    gap: 8px;
 }
 
-.info-list-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 6px;
-    padding: 8px 16px;
-    transition: .3s;
+.pagination .page-link {
+    color: #1B2F55;
+    border: 1px solid #7D9FCF;
+    background: #fff;
+    border-radius: 8px;
+    padding: 8px 14px;
+    transition: .25s;
+}
+
+.pagination .page-link:hover {
+    background: #ABCEFF;
+    color: #1B2F55;
+    border-color: #1B2F55;
+}
+
+.pagination .active .page-link {
+    background: #1B2F55;
+    border-color: #1B2F55;
     color: #fff;
-    max-width: 800px;
-    margin: 0 auto;
 }
 
-.info-list-item:hover {
-    background: rgba(245, 193, 38, 0.15);
-    border-color: #F5C126;
-}
 
-.info-list-badge {
-    color: #fff;
-    font-size: 0.75rem;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 4px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    width: 100px;
-    text-align: center;
-}
-
-.info-list-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 200px;
-    flex-shrink: 0;
-}
-
-.info-list-body {
-    flex: 1;
-    font-size: 0.85rem;
-    color: #ccc;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.info-list-arrow {
-    color: #aaa;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-}
-
-.info-list-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-}
-
-.info-list-img.bg-secondary {
-    font-size: 1.2rem;
-    letter-spacing: 2px;
-}
-
-.info-list-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-}
-
-.info-list-img.bg-secondary {
-    font-size: 1.2rem;
-    letter-spacing: 2px;
-}
-
+/* ==========================================================
+   Card Image
+========================================================== */
 .news-card {
     height: 100%;
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(27, 47, 85, .08);
+    transition: .3s;
 }
 
-.info-list-img {
-    width: 100%;
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 30px rgba(27, 47, 85, .15);
+}
+
+.news-card .card-img-top {
     height: 220px;
     object-fit: cover;
 }
 
+
+/* ==========================================================
+   No Image
+========================================================== */
 .info-list-img.bg-secondary {
+    height: 220px;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    background: #7D9FCF !important;
+    color: #fff;
     font-size: 1.2rem;
+    font-weight: 700;
     letter-spacing: 2px;
+}
+
+
+/* ==========================================================
+   Link
+========================================================== */
+a.text-decoration-none {
+    color: inherit;
+}
+
+a.text-decoration-none:hover {
+    color: inherit;
+}
+
+/* ==========================================================
+   Responsive
+========================================================== */
+@media (max-width: 992px) {
+    .info-page,
+    .info-detail-page {
+        padding: 40px 20px;
+    }
+
+    .info-title,
+    .info-detail-title {
+        font-size: 2.3rem;
+    }
+
+    .info-list-item {
+        width: 100%;
+        padding: 16px;
+        gap: 14px;
+    }
+
+    .info-detail-card {
+        padding: 30px;
+    }
+
+    .info-detail-heading {
+        font-size: 1.7rem;
+    }
+
+    .info-detail-img {
+        max-width: 100%;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .info-list-item {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .info-list-badge {
+        min-width: auto;
+    }
+
+    .info-list-title {
+        width: 100%;
+        order: 2;
+        font-size: 1rem;
+    }
+
+    .info-list-date {
+        order: 3;
+        font-size: .85rem;
+    }
+
+    .info-list-arrow {
+        margin-left: auto;
+        order: 4;
+    }
+
+    .info-detail-card {
+        padding: 24px;
+    }
+
+    .info-detail-heading {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    .info-detail-date {
+        text-align: center;
+    }
+
+    .info-detail-body {
+        padding: 20px;
+        font-size: 1rem;
+        line-height: 1.8;
+    }
+
+    .info-back-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+/* ==========================================================
+   Smooth Animation
+========================================================== */
+.info-list-item,
+.info-detail-card,
+.news-card,
+.info-back-btn,
+.pagination .page-link {
+    transition: all .25s ease;
+}
+
+
+/* ==========================================================
+   Selection Color
+========================================================== */
+::selection {
+    background: #1B2F55;
+    color: #fff;
+}
+
+
+/* ==========================================================
+   Focus
+========================================================== */
+.info-back-btn:focus,
+.page-link:focus {
+    box-shadow: 0 0 0 .2rem rgba(125, 159, 207, .35);
+}
+
+
+/* ==========================================================
+   Container
+========================================================== */
+.info-page .container,
+.info-detail-page .container {
+    max-width: 1100px;
+}
+
+
+/* ==========================================================
+   Divider
+========================================================== */
+.info-divider {
+    width: 80px;
+    height: 3px;
+    background: #7D9FCF;
+    margin: 20px auto 40px;
+    border-radius: 999px;
 }
