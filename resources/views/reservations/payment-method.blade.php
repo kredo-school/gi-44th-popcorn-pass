@@ -55,6 +55,28 @@
             {{-- Payment method selection --}}
             <div class="col-lg-7">
                 <div class="payment-panel">
+                    {{-- Guest Information --}}
+                    @guest
+                        <div class="guest-info-panel mb-5">
+                            <h2 class="payment-title">
+                                Guest Information
+                            </h2>
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" name="guest_name" class="form-control" placeholder="Enter your name">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="guest_email" class="form-control" placeholder="Enter your email">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" name="guest_phone" class="form-control" placeholder="Enter your phone number">
+                            </div>
+                        </div>
+                    @endguest
+
+                    <hr>
 
                     <h2 class="payment-title">
                         Choose Payment Method

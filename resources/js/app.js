@@ -9,6 +9,7 @@ import 'swiper/css/bundle';
 import './reservations/seat-selection';
 import './reservations/ticket-type';
 import './reservations/payment-method';
+import './reservations/showtime-selection';
 
 //admin dashboard
 import './admin/chart.js';

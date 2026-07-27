@@ -165,7 +165,7 @@
                                     </div>
                                 </div>
 
-                                <a href="{{ route('reservations.seat-selection', ['showtime' => $showtime->id]) }}"
+                                {{-- <a href="{{ route('reservations.seat-selection', ['showtime' => $showtime->id]) }}"
                                     class="text-decoration-none">
 
 
@@ -174,7 +174,26 @@
                                         <div class="reservation-text">Reservation</div>
                                     </div>
 
-                                </a>
+                                </a> --}}
+                                @auth
+                                    {{-- already logged in --}}
+                                    <a href="{{ route('reservations.seat-selection', ['showtime' => $showtime->id]) }}" class="text-decoration-none">
+                                    
+                                        <div class="showtime-bottom pt-2">
+                                            <div class="reservation-icon">⭕️</div>
+                                            <div class="reservation-text">Reservation</div>
+                                        </div>
+                                    </a>
+                                @else
+                                    {{-- not logged in yet--}}
+                                    <button type="button" class="showtime-reservation-btn border-0 bg-transparent p-0" data-bs-toggle="modal"
+                                        data-bs-target="#guestLoginModal" data-showtime-id="{{ $showtime->id }}">
+                                        <div class="showtime-bottom pt-2">
+                                            <div class="reservation-icon">⭕️</div>
+                                            <div class="reservation-text">Reservation</div>
+                                        </div>
+                                    </button>
+                                @endauth
                             </div>
                         @endif
                     @endforeach
@@ -189,19 +208,9 @@
             <button type="button" class="back-btn ms-5" onclick="history.back()">
                 <i class="fa-solid fa-arrow-left"></i> BACK
             </button>
-
-            <button type="submit" class="next-btn me-5" disabled>
-                NEXT<i class="fa-solid fa-arrow-right"></i>
-            </button>
         </div>
 
-
-
-
-
-
-
-
+        @include('reservations.modals.guest-or-login')
 
     </div>
 

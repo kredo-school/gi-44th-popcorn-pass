@@ -52,11 +52,31 @@ class ReservationController extends Controller
     }
 
     // --------------------
-    // Checkout
+    // Reservation Login
     // --------------------
-    public function checkout(Showtime $showtime)
-    { 
-        
+    public function loginRedirect(Request $request)
+    {
+        session([
+            'showtime_id' => $request->showtime_id,
+        ]);
+
+        return redirect()->route('login');
+    }
+
+
+    // --------------------
+    // Continue as Guest
+    // --------------------
+    public function guest(Request $request)
+    {
+        session([
+            'showtime_id' => $request->showtime_id,
+            'guest' => true,
+        ]);
+
+        return redirect()->route('reservations.seat-selection', [
+            'showtime' => $request->showtime_id
+        ]);
     }
 
     // --------------------
