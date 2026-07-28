@@ -104,7 +104,14 @@
                     <div class="col-8">{{ $movie->director }}</div>
 
                     <div class="col-4 fw-bold">CAST</div>
-                    <div class="col-8">{{ $movie->cast }}</div>
+                    <div class="col-8">
+                        <div class="row">
+                            @foreach (json_decode($movie->cast, true) ?? [] as $cast)
+                                <div class="col-6">{{ $cast }}</div>
+                            @endforeach
+                        </div>
+
+                    </div>
                 </div>
 
             </div>
@@ -184,7 +191,7 @@
             </div>
         </div>
 
-        
+
         <div class="d-flex justify-content-between mt-5">
             <button type="button" class="back-btn ms-5" onclick="history.back()">
                 <i class="fa-solid fa-arrow-left"></i> BACK

@@ -108,7 +108,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])->name('movies.showtimes');
     Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])->name('movies.showtimes.generate');
     Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])->name('showtimes.delete');
-
+   
     // Dynamic Pricing Management
     Route::get('/dynamic-pricing', [AdminController::class, 'showtimeDynamicPricing'])->name('dynamic-pricing');
     Route::get('/dynamic-pricing/{id}/edit', [AdminController::class, 'editShowtimeDynamicPrice'])->name('dynamic-pricing.edit');

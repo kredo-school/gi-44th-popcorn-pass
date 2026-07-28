@@ -5,10 +5,9 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/css/app.css',
                 'resources/sass/app.scss',
                 'resources/js/app.js',
-                'resources/sass/admin.scss',
+                'resources/js/admin/movie-showtimes.js',
             ],
             refresh: true,
         }),
