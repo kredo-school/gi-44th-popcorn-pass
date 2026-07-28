@@ -73,7 +73,14 @@
                         <div class="col-8">{{ $movie->director }}</div>
 
                         <div class="col-4 fw-bold">CAST</div>
-                        <div class="col-8">{{ $movie->cast }}</div>
+                        <div class="col-8">
+                            <div class="row">
+                            @foreach (json_decode($movie->cast, true) ?? [] as $cast)
+                                <div class="col-6">{{ $cast }}</div>
+                            @endforeach
+                            </div>
+                            
+                        </div>
                     </div>
                     <a href="{{ $movie->trailer_url }}" target="_blank" class="text-trailer">
                         Watch the trailer

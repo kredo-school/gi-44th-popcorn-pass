@@ -140,9 +140,13 @@
                                 placeholder="Enter director name..." value="{{ old('director') }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label text-secondary small">Cast Members</label>
-                            <input type="text" name="cast" class="form-control"
-                                placeholder="Enter cast members..." value="{{ old('cast') }}">
+                            <label class="form-label text-secondary small">Cast Members (Max 6)</label>
+
+                            @for ($i = 0; $i < 6; $i++)
+                                <input type="text" name="cast[]" class="form-control mb-2"
+                                    placeholder="Cast Member {{ $i + 1 }}" value="{{ old('cast.' . $i) }}">
+                            @endfor
+
                         </div>
 
                         <div class="col-md-6">

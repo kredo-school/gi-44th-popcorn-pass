@@ -1,0 +1,75 @@
+.movie-showtime-card {
+    background: #10192b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.movie-showtime-poster {
+    width: 90px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.showtime-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.showtime-chip-time {
+    color: #fff;
+    font-weight: 600;
+}
+
+.showtime-chip-screen {
+    color: #9aa5b1;
+}
+
+.showtime-chip-actions {
+    display: flex;
+    gap: 0.25rem;
+    margin-left: 0.25rem;
+}
+
+
+.showtime-scroll {
+    flex: 1;
+    overflow-y: auto;
+}
+
+
+/* scrollbar */
+.showtime-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.showtime-scroll::-webkit-scrollbar-thumb {
+    background-color: #666;
+    border-radius: 10px;
+}
+
+.showtime-scroll::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+
+/* Date Header */
+.showtime-scroll h6 {
+    position: sticky;
+    top: 0;
+    background: #212529;
+    padding: 10px 0;
+    z-index: 10;
+}
+
+.card-dark {
+    height: 600px;
+}

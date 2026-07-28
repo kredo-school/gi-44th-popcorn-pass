@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 
+
 @section('title', 'Edit Movie')
 @section('page-title', 'Movie Management')
 
@@ -53,30 +54,15 @@
                                         value="{{ old('title', $movie->title) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label text-secondary small">
-                                        Genre <span class="text-muted">(Max 3)</span>
-                                    </label>
-
-                                    <div class="row">
+                                    <label class="form-label text-secondary small">Genre</label>
+                                    <select name="genre_id" class="form-select" required>
+                                        <option value="">Select genre...</option>
                                         @foreach ($genres as $genre)
-                                            <div class="col-md-4 mb-2">
-                                                <div class="form-check">
-                                                    <input class="form-check-input genre-checkbox" type="checkbox"
-                                                        name="genre_ids[]" value="{{ $genre->id }}"
-                                                        id="genre{{ $genre->id }}"
-                                                        {{ in_array($genre->id, old('genre_ids', $movie->genres->pluck('id')->toArray())) ? 'checked' : '' }}>
-
-                                                    <label class="form-check-label" for="genre{{ $genre->id }}">
-                                                        {{ $genre->title }}
-                                                    </label>
-                                                </div>
-                                            </div>
+                                            <option value="{{ $genre->id }}"
+                                                {{ old('genre_id', $movie->genre_id) == $genre->id ? 'selected' : '' }}>
+                                                {{ $genre->title }}</option>
                                         @endforeach
-                                    </div>
-
-                                    <div class="form-text">
-                                        You can select up to <strong>3</strong> genres.
-                                    </div>
+                                    </select>
                                 </div>
 
                                 <div class="col-md-6">
@@ -305,15 +291,95 @@
 
             {{-- Showtime List --}}
             <div class="card card-dark p-3">
-                <div class="d-flex align-items-center mb-3">
-                    <div class="text-warning fw-bold">Existing Showtimes</div>
-                    <button type="button" class="btn btn-sm btn-outline-secondary ms-3" id="refresh-btn">↻
-                        Refresh</button>
+
+                <div class="text-warning fw-bold mb-3">
+                    Existing Showtimes
                 </div>
 
-                <div id="showtime-list-container">
-                    <div class="text-secondary text-center py-3">Click "Showtimes" tab to load...</div>
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+
+                <div id="showtime-list-container" class="showtime-scroll">
+
+                    @if ($showtimes->isEmpty())
+
+                        <div class="text-secondary text-center py-3">
+                            No showtimes registered.
+                        </div>
+                    @else
+                        @foreach ($showtimes->groupBy(function ($showtime) {
+            return $showtime->start_time->format('Y/m/d');
+        }) as $date => $dailyShowtimes)
+                            <div class="d-flex align-items-center mt-3 mb-2">
+                                <i class="fa-solid fa-calendar-days text-warning me-2"></i>
+                                <h6 class="mb-0 text-warning">
+                                    {{ $date }}
+                                </h6>
+                            </div>
+
+
+                            <table class="table table-dark table-hover align-middle mb-4">
+
+                                <thead>
+                                    <tr>
+                                        <th width="30%">Time</th>
+                                        <th width="40%">Screen</th>
+                                        <th width="30%" class="text-end">Action</th>
+                                    </tr>
+                                </thead>
+
+
+                                <tbody>
+
+                                    @foreach ($dailyShowtimes as $showtime)
+                                        <tr>
+
+                                            <td>
+                                                {{ $showtime->start_time->format('H:i') }}
+                                                -
+                                                {{ $showtime->end_time->format('H:i') }}
+                                            </td>
+
+
+                                            <td>
+                                                Screen {{ $showtime->screen->screen_number }}
+                                            </td>
+
+
+                                            <td class="text-end">
+
+                                                <form action="{{ route('admin.showtimes.delete', $showtime->id) }}"
+                                                    method="POST" onsubmit="return confirm('Delete this showtime?')">
+
+                                                    @csrf
+                                                    @method('DELETE')
+
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa-solid fa-trash"></i>
+                                                        Delete
+                                                    </button>
+
+                                                </form>
+
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+
+                                </tbody>
+
+                            </table>
+                        @endforeach
+
+                    @endif
+
                 </div>
+
+
             </div>
         </div>
 
@@ -322,5 +388,102 @@
 @endsection
 
 @section('scripts')
-    @vite('resources/js/admin/movie-showtimes.js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const generateUrl = "{{ route('admin.movies.showtimes.generate', $movie->id) }}";
+            const csrfToken = "{{ csrf_token() }}";
+
+            const generateBtn = document.querySelector('#generate-btn');
+
+            generateBtn?.addEventListener('click', function() {
+
+                const screenId = document.querySelector('#gen-screen').value;
+                const startDate = document.querySelector('#gen-start-date').value;
+                const endDate = document.querySelector('#gen-end-date').value;
+
+                const days = [...document.querySelectorAll('.gen-day:checked')]
+                    .map(el => parseInt(el.value));
+
+                const timeSlots = [...document.querySelectorAll('.gen-slot')]
+                    .map(el => el.value)
+                    .filter(Boolean);
+
+                const msgEl = document.querySelector('#generate-msg');
+
+                if (!screenId || !startDate || !endDate || days.length === 0) {
+                    msgEl.textContent =
+                        'Please fill in Screen, Start Date, End Date, and at least one day.';
+                    msgEl.className = 'ms-3 text-danger small';
+                    return;
+                }
+
+                if (timeSlots.length === 0) {
+                    msgEl.textContent = 'Please enter at least one time slot.';
+                    msgEl.className = 'ms-3 text-danger small';
+                    return;
+                }
+
+                msgEl.textContent = 'Generating...';
+                msgEl.className = 'ms-3 text-secondary small';
+
+                const body = new FormData();
+
+                body.append('_token', csrfToken);
+                body.append('screen_id', screenId);
+                body.append('start_date', startDate);
+                body.append('end_date', endDate);
+
+                days.forEach(day => body.append('days[]', day));
+                timeSlots.forEach(slot => body.append('time_slots[]', slot));
+
+                fetch(generateUrl, {
+                        method: 'POST',
+                        body: body
+                    })
+                    .then(async response => {
+
+                        console.log('Status:', response.status);
+
+                        const text = await response.text();
+
+                        console.log(text);
+
+                        return JSON.parse(text);
+
+                    })
+                    .then(data => {
+
+                        console.log(data);
+
+                        if (data.success) {
+
+                            msgEl.textContent = data.message;
+                            msgEl.className = 'ms-3 text-success small';
+
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1000);
+
+                        } else {
+
+                            msgEl.textContent = data.message ?? 'Failed to generate showtimes.';
+                            msgEl.className = 'ms-3 text-danger small';
+
+                        }
+
+                    })
+                    .catch(error => {
+
+                        console.error(error);
+
+                        msgEl.textContent = error.message;
+                        msgEl.className = 'ms-3 text-danger small';
+
+                    });
+
+            });
+
+        });
+    </script>
 @endsection

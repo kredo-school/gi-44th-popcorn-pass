@@ -10,6 +10,7 @@ use App\Models\Screen;
 use App\Models\ScreenSeat;
 use App\Models\Showtime;
 use App\Models\ShowtimeSeat;
+use App\Models\ReservationSeat;
 use App\Models\Payment;
 use App\Models\Reservation;
 use App\Models\User;
@@ -173,7 +174,8 @@ class AdminController extends Controller
             'status' => 'required|string',
             'synopsis' => 'nullable|string',
             'director' => 'nullable|string|max:255',
-            'cast' => 'nullable|string',
+            'cast' => 'nullable|array|max:6',
+            'cast.*' => 'nullable|string|max:100',
             'search_keywords' => 'nullable|string',
             'trailer_url' => 'nullable|url',
             'poster_url' => 'nullable|url',
@@ -223,7 +225,9 @@ class AdminController extends Controller
         unset($validated['showtimes']);
 
         $validated['duration'] = (int) $validated['duration'];
-        $validated['cast'] = $validated['cast'] ?? null;
+        $validated['cast'] = !empty($validated['cast'])
+            ? json_encode(array_filter($validated['cast']))
+            : null;
         $validated['search_keywords'] = $validated['search_keywords'] ?? null;
         $validated['trailer_url'] = $this->convertYoutubeUrl($validated['trailer_url'] ?? null);
         $validated['is_featured'] = $request->has('is_featured');
@@ -266,12 +270,16 @@ class AdminController extends Controller
             $startsAt = Carbon::parse("{$date} {$startTime}");
             $endsAt = $startsAt->copy()->addMinutes($durationMinutes);
 
-            $alreadyExists = Showtime::where('screen_id', $screen->id)
-                ->where('start_time', $startsAt)
+            // 同じスクリーンで上映時間が重複しているかチェック
+            $overlap = Showtime::where('screen_id', $screen->id)
+                ->where(function ($query) use ($startsAt, $endsAt) {
+                    $query->where('start_time', '<', $endsAt)
+                        ->where('end_time', '>', $startsAt);
+                })
                 ->exists();
 
-            if ($alreadyExists) {
-                $warnings[] = 'Showtime #' . ($index + 1) . ': this screen already has a showtime at that exact time.';
+            if ($overlap) {
+                $warnings[] = 'Showtime #' . ($index + 1) . ': another showtime overlaps on this screen.';
                 continue;
             }
 
@@ -305,8 +313,13 @@ class AdminController extends Controller
         $genres = Genre::orderBy('title')->get();
         $ageRatings = AgeRating::orderBy('title')->get();
         $screens = Screen::with('cinema')->orderBy('screen_number')->get();
+        $showtimes = Showtime::where('movie_id', $movie->id)
+            ->where('start_time', '>=', now())
+            ->with('screen')
+            ->orderBy('start_time')
+            ->get();
 
-        return view('admin.movies.edit', compact('movie', 'genres', 'ageRatings', 'screens'));
+        return view('admin.movies.edit', compact('movie', 'genres', 'ageRatings', 'screens', 'showtimes'));
     }
 
     public function updateMovie(Request $request, $id)
@@ -325,6 +338,11 @@ class AdminController extends Controller
         $movie->update($validated);
 
         return redirect()->route('admin.movies')->with('success', 'Movie updated successfully.');
+    }
+
+    public function destroy(Showtime $showtime)
+    {
+        dd('TEST', $showtime->id);
     }
 
     public function movieShowtimes($id)
@@ -390,39 +408,37 @@ class AdminController extends Controller
         $current = Carbon::parse($validated['start_date'])->startOfDay();
         $end = Carbon::parse($validated['end_date'])->startOfDay();
 
-
         while ($current->lte($end)) {
 
             $dayOfWeek = (int) $current->format('w');
-
 
             if (in_array($dayOfWeek, $validated['days'])) {
 
                 foreach ($validated['time_slots'] as $slot) {
 
-                    if (!$slot) continue;
-
+                    if (!$slot) {
+                        continue;
+                    }
 
                     $startsAt = Carbon::parse(
                         $current->format('Y-m-d') . ' ' . $slot
                     );
 
-                    $endsAt = $startsAt->copy()
-                        ->addMinutes($durationMinutes);
+                    $endsAt = $startsAt->copy()->addMinutes($durationMinutes);
 
-
-                    // 既存チェック
+                    // check of same screen
                     $showtime = Showtime::where('screen_id', $screen->id)
-                        ->where('start_time', $startsAt)
+                        ->where(function ($query) use ($startsAt, $endsAt) {
+                            $query->where('start_time', '<', $endsAt)
+                                ->where('end_time', '>', $startsAt);
+                        })
                         ->first();
-
 
                     if ($showtime) {
 
                         $skipped++;
                     } else {
 
-                        // showtime作成
                         $showtime = Showtime::create([
                             'screen_id' => $screen->id,
                             'movie_id' => $movie->id,
@@ -435,11 +451,7 @@ class AdminController extends Controller
                         $created++;
                     }
 
-
-                    // showtime_seats作成
-                    $screenSeats = ScreenSeat::where('screen_id', $screen->id)
-                        ->get();
-
+                    $screenSeats = ScreenSeat::where('screen_id', $screen->id)->get();
 
                     foreach ($screenSeats as $screenSeat) {
 
@@ -459,28 +471,31 @@ class AdminController extends Controller
                 }
             }
 
-
             $current->addDay();
         }
-
 
         return response()->json([
             'success' => true,
             'created' => $created,
             'skipped' => $skipped,
-            'message' => "{$created} showtime(s) created. {$skipped} skipped (already existed).",
+            'message' => "{$created} showtime(s) created. {$skipped} skipped because they overlap with existing showtimes.",
         ]);
     }
 
     public function deleteShowtime($id)
     {
         $showtime = Showtime::findOrFail($id);
-        $showtime->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Showtime deleted successfully.',
-        ]);
+        DB::transaction(function () use ($showtime) {
+
+            ShowtimeSeat::where('showtime_id', $showtime->id)->delete();
+
+            $showtime->delete();
+        });
+
+        return redirect()
+            ->back()
+            ->with('success', 'Showtime deleted successfully.');
     }
 
     public function analytics()
@@ -1059,6 +1074,4 @@ class AdminController extends Controller
 
         return back()->with('success', 'Category updated successfully.');
     }
-
-
 }
