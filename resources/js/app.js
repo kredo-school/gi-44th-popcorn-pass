@@ -10,6 +10,7 @@ import './reservations/seat-selection';
 import './reservations/ticket-type';
 import './reservations/payment-method';
 import './reservations/showtime-selection';
+import './reservations/reservation-complete';
 
 //admin dashboard
 import './admin/chart.js';

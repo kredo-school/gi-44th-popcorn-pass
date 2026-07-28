@@ -5,7 +5,7 @@
 
     <div class="reservation-page">
         <div class="date-slider-wrapper position-relative">
-            <button class="slider-next" onclick="scrollDateSlider()">
+            <button class="slider-next">
                 ▶
             </button>
 
@@ -213,19 +213,6 @@
         @include('reservations.modals.guest-or-login')
 
     </div>
-
-
-
-    <script>
-        function scrollDateSlider() {
-            document.getElementById('dateSlider-selection').scrollBy({
-                left: 200,
-                behavior: 'smooth'
-            });
-        }
-    </script>
-
-
 
 
 @endsection

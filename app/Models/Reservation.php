@@ -10,12 +10,19 @@ class Reservation extends Model
 {
     use HasFactory, HasUuids;
 
-    protected $guarded = [];
+    // protected $guarded = [];
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',
+
+        // Guest information
+        'guest_first_name',
+        'guest_last_name',
+        'guest_email',
+        'guest_phone',
+
         'showtime_id',
         'screen_id',
         'cinema_id',

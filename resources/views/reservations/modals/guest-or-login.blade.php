@@ -14,17 +14,19 @@
                 <p>
                     Please choose how you would like to continue.
                 </p>
+            
                 <form action="{{ route('reservations.guest') }}" method="POST">
                     @csrf
                     <input type="hidden" name="showtime_id" id="selectedShowtimeId">
+            
                     <button type="submit" class="btn btn-primary w-100 mb-3">
                         Continue as Guest
                     </button>
                 </form>
-
-                <a href="{{ route('login') }}" class="btn btn-outline-primary w-100">
+            
+                <button type="button" class="btn btn-outline-primary w-100" id="loginButton">
                     Login
-                </a>
+                </button>
             </div>
         </div>
     </div>

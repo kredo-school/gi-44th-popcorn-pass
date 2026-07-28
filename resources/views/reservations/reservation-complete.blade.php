@@ -136,18 +136,15 @@
             <a href="{{ route('home') }}" class="go-to-home-btn me-5 text-decoration-none">
                 <i class="fa-solid fa-arrow-left"></i> HOME
             </a>
-            <a href="{{ route('mypage.dashboard') }}" class="go-to-mypage-btn me-5 text-decoration-none">
-                My Page <i class="fa-solid fa-arrow-right"></i>
-            </a>
-
+        
+            @auth
+                <a href="{{ route('mypage.dashboard') }}" class="go-to-mypage-btn me-5 text-decoration-none">
+                    My Page <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            @endauth
         </div>
 
     </div>
-    <script>
-        history.pushState(null, null, location.href);
-        window.addEventListener('popstate', function() {
-            history.pushState(null, null, location.href);
-        });
-    </script>
+    
 
 @endsection

@@ -112,12 +112,12 @@
                         <div class="mb-3">
                             <small>Payment Method</small>
                             <p class="mb-0 fw-bold">
-                                @if ($paymentInfo['method'] === 'card')
-                                    Credit Card (ending {{ $paymentInfo['last4'] }})
-                                @elseif($paymentInfo['method'] === 'paypal')
+                                @if (($paymentInfo['payment_method'] ?? '') === 'paypal')
                                     PayPal ({{ $paymentInfo['email'] }})
-                                @else
+                                @elseif (($paymentInfo['payment_method'] ?? '') === 'onsite')
                                     Pay On-Site
+                                @else
+                                    -
                                 @endif
                             </p>
                         </div>
