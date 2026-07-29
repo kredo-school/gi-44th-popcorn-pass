@@ -127,18 +127,24 @@
                                             <div class="info-card">
                                                 <span class="hero-tag hero-tag-blue">INFORMATION</span>
 
-                                                <h2 class="info-card-title">
-                                                    {{ $information_slide->title }}
-                                                </h2>
-
-                                                <p class="info-card-content">
-                                                    {{ $information_slide->content }}
-                                                </p>
-
-                                                <a href="{{ route('information.detail', $information_slide->id) }}"
-                                                    class="btn-book-black ">
-                                                    VIEW MORE →
-                                                </a>
+                                                @if($information_slide)
+                                                    <div class="d-flex align-items-center justify-content-between">
+                                                        
+                                                        <h2 class="info-card-title mb-0">
+                                                            {{ $information_slide->title }}
+                                                        </h2>
+                                                    
+                                                        <div class="info-card-date mb-0">
+                                                            {{ $information_slide->published_at->format('Y.m.d') }}
+                                                        </div>
+                                                    </div>
+                                                    <p class="info-card-content">
+                                                        {{ $information_slide->content }}
+                                                    </p>
+                                                    <a href="{{ route('information.detail', $information_slide->id) }}" class="btn-book-black">
+                                                        VIEW MORE →
+                                                    </a>
+                                                @endif
 
                                             </div>
                                         </div>

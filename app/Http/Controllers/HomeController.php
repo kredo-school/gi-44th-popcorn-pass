@@ -57,7 +57,7 @@ class HomeController extends Controller
         $information_slide = Information::where('status', 'Published')
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now())
-            ->inRandomOrder()
+            ->latest('published_at')
             ->first();
 
         return view('home')
