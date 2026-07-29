@@ -46,31 +46,26 @@ Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showti
 //--------------------
 Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
     ->name('reservations.showtimeSelection');
-
+Route::get('/reservations/login-redirect',[ReservationController::class, 'loginRedirect'])
+    ->name('reservations.login.redirect');
+Route::post('/reservation/guest',[ReservationController::class, 'guest'])
+    ->name('reservations.guest');
 Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
-
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
     ->name('reservations.seat-selection.store');
-
 Route::get('/ticket-type', [ReservationController::class, 'ticketType'])
     ->name('reservations.ticket-type');
-
 Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
     ->name('reservations.save-ticket');
-
 Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
     ->name('reservations.payment-method');
-
 Route::post('/save-payment', [ReservationController::class, 'savePayment'])
     ->name('reservations.save-payment');
-
-Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
+Route::post('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
-
-Route::post('/reservation-confirm', [ReservationController::class, 'confirmBooking'])
+Route::post('/reservation-booking', [ReservationController::class, 'confirmBooking'])
     ->name('reservations.confirm-booking');
-
 Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
 

@@ -1,12 +1,42 @@
 @import './reservation-common.css';
 
-.go-to-mypage-btn {
-    background-color: #103985;
+.confirmed-title {
     color: #F5C126;
-    border: 3px solid #F5C126;
+    font-size: 2rem;
+    font-weight: 700;
+}
 
+.confirmed-message {
+    color: #1B2F55;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.go-to-home-btn,
+.go-to-mypage-btn {
+    background-color: #fff;
+    color: #1B2F55 !important;
+    border: 3px solid #F5C126;
     padding: 12px 32px;
     font-size: 1.1rem;
     border-radius: 8px;
     font-weight: 600;
+    transition: .3s;
+    display: inline-block;
+}
+
+.go-to-home-btn:hover,
+.go-to-mypage-btn:hover {
+    background-color: #1B2F55;
+    color: #fff !important;
+    border: 3px solid #F5C126;
+}
+
+.go-to-home-btn i,
+.go-to-mypage-btn i {
+    color: inherit;
+}
+
+.premium-text {
+    color: #9C022F;
 }

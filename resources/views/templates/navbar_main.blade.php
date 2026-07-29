@@ -14,7 +14,7 @@
 
             <!-- Logo -->
             <a class="navbar-brand m-0 p-0" href="{{ url('/') }}">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" width="70" height="70">
+                <img src="{{ asset('images/layouts/logo.png') }}" alt="Logo" width="70" height="70">
             </a>
 
             <!-- right button -->
@@ -83,7 +83,7 @@
         Showtimes
     </a>
 
-    <a href="#" class="bar-item">
+    <a href="{{ route('information.index')}}" class="bar-item">
         <i class="fa-solid fa-circle-exclamation"></i>
         Information
     </a>

@@ -2,7 +2,8 @@
 
 /* ticket type selection */
 .ticket-card {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: #fff;
+    border: 1px solid #7D9FCF;
     border-radius: 6px;
     padding: 10px;
     width: 80%;
@@ -25,12 +26,14 @@
 
 .seat-number-box.premium {
     background-color: #F5C126;
-    color: #000;
+    color: #1B2F55;
+    border: 1px solid #1B2F55;
 }
 
 .seat-number-box.regular {
-    background-color: #103985;
+    background-color: #7D9FCF;
     color: #fff;
+    border: 1px solid #1B2F55;
 }
 
 .ticket-selection {
@@ -79,7 +82,7 @@
 /* Total Price */
 .total-price {
     font-size: 1.5rem;
-    color: #fff;
+    color: #1B2F55;
 }
 
 /* Ticket Type Modal */

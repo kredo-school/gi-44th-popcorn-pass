@@ -52,6 +52,37 @@ class ReservationController extends Controller
     }
 
     // --------------------
+    // Reservation Login
+    // --------------------
+    public function loginRedirect(Request $request)
+    {
+        session([
+            'showtime_id' => $request->showtime_id,
+            'url.intended' => route('reservations.seat-selection', [
+                'showtime' => $request->showtime_id,
+            ]),
+        ]);
+        
+        return redirect()->route('login');
+    }
+
+
+    // --------------------
+    // Continue as Guest
+    // --------------------
+    public function guest(Request $request)
+    {
+        session([
+            'showtime_id' => $request->showtime_id,
+            'guest' => true,
+        ]);
+
+        return redirect()->route('reservations.seat-selection', [
+            'showtime' => $request->showtime_id
+        ]);
+    }
+
+    // --------------------
     // Seat Selection
     // --------------------
     public function seatSelection(Showtime $showtime)
@@ -194,25 +225,30 @@ class ReservationController extends Controller
         ));
     }
 
-    // --------------------
-    // Save Payment
-    // --------------------
-    public function savePayment(Request $request)
-    {
-        session(['paymentInfo' => [
-            'method' => $request->method,
-            'last4'  => $request->last4 ?? null,
-            'email'  => $request->email ?? null,
-        ]]);
-
-        return response()->json(['status' => 'ok']);
-    }
-
+    
     // --------------------
     // Confirmation Page
     // --------------------
-    public function confirmation()
+    public function confirmation(Request $request)
     {
+        session([
+            'paymentInfo' => [
+                'payment_method' => $request->payment_method,
+                'email' => $request->payment_method === 'paypal' ? $request->paypal_email : null,
+            ],
+        ]);
+
+        if (session('guest')) {
+            session([
+                'guestInfo' => [
+                    'first_name' => $request->first_name,
+                    'last_name'  => $request->last_name,
+                    'email'      => $request->guest_email,
+                    'phone'      => $request->guest_phone,
+                ],
+            ]);
+        }
+
         if (empty(session('selectedSeats'))) {
             return redirect()->route('home');
         }
@@ -253,6 +289,7 @@ class ReservationController extends Controller
     {
         $selectedSeats = session('selectedSeats', []);
         $paymentInfo = session('paymentInfo', []);
+        $guestInfo = session('guestInfo', []);
         $showtimeId = session('showtime_id');
 
         if (empty($selectedSeats) || empty($paymentInfo) || !$showtimeId) {
@@ -267,12 +304,23 @@ class ReservationController extends Controller
             return ($seat['price'] ?? 0) + (!empty($seat['premium']) ? 10 : 0);
         });
 
-        DB::transaction(function () use ($selectedSeats, $showtime, $totalPrice) {
+        DB::transaction(function () use (
+            $selectedSeats,
+            $paymentInfo,
+            $guestInfo,
+            $showtime,
+            $totalPrice) {
 
             // Create reservation
             $reservation = Reservation::create([
                 'id' => Str::uuid(),
                 'user_id' => Auth::id(),
+
+                'guest_first_name' => $guestInfo['first_name'] ?? null,
+                'guest_last_name'  => $guestInfo['last_name'] ?? null,
+                'guest_email'      => $guestInfo['email'] ?? null,
+                'guest_phone'      => $guestInfo['phone'] ?? null,
+
                 'showtime_id' => $showtime->id,
                 'screen_id' => $showtime->screen_id,
                 'cinema_id' => $showtime->screen->cinema_id,
@@ -298,8 +346,7 @@ class ReservationController extends Controller
                 'amount' => $totalPrice,
 
                 'payment_status' => 'paid',
-                'payment_method' => $paymentInfo['payment_method'] ?? 'credit_card',
-
+                'payment_method' => $paymentInfo['payment_method'],
                 'transaction_id' => null,
                 'stripe_payment_intent_id' => null,
 
@@ -377,6 +424,8 @@ class ReservationController extends Controller
         session()->forget([
             'selectedSeats',
             'paymentInfo',
+            'guestInfo',
+            'guest',
             'showtime_id',
         ]);
 
