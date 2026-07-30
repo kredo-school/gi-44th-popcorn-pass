@@ -55,6 +55,15 @@ class DashboardController extends Controller
 
         $reviewsWrittenCount = $user->reviews()->count();
 
+        $coupons = $user->coupons()
+            ->whereNull('used_at')
+            ->take(3)
+            ->get();
+
+        $couponsCount = $user->coupons()
+            ->whereNull('used_at')
+            ->count();
+
         return view('mypage.dashboard', [
             'user' => $user,
             'upcomingTickets' => $upcomingTickets,
@@ -63,6 +72,8 @@ class DashboardController extends Controller
             'upcomingTicketsCount' => $upcomingTicketsCount,
             'moviesWatchedCount' => $moviesWatchedCount,
             'reviewsWrittenCount' => $reviewsWrittenCount,
+            'coupons' => $coupons,
+            'couponsCount' => $couponsCount,
         ]);
     }
 }

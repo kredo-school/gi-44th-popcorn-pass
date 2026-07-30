@@ -123,7 +123,7 @@
                         </div>
                         <hr>
                         <div class="mb-3">
-                            <small>Total Amount</small>
+                            <small>Total</small>
                             <p class="mb-0 fw-bold total-price">
                                 ${{ $totalPrice }}
                             </p>

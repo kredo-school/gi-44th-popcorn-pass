@@ -1,4 +1,18 @@
-{{-- resources/views/mypage/components/sidebar.blade.php --}}
+@php
+    $user = auth()->user();
+
+    $moviesWatchedCount = $user->reservations()
+    ->where('reservation_status', 'confirmed')
+    ->whereHas('showtime', function ($query) {
+    $query->where('start_time', '<=', now()); }) ->count();
+
+        $reviewsWrittenCount = $user->reviews()->count();
+
+        $couponsCount = $user->coupons()
+        ->wherePivotNull('used_at')
+        ->count();
+@endphp
+
 <a href="{{ route('mypage.profile') }}"
    class="d-block text-decoration-none text-white">
 
@@ -35,4 +49,11 @@
         <span><i class="fa-solid fa-star me-2"></i>Reviews Written</span>
         <strong>{{ $reviewsWrittenCount ?? 0 }}</strong>
     </a>
+
+    <a href="{{ route('mypage.coupons') }}"
+        class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
+        <span><i class="fa-solid fa-tags me-2"></i>Coupons</span>
+        <strong>{{ $couponsCount ?? 0 }}</strong>
+    </a>
+    
 </div>

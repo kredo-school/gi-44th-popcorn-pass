@@ -13,7 +13,9 @@ use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 use App\Http\Controllers\MyPage\CancelController;
+use App\Http\Controllers\MyPage\CouponController;
 use App\Http\Controllers\Api\NearByCinemasController;
+
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -177,4 +179,5 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
     Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
         ->name('reservations.cancel');
+    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons');
 });
