@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CinemaReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
@@ -85,6 +86,9 @@ Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'up
 // ===========================
 Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby']);
 Route::get('/api/dynamic-pricing/{showtimeId}', [AdminController::class, 'getDynamicPricingStats']);
+Route::get('/api/cinemas/{cinemaId}/reviews', [CinemaReviewController::class, 'show']);
+Route::get('/api/cinemas/{cinemaId}/reviews/breakdown', [CinemaReviewController::class, 'getScoreBreakdown']);
+Route::get('/api/cinemas/top-rated', [CinemaReviewController::class, 'getTopRatedCinemas']);
 
 
 // ===========================
@@ -152,7 +156,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])->name('information.categories.update');
 
-
 });
 
 // ===========================
@@ -177,4 +180,9 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
     Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
         ->name('reservations.cancel');
+
+    // Cinema Review Routes
+    Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])->name('cinema-reviews.store');
+    Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])->name('cinema-reviews.index');
+    Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])->name('cinema-reviews.show');
 });
