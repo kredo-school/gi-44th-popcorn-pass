@@ -54,7 +54,8 @@ class HomeController extends Controller
             ->take(5)
             ->get();
 
-        $information_slide = Information::where('status', 'Published')
+        $information_slide = Information::with('category')
+            ->where('status', 'Published')
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now())
             ->latest('published_at')

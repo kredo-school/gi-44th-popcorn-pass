@@ -122,30 +122,29 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div
-                                            class="col-lg-8 d-flex align-items-center justify-content-center h-100 ps-lg-5">
+                                        <div class="col-lg-8 d-flex align-items-center justify-content-center h-100 ps-lg-5">
                                             <div class="info-card">
                                                 <span class="hero-tag hero-tag-blue">INFORMATION</span>
-
-                                                @if($information_slide)
-                                                    <div class="d-flex align-items-center justify-content-between">
-                                                        
+                                                @if($information_slide)                                               
+                                                    <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+                                                        <span class="hero-tag mb-0"
+                                                            style="background-color: {{ $information_slide->category?->color ?? '#6c757d' }};
+                                                                                                                        color: {{ $information_slide->category?->text_color ?? '#fff' }};">
+                                                            {{ $information_slide->category?->name ?? 'General' }}
+                                                        </span>
                                                         <h2 class="info-card-title mb-0">
                                                             {{ $information_slide->title }}
                                                         </h2>
-                                                    
-                                                        <div class="info-card-date mb-0">
+                                                
+                                                        <div class="info-card-date">
                                                             {{ $information_slide->published_at->format('Y.m.d') }}
                                                         </div>
                                                     </div>
-                                                    <p class="info-card-content">
-                                                        {{ $information_slide->content }}
-                                                    </p>
+                                                
                                                     <a href="{{ route('information.detail', $information_slide->id) }}" class="btn-book-black">
                                                         VIEW MORE →
                                                     </a>
                                                 @endif
-
                                             </div>
                                         </div>
 
