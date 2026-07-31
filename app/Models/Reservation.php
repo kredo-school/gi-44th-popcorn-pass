@@ -10,7 +10,6 @@ class Reservation extends Model
 {
     use HasFactory, HasUuids;
 
-    // protected $guarded = [];
     public $incrementing = false;
     protected $keyType = 'string';
 
@@ -22,6 +21,12 @@ class Reservation extends Model
         'guest_last_name',
         'guest_email',
         'guest_phone',
+
+        // Discount information
+        'promotion_id',
+        'coupon_id',
+        'promotion_discount',
+        'coupon_discount',
 
         'showtime_id',
         'screen_id',
@@ -40,6 +45,11 @@ class Reservation extends Model
     ];
 
     protected $casts = [
+        'subtotal' => 'decimal:2',
+        'promotion_discount' => 'decimal:2',
+        'coupon_discount' => 'decimal:2',
+        'discount_amount' => 'decimal:2',
+        'final_amount' => 'decimal:2',
         'confirmed_at' => 'datetime',
         'cancelled_at' => 'datetime',
         'expired_at' => 'datetime',
@@ -75,17 +85,21 @@ class Reservation extends Model
         return $this->hasOne(Payment::class);
     }
 
+    public function promotion()
+    {
+        return $this->belongsTo(Promotion::class);
+    }
+
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+
     public function reservationSeats()
     {
         return $this->hasMany(ReservationSeat::class);
     }
 
-    /**
-     * Returns a collection of actual seat numbers (e.g. ['D5', 'D6'])
-     * by walking reservation_seats -> showtime_seats -> screen_seats.
-     * Requires reservationSeats.showtimeSeat.screenSeat to be eager loaded
-     * to avoid N+1 queries.
-     */
     public function getSeatNumbersAttribute()
     {
         return $this->reservationSeats
@@ -95,6 +109,4 @@ class Reservation extends Model
             ->filter()
             ->values();
     }
-
-    
 }

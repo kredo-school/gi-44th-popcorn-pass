@@ -103,8 +103,50 @@
                                     </div>
                                 </div>
                             </div>
-                            <hr>
+                            <hr class="mb-4">
                         @endguest
+
+                        {{-- Available Coupons --}}
+                        @auth
+                            <div class="mb-4">
+                                <h2 class="payment-title">Available Coupons</h2>
+                            
+                                @forelse($availableCoupons as $coupon)
+                                    <label class="coupon-card mb-2 d-block">
+                                        <input type="radio" name="coupon_id" value="{{ $coupon->id }}" class="form-check-input me-2 coupon-radio"
+                                            data-type="{{ $coupon->coupon_type }}" data-percent="{{ $coupon->discount_percent ?? 0 }}"
+                                            data-amount="{{ $coupon->discount_amount ?? 0 }}">
+                                
+                                        <strong>{{ $coupon->code }}</strong>
+                                
+                                        @if($coupon->coupon_type === 'percentage')
+                                            <span class="ms-2">{{ $coupon->discount_percent }}% OFF</span>
+                                        @else
+                                            <span class="ms-2">${{ $coupon->discount_amount }} OFF</span>
+                                        @endif
+                                
+                                        @if($coupon->expires_at)
+                                            <small class="text-muted float-end">
+                                                Expires: {{ $coupon->expires_at->format('Y.m.d') }}
+                                            </small>
+                                        @endif
+                                    </label>
+                                @empty
+                                    <p class="text-muted mb-0">No available coupons.</p>
+                                @endforelse
+                            
+                                @if($availableCoupons->isNotEmpty())
+                                    <div class="mt-2">
+                                        <label>
+                                            <input type="radio" name="coupon_id" value="" class="coupon-radio" data-type="" data-percent="0" data-amount="0"
+                                                checked>
+                                            Do not use a coupon
+                                        </label>
+                                    </div>
+                                @endif
+                            </div>
+                            <hr class="mb-4">
+                        @endauth
         
         
                         <h2 class="payment-title">
@@ -199,10 +241,36 @@
                             </div>
                             <hr>
                             <div class="mb-3">
-                                <small class="fd-5">Total</small>
-                                <p class="mb-0 fw-bold total-price">
-                                    ${{ $totalPrice }}
-                                </p>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">Subtotal</span>
+                                    <span class="fs-5">${{ number_format($subtotal, 2) }}</span>
+                                </div>
+                            
+                                @if($promotion && $promotionDiscount > 0)
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="fw-bold">
+                                            Promotion Discount
+                                            <small class="text-muted">
+                                                ({{ $promotion->title }})
+                                            </small>
+                                        </span>
+                                        <span class="fs-5">-${{ number_format($promotionDiscount, 2) }}</span>
+                                    </div>
+                                @endif
+                            
+                                <div id="coupon-discount-row" class="d-flex justify-content-between mb-2 d-none">
+                                    <span class="fw-bold">Coupon Discount</span>
+                                    <span id="coupon-discount" class="fs-5">-$0.00</span>
+                                </div>
+                            
+                                <hr>
+                            
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-bold fs-4">Total</span>
+                                    <span id="final-total" class="fw-bold total-price" data-base-total="{{ $totalPrice }}">
+                                        ${{ number_format($totalPrice, 2) }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>

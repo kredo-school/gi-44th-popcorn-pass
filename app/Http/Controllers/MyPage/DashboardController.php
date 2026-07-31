@@ -56,7 +56,13 @@ class DashboardController extends Controller
         $reviewsWrittenCount = $user->reviews()->count();
 
         $coupons = $user->coupons()
-            ->whereNull('used_at')
+            ->wherePivotNull('used_at')
+            ->where('coupon_status', 'active')
+            ->where(function ($query) {
+                $query->whereNull('expires_at')
+                    ->orWhere('expires_at', '>=', now());
+            })
+            ->orderByRaw('expires_at IS NULL, expires_at ASC')
             ->take(3)
             ->get();
 

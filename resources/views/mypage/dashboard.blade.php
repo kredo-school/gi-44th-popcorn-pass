@@ -120,10 +120,11 @@
                 You don't have any available coupons.
             </p>
         @else
-            @foreach ($coupons->take(3) as $coupon)
-                <div class="d-flex justify-content-between align-items-center border-bottom py-3">
+            @foreach ($coupons as $coupon)
+                <div class="d-flex justify-content-between align-items-center py-3">
                     <div>
                         <div class="fw-bold">{{ $coupon->code }}</div>
+                
                         <div class="small text-muted">
                             @if ($coupon->coupon_type === 'percentage')
                                 {{ $coupon->discount_percent }}% OFF
@@ -131,17 +132,22 @@
                                 ${{ number_format($coupon->discount_amount, 2) }} OFF
                             @endif
                         </div>
-            
-                        @if ($coupon->expires_at)
-                            <div class="small text-muted">
+                
+                        <div class="small text-muted">
+                            @if ($coupon->expires_at)
                                 Expires {{ $coupon->expires_at->format('M d, Y') }}
-                            </div>
-                        @endif
+                            @else
+                                No expiration date
+                            @endif
+                        </div>
                     </div>
-                    <span class="badge bg-success">
-                        Available
-                    </span>
+                
+                    <span class="badge bg-success">Available</span>
                 </div>
+                
+                @unless ($loop->last)
+                    <hr class="my-0 border-secondary">
+                @endunless
             @endforeach
         @endif
     </div>

@@ -113,12 +113,38 @@
                             </div>
                         </div>
                         <hr>
+                        
                         <div class="mb-3">
-                            <small>Total</small>
-                            <p class="mb-0 fw-bold total-price">${{ $totalPrice }}</p>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold">Subtotal</span>
+                                <span class="fs-5">${{ number_format($subtotal, 2) }}</span>
+                            </div>
+                        
+                            @if ($promotionDiscount > 0)
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">Promotion Discount</span>
+                                    <span class="fs-5">-${{ number_format($promotionDiscount, 2) }}</span>
+                                </div>
+                            @endif
+                        
+                            @if ($couponDiscount > 0)
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">Coupon Discount</span>
+                                    <span class="fs-5">-${{ number_format($couponDiscount, 2) }}</span>
+                                </div>
+                            @endif
+                        
+                            <hr>
+                        
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold fs-5">Total</span>
+                                <span class="fw-bold total-price fs-5">
+                                    ${{ number_format($totalPrice, 2) }}
+                                </span>
+                            </div>
                         </div>
+                        
                         <hr>
-
 
                         <p class="text-center booking-id mb-1">
 

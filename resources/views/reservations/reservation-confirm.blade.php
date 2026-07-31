@@ -109,9 +109,40 @@
                             </div>
                         </div>
                         <hr>
+
+                        @guest
+                            <div class="mb-3">
+                                <small>Guest Information</small>
+                                <div class="mt-2">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Name</span>
+                                        <span class="fw-bold">
+                                            {{ $guestInfo['first_name'] ?? '' }}
+                                            {{ $guestInfo['last_name'] ?? '' }}
+                                        </span>
+                                    </div>
+                            
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Email</span>
+                                        <span class="fw-bold">
+                                            {{ $guestInfo['email'] ?? '-' }}
+                                        </span>
+                                    </div>
+                            
+                                    <div class="d-flex justify-content-between">
+                                        <span>Phone Number</span>
+                                        <span class="fw-bold">
+                                            {{ $guestInfo['phone'] ?? '-' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                        @endguest
+
                         <div class="mb-3">
                             <small>Payment Method</small>
-                            <p class="mb-0 fw-bold">
+                            <p class="mb-0 fw-bold fs-5">
                                 @if (($paymentInfo['payment_method'] ?? '') === 'paypal')
                                     PayPal ({{ $paymentInfo['email'] }})
                                 @elseif (($paymentInfo['payment_method'] ?? '') === 'onsite')
@@ -123,10 +154,32 @@
                         </div>
                         <hr>
                         <div class="mb-3">
-                            <small>Total</small>
-                            <p class="mb-0 fw-bold total-price">
-                                ${{ $totalPrice }}
-                            </p>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold">Subtotal</span>
+                                <span class="fs-5">${{ number_format($subtotal, 2) }}</span>
+                            </div>
+                        
+                            @if($promotionDiscount > 0)
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">Promotion Discount</span>
+                                    <span class="fs-5">-${{ number_format($promotionDiscount, 2) }}</span>
+                                </div>
+                            @endif
+                        
+                            @if($couponDiscount > 0)
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold">Coupon Discount</span>
+                                    <span class="fs-5">-${{ number_format($couponDiscount, 2) }}</span>
+                                </div>
+                            @endif
+
+                            <hr>
+                            <div class="d-flex justify-content-between">
+                                <span class="fw-bold fs-4">Total</span>
+                                <span class="fw-bold total-price">
+                                    ${{ number_format($totalPrice, 2) }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

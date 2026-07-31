@@ -128,11 +128,13 @@
                             </div>
                         </div>
                         <hr>
-                        <div class="mb-3">
-                            <small class="fd-5">Total</small>
-                            <p class="mb-0 fw-bold total-price">
-                                ${{ $totalPrice }}
-                            </p>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold fs-4">Total</span>
+                        
+                            <span class="fw-bold total-price">
+                                ${{ number_format($totalPrice, 2) }}
+                            </span>
                         </div>
                     </div>
                 </div>

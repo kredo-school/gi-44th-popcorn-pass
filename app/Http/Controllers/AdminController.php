@@ -16,6 +16,7 @@ use App\Models\Reservation;
 use App\Models\User;
 use App\Models\SystemSetting;
 use App\Models\Coupon;
+use App\Models\UserCoupon;
 use App\Models\Promotion;
 use App\Models\Review;
 use App\Models\Information;
@@ -764,9 +765,16 @@ class AdminController extends Controller
         return redirect()->route('admin.settings')->with('success', 'Settings updated successfully.');
     }
 
+    // --------------------
+    // Coupons / Promotions
+    // --------------------
+
+    // Coupon
     public function couponsPromotions()
     {
-        $coupons = Coupon::orderBy('created_at', 'desc')->paginate(10, ['*'], 'coupons_page');
+        $coupons = Coupon::withCount('userCoupons')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10, ['*'], 'coupons_page');
         $promotions = Promotion::orderBy('created_at', 'desc')->paginate(10, ['*'], 'promotions_page');
 
         $genres = Genre::orderBy('title')->get();
@@ -793,6 +801,10 @@ class AdminController extends Controller
             'expires_at' => 'nullable|date',
         ]);
 
+        if (!empty($validated['expires_at'])) {
+            $validated['expires_at'] = \Carbon\Carbon::parse($validated['expires_at'])->endOfDay();
+        }
+
         $validated['current_uses'] = 0;
         $validated['coupon_status'] = 'active';
         $validated['issued_at'] = now();
@@ -814,6 +826,25 @@ class AdminController extends Controller
         return redirect()->route('admin.coupons-promotions')->with('success', 'Coupon status updated.');
     }
 
+    public function distributeCoupon(Request $request, Coupon $coupon)
+    {
+        $users = User::where('role', 1);
+
+        if ($request->target === 'selected') {
+            $users->whereIn('id', $request->user_ids ?? []);
+        }
+
+        foreach ($users->get() as $user) {
+            UserCoupon::firstOrCreate([
+                'user_id' => $user->id,
+                'coupon_id' => $coupon->id,
+            ]);
+        }
+
+        return back()->with('success', 'Coupon distributed successfully.');
+    }
+
+    //Promotion
     public function storePromotion(Request $request)
     {
         $validated = $request->validate([
@@ -830,13 +861,24 @@ class AdminController extends Controller
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
+        if ($validated['type'] === 'percentage' && $validated['discount_value'] > 100) {
+            return back()
+                ->withErrors(['discount_value' => 'Percentage discount cannot exceed 100%.'])
+                ->withInput();
+        }
+
+        $validated['start_date'] = Carbon::parse($validated['start_date'])->startOfDay();
+        $validated['end_date'] = Carbon::parse($validated['end_date'])->endOfDay();
         $validated['current_uses'] = 0;
         $validated['promotion_status'] = 'active';
         $validated['created_by_id'] = auth()->id();
 
         Promotion::create($validated);
 
-        return redirect()->route('admin.coupons-promotions')->with('success', 'Promotion created successfully.');
+        return redirect()
+            ->route('admin.coupons-promotions')
+            ->with('success', 'Promotion created successfully.')
+            ->with('promotion_created', true);
     }
 
     public function togglePromotionStatus($id)

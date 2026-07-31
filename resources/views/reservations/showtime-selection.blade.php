@@ -172,19 +172,12 @@
                                     </div>
                                 </div>
 
-                                {{-- <a href="{{ route('reservations.seat-selection', ['showtime' => $showtime->id]) }}"
-                                    class="text-decoration-none">
-
-
-                                    <div class="showtime-bottom pt-2">
-                                        <div class="reservation-icon">⭕️</div>
-                                        <div class="reservation-text">Reservation</div>
-                                    </div>
-
-                                </a> --}}
                                 @auth
                                     {{-- already logged in --}}
-                                    <a href="{{ route('reservations.seat-selection', ['showtime' => $showtime->id]) }}" class="text-decoration-none">
+                                    <a href="{{ route('reservations.seat-selection', [
+                                        'showtime' => $showtime->id,
+                                        'new' => 1,
+                                    ]) }}" class="text-decoration-none">
                                     
                                         <div class="showtime-bottom pt-2">
                                             <div class="reservation-icon">⭕️</div>

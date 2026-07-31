@@ -1,15 +1,27 @@
 @php
     $user = auth()->user();
 
+    $upcomingTicketsCount = $user->reservations()
+        ->where('reservation_status', 'confirmed')
+        ->whereHas('showtime', function ($query) {
+        $query->where('start_time', '>', now());
+        })
+        ->count();
+
     $moviesWatchedCount = $user->reservations()
-    ->where('reservation_status', 'confirmed')
-    ->whereHas('showtime', function ($query) {
-    $query->where('start_time', '<=', now()); }) ->count();
+        ->where('reservation_status', 'confirmed')
+        ->whereHas('showtime', function ($query) {
+        $query->where('start_time', '<=', now()); }) ->count();
 
-        $reviewsWrittenCount = $user->reviews()->count();
+    $reviewsWrittenCount = $user->reviews()->count();
 
-        $couponsCount = $user->coupons()
+    $couponsCount = $user->coupons()
         ->wherePivotNull('used_at')
+        ->where('coupon_status', 'active')
+        ->where(function ($query) {
+        $query->whereNull('expires_at')
+            ->orWhere('expires_at', '>=', now());
+        })
         ->count();
 @endphp
 

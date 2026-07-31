@@ -132,6 +132,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])->name('coupons-promotions');
     Route::post('/coupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
+    Route::post('/coupons/{coupon}/distribute',[AdminController::class, 'distributeCoupon'])->name('coupons.distribute');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
 

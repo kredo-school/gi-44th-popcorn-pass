@@ -87,6 +87,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Coupon::class, 'user_coupons')
             ->withPivot('used_at')
+            ->withCasts([
+                'used_at' => 'datetime',
+            ])
             ->withTimestamps();
     }
 
@@ -132,4 +135,13 @@ class User extends Authenticatable
     {
         return in_array((int) $this->role, [2, 3, 4], true);
     }
+
+    // -----------------------
+    // Coupon
+    // -----------------------
+    public function userCoupons()
+    {
+        return $this->hasMany(UserCoupon::class);
+    }
+    
 }

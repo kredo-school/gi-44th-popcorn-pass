@@ -68,29 +68,35 @@
                             </div>
 
                             {{-- Slide 2: Coming Soon --}}
-                            <div class="swiper-slide">
-                                <div class="w-75 mx-auto h-100">
-                                    <div class="row g-0 align-items-center justify-content-center h-100">
-                                        <div class="col-lg-4 position-relative h-100">
-                                            <img src="{{ $heroMovie->banner_image_url }}" class="hero-image">
-                                            <div class="hero-overlay"></div>
-                                            <div class="hero-content">
-                                                <span class="hero-tag">COMING SOON</span>
-                                                <h1>UPCOMING<br>BLOCKBUSTERS</h1>
-                                                <a href="{{ route('release', $heroMovie->id) }}" class="btn-book btn-book-yellow">VIEW MORE
-                                                    →</a>
+                            @if ($heroMovie)
+                                <div class="swiper-slide">
+                                    <div class="w-75 mx-auto h-100">
+                                        <div class="row g-0 align-items-center justify-content-center h-100">
+                                            <div class="col-lg-4 position-relative h-100">
+                                                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image" alt="{{ $heroMovie->title }}">
+                                
+                                                <div class="hero-overlay"></div>
+                                
+                                                <div class="hero-content">
+                                                    <span class="hero-tag">COMING SOON</span>
+                                                    <h1>UPCOMING<br>BLOCKBUSTERS</h1>
+                                
+                                                    <a href="{{ route('release', $heroMovie->id) }}" class="btn-book btn-book-yellow">
+                                                        VIEW MORE →
+                                                    </a>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div
-                                            class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                            <iframe class="hero-video"
-                                                src="https://www.youtube.com/embed/jSGmZ85krBs?autoplay=1&mute=1&loop=1&playlist=jSGmZ85krBs"
-                                                allow="autoplay; encrypted-media" allowfullscreen>
-                                            </iframe>
+                                
+                                            <div class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
+                                                <iframe class="hero-video"
+                                                    src="https://www.youtube.com/embed/jSGmZ85krBs?autoplay=1&mute=1&loop=1&playlist=jSGmZ85krBs"
+                                                    allow="autoplay; encrypted-media" allowfullscreen>
+                                                </iframe>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
 
                             {{-- Slide 3: Top Ranking --}}
                             <div class="swiper-slide">
