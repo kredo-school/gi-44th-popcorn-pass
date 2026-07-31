@@ -7,7 +7,6 @@ use App\Models\CinemaReview;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Database\Eloquent\Collection;
 
 class CinemaReviewController extends Controller
 {
@@ -16,24 +15,35 @@ class CinemaReviewController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'cinema_id' => 'required|string|exists:cinemas,id',
-            'image_quality' => 'required|numeric|between:1.0,5.0',
-            'sound_quality' => 'required|numeric|between:1.0,5.0',
-            'seat_comfort' => 'required|numeric|between:1.0,5.0',
-            'crowding_level' => 'required|numeric|between:1.0,5.0',
-            'accessibility' => 'required|numeric|between:1.0,5.0',
-            'service_quality' => 'required|numeric|between:1.0,5.0',
-            'comment' => 'nullable|string|max:1000',
-            'visited_at' => 'required|date|before_or_equal:today',
-            'review_count' => 'nullable|integer|min:1|max:100',
-        ]);
+        try {
+            $validated = $request->validate([
+                'cinema_id' => 'required|string|exists:cinemas,id',
+                'image_quality' => 'required|numeric|between:1.0,5.0',
+                'sound_quality' => 'required|numeric|between:1.0,5.0',
+                'seat_comfort' => 'required|numeric|between:1.0,5.0',
+                'crowding_level' => 'required|numeric|between:1.0,5.0',
+                'accessibility' => 'required|numeric|between:1.0,5.0',
+                'service_quality' => 'required|numeric|between:1.0,5.0',
+                'comment' => 'nullable|string|max:1000',
+                'visited_at' => 'required|date|before_or_equal:today',
+                'review_count' => 'nullable|integer|min:1|max:100',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'error' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        }
 
-        // Verify user has visited this cinema (check reservation history)
+        if (!auth()->check()) {
+            return response()->json([
+                'error' => 'Unauthorized. Please log in.',
+            ], 401);
+        }
+
         $hasVisited = Reservation::where('user_id', auth()->id())
-            ->whereHas('movie.screenings', function ($query) use ($validated) {
-                $query->where('cinema_id', $validated['cinema_id']);
-            })
+            ->where('cinema_id', $validated['cinema_id'])
+            ->where('reservation_status', 'confirmed')
             ->exists();
 
         if (!$hasVisited) {
@@ -42,7 +52,6 @@ class CinemaReviewController extends Controller
             ], 403);
         }
 
-        // Check if review already exists for this user+cinema+date
         $existingReview = CinemaReview::where('user_id', auth()->id())
             ->where('cinema_id', $validated['cinema_id'])
             ->where('visited_at', $validated['visited_at'])
@@ -55,33 +64,37 @@ class CinemaReviewController extends Controller
             ], 409);
         }
 
-        // Create review
-        $review = CinemaReview::create([
-            'id' => Str::uuid(),
-            'cinema_id' => $validated['cinema_id'],
-            'user_id' => auth()->id(),
-            'image_quality' => (float) $validated['image_quality'],
-            'sound_quality' => (float) $validated['sound_quality'],
-            'seat_comfort' => (float) $validated['seat_comfort'],
-            'crowding_level' => (float) $validated['crowding_level'],
-            'accessibility' => (float) $validated['accessibility'],
-            'service_quality' => (float) $validated['service_quality'],
-            'comment' => $validated['comment'] ?? null,
-            'review_count' => $validated['review_count'] ?? 1,
-            'visited_at' => $validated['visited_at'],
-        ]);
+        try {
+            $review = CinemaReview::create([
+                'id' => Str::uuid(),
+                'cinema_id' => $validated['cinema_id'],
+                'user_id' => auth()->id(),
+                'image_quality' => (float) $validated['image_quality'],
+                'sound_quality' => (float) $validated['sound_quality'],
+                'seat_comfort' => (float) $validated['seat_comfort'],
+                'crowding_level' => (float) $validated['crowding_level'],
+                'accessibility' => (float) $validated['accessibility'],
+                'service_quality' => (float) $validated['service_quality'],
+                'comment' => $validated['comment'] ?? null,
+                'review_count' => $validated['review_count'] ?? 1,
+                'visited_at' => $validated['visited_at'],
+            ]);
 
-        // Trigger job to update cinema aggregate scores
-        \App\Jobs\UpdateCinemaScores::dispatch($validated['cinema_id']);
+            \App\Jobs\UpdateCinemaScores::dispatch($validated['cinema_id']);
 
-        return response()->json([
-            'message' => 'Review submitted successfully',
-            'review' => [
-                'id' => $review->id,
-                'overall_score' => $review->calculateOverallScore(),
-                'cinema_id' => $review->cinema_id,
-            ],
-        ], 201);
+            return response()->json([
+                'message' => 'Review submitted successfully',
+                'review' => [
+                    'id' => $review->id,
+                    'overall_score' => $review->calculateOverallScore(),
+                    'cinema_id' => $review->cinema_id,
+                ],
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Failed to create review: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -96,7 +109,6 @@ class CinemaReviewController extends Controller
             ->latest()
             ->paginate(10);
 
-        // Add calculated overall scores
         $reviews->getCollection()->transform(function ($review) {
             return $review->append('overall_score');
         });
