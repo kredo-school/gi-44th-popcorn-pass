@@ -7,7 +7,15 @@ export default defineConfig({
             input: [
                 'resources/sass/app.scss',
                 'resources/js/app.js',
+
+                // Admin
                 'resources/js/admin/movie-showtimes.js',
+
+                // Customer Chat
+                'resources/js/customer/chat.js',
+
+                // Admin Chat
+                  'resources/js/admin/chat.js',
             ],
             refresh: true,
         }),

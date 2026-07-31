@@ -44,6 +44,13 @@
                 </form>
             </div>
 
+            {{-- Contact icon --}}
+            <div class="contact-icon">
+                <a href="{{ route('customer.chat.index')}}">
+                    <i class="fa-solid fa-comment"></i>
+                </a>
+            </div>
+
             {{-- Swiper section --}}
             <div class=" mx-auto">
                 <div class="swiper-position">
@@ -58,7 +65,8 @@
                                         <div class="hero-content-welcome">
                                             <p>Experience the Magic of Movies</p>
                                             @auth
-                                                <a href="{{ route('mypage.dashboard') }}" class="btn text-white border">My Page</a>
+                                                <a href="{{ route('mypage.dashboard') }}" class="btn text-white border">My
+                                                    Page</a>
                                             @else
                                                 <a href="{{ route('login') }}" class="btn text-white border">Log in</a>
                                             @endauth
@@ -77,7 +85,8 @@
                                             <div class="hero-content">
                                                 <span class="hero-tag">COMING SOON</span>
                                                 <h1>UPCOMING<br>BLOCKBUSTERS</h1>
-                                                <a href="{{ route('release', $heroMovie->id) }}" class="btn-book btn-book-yellow">VIEW MORE
+                                                <a href="{{ route('release', $heroMovie->id) }}"
+                                                    class="btn-book btn-book-yellow">VIEW MORE
                                                     →</a>
                                             </div>
                                         </div>
@@ -529,6 +538,7 @@
                     <hr class="text-white">
 
                     {{-- Information --}}
+
                     <div class="row" id="Information">
                         <div class="col-1"></div>
                         <div class="col-10 ">
@@ -537,6 +547,7 @@
                                     <span class="title-icon">📢</span>
                                     INFORMATION
                                 </h2>
+
                             </div>
 
                             <div class="container-fluid px-0 section-gap" id="Information">

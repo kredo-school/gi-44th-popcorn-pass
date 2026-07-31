@@ -83,11 +83,12 @@
         Showtimes
     </a>
 
+
     <a href="{{ route('information.index')}}" class="bar-item">
         <i class="fa-solid fa-circle-exclamation"></i>
         Information
     </a>
-    <a href="#" class="bar-item">
+    <a href="{{ route('customer.chat.index')}}" class="bar-item">
         <i class="fa-solid fa-circle-question"></i>
         Contact
     </a>
@@ -105,7 +106,7 @@
             </button>
         </form>
     @else
-        <a href="{{ route('login') }}" class="sidebar-btn">
+        <a href="{{ route('login') }}" class="sidebar-btn text-dark">
             Log in
         </a>
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 use App\Http\Controllers\MyPage\CancelController;
 use App\Http\Controllers\Api\NearByCinemasController;
+use App\Http\Controllers\Customer\ChatController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -107,7 +108,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])->name('movies.showtimes');
     Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])->name('movies.showtimes.generate');
     Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])->name('showtimes.delete');
-   
+
     // Dynamic Pricing Management
     Route::get('/dynamic-pricing', [AdminController::class, 'showtimeDynamicPricing'])->name('dynamic-pricing');
     Route::get('/dynamic-pricing/{id}/edit', [AdminController::class, 'editShowtimeDynamicPrice'])->name('dynamic-pricing.edit');
@@ -156,6 +157,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
 
     Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])->name('information.categories.update');
 
+    // custemor chat
+    Route::get('/chat',[AdminController::class,'chat_index'])->name('chat.index');
+    Route::get('/chat/{conversation}', [AdminController::class,'chat_show'])->name('chat.show');
+    Route::post('/chat/{conversation}',[AdminController::class,'chat_store'])->name('chat.store');
+    Route::get('/chat/{conversation}/fetch',[AdminController::class,'chat_fetch'])->name('chat.fetch');
+    Route::post('/admin/chat/{conversation}/close',[AdminController::class, 'chat_close'])->name('chat.close');
+
 });
 
 // ===========================
@@ -180,6 +188,26 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
     Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
         ->name('reservations.cancel');
+
+});
+
+
+// ===========================
+// Customer Service Chat
+// ===========================
+Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(function () {
+
+
+    Route::get('/chat', [ChatController::class, 'index'])
+        ->name('chat.index');
+    Route::post('/chat/message', [ChatController::class, 'store'])
+        ->name('chat.message');
+    Route::post('/chat/staff', [ChatController::class, 'staff'])
+        ->name('chat.staff');
+    Route::get('/chat/{conversation}/fetch', [ChatController::class, 'fetch'])
+        ->name('chat.fetch');
+    Route::post('/customer/chat/close', [ChatController::class, 'close'])
+        ->name('chat.close');
 
     // Cinema Review Routes
     Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])->name('cinema-reviews.store');

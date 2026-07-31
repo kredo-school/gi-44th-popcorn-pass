@@ -51,16 +51,14 @@
     color: #F5C126;
 }
 
+.premium-text {
+    color: #9C022F;
+}
+
 /* Payment form */
 .payment-form {
     width: 400px;
     margin: 30px auto 0;
 }
 
-.payment-btn.active {
-    border: 3px solid #F5C126;
-}
 
-.premium-text {
-    color: #9C022F;
-}
