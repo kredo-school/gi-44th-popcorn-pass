@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\CinemaReviewController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
@@ -47,31 +48,26 @@ Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showti
 //--------------------
 Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
     ->name('reservations.showtimeSelection');
-
+Route::get('/reservations/login-redirect',[ReservationController::class, 'loginRedirect'])
+    ->name('reservations.login.redirect');
+Route::post('/reservation/guest',[ReservationController::class, 'guest'])
+    ->name('reservations.guest');
 Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
-
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
     ->name('reservations.seat-selection.store');
-
 Route::get('/ticket-type', [ReservationController::class, 'ticketType'])
     ->name('reservations.ticket-type');
-
 Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
     ->name('reservations.save-ticket');
-
 Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
     ->name('reservations.payment-method');
-
 Route::post('/save-payment', [ReservationController::class, 'savePayment'])
     ->name('reservations.save-payment');
-
-Route::get('/reservation-confirm', [ReservationController::class, 'confirmation'])
+Route::post('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
-
-Route::post('/reservation-confirm', [ReservationController::class, 'confirmBooking'])
+Route::post('/reservation-booking', [ReservationController::class, 'confirmBooking'])
     ->name('reservations.confirm-booking');
-
 Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
 
@@ -91,6 +87,9 @@ Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'up
 // ===========================
 Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby']);
 Route::get('/api/dynamic-pricing/{showtimeId}', [AdminController::class, 'getDynamicPricingStats']);
+Route::get('/api/cinemas/{cinemaId}/reviews', [CinemaReviewController::class, 'show']);
+Route::get('/api/cinemas/{cinemaId}/reviews/breakdown', [CinemaReviewController::class, 'getScoreBreakdown']);
+Route::get('/api/cinemas/top-rated', [CinemaReviewController::class, 'getTopRatedCinemas']);
 
 
 // ===========================
@@ -164,7 +163,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/chat/{conversation}',[AdminController::class,'chat_store'])->name('chat.store');
     Route::get('/chat/{conversation}/fetch',[AdminController::class,'chat_fetch'])->name('chat.fetch');
     Route::post('/admin/chat/{conversation}/close',[AdminController::class, 'chat_close'])->name('chat.close');
-        
+
 });
 
 // ===========================
@@ -189,6 +188,7 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
     Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
         ->name('reservations.cancel');
+
 });
 
 
@@ -208,4 +208,9 @@ Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(functi
         ->name('chat.fetch');
     Route::post('/customer/chat/close', [ChatController::class, 'close'])
         ->name('chat.close');
+
+    // Cinema Review Routes
+    Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])->name('cinema-reviews.store');
+    Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])->name('cinema-reviews.index');
+    Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])->name('cinema-reviews.show');
 });

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/home.css') }}">
+    @vite(['resources/js/app.js'])
 
     {{-- ===========================
          Location Permission Dialog
@@ -61,7 +61,7 @@
                             <div class="swiper-slide">
                                 <div class="w-75 mx-auto row justify-content-center h-100">
                                     <div class="position-relative h-100 col-10">
-                                        <img src="{{ asset('images/welcome.png') }}" class="hero-image-welcome">
+                                        <img src="{{ asset('images/layouts/welcome.png') }}" class="hero-image-welcome">
                                         <div class="hero-content-welcome">
                                             <p>Experience the Magic of Movies</p>
                                             @auth
@@ -131,13 +131,8 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div class="col-lg-4 position-relative h-100">
-                                            <img src="{{ $information_slide->image_url }}" class="hero-image">
-                                            <div class="hero-overlay"></div>
-                                        </div>
-
                                         <div
-                                            class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
+                                            class="col-lg-8 d-flex align-items-center justify-content-center h-100 ps-lg-5">
                                             <div class="info-card">
                                                 <span class="hero-tag hero-tag-blue">INFORMATION</span>
 
@@ -543,57 +538,68 @@
                     <hr class="text-white">
 
                     {{-- Information --}}
-                    <div class="container-fluid px-0 mt-5 section-gap" id="Information">
-                        <p class="display-3 text-white title-base ms-5 text-center">
-                            Information
-                        </p>
-                        <div class="container">
-                            <div class="info-home-list">
 
-                                @forelse($information as $info)
-                                    <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
+                    <div class="row" id="Information">
+                        <div class="col-1"></div>
+                        <div class="col-10 ">
+                            <div class="section-title-wrap">
+                                <h2 class="section-title">
+                                    <span class="title-icon">📢</span>
+                                    INFORMATION
+                                </h2>
 
-                                        <div class="info-list-item">
+                            </div>
 
-                                            {{-- Category --}}
-                                            <span class="info-list-badge"
-                                                style="background-color: {{ $info->category->color }};
-                                                    color: {{ $info->category->text_color }};">
-                                                {{ $info->category->name }}
-                                            </span>
-
-                                            {{-- Title --}}
-                                            <span class="info-list-title">
-                                                {{ $info->title }}
-                                            </span>
-
-                                            {{-- Published Date --}}
-                                            <span class="info-list-date">
-                                                {{ $info->published_at->format('Y.m.d') }}
-                                            </span>
-
-                                            {{-- Arrow --}}
-                                            <span class="info-list-arrow">
-                                                <i class="fa-solid fa-chevron-right"></i>
-                                            </span>
-
-                                        </div>
-
+                            <div class="container-fluid px-0 section-gap" id="Information">
+                                <div class="info-home-list">
+                                
+                                    @forelse($information as $info)
+                                        <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
+                                    
+                                            <div class="info-list-item">
+                                    
+                                                {{-- Category --}}
+                                                <span class="info-list-badge" style="background-color: {{ $info->category->color }};
+                                                            color: {{ $info->category->text_color }};">
+                                                    {{ $info->category->name }}
+                                                </span>
+                                    
+                                                {{-- Title --}}
+                                                <span class="info-list-title">
+                                                    {{ $info->title }}
+                                                </span>
+                                    
+                                                {{-- Published Date --}}
+                                                <span class="info-list-date">
+                                                    {{ $info->published_at->format('Y.m.d') }}
+                                                </span>
+                                    
+                                                {{-- Arrow --}}
+                                                <span class="info-list-arrow">
+                                                    <i class="fa-solid fa-chevron-right"></i>
+                                                </span>
+                                    
+                                            </div>
+                                    
+                                        </a>
+                                    @empty
+                                        <p class="text-white text-center">No information available.</p>
+                                    @endforelse
+                                
+                                </div>
+                                
+                                <div class="text-center mt-4">
+                                    <a href="{{ route('information.index') }}" class="btn btn-outline-warning px-5 py-2">
+                                        View All Information
                                     </a>
-                                @empty
-                                    <p class="text-white text-center">No information available.</p>
-                                @endforelse
+                                </div>
 
+                                </div>
                             </div>
-
-                            <div class="text-center mt-4">
-                                <a href="{{ route('information.index') }}" class="btn btn-outline-warning px-5 py-2">
-                                    View All Information
-                                </a>
-                            </div>
-
                         </div>
+                        <div class="col-1"></div>
                     </div>
+
 
                     <div class="back-to-top mb-5">
                         <a href="#top" class="back-to-top-link">
@@ -605,6 +611,8 @@
                             <span>to top page</span>
                         </a>
                     </div>
+                    
+
                 </div>
             </div>
         </div>

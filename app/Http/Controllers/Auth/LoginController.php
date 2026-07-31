@@ -79,6 +79,10 @@ class LoginController extends Controller
             return route('admin.dashboard');
         }
 
+        if (session()->has('url.intended')) {
+            return session()->pull('url.intended');
+        }
+
         return route('mypage.dashboard');
     }
 }
