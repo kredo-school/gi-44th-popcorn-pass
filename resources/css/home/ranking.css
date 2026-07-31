@@ -1,3 +1,39 @@
+.panel-navy-overlay {
+
+    background:rgba(183,183,183,.3);
+
+}
+
+
+.rank-number.rank-1 {
+
+    font-size:20rem;
+
+}
+
+
+.rank-number.rank-2,
+.rank-number.rank-3 {
+
+    font-size:12rem;
+
+}
+
+
+
+.poster-area.first {
+
+    height:400px;
+
+}
+
+
+.poster-area.second,
+.poster-area.third {
+
+    height:300px;
+
+}
 
 .ranking-header{
     text-align:center;

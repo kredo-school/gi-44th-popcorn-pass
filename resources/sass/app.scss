@@ -15,12 +15,13 @@
 
 //home
 @import '../css/home/home.css';
-//ranking
+@import '../css/home/hero.css';
 @import '../css/home/ranking.css';
-//nowplaying
-@import '../css/home/nowplaying.css';
-//comingsoon
+@import '../css/home/movie-slider.css';
 @import '../css/home/comingsoon.css';
+@import '../css/home/location.css';
+@import '../css/home/information.css';
+@import '../css/home/contact.css';
 
 //showtime
 @import '../css/showtime/showtime.css';
