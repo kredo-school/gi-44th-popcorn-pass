@@ -44,6 +44,13 @@
                 </form>
             </div>
 
+            {{-- Contact icon --}}
+            <div class="contact-icon">
+                <a href="{{ route('customer.chat.index')}}">
+                    <i class="fa-solid fa-comment"></i>
+                </a>
+            </div>
+
             {{-- Swiper section --}}
             <div class=" mx-auto">
                 <div class="swiper-position">
@@ -58,7 +65,8 @@
                                         <div class="hero-content-welcome">
                                             <p>Experience the Magic of Movies</p>
                                             @auth
-                                                <a href="{{ route('mypage.dashboard') }}" class="btn text-white border">My Page</a>
+                                                <a href="{{ route('mypage.dashboard') }}" class="btn text-white border">My
+                                                    Page</a>
                                             @else
                                                 <a href="{{ route('login') }}" class="btn text-white border">Log in</a>
                                             @endauth
@@ -77,7 +85,8 @@
                                             <div class="hero-content">
                                                 <span class="hero-tag">COMING SOON</span>
                                                 <h1>UPCOMING<br>BLOCKBUSTERS</h1>
-                                                <a href="{{ route('release', $heroMovie->id) }}" class="btn-book btn-book-yellow">VIEW MORE
+                                                <a href="{{ route('release', $heroMovie->id) }}"
+                                                    class="btn-book btn-book-yellow">VIEW MORE
                                                     →</a>
                                             </div>
                                         </div>
@@ -529,58 +538,59 @@
                         <div class="col-1"></div>
 
 
-                </div>
+                    </div>
 
                     <hr class="text-white">
 
-                {{-- Information --}}
-                <div class="container-fluid px-0 mt-5 section-gap" id="Information">
-                    <p class="display-3 text-white title-base ms-5 text-center">
-                        Information
-                    </p>
-                    <div class="container">
-                        <div class="info-home-list">
-                        
-                            @forelse($information as $info)
-                                <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
-                            
-                                    <div class="info-list-item">
-                            
-                                        {{-- Category --}}
-                                        <span class="info-list-badge" style="background-color: {{ $info->category->color }};
+                    {{-- Information --}}
+                    <div class="container-fluid px-0 mt-5 section-gap" id="Information">
+                        <p class="display-3 text-white title-base ms-5 text-center">
+                            Information
+                        </p>
+                        <div class="container">
+                            <div class="info-home-list">
+
+                                @forelse($information as $info)
+                                    <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
+
+                                        <div class="info-list-item">
+
+                                            {{-- Category --}}
+                                            <span class="info-list-badge"
+                                                style="background-color: {{ $info->category->color }};
                                                     color: {{ $info->category->text_color }};">
-                                            {{ $info->category->name }}
-                                        </span>
-                            
-                                        {{-- Title --}}
-                                        <span class="info-list-title">
-                                            {{ $info->title }}
-                                        </span>
-                            
-                                        {{-- Published Date --}}
-                                        <span class="info-list-date">
-                                            {{ $info->published_at->format('Y.m.d') }}
-                                        </span>
-                            
-                                        {{-- Arrow --}}
-                                        <span class="info-list-arrow">
-                                            <i class="fa-solid fa-chevron-right"></i>
-                                        </span>
-                            
-                                    </div>
-                            
+                                                {{ $info->category->name }}
+                                            </span>
+
+                                            {{-- Title --}}
+                                            <span class="info-list-title">
+                                                {{ $info->title }}
+                                            </span>
+
+                                            {{-- Published Date --}}
+                                            <span class="info-list-date">
+                                                {{ $info->published_at->format('Y.m.d') }}
+                                            </span>
+
+                                            {{-- Arrow --}}
+                                            <span class="info-list-arrow">
+                                                <i class="fa-solid fa-chevron-right"></i>
+                                            </span>
+
+                                        </div>
+
+                                    </a>
+                                @empty
+                                    <p class="text-white text-center">No information available.</p>
+                                @endforelse
+
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <a href="{{ route('information.index') }}" class="btn btn-outline-warning px-5 py-2">
+                                    View All Information
                                 </a>
-                            @empty
-                                <p class="text-white text-center">No information available.</p>
-                            @endforelse
-                        
-                        </div>
-                        
-                        <div class="text-center mt-4">
-                            <a href="{{ route('information.index') }}" class="btn btn-outline-warning px-5 py-2">
-                                View All Information
-                            </a>
-                        </div>
+                            </div>
 
                         </div>
                     </div>

@@ -19,7 +19,7 @@
 /* Search */
 .search-wrapper {
     position: fixed;      
-    top: 65px;
+    top: 55px;
     left: 0;
     z-index: 999;
 
@@ -598,4 +598,28 @@
         font-size: 0.8rem;
         -webkit-line-clamp: 3;
     }
+}
+
+
+/* Contacut */
+.contact-icon {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+}
+
+.contact-icon a {
+    width: 60px;
+    height: 60px;
+    background-color: #222;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+}
+
+.contact-icon i {
+    font-size: 28px;
 }
