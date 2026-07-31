@@ -1,78 +1,96 @@
 @import './reservation-common.css';
 
+/* Reservation Page */
 .reservation-page {
     margin: 0;
     padding: 50px;
     min-height: 100vh;
-
-    /* background-image: url("/images/layouts/reservation_bg.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat; */
-
-    background-color: rgb(244, 248, 255);
-    /* background-color: rgb(255, 250, 242); */
-
+    background-color: #E3EBFA;
     font-family: Georgia, serif;
 }
 
-/* stepper */
+/* Stepper */
 .step-circle {
     width: 40px;
     height: 40px;
     border-radius: 50%;
 }
 
-/* Current */
 .current .step-circle {
-    background-color: #F5C126;
-    color: #000;
+    background-color: #1B2F55;
+    color: #fff;
 }
 
-/* Complete */
 .complete .step-circle {
-    background-color: #FFF;
-    color: #000;
-    border: 2px solid #1D3761;
+    background-color: #F7FBFF;
+    color: #1B2F55;
+    border: 2px solid #1B2F55;
 }
 
-/* Upcoming */
 .upcoming .step-circle {
-    background-color: #6C757D;
-    color: #FFF;
+    background-color: #7D9FCF;
+    color: #fff;
 }
 
 .step-line {
     width: 80px;
     height: 2px;
-    background-color: #6C757D;
+    background-color: #7D9FCF;
 }
 
-/* Reservation Summary */
+/* Summary */
 .card.summary {
-    background-color: #1D3761;
-    color: #fff;
-    border: 2px solid #F5C126;
+    background-color: #F7FBFF;
+    color: #1B2F55;
+    border: 1px solid #7D9FCF;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(27, 47, 85, .08);
 }
 
-/* button */
+.card.summary .card-header {
+    background-color: transparent;
+    color: #1B2F55;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.card.summary hr {
+    border-color: #1B2F55;
+}
+
+.card.summary small {
+    color: #7D9FCF;
+    font-weight: 600;
+}
+
+/* Button */
 .back-btn,
 .next-btn {
-    padding: 8px 24px;
+    padding: 10px 28px;
     font-size: 16px;
-    border-radius: 6px;
-    font-weight: bold;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: .3s;
 }
 
 .back-btn {
-    background-color: #000;
-    color: #FFF;
-    border: 3px solid #FFF;
+    background-color: #1B2F55;
+    color: #fff;
+    border: 2px solid #1B2F55;
+}
+
+.back-btn:hover {
+    background-color: #fff;
+    color: #1B2F55;
 }
 
 .next-btn {
     background-color: #F5C126;
-    color: #000;
-    border: none;
-    border: 3px solid #F5C126;
+    color: #1B2F55;
+    border: 2px solid #F5C126;
+}
+
+.next-btn:hover {
+    background-color: #1B2F55;
+    color: #F5C126;
 }

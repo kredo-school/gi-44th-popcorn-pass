@@ -1,0 +1,91 @@
+@import './reservation-common.css';
+
+/* Seat */
+.row-label {
+    width: 40px;
+}
+
+.seat-number {
+    width: 48px;
+}
+
+.seat {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.seat.selected {
+    background-color: hsl(307, 100%, 63%);
+}
+
+#selected-seats span {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 3px;
+    border-radius: 6px;
+}
+
+.seat-tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-right: 4px;
+    font-weight: bold;
+}
+
+.seat-tag.normal {
+    background-color: #103985;
+    color: #fff;
+    border: 2px solid #fff;
+}
+
+.seat-tag.premium {
+    background-color: #F5C126;
+    color: #000;
+    border: 2px solid #fff;
+}
+
+.available,
+.wheelchair {
+    background-color: #103985;
+}
+
+.wheelchair {
+    color: #FFF;
+}
+
+.premium {
+    background-color: #F5C126;
+}
+
+.premium-divider {
+    width: 75%;
+    margin: 0 auto;
+    border: 0;
+    border-top: 5px solid #000;
+}
+
+.pay-extra{
+    color: #9C022F;
+}
+
+.legend-seat {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.seat-bg{
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+}
+.bg-pink{
+    background-color: hsl(307, 100%, 63%);
+    color: hsl(307, 100%, 63%);
+    border: 2px solid  hsl(307, 100%, 63%);
+}
+

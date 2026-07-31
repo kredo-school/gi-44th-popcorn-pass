@@ -1,25 +1,20 @@
 @import './reservation-common.css';
-
-.confirm-title {
-    color: #F5C126;
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-.confirm-message {
-    color: #fff;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-
 .confirm-btn {
     background-color: #F5C126;
-    color: #000;
-    border: none;
-    border: 3px solid #F5C126;
+    color: #1B2F55;
+    border: 2px solid #F5C126;
 
     padding: 8px 24px;
     font-size: 16px;
     border-radius: 6px;
     font-weight: bold;
+}
+
+.confirm-btn:hover {
+    background-color: #1B2F55;
+    color: #F5C126;
+}
+
+.premium-text {
+    color: #9C022F;
 }

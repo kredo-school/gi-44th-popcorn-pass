@@ -63,7 +63,7 @@
             <div id="seat-data" data-seats='@json($selectedSeats)'></div>
 
             <div class="row">
-                <div class="fw-bolder fs-2 text-center text-white mb-5">SELECT YOUR SEAT</div>
+                <div class="fw-bolder fs-2 text-center page-title mb-5">SELECT YOUR SEAT</div>
 
                 {{-- Seat Area --}}
                 <div class="col-lg-8 seat-bg">
@@ -172,7 +172,7 @@
                             <div class="text-center">
                                 <img src="{{ $showtime->movie->poster_url }}" alt="Movie Poster" class="reservation-img">
                             </div>
-                            <h5 class="fw-bold mt-3">
+                            <h5 class="fw-bold text-center mt-3">
                                 {{ $showtime->movie->title }}
                             </h5>
                             <hr>
