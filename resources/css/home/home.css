@@ -252,9 +252,6 @@
 }
 
 
-.swiper-bg {
-    position: relative;
-}
 
 .swiper-bg .swiper-button-prev,
 .swiper-bg .swiper-button-next {
@@ -299,9 +296,7 @@
 }
 
 
-.swiper-bg {
-    padding: 5px;
-}
+
 
 .panel-navy-overlay {
     background: rgba(183, 183, 183, 0.3);
