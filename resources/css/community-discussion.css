@@ -1,0 +1,278 @@
+/* Community Discussion Styles */
+
+.community-discussion {
+    background-color: rgba(20, 40, 80, 0.8);
+    border-radius: 8px;
+    padding: 30px;
+    border: 1px solid rgba(100, 150, 255, 0.3);
+}
+
+.community-discussion h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    border-bottom: 2px solid rgba(100, 150, 255, 0.5);
+    padding-bottom: 15px;
+}
+
+/* Post Form */
+.post-form {
+    background-color: rgba(10, 20, 50, 0.6);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #6496ff;
+}
+
+.post-form .form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(100, 150, 255, 0.3);
+    color: #fff;
+}
+
+.post-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.post-form .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: #6496ff;
+    color: #fff;
+    box-shadow: 0 0 8px rgba(100, 150, 255, 0.3);
+}
+
+.post-form .form-check-label {
+    color: #fff;
+    font-size: 0.95rem;
+}
+
+.post-form .btn-primary {
+    background-color: #6496ff;
+    border: none;
+    font-weight: bold;
+}
+
+.post-form .btn-primary:hover {
+    background-color: #4575dd;
+}
+
+/* Posts List */
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post-card {
+    background-color: rgba(10, 20, 50, 0.6);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #6496ff;
+}
+
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 15px;
+}
+
+.post-author {
+    font-weight: bold;
+    color: #6496ff;
+    font-size: 1rem;
+}
+
+.post-time {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.85rem;
+}
+
+.post-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.spoiler-badge {
+    display: inline-block;
+    background-color: #ff6b6b;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+
+.post-body {
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.post-body.spoiler-hidden {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    text-align: center;
+    font-style: italic;
+}
+
+.post-body.spoiler-hidden:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.post-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.post-action-btn {
+    background: none;
+    border: none;
+    color: rgba(100, 150, 255, 0.8);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0;
+}
+
+.post-action-btn:hover {
+    color: #6496ff;
+}
+
+/* Replies */
+.replies-container {
+    margin-top: 15px;
+    border-top: 1px solid rgba(100, 150, 255, 0.2);
+    padding-top: 15px;
+}
+
+.reply-card {
+    background-color: rgba(5, 15, 40, 0.8);
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+    border-left: 3px solid rgba(100, 150, 255, 0.5);
+}
+
+.reply-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.reply-author {
+    font-weight: bold;
+    color: rgba(100, 150, 255, 0.9);
+    font-size: 0.95rem;
+}
+
+.reply-time {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.8rem;
+}
+
+.reply-body {
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.reply-body.spoiler-hidden {
+    background-color: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border-radius: 4px;
+    color: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.reply-form {
+    background-color: rgba(5, 15, 40, 0.8);
+    padding: 15px;
+    border-radius: 6px;
+    margin-left: 20px;
+    margin-bottom: 10px;
+}
+
+.reply-form .form-control {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(100, 150, 255, 0.2);
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.reply-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.reply-form .form-control:focus {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(100, 150, 255, 0.5);
+    color: #fff;
+    box-shadow: 0 0 6px rgba(100, 150, 255, 0.2);
+}
+
+.reply-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.reply-form-actions button {
+    background-color: rgba(100, 150, 255, 0.8);
+    border: none;
+    color: #fff;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.reply-form-actions button:hover {
+    background-color: #6496ff;
+}
+
+.reply-form-actions button.cancel-btn {
+    background-color: rgba(100, 100, 100, 0.6);
+}
+
+.reply-form-actions button.cancel-btn:hover {
+    background-color: rgba(100, 100, 100, 0.8);
+}
+
+/* Delete Button */
+.delete-btn {
+    background-color: #ff6b6b;
+    border: none;
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.delete-btn:hover {
+    background-color: #ff5252;
+}
+
+/* Loading & Empty States */
+.text-muted {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.alert-info {
+    background-color: rgba(100, 150, 255, 0.2);
+    border: 1px solid rgba(100, 150, 255, 0.4);
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.alert-info a {
+    color: #6496ff;
+    text-decoration: underline;
+}
