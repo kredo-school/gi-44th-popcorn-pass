@@ -1,93 +1,77 @@
-document.addEventListener('DOMContentLoaded', function () {
-    loadRecommendations();
-});
+/**
+ * Recommendations Module
+ * Handles fetching and rendering personalized movie recommendations
+ */
 
-function loadRecommendations() {
-    const token = document.querySelector('meta[name="csrf-token"]')?.content;
+(function () {
+    'use strict';
 
-    fetch('/api/recommendations', {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': token,
-        },
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.recommendations.length > 0) {
-                renderRecommendations(data.recommendations);
-            } else {
-                renderNoRecommendations();
-            }
-        })
-        .catch(error => {
-            console.error('Error loading recommendations:', error);
-            renderError();
-        });
-}
+    function fetchRecommendations() {
+        const container = document.getElementById('recommendations-container');
+        
+        if (!container) {
+            return;
+        }
 
-function renderRecommendations(recommendations) {
-    const container = document.getElementById('recommendedContainer');
-    const mypageContainer = document.getElementById('mypageRecommendedContainer');
+        fetch('/api/recommendations?limit=5')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('API Error: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                renderRecommendations(container, data);
+            })
+            .catch(error => {
+                console.error('Error fetching recommendations:', error);
+                renderError(container);
+            });
+    }
 
-    const html = recommendations.map(movie => `
-        <div class="col-md-4 mb-4">
-            <div class="card recommendation-card h-100">
-                <img src="${movie.poster_url}" class="card-img-top" alt="${movie.title}">
-                <div class="card-body">
-                    <h5 class="card-title">${movie.title}</h5>
-                    <div class="rating mb-2">
-                        <span class="stars">${renderStars(movie.review_average)}</span>
-                        <span class="rating-value">${(movie.review_average / 2).toFixed(1)}/5</span>
+    function renderRecommendations(container, data) {
+        container.innerHTML = '';
+
+        if (data.data && data.data.length > 0) {
+            const html = data.data.map(movie => `
+                <div class="col-md-4 col-lg-2">
+                    <div class="card recommendation-card h-100">
+                        <img src="${movie.poster_url || '/images/no-poster.png'}" 
+                             alt="${movie.title}"
+                             class="card-img-top">
+                        <div class="card-body">
+                            <h6 class="card-title">${movie.title}</h6>
+                        </div>
+                        <div class="recommendation-score">
+                            ${Math.round(movie.recommendation_score * 10) / 10}⭐
+                        </div>
                     </div>
-                    <p class="card-text text-muted small">Match: ${(movie.recommendation_score * 20).toFixed(0)}%</p>
-                    <a href="/movies/${movie.id}" class="btn btn-primary btn-sm w-100">View Details</a>
                 </div>
-            </div>
-        </div>
-    `).join('');
-
-    if (container) {
-        container.innerHTML = html;
+            `).join('');
+            container.innerHTML = html;
+        } else {
+            renderEmpty(container);
+        }
     }
-    if (mypageContainer) {
-        mypageContainer.innerHTML = html;
-    }
-}
 
-function renderNoRecommendations() {
-    const container = document.getElementById('recommendedContainer');
-    if (container) {
+    function renderEmpty(container) {
         container.innerHTML = `
-            <div class="col-12 text-center">
-                <p class="text-muted">No recommendations available yet. Watch more movies to get personalized recommendations!</p>
+            <div class="col-12 recommendations-empty">
+                <i class="fa-solid fa-film"></i>
+                <p>No recommendations available yet.<br>Watch more movies to get personalized recommendations!</p>
             </div>
         `;
     }
-}
 
-function renderError() {
-    const container = document.getElementById('recommendedContainer');
-    if (container) {
+    function renderError(container) {
         container.innerHTML = `
-            <div class="col-12 text-center">
-                <p class="text-danger">Error loading recommendations. Please try again later.</p>
+            <div class="col-12 recommendations-empty">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <p class="text-danger">Failed to load recommendations</p>
             </div>
         `;
     }
-}
 
-function renderStars(rating) {
-    // rating は 0-10 scale なので、0-5 に正規化
-    const normalizedRating = rating / 2;
-    const fullStars = Math.floor(normalizedRating);
-    const hasHalfStar = normalizedRating % 1 >= 0.5;
-    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-
-    let stars = '★'.repeat(fullStars);
-    if (hasHalfStar) stars += '☆';
-    stars += '☆'.repeat(emptyStars);
-
-    return stars;
-}
+    // Initialize when DOM is ready
+    document.addEventListener('DOMContentLoaded', fetchRecommendations);
+})();
