@@ -75,7 +75,7 @@
     </div>
 
     {{-- My Reviews --}}
-    <div class="mypage-card p-4">
+    <div class="mypage-card mb-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0"><i class="fa-solid fa-star me-2"></i>My Reviews</h5>
             <a href="{{ route('mypage.reviews-written') }}" class="mypage-view-all">View All &rarr;</a>
@@ -152,4 +152,28 @@
         @endif
     </div>
 
+
+    {{-- Recommended for You Section --}}
+    <div class="mypage-card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0"><i class="fa-solid fa-sparkles me-2"></i>Recommended for You</h5>
+        </div>
+
+        <div id="recommendations-container" class="row g-3">
+            <div class="col-12 text-center">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted mt-2 mb-0">Loading recommendations...</p>
+            </div>
+        </div>
+    </div>
 @endsection
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/recommendations.css') }}">
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('js/recommendations.js') }}"></script>
+@endpush

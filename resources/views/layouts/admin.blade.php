@@ -35,6 +35,7 @@
                 <a href="{{ route('admin.reviews') }}"
                     class="nav-link d-inline {{ request()->routeIs('admin.reviews*') ? 'active' : '' }}">Reviews</a>
                 <a href="{{ route('admin.settings') }}" class="nav-link d-inline {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">Settings</a>
+                <a href="{{ route('admin.chat.index') }}" class="nav-link d-inline {{ request()->routeIs('admin.chat*') ? 'active' : '' }}"> Chat</a>
             </nav>
         </div>
 

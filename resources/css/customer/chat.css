@@ -1,0 +1,68 @@
+
+.chat-box{
+    max-width: 450px;
+    height: 650px;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.chat-area{
+
+    height: 420px;
+    overflow-y: auto;
+    background:#f8f9fa;
+
+}
+
+
+.bubble{
+
+    display:inline-block;
+    padding:12px 15px;
+    border-radius:15px;
+    margin-top:5px;
+    max-width:80%;
+    text-align:left;
+
+}
+
+.ai{
+
+    background:white;
+    border:1px solid #ddd;
+
+}
+
+.customer{
+
+    background:#0d6efd;
+    color:white;
+
+}
+
+.staff{
+
+    background:white;
+    border:1px solid #ddd;
+
+}
+
+.message{
+
+    font-size:14px;
+
+}
+
+.chat-area::-webkit-scrollbar{
+
+    width:6px;
+
+}
+
+
+.chat-area::-webkit-scrollbar-thumb{
+
+    background:#aaa;
+    border-radius:10px;
+
+}

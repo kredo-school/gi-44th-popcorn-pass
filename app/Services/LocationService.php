@@ -1,10 +1,7 @@
 <?php
 // app/Services/LocationService.php
-
 namespace App\Services;
-
 use App\Models\Cinema;
-
 class LocationService
 {
     public function __construct(private GooglePlacesService $googlePlaces)
@@ -13,15 +10,11 @@ class LocationService
 
     /**
      * Resolve the cinema list to show on the home page.
-     * Tries Google Places nearby search first (if coordinates were given
-     * and the API key is configured); falls back to the full active
-     * cinema list from the database otherwise.
      */
     public function resolveCinemas(?float $lat, ?float $lng): array
     {
         if ($lat !== null && $lng !== null && $this->googlePlaces->isConfigured()) {
             $nearby = $this->googlePlaces->nearbyCinemas($lat, $lng);
-
             if (!empty($nearby)) {
                 return [
                     'source' => 'google_places',
@@ -29,7 +22,6 @@ class LocationService
                 ];
             }
         }
-
         return [
             'source' => 'database',
             'cinemas' => $this->fallbackCinemas(),
@@ -42,6 +34,7 @@ class LocationService
             ->orderBy('cinema_name')
             ->get()
             ->map(fn (Cinema $cinema) => [
+                'id' => $cinema->id,
                 'source' => 'database',
                 'place_id' => null,
                 'name' => $cinema->cinema_name,

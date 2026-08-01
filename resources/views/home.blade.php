@@ -44,6 +44,13 @@
                 </form>
             </div>
 
+            {{-- Contact icon --}}
+            <div class="contact-icon">
+                <a href="{{ route('customer.chat.index')}}">
+                    <i class="fa-solid fa-comment"></i>
+                </a>
+            </div>
+
             {{-- Swiper section --}}
             <div class=" mx-auto">
                 <div class="swiper-position">
@@ -58,7 +65,8 @@
                                         <div class="hero-content-welcome">
                                             <p>Experience the Magic of Movies</p>
                                             @auth
-                                                <a href="{{ route('mypage.dashboard') }}" class="btn text-white border">My Page</a>
+                                                <a href="{{ route('mypage.dashboard') }}" class="btn text-white border">My
+                                                    Page</a>
                                             @else
                                                 <a href="{{ route('login') }}" class="btn text-white border">Log in</a>
                                             @endauth
@@ -72,27 +80,42 @@
                                 <div class="swiper-slide">
                                     <div class="w-75 mx-auto h-100">
                                         <div class="row g-0 align-items-center justify-content-center h-100">
+
                                             <div class="col-lg-4 position-relative h-100">
-                                                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image" alt="{{ $heroMovie->title }}">
-                                
+                                                <img
+                                                    src="{{ $heroMovie->banner_image_url }}"
+                                                    class="hero-image"
+                                                    alt="{{ $heroMovie->title }}"
+                                                >
+
                                                 <div class="hero-overlay"></div>
-                                
+
                                                 <div class="hero-content">
                                                     <span class="hero-tag">COMING SOON</span>
-                                                    <h1>UPCOMING<br>BLOCKBUSTERS</h1>
-                                
-                                                    <a href="{{ route('release', $heroMovie->id) }}" class="btn-book btn-book-yellow">
+
+                                                    <h1>
+                                                        UPCOMING<br>
+                                                        BLOCKBUSTERS
+                                                    </h1>
+
+                                                    <a
+                                                        href="{{ route('release', $heroMovie->id) }}"
+                                                        class="btn-book btn-book-yellow"
+                                                    >
                                                         VIEW MORE →
                                                     </a>
                                                 </div>
                                             </div>
-                                
+
                                             <div class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                                <iframe class="hero-video"
-                                                    src="https://www.youtube.com/embed/jSGmZ85krBs?autoplay=1&mute=1&loop=1&playlist=jSGmZ85krBs"
-                                                    allow="autoplay; encrypted-media" allowfullscreen>
-                                                </iframe>
+                                                <iframe
+                                                    class="hero-video"
+                                                    src="{{ $heroMovie->trailer_url }}"
+                                                    allow="autoplay; encrypted-media"
+                                                    allowfullscreen
+                                                ></iframe>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -540,6 +563,7 @@
                     <hr class="text-white">
 
                     {{-- Information --}}
+
                     <div class="row" id="Information">
                         <div class="col-1"></div>
                         <div class="col-10 ">
@@ -548,6 +572,7 @@
                                     <span class="title-icon">📢</span>
                                     INFORMATION
                                 </h2>
+
                             </div>
 
                             <div class="container-fluid px-0 section-gap" id="Information">
@@ -627,3 +652,28 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 @endsection
+
+{{-- Add this section at the end of resources/views/home.blade.php --}}
+
+{{-- Recommended for You Section --}}
+@auth
+    <section class="mt-5">
+        <h2 class="mb-4">🎯 Recommended for You</h2>
+        <div id="recommendations-container" class="row g-3">
+            <div class="col-12 text-center">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted mt-2 mb-0">Loading recommendations...</p>
+            </div>
+        </div>
+    </section>
+@endauth
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/recommendations.css') }}">
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('js/recommendations.js') }}"></script>
+@endpush

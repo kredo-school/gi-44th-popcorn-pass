@@ -6,22 +6,37 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+
     public function up(): void
     {
-        Schema::table('movies', function (Blueprint $table) {
 
-            if (Schema::hasColumn('movies', 'genre_id')) {
+        if (Schema::hasColumn('movies', 'genre_id')) {
+
+            Schema::table('movies', function (Blueprint $table) {
+
+               
+                $table->dropForeign(['genre_id']);
+
+           
                 $table->dropColumn('genre_id');
-            }
-        });
+
+            });
+
+        }
+
     }
 
 
     public function down(): void
     {
-        Schema::table('movies', function (Blueprint $table) {
+if (!Schema::hasColumn('movies', 'genre_id')) {
+    Schema::table('movies', function (Blueprint $table) {
+        $table->uuid('genre_id')->nullable();
 
-            $table->uuid('genre_id')->nullable();
-        });
-    }
-};
+        $table->foreign('genre_id')
+            ->references('id')
+            ->on('genres')
+            ->cascadeOnDelete();
+    });
+}
+
