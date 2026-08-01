@@ -471,3 +471,8 @@ Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(functi
     Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])->name('cinema-reviews.index');
     Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])->name('cinema-reviews.show');
 });
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/recommendations', [RecommendationController::class, 'index'])->name('recommendations.index');
+});

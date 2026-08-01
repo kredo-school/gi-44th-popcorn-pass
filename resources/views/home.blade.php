@@ -627,3 +627,78 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 @endsection
+
+<!-- Recommended for You Section -->
+@auth
+<section class="mt-5">
+    <h2 class="mb-4">🎯 Recommended for You</h2>
+    <div id="recommendations-container" class="row">
+        <div class="col-12 text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .recommendation-card {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .recommendation-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .recommendation-score {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: #ff6b6b;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/api/recommendations?limit=5')
+            .then(response => response.json())
+            .then(data => {
+                const container = document.getElementById('recommendations-container');
+                container.innerHTML = '';
+
+                if (data.data && data.data.length > 0) {
+                    data.data.forEach(movie => {
+                        const card = document.createElement('div');
+                        card.className = 'col-md-4 col-lg-2 mb-3';
+                        card.innerHTML = `
+                            <div class="card recommendation-card h-100">
+                                <img src="${movie.poster_url || '/images/no-poster.png'}" 
+                                     class="card-img-top" alt="${movie.title}">
+                                <div class="card-body">
+                                    <h6 class="card-title">${movie.title}</h6>
+                                </div>
+                                <div class="recommendation-score">
+                                    ${Math.round(movie.recommendation_score * 10) / 10}⭐
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                } else {
+                    container.innerHTML = '<div class="col-12 text-muted">No recommendations available yet. Watch more movies!</div>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching recommendations:', error);
+                document.getElementById('recommendations-container').innerHTML = 
+                    '<div class="col-12 text-danger">Failed to load recommendations</div>';
+            });
+    });
+</script>
+@endauth
