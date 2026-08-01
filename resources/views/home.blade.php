@@ -627,3 +627,28 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 @endsection
+
+{{-- Add this section at the end of resources/views/home.blade.php --}}
+
+{{-- Recommended for You Section --}}
+@auth
+    <section class="mt-5">
+        <h2 class="mb-4">🎯 Recommended for You</h2>
+        <div id="recommendations-container" class="row g-3">
+            <div class="col-12 text-center">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="text-muted mt-2 mb-0">Loading recommendations...</p>
+            </div>
+        </div>
+    </section>
+@endauth
+
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/recommendations.css') }}">
+@endpush
+
+@push('scripts')
+    <script src="{{ asset('js/recommendations.js') }}"></script>
+@endpush
