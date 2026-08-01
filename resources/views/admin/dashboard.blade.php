@@ -125,7 +125,7 @@
                     @forelse ($recentReservations as $reservation)
                         <li class="border-bottom border-secondary py-2">
 
-                            {{ $reservation->user->username }}
+                            {{ $reservation->user?->username ?? 'Guest' }}
                             |
                             {{ $reservation->movie->title }}
                             |

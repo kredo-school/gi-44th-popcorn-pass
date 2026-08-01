@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -82,6 +83,16 @@ class User extends Authenticatable
         return $this->hasMany(Reservation::class);
     }
 
+    public function coupons(): BelongsToMany
+    {
+        return $this->belongsToMany(Coupon::class, 'user_coupons')
+            ->withPivot('used_at')
+            ->withCasts([
+                'used_at' => 'datetime',
+            ])
+            ->withTimestamps();
+    }
+
     // -----------------------
     // Computed attributes
     // -----------------------
@@ -124,4 +135,13 @@ class User extends Authenticatable
     {
         return in_array((int) $this->role, [2, 3, 4], true);
     }
+
+    // -----------------------
+    // Coupon
+    // -----------------------
+    public function userCoupons()
+    {
+        return $this->hasMany(UserCoupon::class);
+    }
+    
 }

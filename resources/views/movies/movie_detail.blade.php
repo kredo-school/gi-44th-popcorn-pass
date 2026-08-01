@@ -86,7 +86,10 @@
                         Watch the trailer
                     </a>
                     <div class="text-center mt-3 mb-3">
-                        <a href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
+                        <a href="{{ route('reservations.seat-selection', [
+                            'showtime' => $showtime->id,
+                            'new' => 1,
+                        ]) }}" class="text-decoration-none">
                             <button class="book-btn mt-2 w-75">BOOK NOW</button>
                         </a>
                     </div>

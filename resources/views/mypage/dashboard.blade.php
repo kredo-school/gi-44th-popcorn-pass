@@ -104,6 +104,55 @@
         @endif
     </div>
 
+    {{-- My Coupons --}}
+    <div class="mypage-card mt-4 p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="mb-0">
+                <i class="fa-solid fa-tags me-2"></i>My Coupons
+            </h5>
+            <a href="{{ route('mypage.coupons') }}" class="mypage-view-all">
+                View All &rarr;
+            </a>
+        </div>
+    
+        @if ($coupons->isEmpty())
+            <p class="text-muted mb-0">
+                You don't have any available coupons.
+            </p>
+        @else
+            @foreach ($coupons as $coupon)
+                <div class="d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <div class="fw-bold">{{ $coupon->code }}</div>
+                
+                        <div class="small text-muted">
+                            @if ($coupon->coupon_type === 'percentage')
+                                {{ $coupon->discount_percent }}% OFF
+                            @else
+                                ${{ number_format($coupon->discount_amount, 2) }} OFF
+                            @endif
+                        </div>
+                
+                        <div class="small text-muted">
+                            @if ($coupon->expires_at)
+                                Expires {{ $coupon->expires_at->format('M d, Y') }}
+                            @else
+                                No expiration date
+                            @endif
+                        </div>
+                    </div>
+                
+                    <span class="badge bg-success">Available</span>
+                </div>
+                
+                @unless ($loop->last)
+                    <hr class="my-0 border-secondary">
+                @endunless
+            @endforeach
+        @endif
+    </div>
+
+
     {{-- Recommended for You Section --}}
     <div class="mypage-card p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">

@@ -86,9 +86,8 @@
                     </div>
 
                     <div class="d-flex gap-2 align-items-center">
-                        @if ($tab !== 'cancelled')
-                            <a href="{{ route('mypage.tickets.qrcode', $reservation->id) }}"
-                                class="btn {{ $tab === 'upcoming' ? 'text-warning border-warning' : 'border-white text-white' }}">
+                        @if ($tab === 'upcoming')
+                            <a href="{{ route('mypage.tickets.qrcode', $reservation->id) }}" class="btn text-warning border-warning">
                                 View e-Ticket
                             </a>
                         @endif

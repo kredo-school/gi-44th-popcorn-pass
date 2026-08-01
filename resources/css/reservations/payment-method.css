@@ -62,3 +62,19 @@
 }
 
 
+.premium-text {
+    color: #9C022F;
+}
+
+.coupon-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.coupon-card:hover {
+    border-color: #F5C126;
+    background: #fffdf3;
+}

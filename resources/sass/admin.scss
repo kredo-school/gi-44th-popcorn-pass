@@ -15,6 +15,74 @@
 
 // Admin reviews
 @import "../css/admin/reviews.css";
+//dashboard
+@import '../css/admin/dashboard.css';
+//movie
+@import '../css/admin/movie-edit.css';
+@import '../css/admin/movie.css';
+
+
+
+///////////////////////////////////
+:root {
+    --navy: #1a1f36;
+    --navy-light: #232a47;
+    --gold: #FFD700;
+    --red: #E63946;
+}
+
+body {
+    background-color: #1a1f36 !important;
+    color: #ffffff;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.admin-header {
+    background-color: var(--navy);
+    border-bottom: 2px solid var(--gold);
+    padding: 16px 32px;
+}
+
+.brand-title {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 1px;
+}
+
+.brand-subtitle {
+    color: #ffffff;
+    font-size: 16px;
+    margin-left: 12px;
+}
+
+.admin-nav {
+    margin-left: 32px;
+}
+
+.admin-nav .nav-link {
+    color: #c9ccd6;
+    font-size: 15px;
+    padding: 6px 14px;
+}
+
+.admin-nav .nav-link.active {
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.admin-nav .nav-link:hover {
+    color: var(--gold);
+}
+
+.admin-date {
+    color: #c9ccd6;
+    font-size: 14px;
+}
+
+.admin-content {
+    padding: 24px 32px;
+}
 
 // Admin chat
 @import "../css/admin/chat.css";

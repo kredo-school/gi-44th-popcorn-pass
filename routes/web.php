@@ -15,8 +15,10 @@ use App\Http\Controllers\MyPage\ReviewsWrittenController;
 use App\Http\Controllers\MyPage\TicketController;
 use App\Http\Controllers\MyPage\ProfileController;
 use App\Http\Controllers\MyPage\CancelController;
+use App\Http\Controllers\MyPage\CouponController;
 use App\Http\Controllers\Api\NearByCinemasController;
 use App\Http\Controllers\Customer\ChatController;
+
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -325,6 +327,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])->name('coupons-promotions');
     Route::post('/coupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
+    Route::post('/coupons/{coupon}/distribute',[AdminController::class, 'distributeCoupon'])->name('coupons.distribute');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
 
@@ -344,7 +347,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/information/categories', [AdminController::class, 'informationCategories'])->name('information.categories');
     Route::post('/information/categories', [AdminController::class, 'storeInformationCategory'])->name('information.categories.store');
     Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])->name('information.categories.delete');
-
     Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])->name('information.categories.update');
 
     // custemor chat
@@ -445,6 +447,7 @@ Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () 
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
     Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
         ->name('reservations.cancel');
+    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons');
 
 });
 

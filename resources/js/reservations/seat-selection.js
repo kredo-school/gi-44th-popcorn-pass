@@ -6,17 +6,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const nextButton = document.querySelector('.next-btn');
     const limitMsg = document.getElementById('seat-limit-msg');
 
-    if (!hiddenInput || !summary || !nextButton) {
-        return;
-    }
+    if (!hiddenInput || !summary || !nextButton) return;
 
     let selectedSeats = [];
 
+    const isNewReservation =
+        new URLSearchParams(window.location.search).get('new') === '1';
+
     const dataEl = document.getElementById('seat-data');
-    if (dataEl) {
+
+    if (dataEl && !isNewReservation) {
         const savedSeats = JSON.parse(dataEl.dataset.seats || '[]');
+
         savedSeats.forEach(saved => {
             const seatBtn = document.querySelector(`[data-seat="${saved.seat}"]`);
+
             if (seatBtn) {
                 seatBtn.classList.add('selected');
                 selectedSeats.push(saved);
@@ -25,36 +29,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updateSummary() {
-
         hiddenInput.value = JSON.stringify(selectedSeats);
-
         nextButton.disabled = selectedSeats.length === 0;
 
-        if (selectedSeats.length === 0) {
-            summary.innerHTML = "No seats selected";
-            return;
-        }
-
-        summary.innerHTML = selectedSeats.map(item => `
-            <span class="seat-tag ${item.premium ? 'premium' : 'normal'}">
-                ${item.seat}
-            </span>
-        `).join('');
+        summary.innerHTML = selectedSeats.length
+            ? selectedSeats.map(item => `
+                <span class="seat-tag ${item.premium ? 'premium' : 'normal'}">
+                    ${item.seat}
+                </span>
+            `).join('')
+            : 'No seats selected';
     }
 
     seats.forEach(seat => {
-
         seat.addEventListener('click', function () {
 
             const seatNumber = this.dataset.seat;
             const isPremium = this.classList.contains('premium');
+            const index = selectedSeats.findIndex(s => s.seat === seatNumber);
 
-            const existingIndex = selectedSeats.findIndex(
-                s => s.seat === seatNumber
-            );
-
-            if (existingIndex !== -1) {
-                selectedSeats.splice(existingIndex, 1);
+            if (index !== -1) {
+                selectedSeats.splice(index, 1);
                 this.classList.remove('selected');
                 limitMsg.style.display = 'none';
             } else {
@@ -62,7 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     limitMsg.style.display = 'block';
                     return;
                 }
+
                 limitMsg.style.display = 'none';
+
                 selectedSeats.push({
                     seat: seatNumber,
                     premium: isPremium
@@ -73,7 +70,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             updateSummary();
         });
-
     });
 
     updateSummary();

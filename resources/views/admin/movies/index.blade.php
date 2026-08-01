@@ -38,6 +38,7 @@
                             <th>Rating</th>
                             <th>Status</th>
                             <th>Release Date</th>
+                            <th>End Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -54,6 +55,7 @@
                                     <span class="badge bg-secondary">{{ $movie->status }}</span>
                                 </td>
                                 <td>{{ $movie->released_date ? $movie->released_date->format('Y-m-d') : '—' }}</td>
+                                <td>{{ $movie->end_date ? $movie->end_date->format('Y-m-d') : '—' }}</td>
                             </tr>
                         @empty
                             <tr>

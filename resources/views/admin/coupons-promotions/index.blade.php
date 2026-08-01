@@ -5,9 +5,25 @@
 
 @section('content')
 
-    @if (session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+    @if (session('promotion_created'))
+        <div class="alert alert-success d-flex justify-content-between align-items-center">
+            <div>
+                <strong>Promotion created successfully.</strong><br>
+                <span class="small">
+                    Add an Information article to let users know about this promotion.
+                </span>
+            </div>
+        
+            <a href="{{ route('admin.information.create') }}" class="btn btn-success fw-bold px-4">
+                Add Information
+            </a>
+        </div>
+    @elseif (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
     @endif
+        
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul class="mb-0">
@@ -42,8 +58,8 @@
                         @csrf
 
                         <div class="col-md-3">
-                            <label class="form-label text-secondary small">Coupon Code</label>
-                            <input type="text" name="code" class="form-control" placeholder="SUMMER2026" required>
+                            <label class="form-label text-secondary small">Title</label>
+                            <input type="text" name="code" class="form-control" required>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label text-secondary small">Type</label>
@@ -79,7 +95,7 @@
                 <table class="table table-dark table-hover align-middle mb-0">
                     <thead>
                         <tr>
-                            <th>Code</th>
+                            <th>Title</th>
                             <th>Type</th>
                             <th>Discount</th>
                             <th>Uses</th>
@@ -88,11 +104,14 @@
                             <th></th>
                         </tr>
                     </thead>
+            
                     <tbody>
                         @forelse ($coupons as $coupon)
                             <tr>
                                 <td>{{ $coupon->code }}</td>
+                
                                 <td>{{ ucfirst(str_replace('_', ' ', $coupon->coupon_type)) }}</td>
+                
                                 <td>
                                     @if ($coupon->discount_percent)
                                         {{ $coupon->discount_percent }}%
@@ -102,8 +121,11 @@
                                         —
                                     @endif
                                 </td>
+                
                                 <td>{{ $coupon->current_uses }} / {{ $coupon->max_uses ?? '∞' }}</td>
+                
                                 <td>{{ $coupon->expires_at ? $coupon->expires_at->format('Y-m-d') : '—' }}</td>
+                
                                 <td>
                                     @if ($coupon->coupon_status === 'active')
                                         <span class="badge bg-success">Active</span>
@@ -111,19 +133,38 @@
                                         <span class="badge bg-danger">{{ ucfirst($coupon->coupon_status) }}</span>
                                     @endif
                                 </td>
+                
                                 <td>
-                                    <form method="POST" action="{{ route('admin.coupons.toggle-status', $coupon->id) }}" class="d-inline">
+                                    <form method="POST" action="{{ route('admin.coupons.toggle-status', $coupon->id) }}"
+                                        class="d-inline">
                                         @csrf
                                         @method('PUT')
-                                        <button type="submit" class="btn btn-sm {{ $coupon->coupon_status === 'active' ? 'btn-outline-danger' : 'btn-outline-success' }}">
+                                        <button type="submit"
+                                            class="btn btn-sm {{ $coupon->coupon_status === 'active' ? 'btn-outline-danger' : 'btn-outline-success' }}">
                                             {{ $coupon->coupon_status === 'active' ? 'Disable' : 'Activate' }}
                                         </button>
                                     </form>
+                
+                                    @if ($coupon->user_coupons_count > 0)
+                                        <button type="button" class="btn btn-sm btn-secondary" disabled>
+                                            Distributed ({{ $coupon->user_coupons_count }})
+                                        </button>
+                                    @else
+                                        <form method="POST" action="{{ route('admin.coupons.distribute', $coupon->id) }}" class="d-inline">
+                                            @csrf
+                                            <input type="hidden" name="target" value="all">
+                                            <button type="submit" class="btn btn-sm btn-outline-warning">
+                                                Distribute
+                                            </button>
+                                        </form>
+                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center text-secondary py-4">No coupons found.</td>
+                                <td colspan="7" class="text-center text-secondary py-4">
+                                    No coupons found.
+                                </td>
                             </tr>
                         @endforelse
                     </tbody>

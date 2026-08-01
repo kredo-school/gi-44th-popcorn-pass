@@ -2,5 +2,8 @@
 import 'bootstrap'
 
 
-//admin information
-import './admin/information';
+//admin
+import './admin/information.js';
+import './admin/movie.js';
+import './admin/movie-edit.js';
+import './admin/chart.js';

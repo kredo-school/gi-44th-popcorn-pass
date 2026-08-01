@@ -55,14 +55,23 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-secondary small">Genre</label>
-                                    <select name="genre_id" class="form-select" required>
-                                        <option value="">Select genre...</option>
+                                    <div class="row">
                                         @foreach ($genres as $genre)
-                                            <option value="{{ $genre->id }}"
-                                                {{ old('genre_id', $movie->genre_id) == $genre->id ? 'selected' : '' }}>
-                                                {{ $genre->title }}</option>
+                                            <div class="col-md-4 mb-2">
+                                                <div class="form-check">
+                                                    <input class="form-check-input genre-checkbox" type="checkbox" name="genre_ids[]"
+                                                        value="{{ $genre->id }}" id="genre{{ $genre->id }}" {{ in_array( $genre->id,
+                                                    old('genre_ids', $movie->genres->pluck('id')->toArray())
+                                                    ) ? 'checked' : '' }}
+                                                    >
+                                    
+                                                    <label class="form-check-label" for="genre{{ $genre->id }}">
+                                                        {{ $genre->title }}
+                                                    </label>
+                                                </div>
+                                            </div>
                                         @endforeach
-                                    </select>
+                                    </div>
                                 </div>
 
                                 <div class="col-md-6">
@@ -130,9 +139,19 @@
                                         value="{{ old('director', $movie->director) }}">
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label text-secondary small">Cast Members</label>
-                                    <input type="text" name="cast" class="form-control"
-                                        value="{{ old('cast', $movie->cast) }}">
+                                    <label class="form-label text-secondary small">Cast Members (Max 6)</label>
+                                    @php
+                                        $casts = old(
+                                        'cast',
+                                        is_array($movie->cast)
+                                        ? $movie->cast
+                                        : (json_decode($movie->cast, true) ?? [])
+                                        );
+                                    @endphp
+                                
+                                    @for ($i = 0; $i < 6; $i++) <input type="text" name="cast[]" class="form-control mb-2"
+                                        placeholder="Cast Member {{ $i + 1 }}" value="{{ $casts[$i] ?? '' }}">
+                                    @endfor
                                 </div>
 
                                 <div class="col-md-6">
@@ -238,25 +257,41 @@
                 </div>
 
                 <div class="row g-3" id="generate-form">
-                    <div class="col-md-4">
-                        <label class="form-label text-secondary small">Screen</label>
-                        <select class="form-select" id="gen-screen">
-                            <option value="">Select screen...</option>
-                            @foreach ($screens as $screen)
-                                <option value="{{ $screen->id }}">{{ $screen->cinema->cinema_name }} - Screen
-                                    {{ $screen->screen_number }} - {{ $screen->screen_type }}</option>
+                    {{-- Cinema --}}
+                    <div class="col-md-3">
+                        <label class="form-label text-secondary small">
+                            Cinema
+                        </label>
+                    
+                        <select class="form-select" id="gen-cinema">
+                            <option value="">Select cinema...</option>
+                    
+                            @foreach ($cinemas as $cinema)
+                                <option value="{{ $cinema->id }}">
+                                    {{ $cinema->cinema_name }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label text-secondary small">Start Date</label>
-                        <input type="date" class="form-control" id="gen-start-date">
+                    
+                    {{-- Screen --}}
+                    <div class="col-md-3">
+                        <label class="form-label text-secondary small">
+                            Screen
+                        </label>
+                    
+                        <select class="form-select" id="gen-screen" disabled>
+                            <option value="">Select screen...</option>
+                    
+                            @foreach ($screens as $screen)
+                                <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}" hidden>
+                                    Screen {{ $screen->screen_number }}
+                                    - {{ $screen->screen_type }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label text-secondary small">End Date</label>
-                        <input type="date" class="form-control" id="gen-end-date">
-                    </div>
-
+                    
                     <div class="col-12">
                         <label class="form-label text-secondary small">Days of Week</label>
                         <div class="d-flex gap-3 flex-wrap">
@@ -283,7 +318,10 @@
                     </div>
 
                     <div class="col-12">
-                        <button type="button" class="btn btn-warning" id="generate-btn">Generate Showtimes</button>
+                        <button type="button" class="btn btn-warning" id="generate-btn"
+                            data-url="{{ route('admin.movies.showtimes.generate', $movie->id) }}">
+                            Generate Showtimes
+                        </button>
                         <span class="ms-3 text-secondary small" id="generate-msg"></span>
                     </div>
                 </div>
@@ -312,8 +350,8 @@
                         </div>
                     @else
                         @foreach ($showtimes->groupBy(function ($showtime) {
-            return $showtime->start_time->format('Y/m/d');
-        }) as $date => $dailyShowtimes)
+                            return $showtime->start_time->format('Y/m/d');
+                        }) as $date => $dailyShowtimes)
                             <div class="d-flex align-items-center mt-3 mb-2">
                                 <i class="fa-solid fa-calendar-days text-warning me-2"></i>
                                 <h6 class="mb-0 text-warning">
@@ -326,50 +364,47 @@
 
                                 <thead>
                                     <tr>
-                                        <th width="30%">Time</th>
-                                        <th width="40%">Screen</th>
-                                        <th width="30%" class="text-end">Action</th>
+                                        <th width="25%">Time</th>
+                                        <th width="30%">Cinema</th>
+                                        <th width="25%">Screen</th>
+                                        <th width="20%" class="text-end">Action</th>
                                     </tr>
                                 </thead>
 
 
                                 <tbody>
-
                                     @foreach ($dailyShowtimes as $showtime)
                                         <tr>
-
                                             <td>
                                                 {{ $showtime->start_time->format('H:i') }}
                                                 -
                                                 {{ $showtime->end_time->format('H:i') }}
                                             </td>
-
-
+                                    
                                             <td>
-                                                Screen {{ $showtime->screen->screen_number }}
+                                                {{ $showtime->screen->cinema->cinema_name ?? '—' }}
                                             </td>
-
-
+                                    
+                                            <td>
+                                                Screen {{ $showtime->screen->screen_number ?? '—' }}
+                                                -
+                                                {{ $showtime->screen->screen_type ?? '—' }}
+                                            </td>
+                                    
                                             <td class="text-end">
-
-                                                <form action="{{ route('admin.showtimes.delete', $showtime->id) }}"
-                                                    method="POST" onsubmit="return confirm('Delete this showtime?')">
-
+                                                <form action="{{ route('admin.showtimes.delete', $showtime->id) }}" method="POST"
+                                                    onsubmit="return confirm('Delete this showtime?')">
                                                     @csrf
                                                     @method('DELETE')
-
+                                    
                                                     <button type="submit" class="btn btn-danger btn-sm">
                                                         <i class="fa-solid fa-trash"></i>
                                                         Delete
                                                     </button>
-
                                                 </form>
-
                                             </td>
-
                                         </tr>
                                     @endforeach
-
                                 </tbody>
 
                             </table>
@@ -387,103 +422,3 @@
 
 @endsection
 
-@section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-            const generateUrl = "{{ route('admin.movies.showtimes.generate', $movie->id) }}";
-            const csrfToken = "{{ csrf_token() }}";
-
-            const generateBtn = document.querySelector('#generate-btn');
-
-            generateBtn?.addEventListener('click', function() {
-
-                const screenId = document.querySelector('#gen-screen').value;
-                const startDate = document.querySelector('#gen-start-date').value;
-                const endDate = document.querySelector('#gen-end-date').value;
-
-                const days = [...document.querySelectorAll('.gen-day:checked')]
-                    .map(el => parseInt(el.value));
-
-                const timeSlots = [...document.querySelectorAll('.gen-slot')]
-                    .map(el => el.value)
-                    .filter(Boolean);
-
-                const msgEl = document.querySelector('#generate-msg');
-
-                if (!screenId || !startDate || !endDate || days.length === 0) {
-                    msgEl.textContent =
-                        'Please fill in Screen, Start Date, End Date, and at least one day.';
-                    msgEl.className = 'ms-3 text-danger small';
-                    return;
-                }
-
-                if (timeSlots.length === 0) {
-                    msgEl.textContent = 'Please enter at least one time slot.';
-                    msgEl.className = 'ms-3 text-danger small';
-                    return;
-                }
-
-                msgEl.textContent = 'Generating...';
-                msgEl.className = 'ms-3 text-secondary small';
-
-                const body = new FormData();
-
-                body.append('_token', csrfToken);
-                body.append('screen_id', screenId);
-                body.append('start_date', startDate);
-                body.append('end_date', endDate);
-
-                days.forEach(day => body.append('days[]', day));
-                timeSlots.forEach(slot => body.append('time_slots[]', slot));
-
-                fetch(generateUrl, {
-                        method: 'POST',
-                        body: body
-                    })
-                    .then(async response => {
-
-                        console.log('Status:', response.status);
-
-                        const text = await response.text();
-
-                        console.log(text);
-
-                        return JSON.parse(text);
-
-                    })
-                    .then(data => {
-
-                        console.log(data);
-
-                        if (data.success) {
-
-                            msgEl.textContent = data.message;
-                            msgEl.className = 'ms-3 text-success small';
-
-                            setTimeout(() => {
-                                location.reload();
-                            }, 1000);
-
-                        } else {
-
-                            msgEl.textContent = data.message ?? 'Failed to generate showtimes.';
-                            msgEl.className = 'ms-3 text-danger small';
-
-                        }
-
-                    })
-                    .catch(error => {
-
-                        console.error(error);
-
-                        msgEl.textContent = error.message;
-                        msgEl.className = 'ms-3 text-danger small';
-
-                    });
-
-            });
-
-        });
-    </script>
-@endsection

@@ -1,70 +1,94 @@
 document.addEventListener('DOMContentLoaded', () => {
-
     const buttons = document.querySelectorAll('.payment-btn');
     const nextButton = document.getElementById('next-btn');
     const paymentMethodInput = document.getElementById('payment_method');
 
-    if (buttons.length === 0) return;
+    if (buttons.length > 0 && nextButton && paymentMethodInput) {
+        const forms = {
+            paypal: document.getElementById('paypal-form'),
+            onsite: document.getElementById('onsite-form'),
+        };
 
-    const forms = {
-        paypal: document.getElementById('paypal-form'),
-        onsite: document.getElementById('onsite-form'),
-    };
+        let selectedMethod = '';
+        nextButton.disabled = true;
 
-    let selectedMethod = '';
+        Object.values(forms).forEach(form => {
+            if (form) form.classList.add('d-none');
+        });
 
-    nextButton.disabled = true;
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
 
-    Object.values(forms).forEach(form => {
-        if (form) {
-            form.classList.add('d-none');
-        }
-    });
+                Object.values(forms).forEach(form => {
+                    if (form) form.classList.add('d-none');
+                });
 
-    buttons.forEach(button => {
-        button.addEventListener('click', () => {
+                selectedMethod = button.dataset.method;
 
-            buttons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            Object.values(forms).forEach(form => {
-                if (form) {
-                    form.classList.add('d-none');
+                if (forms[selectedMethod]) {
+                    forms[selectedMethod].classList.remove('d-none');
                 }
+
+                paymentMethodInput.value = selectedMethod;
+                updateNextButton();
             });
+        });
 
-            selectedMethod = button.dataset.method;
-
-            if (forms[selectedMethod]) {
-                forms[selectedMethod].classList.remove('d-none');
+        function updateNextButton() {
+            if (!selectedMethod) {
+                nextButton.disabled = true;
+                return;
             }
 
-            paymentMethodInput.value = selectedMethod;
+            if (selectedMethod === 'onsite') {
+                nextButton.disabled = false;
+            } else if (selectedMethod === 'paypal') {
+                const email = document.querySelector('#paypal-form input[type="email"]');
+                nextButton.disabled = !email || email.value.trim() === '';
+            }
+        }
 
-            updateNextButton();
+        const paypalEmail = document.querySelector('#paypal-form input[type="email"]');
+
+        if (paypalEmail) {
+            paypalEmail.addEventListener('input', updateNextButton);
+        }
+    }
+
+    // Coupon
+    const couponRadios = document.querySelectorAll('.coupon-radio');
+    const couponDiscountRow = document.getElementById('coupon-discount-row');
+    const couponDiscount = document.getElementById('coupon-discount');
+    const finalTotal = document.getElementById('final-total');
+
+    if (couponRadios.length > 0 && couponDiscountRow && couponDiscount && finalTotal) {
+        const baseTotal = parseFloat(finalTotal.dataset.baseTotal) || 0;
+
+        couponRadios.forEach(radio => {
+            radio.addEventListener('change', () => {
+                let discount = 0;
+
+                if (radio.dataset.type === 'percentage') {
+                    discount = baseTotal * ((parseFloat(radio.dataset.percent) || 0) / 100);
+                } else if (radio.dataset.type === 'fixed_amount') {
+                    discount = parseFloat(radio.dataset.amount) || 0;
+                }
+
+                discount = Math.min(discount, baseTotal);
+                const newTotal = Math.max(baseTotal - discount, 0);
+
+                if (discount > 0) {
+                    couponDiscountRow.classList.remove('d-none');
+                    couponDiscount.textContent = `-$${discount.toFixed(2)}`;
+                } else {
+                    couponDiscountRow.classList.add('d-none');
+                    couponDiscount.textContent = '-$0.00';
+                }
+
+                finalTotal.textContent = `$${newTotal.toFixed(2)}`;
+            });
         });
-    });
-
-    function updateNextButton() {
-
-        if (!selectedMethod) {
-            nextButton.disabled = true;
-            return;
-        }
-
-        if (selectedMethod === 'onsite') {
-            nextButton.disabled = false;
-
-        } else if (selectedMethod === 'paypal') {
-            const email = document.querySelector('#paypal-form input[type="email"]');
-            nextButton.disabled = email.value.trim() === '';
-        }
     }
-
-    const paypalEmail = document.querySelector('#paypal-form input[type="email"]');
-
-    if (paypalEmail) {
-        paypalEmail.addEventListener('input', updateNextButton);
-    }
-
 });

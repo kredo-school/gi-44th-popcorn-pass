@@ -3,85 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>@yield('title', 'Admin') - Popcorn Pass</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
-    <style>
-        :root {
-            --navy: #1a1f36;
-            --navy-light: #232a47;
-            --gold: #FFD700;
-            --red: #E63946;
-        }
+    @vite([
+    'resources/sass/admin.scss',
+    'resources/js/admin.js'
+    ])
 
-        /* body {
-            background-color: var(--navy);
-            color: #ffffff;
-            font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-        } */
-         body {
-        background-color: #1a1f36 !important;
-        color: #ffffff;
-        font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-        }
-
-        .admin-header {
-            background-color: var(--navy);
-            border-bottom: 2px solid var(--gold);
-            padding: 16px 32px;
-        }
-
-        .brand-title {
-            color: var(--gold);
-            font-weight: 700;
-            font-size: 22px;
-            letter-spacing: 1px;
-        }
-
-        .brand-subtitle {
-            color: #ffffff;
-            font-size: 16px;
-            margin-left: 12px;
-        }
-
-        .admin-nav {
-            margin-left: 32px;
-        }
-
-        .admin-nav .nav-link {
-            color: #c9ccd6;
-            font-size: 15px;
-            padding: 6px 14px;
-        }
-
-        .admin-nav .nav-link.active {
-            color: var(--gold);
-            font-weight: 600;
-        }
-
-        .admin-nav .nav-link:hover {
-            color: var(--gold);
-        }
-
-        .admin-date {
-            color: #c9ccd6;
-            font-size: 14px;
-        }
-
-        .admin-content {
-            padding: 24px 32px;
-        }
-
-        .card-dark {
-            background-color: var(--navy-light);
-            border: none;
-            border-radius: 8px;
-            color: #ffffff;
-        }
-    </style>
-
+    @yield('styles')
 </head>
 <body>
 
