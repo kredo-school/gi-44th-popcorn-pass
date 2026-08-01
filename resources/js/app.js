@@ -11,6 +11,8 @@ import './reservations/ticket-type';
 import './reservations/payment-method';
 import './reservations/showtime-selection';
 
+// customer chat
+import './customer/chat.js';
 
 new Swiper(".heroSwiper", {
     loop: true,
