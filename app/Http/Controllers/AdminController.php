@@ -20,6 +20,11 @@ use App\Models\Promotion;
 use App\Models\Review;
 use App\Models\Information;
 use App\Models\InformationCategory;
+use App\Models\Conversation;
+use App\Models\Message;
+use App\Models\ChatRequest;
+
+
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -1073,5 +1078,89 @@ class AdminController extends Controller
         ]);
 
         return back()->with('success', 'Category updated successfully.');
+    }
+
+
+    // Customer Service
+    public function chat_index()
+    {
+        $conversations = Conversation::whereIn('status', [
+            'waiting',
+            'staff'
+        ])
+            ->with('user')
+            ->latest()
+            ->paginate(10);
+
+
+        return view(
+            'admin.chat.index',
+            compact('conversations')
+        );
+    }
+
+
+    public function chat_show(Conversation $conversation)
+    {
+        $conversation->load('user');
+
+        $messages = $conversation->messages()
+            ->orderBy('created_at')
+            ->get();
+
+        return view('admin.chat.show', compact(
+            'conversation',
+            'messages'
+        ));
+    }
+
+    public function chat_store(Request $request, Conversation $conversation)
+    {
+        Message::create([
+
+            'conversation_id' => $conversation->id,
+
+            'sender_type' => 'staff',
+
+            'message' => $request->message
+
+        ]);
+        // Change to "Ready to Handle" status
+        $conversation->update([
+            'status' => 'staff'
+        ]);
+
+
+        return back();
+    }
+
+    public function chat_fetch(Conversation $conversation)
+    {
+
+        $messages =
+            $conversation
+            ->messages()
+            ->orderBy('created_at')
+            ->get();
+
+
+        return response()->json([
+            'messages' => $messages
+        ]);
+    }
+
+    public function chat_close(Conversation $conversation)
+    {
+        // Delete messages
+        $conversation->messages()->delete();
+
+
+        // Change status
+        $conversation->update([
+            'status' => 'closed'
+        ]);
+
+
+        return redirect()->route('admin.chat.index');
     }
 }

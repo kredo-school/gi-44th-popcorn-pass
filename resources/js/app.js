@@ -14,6 +14,9 @@ import './reservations/showtime-selection';
 //admin dashboard
 import './admin/chart.js';
 
+//customer
+import './customer/chat.js';
+
 
 new Swiper(".heroSwiper", {
     loop: true,

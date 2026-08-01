@@ -1,0 +1,90 @@
+/* =========================
+   Admin Chat
+========================= */
+.admin-chat-background{
+    background-color: #aaa;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+.admin-chat-wrapper {
+
+    max-width:800px;
+    height:650px;
+    margin:auto;
+    border-radius:15px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+
+}
+
+
+
+.admin-chat-area {
+
+    height:500px;
+    overflow-y:auto;
+    background:#f8f9fa;
+    padding:20px;
+
+}
+
+
+
+.admin-chat-message {
+
+    font-size:14px;
+
+}
+
+
+
+.admin-chat-input {
+
+    max-width:800px;
+    margin:auto;
+
+}
+
+
+
+/* Scrollbar */
+
+.admin-chat-area::-webkit-scrollbar {
+
+    width:6px;
+
+}
+
+
+.admin-chat-area::-webkit-scrollbar-thumb {
+
+    background:#aaa;
+    border-radius:10px;
+
+}
+
+
+
+/* Back Button */
+
+.show-box {
+
+    position:relative;
+
+}
+
+
+.chat-back-btn {
+
+    position:absolute;
+    top:-10px;
+    left:0;
+
+}
+
+.chat-display-bg{
+    background:#aaa;
+    border-radius:10px;
+}
