@@ -21,16 +21,6 @@
 
     <form method="POST" action="{{ route('admin.movies.store') }}">
         @csrf
-        @if ($errors->any())
-            <div style="color:red;">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <div class="row g-3">
             <div class="col-md-6">
                 <div class="card card-dark p-3 mb-3">
@@ -67,10 +57,6 @@
                                 You can select up to <strong>3</strong> genres.
                             </div>
 
-                            <div class="form-text">
-                                Hold <strong>Ctrl</strong> (Windows) or <strong>⌘ Command</strong> (Mac) to select multiple
-                                genres.
-                            </div>
                         </div>
 
                         <div class="col-md-6">
@@ -283,26 +269,6 @@
                             </select>
                         </div>
 
-                        {{-- Start Date --}}
-                        <div class="col-md-3">
-                            <label class="form-label text-secondary small">
-                                Start Date
-                            </label>
-
-                            <input type="date" name="showtime_generate[start_date]" class="form-control"
-                                value="{{ old('showtime_generate.start_date') }}">
-                        </div>
-
-                        {{-- End Date --}}
-                        <div class="col-md-3">
-                            <label class="form-label text-secondary small">
-                                End Date
-                            </label>
-
-                            <input type="date" name="showtime_generate[end_date]" class="form-control"
-                                value="{{ old('showtime_generate.end_date') }}">
-                        </div>
-
                         {{-- Days --}}
                         <div class="col-12">
                             <label class="form-label text-secondary small">
@@ -312,14 +278,14 @@
                             <div class="d-flex gap-3 flex-wrap">
 
                                 @foreach ([
-            'Sun' => 0,
-            'Mon' => 1,
-            'Tue' => 2,
-            'Wed' => 3,
-            'Thu' => 4,
-            'Fri' => 5,
-            'Sat' => 6,
-        ] as $label => $value)
+                                    'Sun' => 0,
+                                    'Mon' => 1,
+                                    'Tue' => 2,
+                                    'Wed' => 3,
+                                    'Thu' => 4,
+                                    'Fri' => 5,
+                                    'Sat' => 6,
+                                ] as $label => $value)
                                     <div class="form-check">
 
                                         <input class="form-check-input" type="checkbox" name="showtime_generate[days][]"
@@ -379,60 +345,7 @@
     </form>
 
 @endsection
-@section('styles')
-    <style>
-        select.form-select {
-            display: block !important;
-            background-color: white !important;
-            color: black !important;
-        }
-    </style>
-@endsection
+
 @section('scripts')
-    <script>
-        function filterScreensForRow(cinemaSelect) {
-            const index = cinemaSelect.dataset.index;
-            const screenSelect = document.querySelector(`.showtime-screen[data-index="${index}"]`);
-            const selectedCinema = cinemaSelect.value;
-
-            Array.from(screenSelect.options).forEach(function(option) {
-                if (!option.value) return; // always keep the placeholder visible
-
-                const matches = option.dataset.cinema === selectedCinema;
-                option.hidden = selectedCinema !== '' && !matches;
-            });
-
-            const currentOption = screenSelect.options[screenSelect.selectedIndex];
-            if (currentOption && currentOption.hidden) {
-                screenSelect.value = '';
-            }
-        }
-
-        document.querySelectorAll('.showtime-cinema').forEach(function(cinemaSelect) {
-            cinemaSelect.addEventListener('change', function() {
-                filterScreensForRow(this);
-            });
-
-            // Re-apply filtering on page load in case of validation-error redisplay
-            if (cinemaSelect.value) {
-                filterScreensForRow(cinemaSelect);
-            }
-        });
-    </script>
-    {{-- select multiple genres --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const genreSelect = document.querySelector('select[name="genre_ids[]"]');
-
-            genreSelect.addEventListener('change', function() {
-                const selected = [...this.selectedOptions];
-
-                if (selected.length > 3) {
-                    alert('You can select up to 3 genres.');
-
-                    selected[selected.length - 1].selected = false;
-                }
-            });
-        });
-    </script>
+    <script src="{{ asset('js/admin/movie.js') }}"></script>
 @endsection

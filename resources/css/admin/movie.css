@@ -1,0 +1,5 @@
+select.form-select {
+    display: block !important;
+    background-color: white !important;
+    color: black !important;
+}

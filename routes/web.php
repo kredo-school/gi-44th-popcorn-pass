@@ -152,7 +152,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/information/categories', [AdminController::class, 'informationCategories'])->name('information.categories');
     Route::post('/information/categories', [AdminController::class, 'storeInformationCategory'])->name('information.categories.store');
     Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])->name('information.categories.delete');
-
     Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])->name('information.categories.update');
 
 
