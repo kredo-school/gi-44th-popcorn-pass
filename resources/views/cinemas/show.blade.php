@@ -18,12 +18,12 @@
                 <h3 class="mb-3">Overall Experience Score</h3>
                 <div class="d-flex align-items-center gap-3">
                     <div class="display-4 fw-bold">
-                        {{ number_format($avgScores['overall'], 1) }}/5
+                        {{ number_format($cinema->avg_experience_score, 1) }}/5
                     </div>
                     <div>
                         <div class="mb-2">
                             @for ($i = 1; $i <= 5; $i++)
-                                @if ($i <= $avgScores['overall'])
+                                @if ($i <= $cinema->avg_experience_score)
                                     <span class="text-warning fa-solid fa-star"></span>
                                 @else
                                     <span class="text-secondary fa-regular fa-star"></span>
@@ -45,131 +45,35 @@
             <h3 class="mb-4">Rating Breakdown</h3>
 
             <div class="row g-4">
-                {{-- Image Quality --}}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <h6 class="card-title mb-3">
-                                <i class="fa-solid fa-film text-info me-2"></i>Image Quality
-                            </h6>
-                            <div class="mb-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $avgScores['image_quality'])
-                                        <span class="text-warning fa-solid fa-star"></span>
-                                    @else
-                                        <span class="text-secondary fa-regular fa-star"></span>
+                @foreach ($scoreBreakdown as $score)
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card border-0 bg-light">
+                            <div class="card-body">
+                                <h6 class="card-title mb-3">
+                                    <i class="fa-solid {{ $score['icon'] }} text-info me-2"></i>{{ $score['label'] }}
+                                </h6>
+                                <div class="mb-2">
+                                    @php
+                                        $displayValue = $score['inverted'] ? (5 - $score['value']) : $score['value'];
+                                    @endphp
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= $displayValue)
+                                            <span class="text-warning fa-solid fa-star"></span>
+                                        @else
+                                            <span class="text-secondary fa-regular fa-star"></span>
+                                        @endif
+                                    @endfor
+                                </div>
+                                <small class="text-muted">
+                                    {{ number_format($score['value'], 1) }}/5
+                                    @if (isset($score['note']))
+                                        {{ $score['note'] }}
                                     @endif
-                                @endfor
+                                </small>
                             </div>
-                            <small class="text-muted">{{ number_format($avgScores['image_quality'], 1) }}/5</small>
                         </div>
                     </div>
-                </div>
-
-                {{-- Sound Quality --}}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <h6 class="card-title mb-3">
-                                <i class="fa-solid fa-volume-high text-info me-2"></i>Sound Quality
-                            </h6>
-                            <div class="mb-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $avgScores['sound_quality'])
-                                        <span class="text-warning fa-solid fa-star"></span>
-                                    @else
-                                        <span class="text-secondary fa-regular fa-star"></span>
-                                    @endif
-                                @endfor
-                            </div>
-                            <small class="text-muted">{{ number_format($avgScores['sound_quality'], 1) }}/5</small>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Seat Comfort --}}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <h6 class="card-title mb-3">
-                                <i class="fa-solid fa-chair text-info me-2"></i>Seat Comfort
-                            </h6>
-                            <div class="mb-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $avgScores['seat_comfort'])
-                                        <span class="text-warning fa-solid fa-star"></span>
-                                    @else
-                                        <span class="text-secondary fa-regular fa-star"></span>
-                                    @endif
-                                @endfor
-                            </div>
-                            <small class="text-muted">{{ number_format($avgScores['seat_comfort'], 1) }}/5</small>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Crowding Level --}}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <h6 class="card-title mb-3">
-                                <i class="fa-solid fa-people-group text-info me-2"></i>Crowding Level
-                            </h6>
-                            <div class="mb-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= (5 - $avgScores['crowding_level']))
-                                        <span class="text-warning fa-solid fa-star"></span>
-                                    @else
-                                        <span class="text-secondary fa-regular fa-star"></span>
-                                    @endif
-                                @endfor
-                            </div>
-                            <small class="text-muted">{{ number_format($avgScores['crowding_level'], 1) }}/5 (lower is better)</small>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Accessibility --}}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <h6 class="card-title mb-3">
-                                <i class="fa-solid fa-wheelchair text-info me-2"></i>Accessibility
-                            </h6>
-                            <div class="mb-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $avgScores['accessibility'])
-                                        <span class="text-warning fa-solid fa-star"></span>
-                                    @else
-                                        <span class="text-secondary fa-regular fa-star"></span>
-                                    @endif
-                                @endfor
-                            </div>
-                            <small class="text-muted">{{ number_format($avgScores['accessibility'], 1) }}/5</small>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Service Quality --}}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card border-0 bg-light">
-                        <div class="card-body">
-                            <h6 class="card-title mb-3">
-                                <i class="fa-solid fa-handshake text-info me-2"></i>Service Quality
-                            </h6>
-                            <div class="mb-2">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    @if ($i <= $avgScores['service_quality'])
-                                        <span class="text-warning fa-solid fa-star"></span>
-                                    @else
-                                        <span class="text-secondary fa-regular fa-star"></span>
-                                    @endif
-                                @endfor
-                            </div>
-                            <small class="text-muted">{{ number_format($avgScores['service_quality'], 1) }}/5</small>
-                        </div>
-                    </div>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>
