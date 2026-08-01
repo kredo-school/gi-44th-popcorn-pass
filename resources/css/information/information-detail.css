@@ -1,6 +1,4 @@
-/* ==========================================================
-   Information Page
-========================================================== */
+/* Information Page */
 .info-page,
 .info-detail-page {
     min-height: 100vh;
@@ -8,10 +6,7 @@
     padding: 60px 40px;
 }
 
-
-/* ==========================================================
-   Page Title
-========================================================== */
+/* Page Title */
 .info-title,
 .info-detail-title {
     font-family: Georgia, serif;
@@ -22,10 +17,7 @@
     text-align: center;
 }
 
-
-/* ==========================================================
-   Information List
-========================================================== */
+/* Information List */
 .info-list-item {
     width: 75%;
     margin: 0 auto 18px;
@@ -46,10 +38,7 @@
     box-shadow: 0 12px 28px rgba(27, 47, 85, .18);
 }
 
-
-/* ==========================================================
-   Category Badge
-========================================================== */
+/* Category Badge */
 .info-list-badge {
     min-width: 120px;
     text-align: center;
@@ -59,10 +48,7 @@
     font-weight: 700;
 }
 
-
-/* ==========================================================
-   Title
-========================================================== */
+/* Title */
 .info-list-title {
     flex: 1;
     color: #1B2F55;
@@ -70,20 +56,14 @@
     font-size: 1rem;
 }
 
-
-/* ==========================================================
-   Date
-========================================================== */
+/* Date */
 .info-list-date {
     color: #5C7194;
     font-size: .9rem;
     white-space: nowrap;
 }
 
-
-/* ==========================================================
-   Arrow
-========================================================== */
+/* Arrow */
 .info-list-arrow {
     color: #1B2F55;
     font-size: 1rem;
@@ -95,9 +75,7 @@
     color: #F5C126;
 }
 
-/* ==========================================================
-   Detail Page
-========================================================== */
+/* Detail Page */
 .info-detail-card {
     max-width: 900px;
     margin: 0 auto;
@@ -108,24 +86,18 @@
     box-shadow: 0 10px 30px rgba(27, 47, 85, .10);
 }
 
-
-/* ==========================================================
-   Category
-========================================================== */
+/* Category */
 .info-detail-category {
     display: inline-block;
-    padding: 8px 24px;
+    padding: 10px 28px;
     border-radius: 999px;
-    font-size: .85rem;
+    font-size: 1rem;
     font-weight: 700;
     letter-spacing: .5px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, .08);
 }
 
-
-/* ==========================================================
-   Image
-========================================================== */
+/* Image */
 .info-detail-image-wrap {
     text-align: center;
     margin-bottom: 35px;
@@ -145,10 +117,7 @@
     transform: scale(1.02);
 }
 
-
-/* ==========================================================
-   Heading
-========================================================== */
+/* Heading */
 .info-detail-heading {
     color: #1B2F55;
     font-size: 2rem;
@@ -157,20 +126,14 @@
     margin-bottom: 10px;
 }
 
-
-/* ==========================================================
-   Date
-========================================================== */
+/* Date */
 .info-detail-date {
     color: #5C7194;
     font-size: .95rem;
     margin-bottom: 25px;
 }
 
-
-/* ==========================================================
-   Content
-========================================================== */
+/* Content */
 .info-detail-body {
     color: #444;
     background: #fff;
@@ -179,13 +142,11 @@
     padding: 28px;
     line-height: 1.9;
     font-size: 1.05rem;
-    white-space: pre-wrap;
+    white-space: normal;
     box-shadow: inset 0 2px 5px rgba(0, 0, 0, .03);
 }
 
-/* ==========================================================
-   Back Button
-========================================================== */
+/* Back Button */
 .info-back-btn {
     display: inline-flex;
     align-items: center;
@@ -206,10 +167,7 @@
     text-decoration: none;
 }
 
-
-/* ==========================================================
-   Pagination
-========================================================== */
+/* Pagination */
 .pagination {
     gap: 8px;
 }
@@ -235,10 +193,7 @@
     color: #fff;
 }
 
-
-/* ==========================================================
-   Card Image
-========================================================== */
+/* Card Image */
 .news-card {
     height: 100%;
     border: none;
@@ -259,10 +214,7 @@
     object-fit: cover;
 }
 
-
-/* ==========================================================
-   No Image
-========================================================== */
+/* No Image */
 .info-list-img.bg-secondary {
     height: 220px;
     display: flex;
@@ -275,10 +227,7 @@
     letter-spacing: 2px;
 }
 
-
-/* ==========================================================
-   Link
-========================================================== */
+/* Link */
 a.text-decoration-none {
     color: inherit;
 }
@@ -287,9 +236,7 @@ a.text-decoration-none:hover {
     color: inherit;
 }
 
-/* ==========================================================
-   Responsive
-========================================================== */
+/* Responsive */
 @media (max-width: 992px) {
     .info-page,
     .info-detail-page {
@@ -317,6 +264,10 @@ a.text-decoration-none:hover {
 
     .info-detail-img {
         max-width: 100%;
+    }
+
+    .info-detail-body {
+        text-align: left;
     }
 }
 
@@ -373,10 +324,7 @@ a.text-decoration-none:hover {
     }
 }
 
-
-/* ==========================================================
-   Smooth Animation
-========================================================== */
+/* Smooth Animation */
 .info-list-item,
 .info-detail-card,
 .news-card,
@@ -385,37 +333,25 @@ a.text-decoration-none:hover {
     transition: all .25s ease;
 }
 
-
-/* ==========================================================
-   Selection Color
-========================================================== */
+/* Selection Color */
 ::selection {
     background: #1B2F55;
     color: #fff;
 }
 
-
-/* ==========================================================
-   Focus
-========================================================== */
+/* Focus */
 .info-back-btn:focus,
 .page-link:focus {
     box-shadow: 0 0 0 .2rem rgba(125, 159, 207, .35);
 }
 
-
-/* ==========================================================
-   Container
-========================================================== */
+/* Container */
 .info-page .container,
 .info-detail-page .container {
     max-width: 1100px;
 }
 
-
-/* ==========================================================
-   Divider
-========================================================== */
+/* Divider */
 .info-divider {
     width: 80px;
     height: 3px;

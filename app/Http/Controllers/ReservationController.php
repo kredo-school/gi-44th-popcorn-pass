@@ -17,13 +17,22 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+use App\Services\PaypalService;
+use Illuminate\Http\JsonResponse;
+use Throwable;
+
+
 class ReservationController extends Controller
 {
     protected $pricingService;
+    protected $payPalService;
 
-    public function __construct(DynamicPricingService $pricingService)
+    public function __construct(
+        DynamicPricingService $pricingService,
+        PayPalService $payPalService)
     {
         $this->pricingService = $pricingService;
+        $this->payPalService = $payPalService;
     }
 
     // --------------------
@@ -390,17 +399,18 @@ class ReservationController extends Controller
         $request->validate([
             'payment_method' => 'required|in:paypal,onsite',
             'coupon_id' => 'nullable|uuid',
-            'paypal_email' => 'nullable|email',
         ]);
 
         session([
             'paymentInfo' => [
                 'payment_method' => $request->payment_method,
-                'email' => $request->payment_method === 'paypal'
-                    ? $request->paypal_email
-                    : null,
+                'email' => null,
             ],
         ]);
+
+        if ($request->payment_method !== 'paypal') {
+            session()->forget('paypalPayment');
+        }
 
         if (session('guest')) {
             session([
@@ -541,6 +551,156 @@ class ReservationController extends Controller
             'couponDiscount',
             'totalPrice'
         ));
+    }
+
+    // --------------------
+    // Create PayPal Order
+    // --------------------
+    public function createPayPalOrder(): JsonResponse
+    {
+        $paymentInfo = session('paymentInfo', []);
+        $discountInfo = session('discountInfo', []);
+
+        if (($paymentInfo['payment_method'] ?? null) !== 'paypal') {
+            return response()->json([
+                'message' => 'PayPal is not selected.',
+            ], 422);
+        }
+
+        $amount = round(
+            (float) ($discountInfo['final_amount'] ?? 0),
+            2
+        );
+
+        if ($amount <= 0) {
+            return response()->json([
+                'message' => 'The payment amount is invalid.',
+            ], 422);
+        }
+
+        try {
+            $requestId = (string) Str::uuid();
+
+            $order = $this->payPalService->createOrder(
+                $amount,
+                $requestId
+            );
+
+            session([
+                'paypalPayment' => [
+                    'order_id' => $order['id'],
+
+                    'amount' => number_format(
+                        $amount,
+                        2,
+                        '.',
+                        ''),
+                    'currency' => config('paypal.currency'),
+                    'create_request_id' => $requestId,
+                    'capture_request_id' => (string) Str::uuid(),
+                    'status' => $order['status'] ?? 'CREATED',
+                ],
+            ]);
+
+            return response()->json([
+                'id' => $order['id'],
+            ]);
+        } catch (Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'message' =>
+                'Unable to start PayPal Checkout. Please try again.',
+            ], 502);
+        }
+    }
+
+    // --------------------
+    // Capture PayPal Order
+    // --------------------
+    public function capturePayPalOrder(Request $request): JsonResponse
+    {
+        $request->validate([
+            'order_id' => 'required|string|max:100',
+        ]);
+
+        $paypalPayment = session('paypalPayment', []);
+
+        if (
+            empty($paypalPayment['order_id']) ||
+            !hash_equals(
+                $paypalPayment['order_id'],
+                $request->string('order_id')->toString()
+            )
+        ) {
+            return response()->json([
+                'message' => 'Invalid PayPal order.',
+            ], 422);
+        }
+
+        if (($paypalPayment['status'] ?? null) === 'COMPLETED') {
+            return response()->json([
+                'status' => 'COMPLETED',
+                'capture_id' => $paypalPayment['capture_id'],
+            ]);
+        }
+
+        try {
+            $order = $this->payPalService->captureOrder(
+                $paypalPayment['order_id'],
+                $paypalPayment['capture_request_id']
+            );
+
+            $capture = data_get(
+                $order,
+                'purchase_units.0.payments.captures.0'
+            );
+
+            $capturedAmount = data_get(
+                $capture,
+                'amount.value'
+            );
+
+            $capturedCurrency = data_get(
+                $capture,
+                'amount.currency_code'
+            );
+
+            if (
+                ($order['status'] ?? null) !== 'COMPLETED' ||
+                ($capture['status'] ?? null) !== 'COMPLETED' ||
+                $capturedAmount !== $paypalPayment['amount'] ||
+                $capturedCurrency !== $paypalPayment['currency']
+            ) {
+                throw new \RuntimeException(
+                    'PayPal capture verification failed.'
+                );
+            }
+
+            $paypalPayment['status'] = 'COMPLETED';
+            $paypalPayment['capture_id'] = $capture['id'];
+
+            $paypalPayment['payer_email'] = data_get(
+                $order,
+                'payer.email_address'
+            );
+
+            session([
+                'paypalPayment' => $paypalPayment,
+            ]);
+
+            return response()->json([
+                'status' => 'COMPLETED',
+                'capture_id' => $capture['id'],
+            ]);
+        } catch (Throwable $e) {
+            report($e);
+
+            return response()->json([
+                'message' =>
+                'PayPal payment could not be completed. Please try again.',
+            ], 502);
+        }
     }
 
     // --------------------

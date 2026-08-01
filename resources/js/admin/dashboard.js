@@ -18,7 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.querySelector('#detail-title').textContent = data.title || '—';
                     document.querySelector('#detail-synopsis').textContent = data.synopsis || '—';
                     document.querySelector('#detail-director').textContent = data.director || '—';
-                    document.querySelector('#detail-cast').textContent = data.cast || '—';
+                    document.querySelector('#detail-cast').textContent =
+                        Array.isArray(data.cast) && data.cast.length > 0
+                            ? data.cast.join(', ')
+                            : '—';
                     document.querySelector('#detail-trailer').textContent = data.trailer_url || '—';
                 });
 

@@ -20,10 +20,10 @@
 
         {{-- Image --}}
         @if($information->image)
-        <div class="info-detail-image-wrap">
-            <img src="{{ asset($information->image) }}" alt="{{ $information->title }}"
-                class="rounded info-detail-img">
-        </div>
+            <div class="info-detail-image-wrap">
+                <img src="{{ asset($information->image) }}" alt="{{ $information->title }}"
+                    class="rounded info-detail-img">
+            </div>
         @endif
 
 
