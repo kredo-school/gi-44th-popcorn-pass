@@ -7,6 +7,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="user-id" content="{{ Auth::check() ? Auth::id() : '' }}">
 
     <title>@yield('title', config('app.name', 'Popcorn Pass'))</title>
 
