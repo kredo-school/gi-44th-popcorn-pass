@@ -82,11 +82,6 @@
         }
     </style>
 
-    @yield('styles')
-    @vite([
-    'resources/sass/admin.scss',
-    'resources/js/admin.js'
-    ])
 </head>
 <body>
 

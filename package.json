@@ -20,6 +20,6 @@
     },
     "dependencies": {
         "chart.js": "^4.5.1",
-        "swiper": "^14.0.6"
+        "swiper": "^14.0.7"
     }
 }
