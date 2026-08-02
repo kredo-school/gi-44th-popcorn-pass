@@ -713,11 +713,42 @@ class ReservationController extends Controller
         $guestInfo = session('guestInfo', []);
         $discountInfo = session('discountInfo', []);
         $showtimeId = session('showtime_id');
+        $paypalPayment = session('paypalPayment', []);
 
         if (empty($selectedSeats) || empty($paymentInfo) || !$showtimeId) {
             return redirect()
                 ->route('home')
                 ->with('error', 'Your reservation session has expired. Please start again.');
+        }
+
+        if (
+            ($paymentInfo['payment_method'] ?? null) === 'paypal' &&
+            (float) ($discountInfo['final_amount'] ?? 0) > 0 &&
+            (
+                ($paypalPayment['status'] ?? null) !== 'COMPLETED' ||
+                empty($paypalPayment['capture_id'])
+            )
+        ) {
+            return redirect()
+                ->route('reservations.payment-method')
+                ->with(
+                    'error',
+                    'Please complete your PayPal payment first.'
+                );
+        }
+
+        if (
+            ($paymentInfo['payment_method'] ?? null) === 'paypal' &&
+            !empty($paypalPayment['reservation_reference'])
+        ) {
+            session()->put(
+                'reservation_reference',
+                $paypalPayment['reservation_reference']
+            );
+
+            return redirect()->route('reservations.complete', [
+                'showtime' => $showtimeId,
+            ]);
         }
 
         $showtime = Showtime::with(['movie', 'screen'])
@@ -744,7 +775,8 @@ class ReservationController extends Controller
             $promotionDiscount,
             $couponDiscount,
             $discountAmount,
-            $finalAmount
+            $finalAmount,
+            $paypalPayment
         ) {
             // Create reservation
             $reservation = Reservation::create([
@@ -789,12 +821,24 @@ class ReservationController extends Controller
                 'tax' => 0,
                 'amount' => $finalAmount,
 
-                'payment_status' => 'paid',
+                'payment_status' =>
+                $paymentInfo['payment_method'] === 'paypal'
+                    ? 'paid'
+                    : 'pending',
                 'payment_method' => $paymentInfo['payment_method'],
-                'transaction_id' => null,
+                'transaction_id' =>
+                $paymentInfo['payment_method'] === 'paypal'
+                    ? ($paypalPayment['capture_id'] ?? null)
+                    : null,
+                'paypal_order_id' =>
+                $paymentInfo['payment_method'] === 'paypal'
+                    ? ($paypalPayment['order_id'] ?? null)
+                    : null,
                 'stripe_payment_intent_id' => null,
-
-                'paid_at' => now(),
+                'paid_at' =>
+                $paymentInfo['payment_method'] === 'paypal'
+                    ? now()
+                    : null,
                 'refunded_at' => null,
                 'refund_amount' => 0,
             ]);
@@ -870,6 +914,15 @@ class ReservationController extends Controller
         session()->put('booking_done', true);
         session()->put('final_price', $finalAmount);
 
+        if (($paymentInfo['payment_method'] ?? null) === 'paypal') {
+            $paypalPayment['reservation_reference'] =
+                session('reservation_reference');
+
+            session([
+                'paypalPayment' => $paypalPayment,
+            ]);
+        }
+
         return redirect()->route('reservations.complete', [
             'showtime' => $showtime->id,
         ]);
@@ -906,6 +959,7 @@ class ReservationController extends Controller
             'discountInfo',
             'guest',
             'showtime_id',
+            'paypalPayment',
         ]);
 
         return view('reservations.reservation-complete', compact(
