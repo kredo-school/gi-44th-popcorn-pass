@@ -100,7 +100,17 @@ Route::post('/reservation-confirm', [ReservationController::class, 'confirmation
 
 Route::post('/reservation-booking', [ReservationController::class, 'confirmBooking'])
     ->name('reservations.confirm-booking');
+// Create PayPal Order
+Route::post(
+    '/paypal/orders',
+    [ReservationController::class, 'createPayPalOrder']
+)->name('paypal.orders.create');
 
+// Capture PayPal Order
+Route::post(
+    '/paypal/orders/capture',
+    [ReservationController::class, 'capturePayPalOrder']
+)->name('paypal.orders.capture');
 Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
 
@@ -152,141 +162,6 @@ Route::get('/api/cinemas/top-rated', [CinemaReviewController::class, 'getTopRate
 // ===========================
 // Admin Routes
 // ===========================
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth', 'admin'])
-    ->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])
-            ->name('dashboard');
-
-        // Movies Management
-        Route::get('/movies', [AdminController::class, 'movies'])
-            ->name('movies');
-
-        Route::get('/movies/create', [AdminController::class, 'createMovie'])
-            ->name('movies.create');
-
-        Route::post('/movies', [AdminController::class, 'storeMovie'])
-            ->name('movies.store');
-
-        Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])
-            ->name('movies.details');
-
-        Route::get('/movies/{id}/edit', [AdminController::class, 'editMovie'])
-            ->name('movies.edit');
-
-        Route::put('/movies/{id}', [AdminController::class, 'updateMovie'])
-            ->name('movies.update');
-
-        Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])
-            ->name('movies.showtimes');
-
-        Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])
-            ->name('movies.showtimes.generate');
-
-        Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])
-            ->name('showtimes.delete');
-
-        // Dynamic Pricing Management
-        Route::get('/dynamic-pricing', [AdminController::class, 'showtimeDynamicPricing'])
-            ->name('dynamic-pricing');
-
-        Route::get('/dynamic-pricing/{id}/edit', [AdminController::class, 'editShowtimeDynamicPrice'])
-            ->name('dynamic-pricing.edit');
-
-        Route::put('/dynamic-pricing/{id}', [AdminController::class, 'updateShowtimeDynamicPrice'])
-            ->name('dynamic-pricing.update');
-
-        // Analytics & Reports
-        Route::get('/analytics', [AdminController::class, 'analytics'])
-            ->name('analytics');
-
-        // Reservations Management
-        Route::get('/reservations', [AdminController::class, 'reservations'])
-            ->name('reservations');
-
-        Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])
-            ->name('reservations.export');
-
-        Route::get('/reservations/{id}/details', [AdminController::class, 'reservationDetails'])
-            ->name('reservations.details');
-
-        // Users Management
-        Route::get('/users', [AdminController::class, 'users'])
-            ->name('users');
-
-        Route::get('/users/{id}/details', [AdminController::class, 'userDetails'])
-            ->name('users.details');
-
-        Route::put('/users/{id}', [AdminController::class, 'updateUser'])
-            ->name('users.update');
-
-        // Settings
-        Route::get('/settings', [AdminController::class, 'settings'])
-            ->name('settings');
-
-        Route::put('/settings', [AdminController::class, 'updateSettings'])
-            ->name('settings.update');
-
-        // Coupons & Promotions
-        Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])
-            ->name('coupons-promotions');
-
-        Route::post('/coupons', [AdminController::class, 'storeCoupon'])
-            ->name('coupons.store');
-
-        Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])
-            ->name('coupons.toggle-status');
-
-        Route::post('/promotions', [AdminController::class, 'storePromotion'])
-            ->name('promotions.store');
-
-        Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])
-            ->name('promotions.toggle-status');
-
-        // Reviews Management
-        Route::get('/reviews', [AdminController::class, 'reviews'])
-            ->name('reviews');
-
-        Route::put('/reviews/{id}/toggle', [AdminController::class, 'toggleReview'])
-            ->name('reviews.toggle');
-
-        Route::get('/information', [AdminController::class, 'information'])
-            ->name('information');
-
-        // Information
-        Route::get('/information/create', [AdminController::class, 'createInformation'])
-            ->name('information.create');
-
-        Route::post('/information', [AdminController::class, 'storeInformation'])
-            ->name('information.store');
-
-        Route::get('/information/{id}/edit', [AdminController::class, 'editInformation'])
-            ->name('information.edit');
-
-        Route::put('/information/{id}', [AdminController::class, 'updateInformation'])
-            ->name('information.update');
-
-        Route::get('/information/{id}/details', [AdminController::class, 'informationDetails'])
-            ->name('information.details');
-
-        Route::delete('/information/{id}', [AdminController::class, 'deleteInformation'])
-            ->name('information.delete');
-
-        // Information Category
-        Route::get('/information/categories', [AdminController::class, 'informationCategories'])
-            ->name('information.categories');
-
-        Route::post('/information/categories', [AdminController::class, 'storeInformationCategory'])
-            ->name('information.categories.store');
-
-        Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])
-            ->name('information.categories.delete');
-
-        Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])
-            ->name('information.categories.update');
-    });
-
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
