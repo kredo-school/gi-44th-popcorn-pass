@@ -491,10 +491,10 @@ Please wait while we connect you to our support team.
             $reply = '
             <span style="color:red;">
                     I will connect you with a staff member.
-            </span>
+        
             <br><br>
-
             Please wait a moment while our support team reviews your request.<br><br>
+            </span>
             ';
 
             $needStaff = true;

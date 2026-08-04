@@ -32,15 +32,25 @@
                                 <p class="mb-0">
                                     Status:
 
-                                    <span class="badge bg-dark">
-                                        {{ $conversation->status }}
-                                    </span>
+                                    @if ($conversation->status === 'waiting')
+                                        <span class="badge bg-danger">
+                                            Waiting
+                                        </span>
+                                    @elseif($conversation->status === 'staff')
+                                        <span class="badge bg-primary">
+                                            Staff
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary">
+                                            {{ ucfirst($conversation->status) }}
+                                        </span>
+                                    @endif
                                 </p>
                             </div>
 
 
                             <div>
-                                <a href="{{ route('admin.chat.show', $conversation->id) }}" class="btn btn-primary">
+                                <a href="{{ route('admin.chat.show', $conversation->id) }}" class="text-dark btn border-dark">
                                     Open Chat
                                 </a>
                             </div>

@@ -46,11 +46,10 @@
                             </strong>
 
 
-                            <p class="admin-message-bubble">
-
+                            <p>
                                 {{ $message->message }}
-
                             </p>
+                            
 
 
                         </div>

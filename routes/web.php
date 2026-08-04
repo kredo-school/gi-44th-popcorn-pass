@@ -18,6 +18,7 @@ use App\Http\Controllers\MyPage\CancelController;
 use App\Http\Controllers\MyPage\CouponController;
 use App\Http\Controllers\Api\NearByCinemasController;
 use App\Http\Controllers\Customer\ChatController;
+use App\Http\Controllers\Customer\RecommendationController;
 
 
 Route::get('/', [HomeController::class, 'index']);
