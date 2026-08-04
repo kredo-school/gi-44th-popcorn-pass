@@ -18,6 +18,7 @@ use App\Http\Controllers\MyPage\CancelController;
 use App\Http\Controllers\MyPage\CouponController;
 use App\Http\Controllers\Api\NearByCinemasController;
 use App\Http\Controllers\Customer\ChatController;
+use App\Http\Controllers\Customer\RecommendationController;
 
 
 Route::get('/', [HomeController::class, 'index']);
@@ -41,8 +42,7 @@ Route::get('/movie/{movie}/release', [HomeController::class, 'release'])
 Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])
     ->name('movie_detail');
 
-Route::get('/movies/search', [HomeController::class, 'home_search'])
-    ->name('movies.search');
+
 
 Route::get('/movies/search_showtime', [HomeController::class, 'showtime_search'])
     ->name('movies.search_showtime');
