@@ -8,9 +8,10 @@
         #7d9fcf 80%,
         #2a4a85 100%
     );
+    min-height: 100vh;
 }
 .home-hero {
-    background: #e3ebfa; 
+    background: transparent; 
     padding-top: 80px;
 }
 
