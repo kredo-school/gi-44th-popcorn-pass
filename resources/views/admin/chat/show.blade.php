@@ -15,7 +15,7 @@
 
         </div>
 
-        <h2 class="bg-white mb-4 text-center p-3">
+        <h2 class="bg-white mb-4 text-center text-dark p-3">
             👨‍💻 Chat with {{ $conversation->user->first_name }} {{ $conversation->user->last_name }}
         </h2>
 
@@ -25,7 +25,7 @@
 
 
                 {{-- Message Area --}}
-                <div class="admin-chat-area" id="chat-area"
+                <div class="admin-chat-area " id="chat-area"
                     data-fetch-url="{{ route('admin.chat.fetch', $conversation->id) }}">
 
 
@@ -46,7 +46,7 @@
                             </strong>
 
 
-                            <p>
+                            <p class="admin-message-bubble">
 
                                 {{ $message->message }}
 

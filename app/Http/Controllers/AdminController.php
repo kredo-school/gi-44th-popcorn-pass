@@ -491,7 +491,7 @@ class AdminController extends Controller
             ->with('success', 'Movie updated successfully.');
     }
 
-        public function movieShowtimes($id)
+    public function movieShowtimes($id)
     {
         $movie = Movie::findOrFail($id);
 
@@ -1301,11 +1301,26 @@ class AdminController extends Controller
 
     public function chat_show(Conversation $conversation)
     {
+        // Load user
         $conversation->load('user');
+
+
+        // =====================
+        // Staff entered chat
+        // =====================
+
+        if ($conversation->status === 'waiting') {
+
+            $conversation->update([
+                'status' => 'staff'
+            ]);
+        }
+
 
         $messages = $conversation->messages()
             ->orderBy('created_at')
             ->get();
+
 
         return view('admin.chat.show', compact(
             'conversation',

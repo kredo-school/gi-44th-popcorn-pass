@@ -22,11 +22,6 @@
 
                 @auth
 
-                   {{-- notification --}}
-                   <a href="#" id="" class="notification-icon">
-                    <i class="fa-solid fa-bell"></i>
-                   </a>
-
                     <!-- My Page -->
                     <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-text">
                         <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
