@@ -16,7 +16,7 @@
         </div>
 
         <h2 class="bg-white mb-4 text-center text-dark p-3">
-            👨‍💻 Chat with {{ $conversation->user->first_name }} {{ $conversation->user->last_name }}
+            👨‍💻 Chat with 【 {{ $conversation->user->first_name }} {{ $conversation->user->last_name }} 】
         </h2>
 
         <div class="admin-chat-background">

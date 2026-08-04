@@ -87,29 +87,6 @@
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label text-secondary small">Movie Status</label><br>
-                            <div class="btn-group" role="group">
-                                <input type="radio" class="btn-check" name="status" id="status-coming-soon"
-                                    value="coming_soon" autocomplete="off"
-                                    {{ old('status', 'coming_soon') == 'coming_soon' ? 'checked' : '' }}>
-                                <label class="btn btn-outline-warning" for="status-coming-soon">Coming Soon</label>
-
-                                <input type="radio" class="btn-check" name="status" id="status-now-showing"
-                                    value="now_showing" autocomplete="off"
-                                    {{ old('status') == 'now_showing' ? 'checked' : '' }}>
-                                <label class="btn btn-outline-success" for="status-now-showing">Now Showing</label>
-
-                                <input type="radio" class="btn-check" name="status" id="status-archived" value="archived"
-                                    autocomplete="off" {{ old('status') == 'archived' ? 'checked' : '' }}>
-                                <label class="btn btn-outline-secondary" for="status-archived">Archived</label>
-                            </div>
-                            <div class="form-text text-secondary">
-                                Note: once a Release Date / End Date is set, this status will be updated automatically over
-                                time.
-                            </div>
-                        </div>
-
-                        <div class="col-12">
                             <label class="form-label text-secondary small">Synopsis</label>
                             <textarea name="synopsis" class="form-control" rows="3" placeholder="Enter movie synopsis...">{{ old('synopsis') }}</textarea>
                         </div>

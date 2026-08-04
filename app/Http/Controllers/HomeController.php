@@ -30,6 +30,7 @@ class HomeController extends Controller
     public function index()
     {
         $movies = Movie::where('status', 'now_showing')
+            ->orderBy('released_date', 'desc')
             ->get();
         $comingSoonMovies = Movie::where('status', 'coming_soon')
             ->whereDate('released_date', '>=', now())
@@ -65,7 +66,7 @@ class HomeController extends Controller
             ->latest('published_at')
             ->first();
 
-            // chat notification
+        // chat notification
         $unreadMessages = 0;
 
         $conversation = Conversation::where(

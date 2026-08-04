@@ -183,7 +183,7 @@ class AdminController extends Controller
             'age_rating_id' => 'nullable|exists:age_ratings,id',
             'released_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:released_date',
-            'status' => 'required|string',
+            'status' => 'nullable',
             'synopsis' => 'nullable|string',
             'director' => 'nullable|string|max:255',
             'cast' => 'nullable|array|max:6',
@@ -267,6 +267,16 @@ class AdminController extends Controller
 
         $validated['created_by_id'] =
             auth()->id();
+
+        $today = now()->toDateString();
+
+        if ($validated['released_date'] > $today) {
+            $validated['status'] = 'coming_soon';
+        } elseif (!empty($validated['end_date']) && $validated['end_date'] < $today) {
+            $validated['status'] = 'archived';
+        } else {
+            $validated['status'] = 'now_showing';
+        }
 
         $movie = Movie::create($validated);
 
@@ -1297,10 +1307,15 @@ class AdminController extends Controller
         ")
             ->latest('updated_at')
             ->paginate(10);
+        
+            $chatNotificationCount = Conversation::whereIn('status', [
+                'waiting',
+                'staff'
+            ])->count();
 
         return view(
             'admin.chat.index',
-            compact('conversations')
+            compact('conversations','chatNotificationCount')
         );
     }
 
@@ -1333,7 +1348,7 @@ class AdminController extends Controller
             'messages'
         ));
     }
-    
+
 
     public function chat_store(Request $request, Conversation $conversation)
     {
