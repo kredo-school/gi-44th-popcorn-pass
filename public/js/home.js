@@ -1,7 +1,7 @@
 // public/js/home.js
 (function () {
     // ===========================
-    // Horizontal slider buttons (Now Playing / Coming Soon)
+    // Horizontal slider buttons (Now Showing / Coming Soon)
     // ===========================
     function bindSlider(buttonId, targetId, distance) {
         const button = document.getElementById(buttonId);
@@ -16,8 +16,8 @@
         });
     }
 
-    bindSlider('nowPlayingPrevBtn', 'nowPlayingSlider', -280);
-    bindSlider('nowPlayingNextBtn', 'nowPlayingSlider', 280);
+    bindSlider('nowShowingPrevBtn', 'nowShowingSlider', -280);
+    bindSlider('nowShowingNextBtn', 'nowShowingSlider', 280);
     bindSlider('comingSoonNextBtn', 'comingSoonSlider', 280);
 
     // ===========================

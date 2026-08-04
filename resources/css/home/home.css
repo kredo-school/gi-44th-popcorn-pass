@@ -341,19 +341,19 @@
     width: 40px;
 }
 
-.now-playing-track-wrap {
+.now-showing-track-wrap {
     flex-grow: 1;
     min-width: 0;
 }
 
-.now-playing-track {
+.now-showing-track {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
 
-.now-playing-slide {
+.now-showing-slide {
     flex-shrink: 0;
     scroll-snap-align: start;
     width: 200px;

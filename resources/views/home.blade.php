@@ -402,16 +402,16 @@
 
                     <hr class="text-white">
 
-                    {{-- Nowplaying --}}
+                    {{-- Nowshowing --}}
 
-                    <div class="container-fluid px-0 " id="Nowplaying">
+                    <div class="container-fluid px-0 " id="Nowshowing">
                         <div class="row">
                             <div class="col-1"></div>
                             <div class="col-10 ">
                                 <div class="section-title-wrap">
                                     <h2 class="section-title">
                                         <span class="title-icon">🎬</span>
-                                        NOW PLAYING
+                                        NOW SHOWING
                                     </h2>
                                 </div>
 
@@ -427,16 +427,16 @@
 
                                         <!-- left button slider-->
 
-                                        <button id="nowPlayingNextBtn" type="button" class="nowplaying-btn">
+                                        <button id="nowShowingNextBtn" type="button" class="nowshowing-btn">
                                             <i class="fa-solid fa-chevron-right"></i>
                                         </button>
 
                                         <!-- Movie Cards scroll -->
-                                        <div class="flex-grow-1 now-playing-track-wrap">
-                                            <div class="d-flex gap-3 pb-2 now-playing-track" id="nowPlayingSlider">
+                                        <div class="flex-grow-1 now-showing-track-wrap">
+                                            <div class="d-flex gap-3 pb-2 now-showing-track" id="nowShowingSlider">
 
                                                 @foreach ($movies as $movie)
-                                                    <div class="now-playing-slide">
+                                                    <div class="now-showing-slide">
                                                         <div class="movie-card">
                                                             <a
                                                                 href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
@@ -481,7 +481,7 @@
                                         </div>
 
                                         <!-- right button slider-->
-                                        <button id="nowPlayingPrevBtn" type="button" class="nowplaying-btn">
+                                        <button id="nowShowingPrevBtn" type="button" class="nowshowing-btn">
                                             <i class="fa-solid fa-chevron-left"></i>
                                         </button>
 
@@ -535,9 +535,7 @@
                                                         <div
                                                             class="ticket-stub {{ $daysLeft <= 0 ? 'ticket-stub-today' : '' }}">
                                                             <span class="ticket-stub-label">
-                                                                @if ($daysLeft <= 0)
-                                                                    Now showing
-                                                                @elseif ($daysLeft == 1)
+                                                                @if ($daysLeft == 0)
                                                                     Tomorrow
                                                                 @else
                                                                     {{ $daysLeft }} days
