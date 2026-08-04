@@ -479,3 +479,6 @@ Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(functi
 Route::middleware('auth')->group(function () {
     Route::get('/recommendations', [RecommendationController::class, 'index'])->name('recommendations.index');
 });
+
+// Map routes
+Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
