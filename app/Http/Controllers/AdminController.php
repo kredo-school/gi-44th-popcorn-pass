@@ -696,6 +696,10 @@ class AdminController extends Controller
         ));
     }
 
+
+    // --------------------
+    // Reservations
+    // --------------------
     private function reservationStatusOptions(): array
     {
         return ['pending', 'confirmed', 'cancelled', 'expired'];
@@ -733,6 +737,34 @@ class AdminController extends Controller
         return $query->orderBy('created_at', 'desc');
     }
 
+    public function markPaymentAsPaid(
+        Payment $payment
+    ) {
+        if ($payment->payment_method !== 'onsite') {
+            return back()->with(
+                'error',
+                'Only on-site payments can be updated manually.'
+            );
+        }
+
+        if ($payment->payment_status !== 'pending') {
+            return back()->with(
+                'error',
+                'This payment is not pending.'
+            );
+        }
+
+        $payment->update([
+            'payment_status' => 'paid',
+            'paid_at' => now(),
+        ]);
+
+        return back()->with(
+            'success',
+            'Payment marked as paid successfully.'
+        );
+    }
+
     public function reservations(Request $request)
     {
         $reservations = $this->buildReservationsQuery($request)
@@ -758,26 +790,99 @@ class AdminController extends Controller
         ])->findOrFail($id);
 
         return response()->json([
-            'reservation_reference' => $reservation->reservation_reference,
-            'customer_name' => $reservation->user->username ?? '—',
-            'customer_email' => $reservation->user->email ?? '—',
-            'movie_title' => $reservation->movie->title ?? '—',
-            'cinema_name' => $reservation->cinema->cinema_name ?? '—',
-            'screen_number' => $reservation->screen->screen_number ?? '—',
-            'showtime' => optional($reservation->showtime?->start_time)->format('Y-m-d H:i'),
-            'seats' => $reservation->seat_numbers,
-            'total_seats' => $reservation->total_seats,
-            'subtotal' => number_format($reservation->subtotal, 2),
-            'discount_amount' => number_format($reservation->discount_amount, 2),
-            'final_amount' => number_format($reservation->final_amount, 2),
-            'reservation_status' => $reservation->reservation_status,
-            'qr_code' => $reservation->qr_code,
-            'confirmed_at' => optional($reservation->confirmed_at)->format('Y-m-d H:i'),
-            'cancelled_at' => optional($reservation->cancelled_at)->format('Y-m-d H:i'),
-            'payment_status' => $reservation->payment->payment_status ?? '—',
-            'payment_method' => $reservation->payment->payment_method ?? '—',
-            'transaction_id' => $reservation->payment->transaction_id ?? '—',
-            'paid_at' => optional($reservation->payment?->paid_at)->format('Y-m-d H:i'),
+            'reservation_reference' =>
+            $reservation->reservation_reference,
+
+            'customer_name' =>
+            $reservation->user?->username
+                ?? trim(
+                    ($reservation->guest_first_name ?? '')
+                        . ' '
+                        . ($reservation->guest_last_name ?? '')
+                )
+                ?: 'Guest',
+
+            'customer_email' =>
+            $reservation->user?->email
+                ?? $reservation->guest_email
+                ?? '—',
+
+            'movie_title' =>
+            $reservation->movie?->title ?? '—',
+
+            'cinema_name' =>
+            $reservation->cinema?->cinema_name ?? '—',
+
+            'screen_number' =>
+            $reservation->screen?->screen_number ?? '—',
+
+            'showtime' =>
+            $reservation->showtime?->start_time
+                ?->format('Y-m-d H:i'),
+
+            'seats' =>
+            $reservation->seat_numbers,
+
+            'total_seats' =>
+            $reservation->total_seats,
+
+            'subtotal' =>
+            number_format(
+                $reservation->subtotal,
+                2
+            ),
+
+            'discount_amount' =>
+            number_format(
+                $reservation->discount_amount,
+                2
+            ),
+
+            'final_amount' =>
+            number_format(
+                $reservation->final_amount,
+                2
+            ),
+
+            'reservation_status' =>
+            $reservation->reservation_status,
+
+            'qr_code' =>
+            $reservation->qr_code,
+
+            'confirmed_at' =>
+            $reservation->confirmed_at
+                ?->format('Y-m-d H:i'),
+
+            'cancelled_at' =>
+            $reservation->cancelled_at
+                ?->format('Y-m-d H:i'),
+
+            // Payment
+            'payment_id' =>
+            $reservation->payment?->id,
+
+            'payment_status' =>
+            $reservation->payment?->payment_status
+                ?? '—',
+
+            'payment_method' =>
+            $reservation->payment?->payment_method
+                ?? '—',
+
+            'transaction_id' =>
+            $reservation->payment?->transaction_id
+                ?? '—',
+
+            'paid_at' =>
+            $reservation->payment?->paid_at
+                ?->format('Y-m-d H:i'),
+
+            'can_mark_paid' =>
+            $reservation->payment?->payment_method
+                === 'onsite'
+                && $reservation->payment?->payment_status
+                === 'pending',
         ]);
     }
 

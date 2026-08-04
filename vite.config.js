@@ -5,14 +5,20 @@ export default defineConfig({
         laravel({
             input: [
                 'resources/sass/app.scss',
+                'resources/sass/admin.scss',
                 'resources/js/app.js',
                 'resources/js/admin.js',
+                // !! USE ↑ FILES like "import './~~~~/~~~.js'; or @import "../css/~~~~/~~~.css";" !!
+
                 // Admin
                 'resources/js/admin/movie-showtimes.js',
+
                 // Customer Chat
                 'resources/js/customer/chat.js',
+
                 // Admin Chat
                 'resources/js/admin/chat.js',
+
             ],
             refresh: true,
         }),

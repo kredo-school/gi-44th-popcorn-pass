@@ -7,6 +7,7 @@ use App\Http\Controllers\CinemaController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CinemaReviewController;
+use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
@@ -188,6 +189,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
     Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])->name('reservations.export');
     Route::get('/reservations/{id}/details', [AdminController::class, 'reservationDetails'])->name('reservations.details');
+    //Payments
+    Route::patch(
+        '/payments/{payment}/mark-paid',
+        [AdminController::class, 'markPaymentAsPaid']
+    )->name('payments.mark-paid');
 
     // Users Management
     Route::get('/users', [AdminController::class, 'users'])->name('users');
@@ -229,7 +235,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/chat/{conversation}', [AdminController::class,'chat_show'])->name('chat.show');
     Route::post('/chat/{conversation}',[AdminController::class,'chat_store'])->name('chat.store');
     Route::get('/chat/{conversation}/fetch',[AdminController::class,'chat_fetch'])->name('chat.fetch');
-    Route::post('/admin/chat/{conversation}/close',[AdminController::class, 'chat_close'])->name('chat.close');
+    Route::post('/chat/{conversation}/close',[AdminController::class, 'chat_close'])->name('chat.close');
 
 });
 
@@ -242,90 +248,48 @@ Route::middleware('auth')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])
             ->name('dashboard');
-
         Route::get('/profile', [ProfileController::class, 'show'])
             ->name('profile');
-
         Route::get('/profile/edit', [ProfileController::class, 'edit'])
             ->name('profile.edit');
-
         Route::put('/profile', [ProfileController::class, 'update'])
             ->name('profile.update');
-
         Route::get('/rewards', [RewardsController::class, 'index'])
             ->name('rewards');
-
         Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])
             ->name('movies-watched');
-
-        Route::post(
-            '/movies-watched/{reservation}/send-review-email',
-            [MoviesWatchedController::class, 'sendReviewEmail']
-        )->name('movies-watched.send-review-email');
-
+        Route::post('/movies-watched/{reservation}/send-review-email',[MoviesWatchedController::class, 'sendReviewEmail'])
+            ->name('movies-watched.send-review-email');
         Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])
             ->name('reviews.create');
-
         Route::post('/reviews', [MyPageReviewController::class, 'store'])
             ->name('reviews.store');
-
         Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])
             ->name('reviews.update');
-
         Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])
             ->name('reviews-written');
-
         Route::get('/tickets', [TicketController::class, 'index'])
             ->name('tickets');
-
         Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])
             ->name('tickets.qrcode');
-
         Route::get('/cancel/{id}', [CancelController::class, 'show'])
             ->name('cancel.show');
-
         Route::post('/cancel/{id}', [CancelController::class, 'cancel'])
             ->name('cancel.confirm');
-
         Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])
             ->name('cancel.complete');
-
         Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
             ->name('reservations.cancel');
-
         // Cinema Review Routes
         Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])
             ->name('cinema-reviews.store');
-
         Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])
             ->name('cinema-reviews.index');
-
         Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])
             ->name('cinema-reviews.show');
+        Route::get('/coupons', [CouponController::class, 'index'])
+            ->name('coupons');
     });
-Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
-    Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])->name('movies-watched');
-    Route::post('/movies-watched/{reservation}/send-review-email', [MoviesWatchedController::class, 'sendReviewEmail'])->name('movies-watched.send-review-email');
-    Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])->name('reviews.create');
-    Route::post('/reviews', [MyPageReviewController::class, 'store'])->name('reviews.store');
-    Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])->name('reviews.update');
-    Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
-    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
-    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
-    Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
-    Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
-    Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
-    Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
-        ->name('reservations.cancel');
-    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons');
-
-});
-
 
 // ===========================
 // Customer Service Chat
@@ -341,16 +305,13 @@ Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(functi
         ->name('chat.staff');
     Route::get('/chat/{conversation}/fetch', [ChatController::class, 'fetch'])
         ->name('chat.fetch');
-    Route::post('/customer/chat/close', [ChatController::class, 'close'])
+    Route::post('/chat/close', [ChatController::class, 'close'])
         ->name('chat.close');
-
-    // Cinema Review Routes
-    Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])->name('cinema-reviews.store');
-    Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])->name('cinema-reviews.index');
-    Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])->name('cinema-reviews.show');
 });
 
-
+// ===========================
+// Recommendations
+// ===========================
 Route::middleware('auth')->group(function () {
     Route::get('/recommendations', [RecommendationController::class, 'index'])->name('recommendations.index');
 });
