@@ -657,7 +657,6 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 @endsection
 
-{{-- Add this section at the end of resources/views/home.blade.php --}}
 
 {{-- Recommended for You Section --}}
 @auth
