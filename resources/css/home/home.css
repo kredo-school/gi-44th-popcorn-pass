@@ -8,9 +8,10 @@
         #7d9fcf 80%,
         #2a4a85 100%
     );
+    min-height: 100vh;
 }
 .home-hero {
-    background: #e3ebfa; 
+    background: transparent; 
     padding-top: 80px;
 }
 
@@ -341,19 +342,19 @@
     width: 40px;
 }
 
-.now-playing-track-wrap {
+.now-showing-track-wrap {
     flex-grow: 1;
     min-width: 0;
 }
 
-.now-playing-track {
+.now-showing-track {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
 
-.now-playing-slide {
+.now-showing-slide {
     flex-shrink: 0;
     scroll-snap-align: start;
     width: 200px;
@@ -617,4 +618,45 @@
 
 .contact-icon i {
     font-size: 28px;
+}
+
+/* Chat notification */
+
+.contact-icon {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+}
+
+
+.chat-notification {
+
+    position: absolute;
+
+    top: -5px;
+    right: -5px;
+
+
+    width: 25px;
+    height: 25px;
+
+
+    background-color: red;
+    color: white;
+
+
+    border-radius: 50%;
+
+
+    font-size: 12px;
+    font-weight: bold;
+
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+    z-index: 10;
+
 }

@@ -183,7 +183,7 @@ class AdminController extends Controller
             'age_rating_id' => 'nullable|exists:age_ratings,id',
             'released_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:released_date',
-            'status' => 'required|string',
+            'status' => 'nullable',
             'synopsis' => 'nullable|string',
             'director' => 'nullable|string|max:255',
             'cast' => 'nullable|array|max:6',
@@ -267,6 +267,16 @@ class AdminController extends Controller
 
         $validated['created_by_id'] =
             auth()->id();
+
+        $today = now()->toDateString();
+
+        if ($validated['released_date'] > $today) {
+            $validated['status'] = 'coming_soon';
+        } elseif (!empty($validated['end_date']) && $validated['end_date'] < $today) {
+            $validated['status'] = 'archived';
+        } else {
+            $validated['status'] = 'now_showing';
+        }
 
         $movie = Movie::create($validated);
 
@@ -491,7 +501,7 @@ class AdminController extends Controller
             ->with('success', 'Movie updated successfully.');
     }
 
-        public function movieShowtimes($id)
+    public function movieShowtimes($id)
     {
         $movie = Movie::findOrFail($id);
 
@@ -1393,30 +1403,57 @@ class AdminController extends Controller
             'staff'
         ])
             ->with('user')
-            ->latest()
+            ->orderByRaw("
+            CASE
+                WHEN status = 'waiting' THEN 0
+                WHEN status = 'staff' THEN 1
+                ELSE 2
+            END
+        ")
+            ->latest('updated_at')
             ->paginate(10);
-
+        
+            $chatNotificationCount = Conversation::whereIn('status', [
+                'waiting',
+                'staff'
+            ])->count();
 
         return view(
             'admin.chat.index',
-            compact('conversations')
+            compact('conversations','chatNotificationCount')
         );
     }
 
 
     public function chat_show(Conversation $conversation)
     {
+        // Load user
         $conversation->load('user');
+
+
+        // =====================
+        // Staff entered chat
+        // =====================
+
+        if ($conversation->status === 'waiting') {
+
+            $conversation->update([
+                'status' => 'staff'
+            ]);
+        }
+
 
         $messages = $conversation->messages()
             ->orderBy('created_at')
             ->get();
+
 
         return view('admin.chat.show', compact(
             'conversation',
             'messages'
         ));
     }
+
 
     public function chat_store(Request $request, Conversation $conversation)
     {

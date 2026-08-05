@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Review;
 use App\Models\Information;
+use App\Models\Message;
+use App\Models\Conversation;
 use Carbon\Carbon;
 
 
@@ -23,9 +25,12 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
+
     public function index()
     {
         $movies = Movie::where('status', 'now_showing')
+            ->orderBy('released_date', 'desc')
             ->get();
         $comingSoonMovies = Movie::where('status', 'coming_soon')
             ->whereDate('released_date', '>=', now())
@@ -61,6 +66,31 @@ class HomeController extends Controller
             ->latest('published_at')
             ->first();
 
+        // chat notification
+        $unreadMessages = 0;
+
+        $conversation = Conversation::where(
+            'user_id',
+            auth()->id()
+        )->first();
+
+
+        if ($conversation) {
+            $unreadMessages = Message::where(
+                'conversation_id',
+                $conversation->id
+            )
+                ->where(
+                    'sender_type',
+                    'staff'
+                )
+                ->where(
+                    'is_read',
+                    false
+                )
+                ->count();
+        }
+
         return view('home')
             ->with('movies', $movies)
             ->with('comingSoonMovies', $comingSoonMovies)
@@ -68,7 +98,8 @@ class HomeController extends Controller
             ->with('heroMovie', $heroMovie)
             ->with('topMovie', $topMovie)
             ->with('information', $information)
-            ->with('information_slide', $information_slide);
+            ->with('information_slide', $information_slide)
+            ->with('unreadMessages', $unreadMessages);
     }
 
     private function commonData($selectedDate)
@@ -143,61 +174,69 @@ class HomeController extends Controller
             ->with('topMovie', $topMovie);
     }
 
-    public function home_search(Request $request)
-    {
-        $selectedDate = request('date', now()->toDateString());
-
-        $data = $this->commonData($selectedDate);
-
-        $keyword = $request->keyword;
-
-        $data['searchResults'] = Movie::with(['showtimes' => function ($query) use ($selectedDate) {
-            $query->whereDate('start_time', $selectedDate);
-        }, 'showtimes.screen.cinema'])
-            ->where(function ($query) use ($keyword) {
-                $query->where('title', 'like', "%{$keyword}%")
-                    ->orWhere('director', 'like', "%{$keyword}%")
-                    ->orWhere('synopsis', 'like', "%{$keyword}%")
-                    ->orWhereHas('genres', function ($q) use ($keyword) {
-                        $q->where('title', 'like', "%{$keyword}%");
-                    })
-                    ->orWhereJsonContains('search_keywords', $keyword);
-            })->get();
-
-        $data['selectedDate'] = $selectedDate;
-        $data['isSearch'] = true;
-
-        return view('layouts.showtime_display', $data);
-    }
 
     public function showtime_search(Request $request)
     {
-        $selectedDate = $request->get('date', now()->toDateString());
+        $selectedDate = $request->get(
+            'date',
+            now()->toDateString()
+        );
+
+
         $keyword = $request->keyword;
+
 
         $data = $this->commonData($selectedDate);
 
+
+
         $data['searchResults'] = Movie::with([
+
             'showtimes' => function ($query) use ($selectedDate) {
-                $query->whereDate('start_time', $selectedDate);
+
+                $query->whereDate(
+                    'start_time',
+                    $selectedDate
+                );
             },
+
             'showtimes.screen.cinema',
+
             'genres',
+
         ])
             ->where(function ($query) use ($keyword) {
+
                 $query->where('title', 'like', "%{$keyword}%")
                     ->orWhere('director', 'like', "%{$keyword}%")
                     ->orWhere('synopsis', 'like', "%{$keyword}%")
                     ->orWhereHas('genres', function ($q) use ($keyword) {
-                        $q->where('title', 'like', "%{$keyword}%");
-                    });
+
+                        $q->where(
+                            'title',
+                            'like',
+                            "%{$keyword}%"
+                        );
+                    })
+                    ->orWhereJsonContains(
+                        'search_keywords',
+                        $keyword
+                    );
             })
             ->get();
 
+
+
         $data['selectedDate'] = $selectedDate;
+
         $data['isSearch'] = true;
 
-        return view('layouts.showtime_display', $data);
+
+
+        return view(
+            'layouts.showtime_display',
+            $data
+        );
     }
 
     // showtime selection
@@ -240,10 +279,17 @@ class HomeController extends Controller
         $averageRating = $movie->reviews->avg('rating') ?? 0;
         $totalReviews = $movie->reviews->count();
 
+        // 最新の上映スケジュールを取得
+        $showtime = $movie->showtimes()
+            ->where('is_active', true)
+            ->orderBy('start_time')
+            ->first();
+
         return view('movies.movie_detail', compact(
             'movie',
             'averageRating',
-            'totalReviews'
+            'totalReviews',
+            'showtime'
         ));
     }
 
@@ -252,7 +298,9 @@ class HomeController extends Controller
     {
         $keyword = $request->keyword;
 
+
         $movies = Movie::where(function ($query) use ($keyword) {
+
             $query->where('title', 'like', "%{$keyword}%")
                 ->orWhere('director', 'like', "%{$keyword}%")
                 ->orWhere('synopsis', 'like', "%{$keyword}%")
@@ -260,7 +308,10 @@ class HomeController extends Controller
                     $q->where('title', 'like', "%{$keyword}%");
                 })
                 ->orWhereJsonContains('search_keywords', $keyword);
-        })->get();
+        })
+            ->with('genres')
+            ->get();
+
 
         return view('movies.search', compact(
             'movies',

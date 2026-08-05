@@ -6,64 +6,69 @@
 
 
 
-    <div class="container py-5">
+    <div class="container ">
 
+        <div class="chat-display-bg">
 
-        <h2 class="mb-4 text-white ">
-            👨‍💻 Customer Support Requests
-        </h2>
+            <div class="card shadow admin-chat-list-card mx-auto">
+                <h2 class="text-center mt-3">
+                    👨‍💻 Customer Support Requests <span class="text-danger">({{ $chatNotificationCount }})</span>
+                </h2>
 
-
-
-        <div class="chat-display-bg p-3">
-            <div class="card shadow w-50 mx-auto">
+                
 
                 <div class="card-body">
 
                     @forelse($conversations as $conversation)
-                        <div class="border rounded p-3 mb-3 d-flex justify-content-between align-items-center">
+                        <div class="border rounded p-1 mb-3 d-flex justify-content-between align-items-center">
 
                             <div>
                                 <h5>
-                                    👤
-                                    {{ $conversation->user->first_name }} {{ $conversation->user->last_name }}
+                                    👤 {{ $conversation->user->username }}
                                 </h5>
 
                                 <p class="mb-0">
                                     Status:
 
-                                    <span class="badge bg-dark">
-                                        {{ $conversation->status }}
-                                    </span>
+                                    @if ($conversation->status === 'waiting')
+                                        <span class="badge bg-danger">
+                                            Waiting
+                                        </span>
+                                    @elseif($conversation->status === 'staff')
+                                        <span class="badge bg-primary">
+                                            Staff
+                                        </span>
+                                    @else
+                                        <span class="badge bg-secondary">
+                                            {{ ucfirst($conversation->status) }}
+                                        </span>
+                                    @endif
+
                                 </p>
                             </div>
-
-
-                            <div>
-                                <a href="{{ route('admin.chat.show', $conversation->id) }}" class="btn btn-primary">
-                                    Open Chat
-                                </a>
-                            </div>
-
+                            <a href="{{ route('admin.chat.show', $conversation->id) }}" class="btn btn-outline-dark">
+                                Open Chat
+                            </a>
                         </div>
-
-
-
                     @empty
 
-
                         <div class="text-center text-secondary">
-
                             No support requests.
-
                         </div>
                     @endforelse
+
+
+                </div>
+
+                {{-- pagination --}}
+                <div class="d-flex justify-content-center ">
 
                     {{ $conversations->links() }}
 
                 </div>
 
             </div>
+
         </div>
 
 

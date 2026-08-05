@@ -9,21 +9,15 @@ return new class extends Migration
 
     public function up(): void
     {
-
         if (Schema::hasColumn('movies', 'genre_id')) {
 
             Schema::table('movies', function (Blueprint $table) {
 
-               
                 $table->dropForeign(['genre_id']);
 
-           
                 $table->dropColumn('genre_id');
-
             });
-
         }
-
     }
 
 

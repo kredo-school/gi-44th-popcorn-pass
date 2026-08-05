@@ -22,7 +22,7 @@
                             <h1>{{ $movie->title }}</h1>
 
                             <div class="mt-1">
-                                ※ {{ $movie->ageRating->title }}
+                                🎬 {{ $movie->ageRating->title }}
                             </div>
                         </div>
 
@@ -38,7 +38,7 @@
                             <a href="{{ route('reviews.index', ['movieId' => $movie->id]) }}"
                                 class="text-decoration-none text-white text-small">
 
-                                ⭐️
+                                ⭐
                                 <span class=" ms-2">
                                     {{ number_format($averageRating, 1) }} / 5
                                 </span>
@@ -99,6 +99,42 @@
             </div>
         </div>
 
+        <!-- Community Discussion Section -->
+        <div class="container community-discussion mt-5 mb-5">
+            <div class="text-white">
+                <h2 class="mb-4">💬 Community Discussion</h2>
+                
+                <!-- New Post Form -->
+                @auth
+                <div class="post-form mb-4">
+                    <form id="newPostForm">
+                        <div class="form-group mb-3">
+                            <input type="text" id="postTitle" class="form-control" placeholder="Post title..." maxlength="255" required>
+                        </div>
+                        <div class="form-group mb-3">
+                            <textarea id="postBody" class="form-control" placeholder="Share your thoughts... (No spoilers!)" rows="4" maxlength="2000" required></textarea>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" class="form-check-input" id="postSpoilerFlag">
+                            <label class="form-check-label" for="postSpoilerFlag">
+                                ⚠️ This post contains spoilers
+                            </label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Post</button>
+                    </form>
+                </div>
+                @else
+                <div class="alert alert-info mb-4">
+                    <a href="{{ route('login') }}">Log in</a> to post in the community discussion.
+                </div>
+                @endauth
+
+                <!-- Posts List -->
+                <div id="postsList" class="posts-list">
+                    <p class="text-muted">Loading posts...</p>
+                </div>
+            </div>
+        </div>
 
         <div class="d-flex justify-content-between mt-5">
             <button type="button" class="back-btn ms-5" onclick="history.back()">
@@ -106,6 +142,8 @@
             </button>
         </div>
 
-
     </div>
+
+    @vite(['resources/css/community-discussion.css', 'resources/js/community-discussion.js'])
+    <meta name="movie-id" content="{{ $movie->id }}">
 @endsection

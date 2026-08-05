@@ -49,6 +49,8 @@
 
 
 
+
+
 /* Scrollbar */
 
 .admin-chat-area::-webkit-scrollbar {
@@ -84,7 +86,3 @@
 
 }
 
-.chat-display-bg{
-    background:#aaa;
-    border-radius:10px;
-}

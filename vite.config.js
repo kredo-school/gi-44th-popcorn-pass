@@ -18,7 +18,9 @@ export default defineConfig({
 
                 // Admin Chat
                 'resources/js/admin/chat.js',
-
+                // Community Discussion
+                'resources/css/community-discussion.css',
+                'resources/js/community-discussion.js',
             ],
             refresh: true,
         }),

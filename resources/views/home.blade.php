@@ -46,9 +46,18 @@
 
             {{-- Contact icon --}}
             <div class="contact-icon">
-                <a href="{{ route('customer.chat.index')}}">
+
+                <a href="{{ route('customer.chat.index') }}">
                     <i class="fa-solid fa-comment"></i>
                 </a>
+
+
+                @if ($unreadMessages > 0)
+                    <span class="chat-notification">
+                        {{ $unreadMessages }}
+                    </span>
+                @endif
+
             </div>
 
             {{-- Swiper section --}}
@@ -82,11 +91,8 @@
                                         <div class="row g-0 align-items-center justify-content-center h-100">
 
                                             <div class="col-lg-4 position-relative h-100">
-                                                <img
-                                                    src="{{ $heroMovie->banner_image_url }}"
-                                                    class="hero-image"
-                                                    alt="{{ $heroMovie->title }}"
-                                                >
+                                                <img src="{{ $heroMovie->banner_image_url }}" class="hero-image"
+                                                    alt="{{ $heroMovie->title }}">
 
                                                 <div class="hero-overlay"></div>
 
@@ -98,22 +104,17 @@
                                                         BLOCKBUSTERS
                                                     </h1>
 
-                                                    <a
-                                                        href="{{ route('release', $heroMovie->id) }}"
-                                                        class="btn-book btn-book-yellow"
-                                                    >
+                                                    <a href="{{ route('release', $heroMovie->id) }}"
+                                                        class="btn-book btn-book-yellow">
                                                         VIEW MORE →
                                                     </a>
                                                 </div>
                                             </div>
 
-                                            <div class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                                <iframe
-                                                    class="hero-video"
-                                                    src="{{ $heroMovie->trailer_url }}"
-                                                    allow="autoplay; encrypted-media"
-                                                    allowfullscreen
-                                                ></iframe>
+                                            <div
+                                                class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
+                                                <iframe class="hero-video" src="{{ $heroMovie->trailer_url }}"
+                                                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                             </div>
 
                                         </div>
@@ -151,11 +152,13 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div class="col-lg-8 d-flex align-items-center justify-content-center h-100 ps-lg-5">
+                                        <div
+                                            class="col-lg-8 d-flex align-items-center justify-content-center h-100 ps-lg-5">
                                             <div class="info-card">
                                                 <span class="hero-tag hero-tag-blue">INFORMATION</span>
-                                                @if($information_slide)                                               
-                                                    <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
+                                                @if ($information_slide)
+                                                    <div
+                                                        class="d-flex justify-content-between align-items-center mt-2 mb-2">
                                                         <span class="hero-tag mb-0"
                                                             style="background-color: {{ $information_slide->category?->color ?? '#6c757d' }};
                                                                                                                         color: {{ $information_slide->category?->text_color ?? '#fff' }};">
@@ -164,13 +167,14 @@
                                                         <h2 class="info-card-title mb-0">
                                                             {{ $information_slide->title }}
                                                         </h2>
-                                                
+
                                                         <div class="info-card-date">
                                                             {{ $information_slide->published_at->format('Y.m.d') }}
                                                         </div>
                                                     </div>
-                                                
-                                                    <a href="{{ route('information.detail', $information_slide->id) }}" class="btn-book-black">
+
+                                                    <a href="{{ route('information.detail', $information_slide->id) }}"
+                                                        class="btn-book-black">
                                                         VIEW MORE →
                                                     </a>
                                                 @endif
@@ -398,16 +402,16 @@
 
                     <hr class="text-white">
 
-                    {{-- Nowplaying --}}
+                    {{-- Nowshowing --}}
 
-                    <div class="container-fluid px-0 " id="Nowplaying">
+                    <div class="container-fluid px-0 " id="Nowshowing">
                         <div class="row">
                             <div class="col-1"></div>
                             <div class="col-10 ">
                                 <div class="section-title-wrap">
                                     <h2 class="section-title">
                                         <span class="title-icon">🎬</span>
-                                        NOW PLAYING
+                                        NOW SHOWING
                                     </h2>
                                 </div>
 
@@ -423,16 +427,16 @@
 
                                         <!-- left button slider-->
 
-                                        <button id="nowPlayingNextBtn" type="button" class="nowplaying-btn">
+                                        <button id="nowShowingNextBtn" type="button" class="nowshowing-btn">
                                             <i class="fa-solid fa-chevron-right"></i>
                                         </button>
 
                                         <!-- Movie Cards scroll -->
-                                        <div class="flex-grow-1 now-playing-track-wrap">
-                                            <div class="d-flex gap-3 pb-2 now-playing-track" id="nowPlayingSlider">
+                                        <div class="flex-grow-1 now-showing-track-wrap">
+                                            <div class="d-flex gap-3 pb-2 now-showing-track" id="nowShowingSlider">
 
                                                 @foreach ($movies as $movie)
-                                                    <div class="now-playing-slide">
+                                                    <div class="now-showing-slide">
                                                         <div class="movie-card">
                                                             <a
                                                                 href="{{ route('movie_detail', ['movie' => $movie->id]) }}">
@@ -477,7 +481,7 @@
                                         </div>
 
                                         <!-- right button slider-->
-                                        <button id="nowPlayingPrevBtn" type="button" class="nowplaying-btn">
+                                        <button id="nowShowingPrevBtn" type="button" class="nowshowing-btn">
                                             <i class="fa-solid fa-chevron-left"></i>
                                         </button>
 
@@ -531,9 +535,7 @@
                                                         <div
                                                             class="ticket-stub {{ $daysLeft <= 0 ? 'ticket-stub-today' : '' }}">
                                                             <span class="ticket-stub-label">
-                                                                @if ($daysLeft <= 0)
-                                                                    Now showing
-                                                                @elseif ($daysLeft == 1)
+                                                                @if ($daysLeft == 0)
                                                                     Tomorrow
                                                                 @else
                                                                     {{ $daysLeft }} days
@@ -577,70 +579,72 @@
 
                             <div class="container-fluid px-0 section-gap" id="Information">
                                 <div class="info-home-list">
-                                
+
                                     @forelse($information as $info)
-                                        <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
-                                    
+                                        <a href="{{ route('information.detail', $info->id) }}"
+                                            class="text-decoration-none">
+
                                             <div class="info-list-item">
-                                    
+
                                                 {{-- Category --}}
-                                                <span class="info-list-badge" style="background-color: {{ $info->category->color }};
+                                                <span class="info-list-badge"
+                                                    style="background-color: {{ $info->category->color }};
                                                             color: {{ $info->category->text_color }};">
                                                     {{ $info->category->name }}
                                                 </span>
-                                    
+
                                                 {{-- Title --}}
                                                 <span class="info-list-title">
                                                     {{ $info->title }}
                                                 </span>
-                                    
+
                                                 {{-- Published Date --}}
                                                 <span class="info-list-date">
                                                     {{ $info->published_at->format('Y.m.d') }}
                                                 </span>
-                                    
+
                                                 {{-- Arrow --}}
                                                 <span class="info-list-arrow">
                                                     <i class="fa-solid fa-chevron-right"></i>
                                                 </span>
-                                    
+
                                             </div>
-                                    
+
                                         </a>
                                     @empty
                                         <p class="text-white text-center">No information available.</p>
                                     @endforelse
-                                
+
                                 </div>
-                                
+
                                 <div class="text-center mt-4">
                                     <a href="{{ route('information.index') }}" class="btn btn-outline-warning px-5 py-2">
                                         View All Information
                                     </a>
                                 </div>
 
-                                </div>
                             </div>
                         </div>
-                        <div class="col-1"></div>
                     </div>
-
-
-                    <div class="back-to-top mb-5">
-                        <a href="#top" class="back-to-top-link">
-                            <div class="arrow">
-                                <div class="arrow">
-                                    <i class="fa-solid fa-chevron-up"></i>
-                                </div>
-                            </div>
-                            <span>to top page</span>
-                        </a>
-                    </div>
-                    
-
+                    <div class="col-1"></div>
                 </div>
+
+
+                <div class="back-to-top mb-5">
+                    <a href="#top" class="back-to-top-link">
+                        <div class="arrow">
+                            <div class="arrow">
+                                <i class="fa-solid fa-chevron-up"></i>
+                            </div>
+                        </div>
+                        <span>to top page</span>
+                    </a>
+                </div>
+
+
             </div>
         </div>
+    </div>
     </div>
 
 

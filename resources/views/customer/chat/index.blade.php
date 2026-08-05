@@ -33,7 +33,7 @@
                             </div>
 
                             <div class="bubble ai">
-                                {{ $message->message }}
+                                {!! $message->message !!}
                             </div>
                         </div>
 
@@ -88,9 +88,11 @@
                 </form>
             @elseif($conversation->status === 'waiting')
                 <div class="text-center text-secondary">
-
                     👨‍💻 Waiting for staff response...
-
+                </div>
+            @elseif($conversation->status === 'staff')
+                <div class="text-center text-success">
+                    👨‍💼 Staff is here
                 </div>
             @endif
 
