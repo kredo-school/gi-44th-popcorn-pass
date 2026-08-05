@@ -59,12 +59,11 @@
                                         @foreach ($genres as $genre)
                                             <div class="col-md-4 mb-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input genre-checkbox" type="checkbox" name="genre_ids[]"
-                                                        value="{{ $genre->id }}" id="genre{{ $genre->id }}" {{ in_array( $genre->id,
-                                                    old('genre_ids', $movie->genres->pluck('id')->toArray())
-                                                    ) ? 'checked' : '' }}
-                                                    >
-                                    
+                                                    <input class="form-check-input genre-checkbox" type="checkbox"
+                                                        name="genre_ids[]" value="{{ $genre->id }}"
+                                                        id="genre{{ $genre->id }}"
+                                                        {{ in_array($genre->id, old('genre_ids', $movie->genres->pluck('id')->toArray())) ? 'checked' : '' }}>
+
                                                     <label class="form-check-label" for="genre{{ $genre->id }}">
                                                         {{ $genre->title }}
                                                     </label>
@@ -103,22 +102,24 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <label class="form-label text-secondary small">Movie Status</label><br>
-                                    <div class="btn-group" role="group">
-                                        <input type="radio" class="btn-check" name="status" id="status-coming-soon"
-                                            value="coming_soon" autocomplete="off"
-                                            {{ old('status', $movie->status) == 'coming_soon' ? 'checked' : '' }}>
-                                        <label class="btn btn-outline-warning" for="status-coming-soon">Coming Soon</label>
+                                    <label class="form-label text-secondary small">
+                                        Movie Status
+                                    </label>
 
-                                        <input type="radio" class="btn-check" name="status" id="status-now-showing"
-                                            value="now_showing" autocomplete="off"
-                                            {{ old('status', $movie->status) == 'now_showing' ? 'checked' : '' }}>
-                                        <label class="btn btn-outline-success" for="status-now-showing">Now Showing</label>
-
-                                        <input type="radio" class="btn-check" name="status" id="status-archived"
-                                            value="archived" autocomplete="off"
-                                            {{ old('status', $movie->status) == 'archived' ? 'checked' : '' }}>
-                                        <label class="btn btn-outline-secondary" for="status-archived">Archived</label>
+                                    <div>
+                                        @if ($movie->status === 'coming_soon')
+                                            <span class="bg-warning text-dark p-2">
+                                                Coming Soon
+                                            </span>
+                                        @elseif($movie->status === 'now_showing')
+                                            <span class="bg-success p-2">
+                                                Now Showing
+                                            </span>
+                                        @elseif($movie->status === 'archived')
+                                            <span class="bg-secondary p-2">
+                                                Archived
+                                            </span>
+                                        @endif
                                     </div>
                                 </div>
 
@@ -142,15 +143,16 @@
                                     <label class="form-label text-secondary small">Cast Members (Max 6)</label>
                                     @php
                                         $casts = old(
-                                        'cast',
-                                        is_array($movie->cast)
-                                        ? $movie->cast
-                                        : (json_decode($movie->cast, true) ?? [])
+                                            'cast',
+                                            is_array($movie->cast)
+                                                ? $movie->cast
+                                                : json_decode($movie->cast, true) ?? [],
                                         );
                                     @endphp
-                                
-                                    @for ($i = 0; $i < 6; $i++) <input type="text" name="cast[]" class="form-control mb-2"
-                                        placeholder="Cast Member {{ $i + 1 }}" value="{{ $casts[$i] ?? '' }}">
+
+                                    @for ($i = 0; $i < 6; $i++)
+                                        <input type="text" name="cast[]" class="form-control mb-2"
+                                            placeholder="Cast Member {{ $i + 1 }}" value="{{ $casts[$i] ?? '' }}">
                                     @endfor
                                 </div>
 
@@ -262,10 +264,10 @@
                         <label class="form-label text-secondary small">
                             Cinema
                         </label>
-                    
+
                         <select class="form-select" id="gen-cinema">
                             <option value="">Select cinema...</option>
-                    
+
                             @foreach ($cinemas as $cinema)
                                 <option value="{{ $cinema->id }}">
                                     {{ $cinema->cinema_name }}
@@ -273,16 +275,16 @@
                             @endforeach
                         </select>
                     </div>
-                    
+
                     {{-- Screen --}}
                     <div class="col-md-3">
                         <label class="form-label text-secondary small">
                             Screen
                         </label>
-                    
+
                         <select class="form-select" id="gen-screen" disabled>
                             <option value="">Select screen...</option>
-                    
+
                             @foreach ($screens as $screen)
                                 <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}" hidden>
                                     Screen {{ $screen->screen_number }}
@@ -291,7 +293,7 @@
                             @endforeach
                         </select>
                     </div>
-                    
+
                     <div class="col-12">
                         <label class="form-label text-secondary small">Days of Week</label>
                         <div class="d-flex gap-3 flex-wrap">
@@ -350,8 +352,8 @@
                         </div>
                     @else
                         @foreach ($showtimes->groupBy(function ($showtime) {
-                            return $showtime->start_time->format('Y/m/d');
-                        }) as $date => $dailyShowtimes)
+            return $showtime->start_time->format('Y/m/d');
+        }) as $date => $dailyShowtimes)
                             <div class="d-flex align-items-center mt-3 mb-2">
                                 <i class="fa-solid fa-calendar-days text-warning me-2"></i>
                                 <h6 class="mb-0 text-warning">
@@ -380,23 +382,23 @@
                                                 -
                                                 {{ $showtime->end_time->format('H:i') }}
                                             </td>
-                                    
+
                                             <td>
                                                 {{ $showtime->screen->cinema->cinema_name ?? '—' }}
                                             </td>
-                                    
+
                                             <td>
                                                 Screen {{ $showtime->screen->screen_number ?? '—' }}
                                                 -
                                                 {{ $showtime->screen->screen_type ?? '—' }}
                                             </td>
-                                    
+
                                             <td class="text-end">
-                                                <form action="{{ route('admin.showtimes.delete', $showtime->id) }}" method="POST"
-                                                    onsubmit="return confirm('Delete this showtime?')">
+                                                <form action="{{ route('admin.showtimes.delete', $showtime->id) }}"
+                                                    method="POST" onsubmit="return confirm('Delete this showtime?')">
                                                     @csrf
                                                     @method('DELETE')
-                                    
+
                                                     <button type="submit" class="btn btn-danger btn-sm">
                                                         <i class="fa-solid fa-trash"></i>
                                                         Delete
@@ -421,4 +423,3 @@
     </div>
 
 @endsection
-

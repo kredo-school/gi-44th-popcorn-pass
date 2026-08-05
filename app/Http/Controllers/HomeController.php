@@ -264,7 +264,9 @@ class HomeController extends Controller
     // Relese display
     public function release(Movie $movie)
     {
-        return view('movies.release')->with('movie', $movie);
+        $movie->load('ageRating');
+
+        return view('movies.release', compact('movie'));
     }
 
     // movie detail

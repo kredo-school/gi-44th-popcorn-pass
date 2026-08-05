@@ -160,6 +160,7 @@ class AdminController extends Controller
             'director' => $movie->director,
             'cast' => $movie->cast,
             'trailer_url' => $movie->trailer_url,
+            'genres' => $movie->genres->pluck('title'),
         ]);
     }
 
