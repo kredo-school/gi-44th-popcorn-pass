@@ -24,9 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         if (!Schema::hasColumn('movies', 'genre_id')) {
-
             Schema::table('movies', function (Blueprint $table) {
-
                 $table->uuid('genre_id')->nullable();
 
                 $table->foreign('genre_id')

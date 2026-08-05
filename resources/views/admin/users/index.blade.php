@@ -20,6 +20,8 @@
             <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>Active</option>
             <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
         </select>
+
+        <button type="submit" class="btn btn-outline-warning">Search</button>
     </form>
 
     <div class="row g-3">

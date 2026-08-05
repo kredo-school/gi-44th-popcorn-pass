@@ -21,6 +21,7 @@ class Payment extends Model
         'payment_status',
         'payment_method',
         'transaction_id',
+        'paypal_order_id',
         'stripe_payment_intent_id',
         'paid_at',
         'refunded_at',
