@@ -96,28 +96,4 @@
     </div>
 
 
-
-    {{-- Scroll Bottom After Reload --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-
-
-            const chatArea = document.getElementById('chat-area');
-
-
-            if (chatArea) {
-
-                chatArea.scrollTop = chatArea.scrollHeight;
-
-            }
-
-
-        });
-    </script>
-
-
-
-    @vite('resources/js/admin/chat.js')
-
-
 @endsection

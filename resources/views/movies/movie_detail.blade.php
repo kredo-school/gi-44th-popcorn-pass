@@ -75,7 +75,7 @@
                         <div class="col-4 fw-bold">CAST</div>
                         <div class="col-8">
                             <div class="row">
-                            @foreach (json_decode($movie->cast, true) ?? [] as $cast)
+                            @foreach ($movie->cast ?? [] as $cast)
                                 <div class="col-6">{{ $cast }}</div>
                             @endforeach
                             </div>
@@ -144,6 +144,5 @@
 
     </div>
 
-    @vite(['resources/css/community-discussion.css', 'resources/js/community-discussion.js'])
     <meta name="movie-id" content="{{ $movie->id }}">
 @endsection

@@ -140,6 +140,4 @@
 
     </div>
 
-    @vite('resources/js/customer/chat.js')
-
 @endsection

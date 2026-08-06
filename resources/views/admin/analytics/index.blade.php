@@ -38,7 +38,8 @@
         <div class="col-md-7">
             <div class="card card-dark p-3" style="height: 360px;">
                 <div class="text-warning fw-bold mb-2">Daily Revenue</div>
-                <canvas id="dailyRevenueChart"></canvas>
+                <canvas id="dailyRevenueChart" data-labels='@json($dailyRevenueChart->pluck("date")->values())'
+                    data-values='@json($dailyRevenueChart->pluck("total")->values())'></canvas>
             </div>
         </div>
         <div class="col-md-5">
@@ -58,32 +59,4 @@
         </div>
     </div>
 
-@endsection
-
-@section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
-<script>
-    const chartLabels = @json($dailyRevenueChart->pluck('date'));
-    const chartData = @json($dailyRevenueChart->pluck('total'));
-
-    const ctx = document.getElementById('dailyRevenueChart');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: chartLabels,
-            datasets: [{
-                label: 'Revenue',
-                data: chartData,
-                backgroundColor: '#FFD700'
-            }]
-        },
-        options: {
-            plugins: { legend: { display: false } },
-            scales: {
-                x: { ticks: { color: '#c9ccd6' }, grid: { color: '#2c3252' } },
-                y: { ticks: { color: '#c9ccd6' }, grid: { color: '#2c3252' } }
-            }
-        }
-    });
-</script>
 @endsection

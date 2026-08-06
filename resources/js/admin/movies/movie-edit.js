@@ -1,11 +1,21 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.querySelector('#generate-btn');
-
     const cinemaSelect = document.querySelector('#gen-cinema');
     const screenSelect = document.querySelector('#gen-screen');
+    const messageElement = document.querySelector('#generate-msg');
 
-    cinemaSelect?.addEventListener('change', function () {
-        const cinemaId = this.value;
+    // Only run on the Edit page.
+    if (
+        !generateBtn ||
+        !cinemaSelect ||
+        !screenSelect ||
+        !messageElement
+    ) {
+        return;
+    }
+
+    cinemaSelect.addEventListener('change', () => {
+        const cinemaId = cinemaSelect.value;
 
         screenSelect.value = '';
 
@@ -16,15 +26,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             option.hidden =
-                !cinemaId || option.dataset.cinema !== cinemaId;
+                !cinemaId ||
+                option.dataset.cinema !== cinemaId;
         });
 
         screenSelect.disabled = !cinemaId;
     });
-
-    if (!generateBtn) {
-        return;
-    }
 
     const generateUrl = generateBtn.dataset.url;
 
@@ -32,13 +39,9 @@ document.addEventListener('DOMContentLoaded', function () {
         .querySelector('meta[name="csrf-token"]')
         ?.getAttribute('content');
 
-
-    generateBtn.addEventListener('click', function () {
-        const cinemaId =
-            document.querySelector('#gen-cinema')?.value;
-
-        const screenId =
-            document.querySelector('#gen-screen')?.value;
+    generateBtn.addEventListener('click', () => {
+        const cinemaId = cinemaSelect.value;
+        const screenId = screenSelect.value;
 
         const days = [
             ...document.querySelectorAll('.gen-day:checked'),
@@ -50,34 +53,39 @@ document.addEventListener('DOMContentLoaded', function () {
             .map((element) => element.value)
             .filter(Boolean);
 
-        const msgEl = document.querySelector('#generate-msg');
-
         if (!cinemaId || !screenId || days.length === 0) {
-            msgEl.textContent =
+            messageElement.textContent =
                 'Please select a cinema, a screen, and at least one day.';
 
-            msgEl.className =
+            messageElement.className =
                 'ms-3 text-danger small';
 
             return;
         }
 
         if (timeSlots.length === 0) {
-            msgEl.textContent =
+            messageElement.textContent =
                 'Please enter at least one time slot.';
-            msgEl.className = 'ms-3 text-danger small';
+
+            messageElement.className =
+                'ms-3 text-danger small';
+
             return;
         }
 
         if (!generateUrl || !csrfToken) {
-            msgEl.textContent =
+            messageElement.textContent =
                 'The generate URL or CSRF token is missing.';
-            msgEl.className = 'ms-3 text-danger small';
+
+            messageElement.className =
+                'ms-3 text-danger small';
+
             return;
         }
 
-        msgEl.textContent = 'Generating...';
-        msgEl.className = 'ms-3 text-secondary small';
+        messageElement.textContent = 'Generating...';
+        messageElement.className =
+            'ms-3 text-secondary small';
 
         const body = new FormData();
 
@@ -105,9 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const text = await response.text();
 
-                console.log('Status:', response.status);
-                console.log('Response:', text);
-
                 if (
                     !contentType ||
                     !contentType.includes('application/json')
@@ -121,7 +126,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (!response.ok) {
                     const validationMessage = data.errors
-                        ? Object.values(data.errors).flat().join(' ')
+                        ? Object.values(data.errors)
+                            .flat()
+                            .join(' ')
                         : null;
 
                     throw new Error(
@@ -134,8 +141,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 return data;
             })
             .then((data) => {
-                msgEl.textContent = data.message;
-                msgEl.className = 'ms-3 text-success small';
+                messageElement.textContent = data.message;
+                messageElement.className =
+                    'ms-3 text-success small';
 
                 setTimeout(() => {
                     window.location.reload();
@@ -144,8 +152,9 @@ document.addEventListener('DOMContentLoaded', function () {
             .catch((error) => {
                 console.error(error);
 
-                msgEl.textContent = error.message;
-                msgEl.className = 'ms-3 text-danger small';
+                messageElement.textContent = error.message;
+                messageElement.className =
+                    'ms-3 text-danger small';
             });
     });
 });

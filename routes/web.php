@@ -25,42 +25,44 @@ Route::get('/', [HomeController::class, 'index']);
 
 Auth::routes();
 
-/**
- * Regular routes
- */
 
+//--------------------
 // Home
+//--------------------
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
+
+//--------------------
 // Cinema Profile
+//--------------------
 Route::get('/cinemas/{cinema}', [CinemaController::class, 'show'])
     ->name('cinemas.show');
 
+//--------------------
+// Movies
+//--------------------
 Route::get('/movie/{movie}/release', [HomeController::class, 'release'])
     ->name('release');
-
 Route::get('/movie/{movie}/detail', [HomeController::class, 'movie_detail'])
     ->name('movie_detail');
-
-
-
 Route::get('/movies/search_showtime', [HomeController::class, 'showtime_search'])
     ->name('movies.search_showtime');
 
+//--------------------
+// Information
+//--------------------
 Route::get('/information', [HomeController::class, 'informationIndex'])
     ->name('information.index');
-
 Route::get('/information/{id}', [HomeController::class, 'informationDetail'])
     ->name('information.detail');
 
-
+//--------------------
 // Movie showtime
+//--------------------
 Route::get('/home/showtime', [HomeController::class, 'showtime_display'])
     ->name('movie.showtime.display');
-
 Route::get('/movies/search', [HomeController::class, 'search'])
     ->name('movies.search');
-
 Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showtime_selection'])
     ->name('reservations.showtime.selection');
 
@@ -70,47 +72,32 @@ Route::get('/movies/{movie}/showtime-selection', [HomeController::class, 'showti
 //--------------------
 Route::get('/showtime_selection/{showtime}', [ReservationController::class, 'showtimeSelection'])
     ->name('reservations.showtimeSelection');
-
 Route::get('/reservations/login-redirect', [ReservationController::class, 'loginRedirect'])
     ->name('reservations.login.redirect');
-
 Route::post('/reservation/guest', [ReservationController::class, 'guest'])
     ->name('reservations.guest');
-
 Route::get('/seat-selection/{showtime}', [ReservationController::class, 'seatSelection'])
     ->name('reservations.seat-selection');
-
 Route::post('/seat-selection', [ReservationController::class, 'seatSelectionStore'])
     ->name('reservations.seat-selection.store');
-
 Route::get('/ticket-type', [ReservationController::class, 'ticketType'])
     ->name('reservations.ticket-type');
-
 Route::post('/save-ticket', [ReservationController::class, 'saveTicket'])
     ->name('reservations.save-ticket');
-
 Route::get('/payment-method', [ReservationController::class, 'paymentMethod'])
     ->name('reservations.payment-method');
-
 Route::post('/save-payment', [ReservationController::class, 'savePayment'])
     ->name('reservations.save-payment');
-
 Route::post('/reservation-confirm', [ReservationController::class, 'confirmation'])
     ->name('reservations.confirm');
-
 Route::post('/reservation-booking', [ReservationController::class, 'confirmBooking'])
     ->name('reservations.confirm-booking');
 // Create PayPal Order
-Route::post(
-    '/paypal/orders',
-    [ReservationController::class, 'createPayPalOrder']
-)->name('paypal.orders.create');
-
+Route::post('/paypal/orders',[ReservationController::class, 'createPayPalOrder'])
+    ->name('paypal.orders.create');
 // Capture PayPal Order
-Route::post(
-    '/paypal/orders/capture',
-    [ReservationController::class, 'capturePayPalOrder']
-)->name('paypal.orders.capture');
+Route::post('/paypal/orders/capture',[ReservationController::class, 'capturePayPalOrder'])
+    ->name('paypal.orders.capture');
 Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
 
@@ -120,26 +107,20 @@ Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'c
 //--------------------
 Route::get('/movies/{movieId}/reviews', [ReviewController::class, 'index'])
     ->name('reviews.index');
-
 Route::post('/movies/{movieId}/reviews', [ReviewController::class, 'store'])
     ->name('reviews.store')
     ->middleware('auth');
-
 Route::get('/movies/{movieId}/reviews/create', [ReviewController::class, 'create'])
     ->name('reviews.create')
     ->middleware('auth');
-
 Route::get('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'show'])
     ->name('reviews.show');
-
 Route::get('/movies/{movieId}/reviews/{reviewId}/edit', [ReviewController::class, 'edit'])
     ->name('reviews.edit')
     ->middleware('auth');
-
 Route::delete('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'destroy'])
     ->name('reviews.destroy')
     ->middleware('auth');
-
 Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'update'])
     ->name('reviews.update')
     ->middleware('auth');
@@ -149,13 +130,9 @@ Route::put('/movies/{movieId}/reviews/{reviewId}', [ReviewController::class, 'up
 // API Routes (Public)
 // ===========================
 Route::get('/api/nearby-cinemas', [NearByCinemasController::class, 'getNearby']);
-
 Route::get('/api/dynamic-pricing/{showtimeId}', [AdminController::class, 'getDynamicPricingStats']);
-
 Route::get('/api/cinemas/{cinemaId}/reviews', [CinemaReviewController::class, 'show']);
-
 Route::get('/api/cinemas/{cinemaId}/reviews/breakdown', [CinemaReviewController::class, 'getScoreBreakdown']);
-
 Route::get('/api/cinemas/top-rated', [CinemaReviewController::class, 'getTopRatedCinemas']);
 
 
@@ -315,5 +292,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/recommendations', [RecommendationController::class, 'index'])->name('recommendations.index');
 });
 
+// ===========================
 // Map routes
+// ===========================
 Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');

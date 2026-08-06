@@ -1,10 +1,27 @@
-//
+import '../sass/admin.scss';
 import 'bootstrap'
 
 
-//admin
-import './admin/information.js';
-import './admin/movie.js';
-import './admin/movie-edit.js';
-import './admin/chart.js';
-import './admin/reservations.js';
+//information
+import './admin/information';
+
+//movies
+import './admin/movies/movie-index';
+import './admin/movies/movie-form';
+import './admin/movies/movie-edit';
+import './admin/movies/movie-showtimes';
+
+//chart for Dashboard
+import './admin/chart';
+
+//reservations
+import './admin/reservations';
+
+// Admin Chat
+import './admin/chat';
+
+//analytics
+import './admin/analytics';
+
+//dynamic-pricing
+import './admin/dynamic-pricing-edit';

@@ -1,9 +1,12 @@
 import '../sass/app.scss';
-import '../css/home/home.css';
 import 'bootstrap';
 
-import Swiper from 'swiper/bundle';
-import 'swiper/css/bundle';
+
+// Home
+import './home/swiper';
+import './home/sliders';
+import './home/nearby-cinemas';
+import './home/recommendations';
 
 // reservation pages
 import './reservations/seat-selection';
@@ -11,31 +14,17 @@ import './reservations/ticket-type';
 import './reservations/payment-method';
 import './reservations/showtime-selection';
 import './reservations/paypal-checkout';
+import './reservations/reservation-complete';
 
 //mypage
-import './mypage/tickets.js';
+import './mypage/tickets';
 
+// Customer Chat
+import './customer/chat';
 
-new Swiper(".heroSwiper", {
-    loop: true,
-    slidesPerView: 1,
-    centeredSlides: false,
+// Community Discussion
+import './community-discussion';
 
-    autoplay: {
-        delay: 4000,
-        disableOnInteraction: false,
-    },
-
-    pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-    },
-
-    navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-    },
-});
 
 //navbar
 const menuBtn = document.getElementById("menuBtn");

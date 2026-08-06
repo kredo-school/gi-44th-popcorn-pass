@@ -332,7 +332,3 @@
 </div>
 
 @endsection
-
-@push('scripts')
-    @vite('resources/js/mypage/tickets.js')
-@endpush

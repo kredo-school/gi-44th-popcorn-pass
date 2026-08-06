@@ -120,7 +120,4 @@
 
 @endsection
 
-@section('scripts')
-    @vite('resources/js/admin/dashboard.js')
-@endsection
 
