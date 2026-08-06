@@ -81,12 +81,26 @@
 
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">Release Date</label>
-                            <input type="date" name="released_date" class="form-control"
+                            <input type="date" name="released_date" id="released-date" class="form-control"
                                 value="{{ old('released_date') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">End Date</label>
-                            <input type="date" name="end_date" class="form-control" value="{{ old('end_date') }}">
+                            <input type="date" name="end_date" id="end-date" class="form-control"
+                                value="{{ old('end_date') }}">
+                        </div>
+                        <div class="col-12">
+
+                            <label class="form-label text-secondary small">
+                                Movie Status
+                            </label>
+
+                            <div>
+                                <span id="movie-status-badge" class="badge bg-secondary p-2">
+                                    Select dates
+                                </span>
+                            </div>
+
                         </div>
 
                         <div class="col-12">

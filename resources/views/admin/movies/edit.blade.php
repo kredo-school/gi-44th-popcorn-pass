@@ -92,12 +92,12 @@
 
                                 <div class="col-md-6">
                                     <label class="form-label text-secondary small">Release Date</label>
-                                    <input type="date" name="released_date" class="form-control"
+                                    <input type="date" name="released_date" id="released-date" class="form-control"
                                         value="{{ old('released_date', optional($movie->released_date)->format('Y-m-d')) }}">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-secondary small">End Date</label>
-                                    <input type="date" name="end_date" class="form-control"
+                                    <input type="date" name="end_date" id="end-date" class="form-control"
                                         value="{{ old('end_date', optional($movie->end_date)->format('Y-m-d')) }}">
                                 </div>
 
@@ -107,19 +107,9 @@
                                     </label>
 
                                     <div>
-                                        @if ($movie->status === 'coming_soon')
-                                            <span class="bg-warning text-dark p-2">
-                                                Coming Soon
-                                            </span>
-                                        @elseif($movie->status === 'now_showing')
-                                            <span class="bg-success p-2">
-                                                Now Showing
-                                            </span>
-                                        @elseif($movie->status === 'archived')
-                                            <span class="bg-secondary p-2">
-                                                Archived
-                                            </span>
-                                        @endif
+                                        <span id="movie-status-badge" class="badge p-2">
+                                            {{ ucfirst(str_replace('_', ' ', $movie->status)) }}
+                                        </span>
                                     </div>
                                 </div>
 
@@ -259,40 +249,59 @@
                 </div>
 
                 <div class="row g-3" id="generate-form">
-                    {{-- Cinema --}}
-                    <div class="col-md-3">
-                        <label class="form-label text-secondary small">
-                            Cinema
-                        </label>
+                    <div class="col-12 row">
+                        {{-- Cinema --}}
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary small">
+                                Cinema
+                            </label>
 
-                        <select class="form-select" id="gen-cinema">
-                            <option value="">Select cinema...</option>
+                            <input type="text" class="form-control"
+                                value="{{ $cinema?->cinema_name ?? 'No Cinema' }}" disabled>
 
-                            @foreach ($cinemas as $cinema)
-                                <option value="{{ $cinema->id }}">
-                                    {{ $cinema->cinema_name }}
+                            <input type="hidden" id="gen-cinema" value="{{ $cinema?->id }}">
+                        </div>
+
+                        {{-- Screen --}}
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary small">
+                                Screen
+                            </label>
+
+                            <select class="form-select" id="gen-screen">
+
+                                <option value="">
+                                    Select screen...
                                 </option>
-                            @endforeach
-                        </select>
+
+                                @foreach ($screens as $screen)
+                                    <option value="{{ $screen->id }}">
+                                        Screen {{ $screen->screen_number }}
+                                        - {{ $screen->screen_type }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
                     </div>
 
-                    {{-- Screen --}}
-                    <div class="col-md-3">
-                        <label class="form-label text-secondary small">
-                            Screen
-                        </label>
+                    <div class="col-12 row">
+                        {{-- Date --}}
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary small">
+                                Start Date
+                            </label>
+                            <input type="date" class="form-control" id="gen-start-date">
+                        </div>
 
-                        <select class="form-select" id="gen-screen" disabled>
-                            <option value="">Select screen...</option>
-
-                            @foreach ($screens as $screen)
-                                <option value="{{ $screen->id }}" data-cinema="{{ $screen->cinema_id }}" hidden>
-                                    Screen {{ $screen->screen_number }}
-                                    - {{ $screen->screen_type }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <div class="col-md-3">
+                            <label class="form-label text-secondary small">
+                                End Date
+                            </label>
+                            <input type="date" class="form-control" id="gen-end-date">
+                        </div>
                     </div>
+
 
                     <div class="col-12">
                         <label class="form-label text-secondary small">Days of Week</label>

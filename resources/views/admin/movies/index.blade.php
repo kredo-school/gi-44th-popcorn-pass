@@ -52,7 +52,18 @@
                                 <td>{{ $movie->duration }} min</td>
                                 <td class="text-warning">{{ $movie->review_average ?? '—' }}</td>
                                 <td>
-                                    <span class="badge bg-secondary">{{ $movie->status }}</span>
+                                    @php
+                                        $statusClass = match ($movie->status) {
+                                            'now_showing' => 'bg-success',
+                                            'coming_soon' => 'bg-warning text-dark',
+                                            'archived' => 'bg-secondary',
+                                            default => 'bg-dark',
+                                        };
+                                    @endphp
+
+                                    <span class="badge {{ $statusClass }}">
+                                        {{ $movie->status }}
+                                    </span>
                                 </td>
                                 <td>{{ $movie->released_date ? $movie->released_date->format('Y-m-d') : '—' }}</td>
                                 <td>{{ $movie->end_date ? $movie->end_date->format('Y-m-d') : '—' }}</td>

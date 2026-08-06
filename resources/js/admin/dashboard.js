@@ -97,28 +97,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     // Genre
-                    const genreElement =
-                        document.querySelector('#detail-genre');
+                    // Genre
+
+const genreElement =
+    document.querySelector('#detail-genre');
 
 
-                    if (genreElement) {
+if (genreElement) {
 
-                        if (data.genres && data.genres.length > 0) {
+    if (data.genres && data.genres.length > 0) {
 
-                            genreElement.innerHTML =
-                                data.genres.map(genre => `
-                                    <span class="badge bg-secondary me-2 mb-2">
-                                        ${genre}
-                                    </span>
-                                `).join('');
 
-                        } else {
+        const genreColors = {
 
-                            genreElement.textContent = '—';
+            'Action': 'genre-action',
+            'Adventure': 'genre-adventure',
+            'Animation': 'genre-animation',
+            'Comedy': 'genre-comedy',
+            'Crime': 'genre-crime',
+            'Drama': 'genre-drama',
+            'Fantasy': 'genre-fantasy',
+            'Horror': 'genre-horror',
+            'Mystery': 'genre-mystery',
+            'Romance': 'genre-romance',
+            'Sci-Fi': 'genre-scifi',
+            'Thriller': 'genre-thriller',
 
-                        }
+        };
 
-                    }
+
+        genreElement.innerHTML =
+            data.genres.map(genre => `
+
+                <span class="badge genre-badge ${genreColors[genre] ?? ''}">
+                    ${genre}
+                </span>
+
+            `).join('');
+
+    } else {
+
+        genreElement.textContent = '—';
+
+    }
+
+}
 
 
 
