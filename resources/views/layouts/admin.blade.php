@@ -8,8 +8,7 @@
 
         <title>@yield('title', 'Admin') - Popcorn Pass</title>
 
-        @vite(['resources/js/admin.js'])
-
+        @vite(['resources/sass/admin.scss', 'resources/js/admin.js',])
         @yield('styles')
     </head>
 

@@ -1,4 +1,3 @@
-import '../sass/admin.scss';
 import 'bootstrap'
 
 
