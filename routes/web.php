@@ -296,7 +296,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');
     Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])->name('movies.details');
     Route::get('/movies/{id}/edit', [AdminController::class, 'editMovie'])->name('movies.edit');
-    Route::patch('/movies/{movie}/archive',[AdminController::class, 'archive'])->name('movies.archive');
   
     Route::put('/movies/{id}', [AdminController::class, 'updateMovie'])->name('movies.update');
     Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])->name('movies.showtimes');
