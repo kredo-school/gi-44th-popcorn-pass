@@ -12,9 +12,11 @@
 }
 .home-hero {
     background: transparent; 
-    padding-top: 80px;
 }
 
+.swiper-position{
+    padding-top: 80px;
+}
 
 
 /* Search */
