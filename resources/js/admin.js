@@ -10,3 +10,4 @@ import './admin/movie-create.js';
 import './admin/movie-edit.js';
 import './admin/chart.js';
 
+import './admin/reservations.js';

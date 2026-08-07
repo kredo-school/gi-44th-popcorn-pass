@@ -10,9 +10,11 @@ import './reservations/seat-selection';
 import './reservations/ticket-type';
 import './reservations/payment-method';
 import './reservations/showtime-selection';
+import './reservations/paypal-checkout';
 
-// customer chat
-import './customer/chat.js';
+//mypage
+import './mypage/tickets.js';
+
 
 new Swiper(".heroSwiper", {
     loop: true,

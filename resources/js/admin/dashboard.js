@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
 
 
+
                     const titleElement =
                         document.querySelector('#detail-title');
 
@@ -155,7 +156,6 @@ if (genreElement) {
                             data.trailer_url || '—';
 
                     }
-
 
                 });
 

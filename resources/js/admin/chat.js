@@ -1,138 +1,67 @@
-console.log("admin chat loaded");
+document.addEventListener('DOMContentLoaded', () => {
+    const chatArea = document.getElementById('chat-area');
 
+    if (!chatArea) return;
 
-document.addEventListener(
-    'DOMContentLoaded',
-    function () {
+    const fetchUrl = chatArea.dataset.fetchUrl;
 
+    if (!fetchUrl) return;
 
-        const chatArea =
-            document.getElementById('chat-area');
+    function scrollBottom(behavior = 'smooth') {
+        chatArea.scrollTo({
+            top: chatArea.scrollHeight,
+            behavior,
+        });
+    }
 
+    function createMessageElement(message) {
+        const senderNames = {
+            customer: '👤 Customer',
+            ai: '🤖 AI',
+            staff: '👨‍💻 Staff',
+        };
 
-        if (!chatArea) {
-            return;
-        }
+        const wrapper = document.createElement('div');
+        const sender = document.createElement('strong');
+        const text = document.createElement('p');
 
+        wrapper.className = 'admin-chat-message mb-3';
+        sender.textContent = senderNames[message.sender_type] ?? 'Unknown';
+        text.textContent = message.message ?? '';
 
-        const fetchUrl =
-            chatArea.dataset.fetchUrl;
+        wrapper.append(sender, text);
 
+        return wrapper;
+    }
 
-        function scrollBottom() {
-
-            chatArea.scrollTo({
-
-                top: chatArea.scrollHeight,
-
-                behavior: "smooth"
-
+    async function loadMessages() {
+        try {
+            const response = await fetch(fetchUrl, {
+                headers: {
+                    Accept: 'application/json',
+                },
             });
 
-        }
+            if (!response.ok) {
+                throw new Error('Failed to load messages.');
+            }
 
+            const data = await response.json();
+            const fragment = document.createDocumentFragment();
 
+            (data.messages ?? []).forEach(message => {
+                fragment.appendChild(createMessageElement(message));
+            });
 
-
-        function loadMessages() {
-
-
-            fetch(fetchUrl)
-
-
-                .then(response => response.json())
-
-
-                .then(data => {
-
-
-                    chatArea.innerHTML = "";
-
-
-
-                    data.messages.forEach(message => {
-
-
-                        let type = "";
-
-
-
-                        if (message.sender_type === "customer") {
-
-
-                            type = "👤 Customer";
-
-
-                        } else if (message.sender_type === "ai") {
-
-
-                            type = "🤖 AI";
-
-
-                        } else if (message.sender_type === "staff") {
-
-
-                            type = "👨‍💻 Staff";
-
-
-                        }
-
-
-
-                        chatArea.innerHTML += `
-
-                            <div class="mb-3">
-
-                                <strong>
-                                    ${type}
-                                </strong>
-
-                                <p>
-                                    ${message.message}
-                                </p>
-
-                            </div>
-
-                        `;
-
-
-                    });
-
-
-                    setTimeout(() => {
-
-                        scrollBottom();
-
-                    }, 100);
-
-
-
-                });
-
-
-        }
-
-
-
-        setTimeout(() => {
-
+            chatArea.replaceChildren(fragment);
             scrollBottom();
-
-        }, 100);
-
-
-
-        loadMessages();
-
-
-        setInterval(
-
-            loadMessages,
-
-            5000
-
-        );
-
-
+        } catch (error) {
+            console.error(error);
+        }
     }
-);
+
+    scrollBottom('auto');
+    loadMessages();
+
+    setInterval(loadMessages, 5000);
+});

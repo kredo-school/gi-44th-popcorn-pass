@@ -154,7 +154,7 @@
 
 
     {{-- Recommended for You Section --}}
-    <div class="mypage-card p-4">
+    <div class="mypage-card mt-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0"><i class="fa-solid fa-sparkles me-2"></i>Recommended for You</h5>
         </div>

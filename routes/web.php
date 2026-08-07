@@ -7,6 +7,7 @@ use App\Http\Controllers\CinemaController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CinemaReviewController;
+use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
@@ -100,7 +101,17 @@ Route::post('/reservation-confirm', [ReservationController::class, 'confirmation
 
 Route::post('/reservation-booking', [ReservationController::class, 'confirmBooking'])
     ->name('reservations.confirm-booking');
+// Create PayPal Order
+Route::post(
+    '/paypal/orders',
+    [ReservationController::class, 'createPayPalOrder']
+)->name('paypal.orders.create');
 
+// Capture PayPal Order
+Route::post(
+    '/paypal/orders/capture',
+    [ReservationController::class, 'capturePayPalOrder']
+)->name('paypal.orders.capture');
 Route::get('/reservation-complete/{showtime}', [ReservationController::class, 'complete'])
     ->name('reservations.complete');
 
@@ -152,141 +163,6 @@ Route::get('/api/cinemas/top-rated', [CinemaReviewController::class, 'getTopRate
 // ===========================
 // Admin Routes
 // ===========================
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth', 'admin'])
-    ->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])
-            ->name('dashboard');
-
-        // Movies Management
-        Route::get('/movies', [AdminController::class, 'movies'])
-            ->name('movies');
-
-        Route::get('/movies/create', [AdminController::class, 'createMovie'])
-            ->name('movies.create');
-
-        Route::post('/movies', [AdminController::class, 'storeMovie'])
-            ->name('movies.store');
-
-        Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])
-            ->name('movies.details');
-
-        Route::get('/movies/{id}/edit', [AdminController::class, 'editMovie'])
-            ->name('movies.edit');
-
-        Route::put('/movies/{id}', [AdminController::class, 'updateMovie'])
-            ->name('movies.update');
-
-        Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])
-            ->name('movies.showtimes');
-
-        Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])
-            ->name('movies.showtimes.generate');
-
-        Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])
-            ->name('showtimes.delete');
-
-        // Dynamic Pricing Management
-        Route::get('/dynamic-pricing', [AdminController::class, 'showtimeDynamicPricing'])
-            ->name('dynamic-pricing');
-
-        Route::get('/dynamic-pricing/{id}/edit', [AdminController::class, 'editShowtimeDynamicPrice'])
-            ->name('dynamic-pricing.edit');
-
-        Route::put('/dynamic-pricing/{id}', [AdminController::class, 'updateShowtimeDynamicPrice'])
-            ->name('dynamic-pricing.update');
-
-        // Analytics & Reports
-        Route::get('/analytics', [AdminController::class, 'analytics'])
-            ->name('analytics');
-
-        // Reservations Management
-        Route::get('/reservations', [AdminController::class, 'reservations'])
-            ->name('reservations');
-
-        Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])
-            ->name('reservations.export');
-
-        Route::get('/reservations/{id}/details', [AdminController::class, 'reservationDetails'])
-            ->name('reservations.details');
-
-        // Users Management
-        Route::get('/users', [AdminController::class, 'users'])
-            ->name('users');
-
-        Route::get('/users/{id}/details', [AdminController::class, 'userDetails'])
-            ->name('users.details');
-
-        Route::put('/users/{id}', [AdminController::class, 'updateUser'])
-            ->name('users.update');
-
-        // Settings
-        Route::get('/settings', [AdminController::class, 'settings'])
-            ->name('settings');
-
-        Route::put('/settings', [AdminController::class, 'updateSettings'])
-            ->name('settings.update');
-
-        // Coupons & Promotions
-        Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])
-            ->name('coupons-promotions');
-
-        Route::post('/coupons', [AdminController::class, 'storeCoupon'])
-            ->name('coupons.store');
-
-        Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])
-            ->name('coupons.toggle-status');
-
-        Route::post('/promotions', [AdminController::class, 'storePromotion'])
-            ->name('promotions.store');
-
-        Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])
-            ->name('promotions.toggle-status');
-
-        // Reviews Management
-        Route::get('/reviews', [AdminController::class, 'reviews'])
-            ->name('reviews');
-
-        Route::put('/reviews/{id}/toggle', [AdminController::class, 'toggleReview'])
-            ->name('reviews.toggle');
-
-        Route::get('/information', [AdminController::class, 'information'])
-            ->name('information');
-
-        // Information
-        Route::get('/information/create', [AdminController::class, 'createInformation'])
-            ->name('information.create');
-
-        Route::post('/information', [AdminController::class, 'storeInformation'])
-            ->name('information.store');
-
-        Route::get('/information/{id}/edit', [AdminController::class, 'editInformation'])
-            ->name('information.edit');
-
-        Route::put('/information/{id}', [AdminController::class, 'updateInformation'])
-            ->name('information.update');
-
-        Route::get('/information/{id}/details', [AdminController::class, 'informationDetails'])
-            ->name('information.details');
-
-        Route::delete('/information/{id}', [AdminController::class, 'deleteInformation'])
-            ->name('information.delete');
-
-        // Information Category
-        Route::get('/information/categories', [AdminController::class, 'informationCategories'])
-            ->name('information.categories');
-
-        Route::post('/information/categories', [AdminController::class, 'storeInformationCategory'])
-            ->name('information.categories.store');
-
-        Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])
-            ->name('information.categories.delete');
-
-        Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])
-            ->name('information.categories.update');
-    });
-
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
@@ -315,6 +191,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/reservations', [AdminController::class, 'reservations'])->name('reservations');
     Route::get('/reservations/export', [AdminController::class, 'exportReservationsCsv'])->name('reservations.export');
     Route::get('/reservations/{id}/details', [AdminController::class, 'reservationDetails'])->name('reservations.details');
+    //Payments
+    Route::patch(
+        '/payments/{payment}/mark-paid',
+        [AdminController::class, 'markPaymentAsPaid']
+    )->name('payments.mark-paid');
 
     // Users Management
     Route::get('/users', [AdminController::class, 'users'])->name('users');
@@ -357,6 +238,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/chat/{conversation}', [AdminController::class, 'chat_store'])->name('chat.store');
     Route::get('/chat/{conversation}/fetch', [AdminController::class, 'chat_fetch'])->name('chat.fetch');
     Route::post('/admin/chat/{conversation}/close', [AdminController::class, 'chat_close'])->name('chat.close');
+
 });
 
 // ===========================
@@ -368,88 +250,48 @@ Route::middleware('auth')
     ->group(function () {
         Route::get('/', [DashboardController::class, 'index'])
             ->name('dashboard');
-
         Route::get('/profile', [ProfileController::class, 'show'])
             ->name('profile');
-
         Route::get('/profile/edit', [ProfileController::class, 'edit'])
             ->name('profile.edit');
-
         Route::put('/profile', [ProfileController::class, 'update'])
             ->name('profile.update');
-
         Route::get('/rewards', [RewardsController::class, 'index'])
             ->name('rewards');
-
         Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])
             ->name('movies-watched');
-
-        Route::post(
-            '/movies-watched/{reservation}/send-review-email',
-            [MoviesWatchedController::class, 'sendReviewEmail']
-        )->name('movies-watched.send-review-email');
-
+        Route::post('/movies-watched/{reservation}/send-review-email',[MoviesWatchedController::class, 'sendReviewEmail'])
+            ->name('movies-watched.send-review-email');
         Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])
             ->name('reviews.create');
-
         Route::post('/reviews', [MyPageReviewController::class, 'store'])
             ->name('reviews.store');
-
         Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])
             ->name('reviews.update');
-
         Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])
             ->name('reviews-written');
-
         Route::get('/tickets', [TicketController::class, 'index'])
             ->name('tickets');
-
         Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])
             ->name('tickets.qrcode');
-
         Route::get('/cancel/{id}', [CancelController::class, 'show'])
             ->name('cancel.show');
-
         Route::post('/cancel/{id}', [CancelController::class, 'cancel'])
             ->name('cancel.confirm');
-
         Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])
             ->name('cancel.complete');
-
         Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
             ->name('reservations.cancel');
-
         // Cinema Review Routes
         Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])
             ->name('cinema-reviews.store');
-
         Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])
             ->name('cinema-reviews.index');
-
         Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])
             ->name('cinema-reviews.show');
+        Route::get('/coupons', [CouponController::class, 'index'])
+            ->name('coupons');
     });
-Route::middleware('auth')->prefix('mypage')->name('mypage.')->group(function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/rewards', [RewardsController::class, 'index'])->name('rewards');
-    Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])->name('movies-watched');
-    Route::post('/movies-watched/{reservation}/send-review-email', [MoviesWatchedController::class, 'sendReviewEmail'])->name('movies-watched.send-review-email');
-    Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])->name('reviews.create');
-    Route::post('/reviews', [MyPageReviewController::class, 'store'])->name('reviews.store');
-    Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])->name('reviews.update');
-    Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])->name('reviews-written');
-    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets');
-    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])->name('tickets.qrcode');
-    Route::get('/cancel/{id}', [CancelController::class, 'show'])->name('cancel.show');
-    Route::post('/cancel/{id}', [CancelController::class, 'cancel'])->name('cancel.confirm');
-    Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])->name('cancel.complete');
-    Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
-        ->name('reservations.cancel');
-    Route::get('/coupons', [CouponController::class, 'index'])->name('coupons');
-});
 
 
 // ===========================
@@ -466,19 +308,17 @@ Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(functi
         ->name('chat.staff');
     Route::get('/chat/{conversation}/fetch', [ChatController::class, 'fetch'])
         ->name('chat.fetch');
-    Route::post('/customer/chat/close', [ChatController::class, 'close'])
+    Route::post('/chat/close', [ChatController::class, 'close'])
         ->name('chat.close');
-
-    // Cinema Review Routes
-    Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])->name('cinema-reviews.store');
-    Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])->name('cinema-reviews.index');
-    Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])->name('cinema-reviews.show');
 });
 
 
-// Route::middleware('auth')->group(function () {
-//     Route::get('/recommendations', [RecommendationController::class, 'index'])->name('recommendations.index');
-// });
+// ===========================
+// Recommendations
+// ===========================
+Route::middleware('auth')->group(function () {
+    Route::get('/recommendations', [RecommendationController::class, 'index'])->name('recommendations.index');
+});
 
 // Map routes
 Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
