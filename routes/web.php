@@ -19,7 +19,7 @@ use App\Http\Controllers\MyPage\CancelController;
 use App\Http\Controllers\MyPage\CouponController;
 use App\Http\Controllers\Api\NearByCinemasController;
 use App\Http\Controllers\Customer\ChatController;
-use App\Http\Controllers\RecommendationController;
+
 
 
 Route::get('/', [HomeController::class, 'index']);
@@ -172,10 +172,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');
     Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])->name('movies.details');
     Route::get('/movies/{id}/edit', [AdminController::class, 'editMovie'])->name('movies.edit');
+  
     Route::put('/movies/{id}', [AdminController::class, 'updateMovie'])->name('movies.update');
     Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])->name('movies.showtimes');
     Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])->name('movies.showtimes.generate');
     Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])->name('showtimes.delete');
+    Route::patch('/movies/{movie}/archive', [AdminController::class, 'archive'])->name('movies.archive');
 
     // Dynamic Pricing Management
     Route::get('/dynamic-pricing', [AdminController::class, 'showtimeDynamicPricing'])->name('dynamic-pricing');
@@ -208,7 +210,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])->name('coupons-promotions');
     Route::post('/coupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
-    Route::post('/coupons/{coupon}/distribute',[AdminController::class, 'distributeCoupon'])->name('coupons.distribute');
+    Route::post('/coupons/{coupon}/distribute', [AdminController::class, 'distributeCoupon'])->name('coupons.distribute');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
 
@@ -231,11 +233,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])->name('information.categories.update');
 
     // custemor chat
-    Route::get('/chat',[AdminController::class,'chat_index'])->name('chat.index');
-    Route::get('/chat/{conversation}', [AdminController::class,'chat_show'])->name('chat.show');
-    Route::post('/chat/{conversation}',[AdminController::class,'chat_store'])->name('chat.store');
-    Route::get('/chat/{conversation}/fetch',[AdminController::class,'chat_fetch'])->name('chat.fetch');
-    Route::post('/chat/{conversation}/close',[AdminController::class, 'chat_close'])->name('chat.close');
+    Route::get('/chat', [AdminController::class, 'chat_index'])->name('chat.index');
+    Route::get('/chat/{conversation}', [AdminController::class, 'chat_show'])->name('chat.show');
+    Route::post('/chat/{conversation}', [AdminController::class, 'chat_store'])->name('chat.store');
+    Route::get('/chat/{conversation}/fetch', [AdminController::class, 'chat_fetch'])->name('chat.fetch');
+    Route::post('/admin/chat/{conversation}/close', [AdminController::class, 'chat_close'])->name('chat.close');
 
 });
 
@@ -291,6 +293,7 @@ Route::middleware('auth')
             ->name('coupons');
     });
 
+
 // ===========================
 // Customer Service Chat
 // ===========================
@@ -309,6 +312,7 @@ Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(functi
         ->name('chat.close');
 });
 
+
 // ===========================
 // Recommendations
 // ===========================
@@ -319,3 +323,4 @@ Route::middleware('auth')->group(function () {
 
 // Map routes
 Route::get('/map', [App\Http\Controllers\MapController::class, 'index'])->name('map.index');
+

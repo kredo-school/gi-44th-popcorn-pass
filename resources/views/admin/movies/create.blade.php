@@ -66,24 +66,41 @@
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">Age Rating</label>
-                            <select name="age_rating_id" class="form-select">
+
+                            <select name="age_rating_id" class="form-select" required>
                                 <option value="">Select rating...</option>
+
                                 @foreach ($ageRatings as $ageRating)
                                     <option value="{{ $ageRating->id }}"
                                         {{ old('age_rating_id') == $ageRating->id ? 'selected' : '' }}>
-                                        {{ $ageRating->title }}</option>
+                                        {{ $ageRating->title }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">Release Date</label>
-                            <input type="date" name="released_date" class="form-control"
+                            <input type="date" name="released_date" id="released-date" class="form-control"
                                 value="{{ old('released_date') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">End Date</label>
-                            <input type="date" name="end_date" class="form-control" value="{{ old('end_date') }}">
+                            <input type="date" name="end_date" id="end-date" class="form-control"
+                                value="{{ old('end_date') }}">
+                        </div>
+                        <div class="col-12">
+
+                            <label class="form-label text-secondary small">
+                                Movie Status
+                            </label>
+
+                            <div>
+                                <span id="movie-status-badge" class="badge bg-secondary p-2">
+                                    Select dates
+                                </span>
+                            </div>
+
                         </div>
 
                         <div class="col-12">
@@ -99,8 +116,8 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">Director</label>
-                            <input type="text" name="director" class="form-control"
-                                placeholder="Enter director name..." value="{{ old('director') }}">
+                            <input type="text" name="director" class="form-control" placeholder="Enter director name..."
+                                value="{{ old('director') }}">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">Cast Members (Max 6)</label>
@@ -255,14 +272,14 @@
                             <div class="d-flex gap-3 flex-wrap">
 
                                 @foreach ([
-                                    'Sun' => 0,
-                                    'Mon' => 1,
-                                    'Tue' => 2,
-                                    'Wed' => 3,
-                                    'Thu' => 4,
-                                    'Fri' => 5,
-                                    'Sat' => 6,
-                                ] as $label => $value)
+            'Sun' => 0,
+            'Mon' => 1,
+            'Tue' => 2,
+            'Wed' => 3,
+            'Thu' => 4,
+            'Fri' => 5,
+            'Sat' => 6,
+        ] as $label => $value)
                                     <div class="form-check">
 
                                         <input class="form-check-input" type="checkbox" name="showtime_generate[days][]"
