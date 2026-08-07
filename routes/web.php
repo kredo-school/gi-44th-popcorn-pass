@@ -19,7 +19,7 @@ use App\Http\Controllers\MyPage\CancelController;
 use App\Http\Controllers\MyPage\CouponController;
 use App\Http\Controllers\Api\NearByCinemasController;
 use App\Http\Controllers\Customer\ChatController;
-use App\Http\Controllers\Customer\RecommendationController;
+use App\Http\Controllers\RecommendationController;
 
 
 Route::get('/', [HomeController::class, 'index']);
@@ -313,7 +313,8 @@ Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(functi
 // Recommendations
 // ===========================
 Route::middleware('auth')->group(function () {
-    Route::get('/recommendations', [RecommendationController::class, 'index'])->name('recommendations.index');
+    Route::get('/api/recommendations', [RecommendationController::class, 'getRecommendations'])
+        ->name('recommendations.api');
 });
 
 // Map routes
