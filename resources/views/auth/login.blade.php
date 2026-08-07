@@ -2,8 +2,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
-
+    
     <div class="pp-auth-hero">
         <div class="pp-auth-card pp-auth-card--sm">
             <span class="pp-auth-tab">{{ __('Login') }}</span>

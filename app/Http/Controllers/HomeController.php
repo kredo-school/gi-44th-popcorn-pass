@@ -151,27 +151,17 @@ class HomeController extends Controller
 
     public function showtime_display()
     {
-        $selectedDate = request('date', today()->format('Y-m-d'));
+        $selectedDate = request(
+            'date',
+            today()->format('Y-m-d')
+        );
 
         $data = $this->commonData($selectedDate);
 
         $data['selectedDate'] = $selectedDate;
         $data['isSearch'] = false;
 
-        $heroMovie = Movie::where('status', 'coming_soon')
-            ->inRandomOrder()
-            ->first();
-        $topMovie = Movie::withAvg([
-            'reviews as weekly_average' => function ($query) {
-                $query->where('created_at', '>=', Carbon::now()->subWeek());
-            }
-        ], 'rating')
-            ->orderByDesc('weekly_average')
-            ->first();
-
-        return view('layouts.showtime_display', $data)
-            ->with('heroMovie', $heroMovie)
-            ->with('topMovie', $topMovie);
+        return view('showtime-display.index', $data);
     }
 
 

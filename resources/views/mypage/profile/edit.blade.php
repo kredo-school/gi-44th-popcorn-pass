@@ -31,8 +31,7 @@
                 <label for="avatar" class="btn text-warning border-warning btn-sm">
                     <i class="fa-solid fa-camera me-1"></i>Change Photo
                 </label>
-                <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*"
-                       onchange="previewAvatar(this)">
+                <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*">
                 @error('avatar')
                     <div class="text-danger small mt-1">{{ $message }}</div>
                 @enderror
@@ -114,28 +113,3 @@
         </a>
     </div>
 @endsection
-
-@push('scripts')
-<script>
-function previewAvatar(input) {
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.getElementById('avatarPreview');
-            // For div placeholders, use an img element instead.
-            if (preview.tagName === 'DIV') {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.id = 'avatarPreview';
-                img.className = 'mypage-profile-avatar rounded-circle';
-                img.alt = 'Avatar Preview';
-                preview.replaceWith(img);
-            } else {
-                preview.src = e.target.result;
-            }
-        };
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-</script>
-@endpush

@@ -12,6 +12,10 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
+// Auth
+@import '../css/auth/auth.css';
+
+
 //home
 @import '../css/home/home.css';
 //ranking
@@ -21,7 +25,7 @@
 //comingsoon
 @import '../css/home/comingsoon.css';
 //recommendations
-@import '../css/home/recommendations.css';
+@import '../css/common/recommendations.css';
 
 //showtime
 @import '../css/showtime/showtime.css';
@@ -54,7 +58,10 @@
 @import '../css/mypage/mypage.css';
 
 // Community Discussion
-@import '../css/community-discussion.css';
+@import '../css/movie-detail/community-discussion.css';
+
+//Map
+@import '../css/map/index.css';
 
 
 
@@ -228,6 +235,7 @@ body{
     cursor: not-allowed;
     pointer-events: none;
 }
+
 // Movie release/detail
 .release-date {
     font-family: 'Bebas Neue', sans-serif;

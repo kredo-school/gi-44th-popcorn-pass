@@ -5,7 +5,9 @@ import 'bootstrap';
 import './home/swiper';
 import './home/sliders';
 import './home/nearby-cinemas';
-import './home/recommendations';
+
+//Recommendations
+import './common/recommendations';
 
 // reservation pages
 import './reservations/seat-selection';
@@ -17,12 +19,19 @@ import './reservations/reservation-complete';
 
 //mypage
 import './mypage/tickets';
+import './mypage/profile-edit';
 
 // Customer Chat
 import './customer/chat';
 
 // Community Discussion
-import './community-discussion';
+import './movie-detail/community-discussion';
+
+//Map
+import './map/index';
+
+//Shoetime display
+import './showtime-display/index';
 
 
 //navbar

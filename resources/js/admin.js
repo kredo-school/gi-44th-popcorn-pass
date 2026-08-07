@@ -16,6 +16,9 @@ import './admin/chart';
 //reservations
 import './admin/reservations';
 
+//users
+import './admin/user-index';
+
 // Admin Chat
 import './admin/chat';
 

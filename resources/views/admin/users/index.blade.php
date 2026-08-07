@@ -131,33 +131,3 @@
     </div>
 
 @endsection
-
-@section('scripts')
-<script>
-const updateForm = document.querySelector('#user-update-form');
-const saveButton = document.querySelector('#user-save-btn');
-
-document.querySelectorAll('.user-row').forEach(function (row) {
-    row.addEventListener('click', function () {
-        const userId = this.dataset.userId;
-
-        fetch(`/admin/users/${userId}/details`)
-            .then(response => response.json())
-            .then(data => {
-                document.querySelector('#detail-username').textContent = data.username || '—';
-                document.querySelector('#detail-email').textContent = data.email || '—';
-                document.querySelector('#detail-phone').textContent = data.phone || '—';
-                document.querySelector('#detail-dob').textContent = data.date_of_birth || '—';
-                document.querySelector('#detail-last-login').textContent = data.last_login_at || '—';
-                document.querySelector('#detail-created').textContent = data.created_at || '—';
-
-                document.querySelector('#detail-role').value = data.role;
-                document.querySelector('#detail-is-active').checked = data.is_active;
-
-                updateForm.action = `/admin/users/${data.id}`;
-                saveButton.disabled = false;
-            });
-    });
-});
-</script>
-@endsection

@@ -59,7 +59,7 @@ Route::get('/information/{id}', [HomeController::class, 'informationDetail'])
 //--------------------
 // Movie showtime
 //--------------------
-Route::get('/home/showtime', [HomeController::class, 'showtime_display'])
+Route::get('/showtimes', [HomeController::class, 'showtime_display'])
     ->name('movie.showtime.display');
 Route::get('/movies/search', [HomeController::class, 'search'])
     ->name('movies.search');
@@ -206,7 +206,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])->name('information.categories.delete');
     Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])->name('information.categories.update');
 
-    // custemor chat
+    // custemor chat(admin)
     Route::get('/chat',[AdminController::class,'chat_index'])->name('chat.index');
     Route::get('/chat/{conversation}', [AdminController::class,'chat_show'])->name('chat.show');
     Route::post('/chat/{conversation}',[AdminController::class,'chat_store'])->name('chat.store');
@@ -268,7 +268,7 @@ Route::middleware('auth')
     });
 
 // ===========================
-// Customer Service Chat
+// Customer Service Chat(user)
 // ===========================
 Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(function () {
 
