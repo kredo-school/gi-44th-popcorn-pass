@@ -370,9 +370,7 @@
                                         <div class="side-ranking ranking-side-background mt-1">
 
                                             @foreach ($topMovies->slice(3, 7)->values() as $index => $movie)
-                                                <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
-                                                    class="ranking-list-item">
-
+                                                <div class="ranking-list-item">
                                                     <span class="ranking-position">
                                                         {{ $index + 4 }}
                                                     </span>
@@ -384,7 +382,15 @@
                                                         {{ $movie->title }}
                                                     </span>
 
-                                                </a>
+                                                    <div class="ranking-book-area">
+                                                        <a
+                                                            href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}">
+                                                            <button class="ranking-slide-book-btn ">
+                                                                BOOK NOW
+                                                            </button>
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             @endforeach
 
                                         </div>

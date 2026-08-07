@@ -5,15 +5,8 @@
 
 @section('content')
 
-    <div class="container py-5 show-box">
+    <div class="container show-box">
 
-
-        {{-- Back Button --}}
-        <div class="chat-back-btn">
-
-            <a href="{{ route('admin.chat.index') }}" class="btn text-white border">Chat home</a>
-
-        </div>
 
         <h2 class="bg-white mb-4 text-center text-dark p-3">
             👨‍💻 Chat with 【 {{ $conversation->user->first_name }} {{ $conversation->user->last_name }} 】
@@ -49,7 +42,7 @@
                             <p>
                                 {{ $message->message }}
                             </p>
-                            
+
 
 
                         </div>
@@ -84,40 +77,50 @@
 
 
             </form>
+            <div class="position-relative d-flex justify-content-center align-items-center mt-4">
 
-            <form action={{ route('admin.chat.close', $conversation->id) }} method="POST">
-                @csrf
-                <button type="submit" class="btn btn-danger w-25 d-block mx-auto mt-5">
-                    Chat Close
-                </button>
-            </form>
+                {{-- Chat home --}}
+                <div class="position-absolute start-50 translate-middle-x me-5" style="margin-left: -342px;">
+                    <a href="{{ route('admin.chat.index') }}" class="btn btn-dark">
+                        Chat home
+                    </a>
+                </div>
+
+                {{-- Chat Reset --}}
+                <form action="{{ route('admin.chat.close', $conversation->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger ps-5 pe-5">
+                        Chat Reset
+                    </button>
+                </form>
+
+            </div>
+
         </div>
 
-    </div>
+
+
+        {{-- Scroll Bottom After Reload --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+
+                const chatArea = document.getElementById('chat-area');
+
+
+                if (chatArea) {
+
+                    chatArea.scrollTop = chatArea.scrollHeight;
+
+                }
+
+
+            });
+        </script>
 
 
 
-    {{-- Scroll Bottom After Reload --}}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        @vite('resources/js/admin/chat.js')
 
 
-            const chatArea = document.getElementById('chat-area');
-
-
-            if (chatArea) {
-
-                chatArea.scrollTop = chatArea.scrollHeight;
-
-            }
-
-
-        });
-    </script>
-
-
-
-    @vite('resources/js/admin/chat.js')
-
-
-@endsection
+    @endsection

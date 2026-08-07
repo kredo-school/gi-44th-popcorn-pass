@@ -30,6 +30,9 @@ class HomeController extends Controller
     public function index()
     {
         $movies = Movie::where('status', 'now_showing')
+            ->whereHas('showtimes', function ($query) {
+                $query->where('is_active', true);
+            })
             ->orderBy('released_date', 'desc')
             ->get();
         $comingSoonMovies = Movie::where('status', 'coming_soon')

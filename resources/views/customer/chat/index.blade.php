@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <div class="container py-5">
+    <div class="container" style="margin-top: 150px;">
 
         <div class="card shadow mx-auto chat-wrapper">
 
@@ -70,9 +70,6 @@
             </div>
 
 
-
-
-
             {{-- Staff Request --}}
             @if ($conversation->status === 'ai')
                 <form action="{{ route('customer.chat.staff') }}" method="POST">
@@ -104,39 +101,41 @@
             <div class="card-footer">
 
                 <form action="{{ route('customer.chat.message') }}" method="POST">
-
                     @csrf
-
                     <div class="input-group">
-
-
                         <input type="text" name="message" class="form-control" placeholder="Enter your message..."
                             required>
-
-
                         <button class="btn btn-primary">
-
                             Send
-
                         </button>
-
-
                     </div>
-
-
                 </form>
-
 
             </div>
 
 
         </div>
-        <form action={{ route('customer.chat.close') }} method="POST">
-            @csrf
-            <button type="submit" class="btn btn-danger w-25 d-block mx-auto mt-5">
-                Chat Close
-            </button>
-        </form>
+        <div class="position-relative mt-4">
+
+            {{-- Home --}}
+            <div class="position-absolute start-0">
+                <a href="{{ url('/') }}" class="btn btn-dark ps-3 pe-3">
+                    Home
+                </a>
+            </div>
+ </div>
+            {{-- Chat Reset --}}
+            <div class="d-flex justify-content-center">
+                <form action="{{ route('customer.chat.close') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger ps-5 pe-5">
+                        Chat Reset
+                    </button>
+                </form>
+            </div>
+
+       
+
 
     </div>
 
