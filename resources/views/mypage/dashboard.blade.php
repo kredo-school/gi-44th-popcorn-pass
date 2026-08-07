@@ -4,6 +4,8 @@
 
 @section('title', 'Dashboard')
 
+@vite(['resources/css/recommendations.css', 'resources/js/recommendations.js'])
+
 @section('content')
     <div class="mypage-welcome mb-4">
         <h2>Welcome back, <span class="text-warning">{{ $user->first_name }}</span> 🍿</h2>
@@ -152,7 +154,6 @@
         @endif
     </div>
 
-
     {{-- Recommended for You Section --}}
     <div class="mypage-card mt-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -169,11 +170,3 @@
         </div>
     </div>
 @endsection
-
-@push('styles')
-    <link rel="stylesheet" href="{{ asset('css/recommendations.css') }}">
-@endpush
-
-@push('scripts')
-    <script src="{{ asset('js/recommendations.js') }}"></script>
-@endpush
