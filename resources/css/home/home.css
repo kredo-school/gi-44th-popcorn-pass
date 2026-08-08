@@ -1,10 +1,16 @@
 .home-hero {
-    background: linear-gradient(to bottom,
-            #e3ebfa 0%,
-            #7d9fcf 20%,
-            #7d9fcf 80%,
-            #2a4a85 100%);
+    background: linear-gradient(
+        to bottom,
+        #e3ebfa 0%,
+        #7d9fcf 20%,
+        #7d9fcf 80%,
+        #2a4a85 100%
+    );
     min-height: 100vh;
+    padding-top: 80px;
+}
+
+.swiper-position {
     padding-top: 80px;
 }
 

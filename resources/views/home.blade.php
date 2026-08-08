@@ -59,11 +59,11 @@
 
         </div>
 
-        {{-- Swiper section --}}
-        <div class=" mx-auto">
-            <div class="swiper-position">
-                <div class="swiper heroSwiper swiper-bg">
-                    <div class="swiper-wrapper swiper-position">
+            {{-- Swiper section --}}
+            <div class=" mx-auto">
+                <div class="swiper-position">
+                    <div class="swiper heroSwiper swiper-bg">
+                        <div class="swiper-wrapper">
 
                         {{-- Slide 1: Welcome --}}
                         <div class="swiper-slide">

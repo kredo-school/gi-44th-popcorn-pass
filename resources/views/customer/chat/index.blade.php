@@ -131,12 +131,22 @@
 
 
         </div>
-        <form action={{ route('customer.chat.close') }} method="POST">
-            @csrf
-            <button type="submit" class="btn btn-danger w-25 d-block mx-auto mt-5">
-                Chat Close
-            </button>
-        </form>
+        <div class="d-flex align-items-center position-relative mt-3">
+
+            <a class="btn btn-dark ms-1" href="{{ url('/') }}">
+                Home
+            </a>
+
+            <form action="{{ route('customer.chat.close') }}" method="POST"
+                class="position-absolute start-50 translate-middle-x">
+                @csrf
+                <button type="submit" class="btn btn-danger " style="width: 400px;">
+                    Reset
+                </button>
+            </form>
+
+        </div>
+
 
     </div>
 

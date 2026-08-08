@@ -1,29 +1,29 @@
-import 'bootstrap'
+import 'bootstrap';
 
-
-//information
+// Information
 import './admin/information';
 
-//movies
+// Movies
 import './admin/movies/movie-index';
 import './admin/movies/movie-form';
 import './admin/movies/movie-edit';
 import './admin/movies/movie-showtimes';
+import './admin/movies/movie-create';
 
-//chart for Dashboard
+// Chart for Dashboard
 import './admin/chart';
 
-//reservations
+// Reservations
 import './admin/reservations';
 
-//users
+// Users
 import './admin/user-index';
 
 // Admin Chat
 import './admin/chat';
 
-//analytics
+// Analytics
 import './admin/analytics';
 
-//dynamic-pricing
+// Dynamic Pricing
 import './admin/dynamic-pricing-edit';

@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Cinema → Screen filter
     cinemaSelect.addEventListener('change', () => {
         const cinemaId = cinemaSelect.value;
 
@@ -39,13 +40,22 @@ document.addEventListener('DOMContentLoaded', () => {
         .querySelector('meta[name="csrf-token"]')
         ?.getAttribute('content');
 
+    // Generate Showtime
     generateBtn.addEventListener('click', () => {
         const cinemaId = cinemaSelect.value;
         const screenId = screenSelect.value;
 
+        const startDate =
+            document.querySelector('#gen-start-date')?.value;
+
+        const endDate =
+            document.querySelector('#gen-end-date')?.value;
+
         const days = [
             ...document.querySelectorAll('.gen-day:checked'),
-        ].map((element) => Number.parseInt(element.value, 10));
+        ].map((element) =>
+            Number.parseInt(element.value, 10)
+        );
 
         const timeSlots = [
             ...document.querySelectorAll('.gen-slot'),
@@ -53,9 +63,15 @@ document.addEventListener('DOMContentLoaded', () => {
             .map((element) => element.value)
             .filter(Boolean);
 
-        if (!cinemaId || !screenId || days.length === 0) {
+        if (
+            !cinemaId ||
+            !screenId ||
+            !startDate ||
+            !endDate ||
+            days.length === 0
+        ) {
             messageElement.textContent =
-                'Please select a cinema, a screen, and at least one day.';
+                'Please select cinema, screen, dates, and at least one day.';
 
             messageElement.className =
                 'ms-3 text-danger small';
@@ -91,6 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         body.append('_token', csrfToken);
         body.append('screen_id', screenId);
+        body.append('start_date', startDate);
+        body.append('end_date', endDate);
 
         days.forEach((day) => {
             body.append('days[]', day);
@@ -111,8 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const contentType =
                     response.headers.get('content-type');
 
-                const text = await response.text();
-
                 if (
                     !contentType ||
                     !contentType.includes('application/json')
@@ -122,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     );
                 }
 
-                const data = JSON.parse(text);
+                const data = await response.json();
 
                 if (!response.ok) {
                     const validationMessage = data.errors
@@ -157,4 +173,122 @@ document.addEventListener('DOMContentLoaded', () => {
                     'ms-3 text-danger small';
             });
     });
+});
+
+
+
+
+// ==========================
+// Display movie status in real time
+// ==========================
+
+document.addEventListener('DOMContentLoaded', () => {
+
+
+    const releaseDate =
+        document.querySelector('#released-date');
+
+
+    const endDate =
+        document.querySelector('#end-date');
+
+
+    const statusBadge =
+        document.querySelector('#movie-status-badge');
+
+
+
+    function updateMovieStatus() {
+
+
+        if (!releaseDate || !endDate || !statusBadge) {
+            return;
+        }
+
+
+
+        const today = new Date();
+
+        today.setHours(0,0,0,0);
+
+
+
+        const release =
+            releaseDate.value
+                ? new Date(releaseDate.value)
+                : null;
+
+
+
+        const end =
+            endDate.value
+                ? new Date(endDate.value)
+                : null;
+
+
+
+        let status;
+
+        let className;
+
+
+
+        if (end && end < today) {
+
+
+            status = 'Archived';
+
+            className = 'bg-secondary';
+
+
+
+        } else if (release && release <= today) {
+
+
+            status = 'Now Showing';
+
+            className = 'bg-success';
+
+
+
+        } else {
+
+
+            status = 'Coming Soon';
+
+            className = 'bg-warning text-dark';
+
+
+        }
+
+
+
+        statusBadge.textContent =
+            status;
+
+
+
+        statusBadge.className =
+            `badge p-2 ${className}`;
+
+
+    }
+
+
+
+    releaseDate?.addEventListener(
+        'change',
+        updateMovieStatus
+    );
+
+
+    endDate?.addEventListener(
+        'change',
+        updateMovieStatus
+    );
+
+
+    updateMovieStatus();
+
+
 });

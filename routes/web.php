@@ -148,10 +148,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::post('/movies', [AdminController::class, 'storeMovie'])->name('movies.store');
     Route::get('/movies/{id}/details', [AdminController::class, 'movieDetails'])->name('movies.details');
     Route::get('/movies/{id}/edit', [AdminController::class, 'editMovie'])->name('movies.edit');
+  
     Route::put('/movies/{id}', [AdminController::class, 'updateMovie'])->name('movies.update');
     Route::get('/movies/{id}/showtimes', [AdminController::class, 'movieShowtimes'])->name('movies.showtimes');
     Route::post('/movies/{id}/showtimes/generate', [AdminController::class, 'generateShowtimes'])->name('movies.showtimes.generate');
     Route::delete('/showtimes/{id}', [AdminController::class, 'deleteShowtime'])->name('showtimes.delete');
+    Route::patch('/movies/{movie}/archive', [AdminController::class, 'archive'])->name('movies.archive');
 
     // Dynamic Pricing Management
     Route::get('/dynamic-pricing', [AdminController::class, 'showtimeDynamicPricing'])->name('dynamic-pricing');
@@ -184,7 +186,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/coupons-promotions', [AdminController::class, 'couponsPromotions'])->name('coupons-promotions');
     Route::post('/coupons', [AdminController::class, 'storeCoupon'])->name('coupons.store');
     Route::put('/coupons/{id}/status', [AdminController::class, 'toggleCouponStatus'])->name('coupons.toggle-status');
-    Route::post('/coupons/{coupon}/distribute',[AdminController::class, 'distributeCoupon'])->name('coupons.distribute');
+    Route::post('/coupons/{coupon}/distribute', [AdminController::class, 'distributeCoupon'])->name('coupons.distribute');
     Route::post('/promotions', [AdminController::class, 'storePromotion'])->name('promotions.store');
     Route::put('/promotions/{id}/status', [AdminController::class, 'togglePromotionStatus'])->name('promotions.toggle-status');
 
@@ -206,12 +208,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::delete('/information/categories/{id}', [AdminController::class, 'deleteInformationCategory'])->name('information.categories.delete');
     Route::put('/information/categories/{category}', [AdminController::class, 'updateInformationCategory'])->name('information.categories.update');
 
-    // custemor chat(admin)
-    Route::get('/chat',[AdminController::class,'chat_index'])->name('chat.index');
-    Route::get('/chat/{conversation}', [AdminController::class,'chat_show'])->name('chat.show');
-    Route::post('/chat/{conversation}',[AdminController::class,'chat_store'])->name('chat.store');
-    Route::get('/chat/{conversation}/fetch',[AdminController::class,'chat_fetch'])->name('chat.fetch');
-    Route::post('/chat/{conversation}/close',[AdminController::class, 'chat_close'])->name('chat.close');
+    // Customer chat (Admin)
+    Route::get('/chat', [AdminController::class, 'chat_index'])->name('chat.index');
+    Route::get('/chat/{conversation}', [AdminController::class, 'chat_show'])->name('chat.show');
+    Route::post('/chat/{conversation}', [AdminController::class, 'chat_store'])->name('chat.store');
+    Route::get('/chat/{conversation}/fetch', [AdminController::class, 'chat_fetch'])->name('chat.fetch');
+    Route::post('/chat/{conversation}/close', [AdminController::class, 'chat_close'])->name('chat.close');
 
 });
 
@@ -222,57 +224,56 @@ Route::middleware('auth')
     ->prefix('mypage')
     ->name('mypage.')
     ->group(function () {
-        Route::get('/', [DashboardController::class, 'index'])
-            ->name('dashboard');
-        Route::get('/profile', [ProfileController::class, 'show'])
-            ->name('profile');
-        Route::get('/profile/edit', [ProfileController::class, 'edit'])
-            ->name('profile.edit');
-        Route::put('/profile', [ProfileController::class, 'update'])
-            ->name('profile.update');
-        Route::get('/rewards', [RewardsController::class, 'index'])
-            ->name('rewards');
-        Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])
-            ->name('movies-watched');
-        Route::post('/movies-watched/{reservation}/send-review-email',[MoviesWatchedController::class, 'sendReviewEmail'])
-            ->name('movies-watched.send-review-email');
-        Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])
-            ->name('reviews.create');
-        Route::post('/reviews', [MyPageReviewController::class, 'store'])
-            ->name('reviews.store');
-        Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])
-            ->name('reviews.update');
-        Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])
-            ->name('reviews-written');
-        Route::get('/tickets', [TicketController::class, 'index'])
-            ->name('tickets');
-        Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])
-            ->name('tickets.qrcode');
-        Route::get('/cancel/{id}', [CancelController::class, 'show'])
-            ->name('cancel.show');
-        Route::post('/cancel/{id}', [CancelController::class, 'cancel'])
-            ->name('cancel.confirm');
-        Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])
-            ->name('cancel.complete');
-        Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
-            ->name('reservations.cancel');
-        // Cinema Review Routes
-        Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])
-            ->name('cinema-reviews.store');
-        Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])
-            ->name('cinema-reviews.index');
-        Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])
-            ->name('cinema-reviews.show');
-        Route::get('/coupons', [CouponController::class, 'index'])
-            ->name('coupons');
-    });
+    Route::get('/', [DashboardController::class, 'index'])
+        ->name('dashboard');
+    Route::get('/profile', [ProfileController::class, 'show'])
+        ->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+    Route::get('/rewards', [RewardsController::class, 'index'])
+        ->name('rewards');
+    Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])
+        ->name('movies-watched');
+    Route::post('/movies-watched/{reservation}/send-review-email',[MoviesWatchedController::class, 'sendReviewEmail'])
+        ->name('movies-watched.send-review-email');
+    Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])
+        ->name('reviews.create');
+    Route::post('/reviews', [MyPageReviewController::class, 'store'])
+        ->name('reviews.store');
+    Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])
+        ->name('reviews.update');
+    Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])
+        ->name('reviews-written');
+    Route::get('/tickets', [TicketController::class, 'index'])
+        ->name('tickets');
+    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])
+        ->name('tickets.qrcode');
+    Route::get('/cancel/{id}', [CancelController::class, 'show'])
+        ->name('cancel.show');
+    Route::post('/cancel/{id}', [CancelController::class, 'cancel'])
+        ->name('cancel.confirm');
+    Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])
+        ->name('cancel.complete');
+    Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
+        ->name('reservations.cancel');
+    // Cinema Review Routes
+    Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])
+        ->name('cinema-reviews.store');
+    Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])
+        ->name('cinema-reviews.index');
+    Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])
+        ->name('cinema-reviews.show');
+    Route::get('/coupons', [CouponController::class, 'index'])
+        ->name('coupons');
+});
+
 
 // ===========================
 // Customer Service Chat(user)
 // ===========================
 Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(function () {
-
-
     Route::get('/chat', [ChatController::class, 'index'])
         ->name('chat.index');
     Route::post('/chat/message', [ChatController::class, 'store'])
@@ -285,11 +286,13 @@ Route::prefix('customer')->middleware(['auth'])->name('customer.')->group(functi
         ->name('chat.close');
 });
 
+
 // ===========================
 // Recommendations
 // ===========================
 Route::middleware('auth')->group(function () {
-    Route::get('/recommendations', [RecommendationController::class, 'index'])->name('recommendations.index');
+    Route::get('/api/recommendations', [RecommendationController::class, 'getRecommendations'])
+        ->name('recommendations.api');
 });
 
 // ===========================

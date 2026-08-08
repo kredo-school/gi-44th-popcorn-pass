@@ -1,59 +1,58 @@
-/* Recommendations Section */
-.recommended-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 40px 0;
-    border-radius: 8px;
-    color: white;
-}
-
-.recommended-section h2 {
-    color: white;
-    font-weight: bold;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+/* Recommendations Styles */
 
 .recommendation-card {
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
     border: none;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #f8f9fa;
 }
 
 .recommendation-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
 }
 
 .recommendation-card img {
-    height: 300px;
+    height: 180px;
     object-fit: cover;
-    border-radius: 8px 8px 0 0;
+    border-radius: 6px;
 }
 
-.recommendation-card .rating {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.recommendation-card .card-body {
+    padding: 12px 8px;
 }
 
-.recommendation-card .stars {
-    font-size: 16px;
-    color: #ffc107;
-    letter-spacing: 2px;
+.recommendation-card .card-title {
+    font-size: 13px;
+    line-height: 1.3;
+    min-height: 2.6em;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.recommendation-card .rating-value {
-    font-size: 14px;
+.recommendation-score {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, #ff6b6b, #ff5252);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
     font-weight: bold;
-    color: #666;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
-/* Loading Spinner */
-.spinner-border {
-    color: #667eea;
+.recommendations-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
 }
 
-/* No recommendations message */
-.text-muted {
-    color: #6c757d !important;
+.recommendations-empty i {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 12px;
+    opacity: 0.3;
 }

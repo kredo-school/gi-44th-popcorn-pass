@@ -144,7 +144,15 @@ class AdminController extends Controller
         Movie::syncStatuses();
 
         $movies = Movie::with(['genres', 'ageRating'])
-            ->orderBy('created_at', 'desc')
+            ->orderByRaw("
+            CASE
+                WHEN status = 'now_showing' THEN 1
+                WHEN status = 'coming_soon' THEN 2
+                WHEN status = 'archived' THEN 3
+                ELSE 4
+            END
+        ")
+            ->orderBy('released_date', 'desc')
             ->paginate(10);
 
         return view('admin.movies.index', compact('movies'));
@@ -160,6 +168,7 @@ class AdminController extends Controller
             'director' => $movie->director,
             'cast' => $movie->cast,
             'trailer_url' => $movie->trailer_url,
+            'genres' => $movie->genres->pluck('title'),
         ]);
     }
 
@@ -305,6 +314,45 @@ class AdminController extends Controller
             ->with('success', $message);
     }
 
+    public function archive(Movie $movie)
+    {
+        $showtimes = $movie->showtimes()
+            ->whereDate('start_time', '>=', Carbon::today())
+            ->get();
+
+        foreach ($showtimes as $showtime) {
+
+            foreach ($showtime->reservations as $reservation) {
+
+                // Delete Payment
+                $reservation->payment()?->delete();
+
+                // Delete ReservationSeat
+                $reservation->reservationSeats()->delete();
+
+                // Delete Reservation
+                $reservation->delete();
+            }
+
+            // Delete ShowtimeSeat
+            $showtime->showtimeSeats()->delete();
+
+            // Delete Showtime
+            $showtime->delete();
+        }
+
+
+        // status->Archive
+        $movie->update([
+            'status' => 'archived',
+        ]);
+
+
+        return response()->json([
+            'success' => true,
+        ]);
+    }
+
     private function hasShowtimeGenerationInput(
         array $showtimeGenerate
     ): bool {
@@ -437,19 +485,37 @@ class AdminController extends Controller
         $movie = Movie::with('genres')->findOrFail($id);
 
         $genres = Genre::orderBy('title')->get();
+
         $ageRatings = AgeRating::orderBy('title')->get();
 
-        $cinemas = Cinema::orderBy('cinema_name')->get();
 
-        $screens = Screen::with('cinema')
-            ->orderBy('screen_number')
-            ->get();
+        // 映画に紐づく上映からCinema取得
+        $cinema = Showtime::where('movie_id', $movie->id)
+            ->where('start_time', '>=', now())
+            ->with('screen.cinema')
+            ->first()
+            ?->screen
+            ?->cinema;
 
+
+        // CinemaのScreenだけ取得
+        $screens = collect();
+
+        if ($cinema) {
+
+            $screens = Screen::where('cinema_id', $cinema->id)
+                ->orderBy('screen_number')
+                ->get();
+        }
+
+
+        // 現在の上映一覧
         $showtimes = Showtime::where('movie_id', $movie->id)
             ->where('start_time', '>=', now())
             ->with('screen.cinema')
             ->orderBy('start_time')
             ->get();
+
 
         return view(
             'admin.movies.edit',
@@ -457,7 +523,7 @@ class AdminController extends Controller
                 'movie',
                 'genres',
                 'ageRatings',
-                'cinemas',
+                'cinema',
                 'screens',
                 'showtimes'
             )
@@ -492,9 +558,38 @@ class AdminController extends Controller
         $validated['is_featured'] =
             $request->has('is_featured');
 
+
+        // ==========================
+        // Movie Status change automaticaly
+        // ==========================
+
+        $today = now()->toDateString();
+
+        if (
+            !empty($validated['end_date']) &&
+            $validated['end_date'] < $today
+        ) {
+
+            // archive
+            $validated['status'] = 'archived';
+        } elseif (
+            !empty($validated['released_date']) &&
+            $validated['released_date'] <= $today
+        ) {
+
+            // nowshowing
+            $validated['status'] = 'now_showing';
+        } else {
+
+            // coming soon
+            $validated['status'] = 'coming_soon';
+        }
+
+
         $movie->update($validated);
 
         $movie->genres()->sync($genreIds);
+
 
         return redirect()
             ->route('admin.movies')
@@ -544,105 +639,160 @@ class AdminController extends Controller
 
         $validated = $request->validate([
             'screen_id' => 'required|exists:screens,id',
+
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+
             'days' => 'required|array|min:1',
             'days.*' => 'integer|between:0,6',
+
             'time_slots' => 'required|array|min:1|max:6',
             'time_slots.*' => 'nullable|date_format:H:i',
         ]);
 
-        if (!$movie->released_date || !$movie->end_date) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Please set the movie release date and end date first.',
-            ], 422);
-        }
 
         $screen = Screen::findOrFail($validated['screen_id']);
 
+
         $durationMinutes = (int) $movie->duration;
+
 
         $created = 0;
         $skipped = 0;
 
-        $current = Carbon::parse($movie->released_date)->startOfDay();
-        $end = Carbon::parse($movie->end_date)->startOfDay();
+
+        $current = Carbon::parse($validated['start_date'])
+            ->startOfDay();
+
+        $end = Carbon::parse($validated['end_date'])
+            ->startOfDay();
+
+
 
         while ($current->lte($end)) {
+
+
             $dayOfWeek = (int) $current->format('w');
 
+
             if (!in_array($dayOfWeek, $validated['days'])) {
+
                 $current->addDay();
+
                 continue;
             }
 
+
+
             foreach ($validated['time_slots'] as $slot) {
+
+
                 if (!$slot) {
                     continue;
                 }
+
 
                 $startsAt = Carbon::parse(
                     $current->format('Y-m-d') . ' ' . $slot
                 );
 
+
                 $endsAt = $startsAt
                     ->copy()
                     ->addMinutes($durationMinutes);
 
+
                 $overlapExists = Showtime::where('screen_id', $screen->id)
                     ->where(function ($query) use ($startsAt, $endsAt) {
+
                         $query
                             ->where('start_time', '<', $endsAt)
                             ->where('end_time', '>', $startsAt);
                     })
                     ->exists();
 
+
+
                 if ($overlapExists) {
+
                     $skipped++;
+
                     continue;
                 }
 
+
+
                 $showtime = Showtime::create([
+
                     'screen_id' => $screen->id,
+
                     'movie_id' => $movie->id,
+
                     'start_time' => $startsAt,
+
                     'end_time' => $endsAt,
+
                     'is_active' => true,
+
                     'created_by_id' => auth()->id(),
+
                 ]);
 
+
+
                 $created++;
+
 
                 $screenSeats = ScreenSeat::where(
                     'screen_id',
                     $screen->id
                 )->get();
 
+
+
                 foreach ($screenSeats as $screenSeat) {
+
+
                     ShowtimeSeat::firstOrCreate(
+
                         [
                             'showtime_id' => $showtime->id,
+
                             'screen_seat_id' => $screenSeat->id,
                         ],
+
                         [
                             'id' => Str::uuid(),
+
                             'seat_status' => 'available',
+
                             'available' => true,
+
                             'price_at_showtime' => $screenSeat->price,
                         ]
+
                     );
                 }
             }
 
+
             $current->addDay();
         }
 
+
+
         return response()->json([
+
             'success' => true,
+
             'created' => $created,
+
             'skipped' => $skipped,
+
             'message' =>
             "{$created} showtime(s) created. "
                 . "{$skipped} skipped because they overlap with existing showtimes.",
+
         ]);
     }
 
@@ -1412,15 +1562,15 @@ class AdminController extends Controller
         ")
             ->latest('updated_at')
             ->paginate(10);
-        
-            $chatNotificationCount = Conversation::whereIn('status', [
-                'waiting',
-                'staff'
-            ])->count();
+
+        $chatNotificationCount = Conversation::whereIn('status', [
+            'waiting',
+            'staff'
+        ])->count();
 
         return view(
             'admin.chat.index',
-            compact('conversations','chatNotificationCount')
+            compact('conversations', 'chatNotificationCount')
         );
     }
 
