@@ -1,4 +1,3 @@
-{{-- resources/views/mypage/profile/edit.blade.php --}}
 @extends('layouts.mypage')
 
 @section('title', 'Edit Profile')

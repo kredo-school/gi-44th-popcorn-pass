@@ -1,178 +1,22 @@
+// Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
-// Admin custom variables
-:root {
-    --admin-primary: #0d6efd;
-    --admin-secondary: #6c757d;
-    --admin-danger: #dc3545;
-    --admin-success: #198754;
-    --admin-warning: #ffc107;
-    --admin-info: #0dcaf0;
-}
 
-// Admin information
-@import "../css/admin/information.css";
+// Admin common
+@import '../css/admin/admin-common.css';
 
-// Admin reviews
-@import "../css/admin/reviews.css";
-//dashboard
+// Dashboard
 @import '../css/admin/dashboard.css';
-//movie
-@import '../css/admin/movie-edit.css';
+
+// Information
+@import '../css/admin/information.css';
+
+// Reviews
+@import '../css/admin/reviews.css';
+
+// Movies
 @import '../css/admin/movie.css';
+@import '../css/admin/movie-edit.css';
 
-
-
-///////////////////////////////////
-:root {
-    --navy: #1a1f36;
-    --navy-light: #232a47;
-    --gold: #FFD700;
-    --red: #E63946;
-}
-
-body {
-    background-color: #1a1f36 !important;
-    color: #ffffff;
-    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
-}
-
-.admin-header {
-    background-color: var(--navy);
-    border-bottom: 2px solid var(--gold);
-    padding: 16px 32px;
-}
-
-.brand-title {
-    color: var(--gold);
-    font-weight: 700;
-    font-size: 22px;
-    letter-spacing: 1px;
-}
-
-.brand-subtitle {
-    color: #ffffff;
-    font-size: 16px;
-    margin-left: 12px;
-}
-
-.admin-nav {
-    margin-left: 32px;
-}
-
-.admin-nav .nav-link {
-    color: #c9ccd6;
-    font-size: 15px;
-    padding: 6px 14px;
-}
-
-.admin-nav .nav-link.active {
-    color: var(--gold);
-    font-weight: 600;
-}
-
-.admin-nav .nav-link:hover {
-    color: var(--gold);
-}
-
-.admin-date {
-    color: #c9ccd6;
-    font-size: 14px;
-}
-
-.admin-content {
-    padding: 24px 32px;
-}
-
-// Admin chat
-@import "../css/admin/chat.css";
-
-// Card styles
-.card-dark {
-    background-color: var(--navy-light);
-    border: none;
-    border-radius: 8px;
-    color: #ffffff;
-}
-
-// Dashboard KPIs
-.kpi-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 12px;
-    padding: 20px;
-    color: white;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.kpi-card h6 {
-    font-size: 0.875rem;
-    opacity: 0.9;
-}
-
-.kpi-card .kpi-value {
-    font-size: 2rem;
-    font-weight: bold;
-    margin: 10px 0;
-}
-
-// Admin layout
-.admin-sidebar {
-    background-color: var(--navy-light);
-    min-height: 100vh;
-}
-
-// Table styles
-.admin-table {
-    font-size: 0.9rem;
-}
-
-.admin-table thead {
-    background-color: var(--navy-light);
-    color: white;
-}
-
-.admin-table tbody tr:hover {
-    background-color: rgba(13, 110, 253, 0.1);
-}
-
-// Badge styles
-.badge-status {
-    padding: 0.5rem 0.75rem;
-    border-radius: 50px;
-}
-
-// Form styles
-.admin-form-control {
-    border-radius: 8px;
-    border: 1px solid #dee2e6;
-}
-
-.admin-form-control:focus {
-    border-color: var(--admin-primary);
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-}
-
-// Button styles
-.btn-admin {
-    border-radius: 8px;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-}
-
-// Chart container
-.chart-container {
-    position: relative;
-    height: 300px;
-    margin-bottom: 20px;
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
-    .kpi-card .kpi-value {
-        font-size: 1.5rem;
-    }
-
-    .admin-table {
-        font-size: 0.8rem;
-    }
-}
+// Chat
+@import '../css/admin/chat.css';

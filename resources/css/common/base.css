@@ -1,0 +1,36 @@
+main {
+    margin-top: 0;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.btn-color {
+    color: #000 !important;
+    background-color: #f5c126 !important;
+    border-color: #f5c126 !important;
+}
+
+.btn-white {
+    color: #000 !important;
+    background-color: #fff !important;
+    border-color: red !important;
+}
+
+.yellow-color {
+    color: #f5c126;
+}
+
+.base {
+    font-family: Georgia, serif;
+}
+
+.back-gray {
+    background-color: #d9d9d9;
+}
+
+.section-gap {
+    margin-top: 2rem;
+    margin-bottom: 10rem;
+}
