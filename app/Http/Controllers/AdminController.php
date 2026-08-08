@@ -38,89 +38,321 @@ class AdminController extends Controller
     // --------------------
     // Dashboard
     // --------------------
-    public function dashboard()
-    {
-        $thisYear = now()->year;
+public function dashboard(Request $request)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard Filters
+    |--------------------------------------------------------------------------
+    */
 
-        // ===== Revenue（this year）=====
-        $thisYearRevenue = Payment::whereYear('created_at', now()->year)->sum('amount');
-        $lastYearRevenue = Payment::whereYear('created_at', now()->subYear()->year)->sum('amount');
+    $currentYear = now()->year;
 
-        $revenueChange = $lastYearRevenue > 0
-            ? (($thisYearRevenue - $lastYearRevenue) / $lastYearRevenue) * 100
-            : 0;
+    $requestedYear = $request->query('year');
 
+    $selectedYear = filter_var(
+        $requestedYear,
+        FILTER_VALIDATE_INT,
+        [
+            'options' => [
+                'min_range' => 2000,
+                'max_range' => $currentYear,
+            ],
+        ]
+    );
 
-        // ===== Users（今年登録したユーザー）=====
-        $totalUsers = User::whereYear('created_at', now()->year)->count();
-        $lastYearUsers = User::whereYear('created_at', now()->subYear()->year)->count();
+    if ($selectedYear === false) {
+        $selectedYear = $currentYear;
+    }
 
-        $userChange = $lastYearUsers > 0
-            ? (($totalUsers - $lastYearUsers) / $lastYearUsers) * 100
-            : 0;
+    $thisYear = $selectedYear;
+    $lastYear = $thisYear - 1;
 
+    $availableYears = range($currentYear, 2020);
 
-        // ===== Movies（今年登録した映画）=====
-        $activeMovies = Movie::whereYear('created_at', now()->year)->count();
-        $lastYearMovies = Movie::whereYear('created_at', now()->subYear()->year)->count();
+    /*
+    |--------------------------------------------------------------------------
+    | Cinema Filter
+    |--------------------------------------------------------------------------
+    */
 
-        $movieChange = $lastYearMovies > 0
-            ? (($activeMovies - $lastYearMovies) / $lastYearMovies) * 100
-            : 0;
+    $requestedCinemaId = $request->query('cinema_id');
 
+    $selectedCinema = null;
 
-        // ===== Reservations（今年の予約件数）=====
-        $totalReservations = Reservation::whereYear('created_at', now()->year)->count();
-        $lastYearReservations = Reservation::whereYear('created_at', now()->subYear()->year)->count();
+    if ($requestedCinemaId) {
+        $selectedCinema = Cinema::query()
+            ->find($requestedCinemaId);
+    }
 
-        $reservationChange = $lastYearReservations > 0
-            ? (($totalReservations - $lastYearReservations) / $lastYearReservations) * 100
-            : 0;
+    $cinemaId = $selectedCinema?->id;
 
+    $cinemas = Cinema::query()
+        ->orderBy('cinema_name')
+        ->get([
+            'id',
+            'cinema_name',
+        ]);
 
-        //Revenue Trend
-        $monthlyRevenue = Payment::selectRaw('
-        MONTH(created_at) as month,
-        SUM(amount) as total')
-            ->whereYear('created_at', now()->year)
-            ->groupByRaw('MONTH(created_at)')
-            ->orderByRaw('MONTH(created_at)')
-            ->get();
+    /*
+    |--------------------------------------------------------------------------
+    | Revenue
+    |--------------------------------------------------------------------------
+    */
 
+    $thisYearRevenueQuery = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereYear('paid_at', $thisYear);
 
-        $revenueData = array_fill(0, 12, 0);
+    $lastYearRevenueQuery = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereYear('paid_at', $lastYear);
 
-        foreach ($monthlyRevenue as $item) {
-            $revenueData[$item->month - 1] = $item->total;
+    if ($cinemaId) {
+        $thisYearRevenueQuery->whereHas(
+            'reservation',
+            function ($query) use ($cinemaId) {
+                $query->where('cinema_id', $cinemaId);
+            }
+        );
+
+        $lastYearRevenueQuery->whereHas(
+            'reservation',
+            function ($query) use ($cinemaId) {
+                $query->where('cinema_id', $cinemaId);
+            }
+        );
+    }
+
+    $thisYearRevenue = (float) $thisYearRevenueQuery->sum('amount');
+    $lastYearRevenue = (float) $lastYearRevenueQuery->sum('amount');
+
+    $revenueChange = $lastYearRevenue > 0
+        ? (($thisYearRevenue - $lastYearRevenue) / $lastYearRevenue) * 100
+        : 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Customers
+    |--------------------------------------------------------------------------
+    */
+
+    if ($cinemaId) {
+        $totalUsers = Reservation::query()
+            ->where('cinema_id', $cinemaId)
+            ->whereYear('created_at', $thisYear)
+            ->whereNotNull('user_id')
+            ->distinct()
+            ->count('user_id');
+
+        $lastYearUsers = Reservation::query()
+            ->where('cinema_id', $cinemaId)
+            ->whereYear('created_at', $lastYear)
+            ->whereNotNull('user_id')
+            ->distinct()
+            ->count('user_id');
+    } else {
+        $totalUsers = User::query()
+            ->whereYear('created_at', $thisYear)
+            ->count();
+
+        $lastYearUsers = User::query()
+            ->whereYear('created_at', $lastYear)
+            ->count();
+    }
+
+    $userChange = $lastYearUsers > 0
+        ? (($totalUsers - $lastYearUsers) / $lastYearUsers) * 100
+        : 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Active Movies
+    |--------------------------------------------------------------------------
+    */
+
+    Movie::syncStatuses();
+
+    $activeMoviesQuery = Movie::query()
+        ->where('status', 'now_showing');
+
+    if ($cinemaId) {
+        $activeMoviesQuery->whereHas(
+            'showtimes.screen',
+            function ($query) use ($cinemaId) {
+                $query->where('cinema_id', $cinemaId);
+            }
+        );
+    }
+
+    $activeMovies = $activeMoviesQuery->count();
+
+    $movieChange = 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reservations
+    |--------------------------------------------------------------------------
+    */
+
+    $thisYearReservationsQuery = Reservation::query()
+        ->whereYear('created_at', $thisYear);
+
+    $lastYearReservationsQuery = Reservation::query()
+        ->whereYear('created_at', $lastYear);
+
+    if ($cinemaId) {
+        $thisYearReservationsQuery->where(
+            'cinema_id',
+            $cinemaId
+        );
+
+        $lastYearReservationsQuery->where(
+            'cinema_id',
+            $cinemaId
+        );
+    }
+
+    $totalReservations = $thisYearReservationsQuery->count();
+    $lastYearReservations = $lastYearReservationsQuery->count();
+
+    $reservationChange = $lastYearReservations > 0
+        ? (($totalReservations - $lastYearReservations) / $lastYearReservations) * 100
+        : 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Revenue Trend
+    |--------------------------------------------------------------------------
+    */
+
+    $monthlyRevenueQuery = Payment::query()
+        ->selectRaw(
+            'MONTH(paid_at) as month, SUM(amount) as total'
+        )
+        ->where('payment_status', 'paid')
+        ->whereYear('paid_at', $thisYear);
+
+    if ($cinemaId) {
+        $monthlyRevenueQuery->whereHas(
+            'reservation',
+            function ($query) use ($cinemaId) {
+                $query->where('cinema_id', $cinemaId);
+            }
+        );
+    }
+
+    $monthlyRevenue = $monthlyRevenueQuery
+        ->groupByRaw('MONTH(paid_at)')
+        ->orderByRaw('MONTH(paid_at)')
+        ->get();
+
+    $revenueData = array_fill(0, 12, 0);
+
+    foreach ($monthlyRevenue as $item) {
+        $monthIndex = (int) $item->month - 1;
+
+        if ($monthIndex >= 0 && $monthIndex < 12) {
+            $revenueData[$monthIndex] = (float) $item->total;
         }
+    }
 
-        // top peforming movies
+    /*
+    |--------------------------------------------------------------------------
+    | Top Performing Movies
+    |--------------------------------------------------------------------------
+    */
 
-        $movieSalesRanking = Payment::join('reservations', 'payments.reservation_id', '=', 'reservations.id')
-            ->join('movies', 'reservations.movie_id', '=', 'movies.id')
-            ->select(
-                'movies.title',
-                DB::raw('SUM(payments.amount) as total_sales')
+    $movieSalesRankingQuery = Payment::query()
+        ->join(
+            'reservations',
+            'payments.reservation_id',
+            '=',
+            'reservations.id'
+        )
+        ->join(
+            'movies',
+            'reservations.movie_id',
+            '=',
+            'movies.id'
+        )
+        ->where(
+            'payments.payment_status',
+            'paid'
+        )
+        ->whereYear(
+            'payments.paid_at',
+            $thisYear
+        );
+
+    if ($cinemaId) {
+        $movieSalesRankingQuery->where(
+            'reservations.cinema_id',
+            $cinemaId
+        );
+    }
+
+    $movieSalesRanking = $movieSalesRankingQuery
+        ->select(
+            'movies.id',
+            'movies.title',
+            DB::raw(
+                'SUM(payments.amount) as total_sales'
             )
-            ->groupBy('movies.id', 'movies.title')
-            ->orderByDesc('total_sales')
-            ->take(5)
-            ->get();
+        )
+        ->groupBy(
+            'movies.id',
+            'movies.title'
+        )
+        ->orderByDesc('total_sales')
+        ->limit(5)
+        ->get();
 
-        //Recent Reservation
-        $recentReservations = Reservation::with([
+    /*
+    |--------------------------------------------------------------------------
+    | Recent Reservations
+    |--------------------------------------------------------------------------
+    */
+
+    $recentReservationsQuery = Reservation::query()
+        ->with([
             'user',
             'movie',
+            'cinema',
             'screen',
-            'showtime'
+            'showtime',
+            'payment',
         ])
-            ->latest('created_at')
-            ->take(5)
-            ->get();
+        ->whereYear('created_at', $thisYear);
 
+    if ($cinemaId) {
+        $recentReservationsQuery->where(
+            'cinema_id',
+            $cinemaId
+        );
+    }
 
+    $recentReservations = $recentReservationsQuery
+        ->latest('created_at')
+        ->limit(5)
+        ->get();
 
-        return view('admin.dashboard', compact(
+    /*
+    |--------------------------------------------------------------------------
+    | View
+    |--------------------------------------------------------------------------
+    */
+
+    return view(
+        'admin.dashboard',
+        compact(
+            'currentYear',
+            'thisYear',
+            'lastYear',
+            'availableYears',
+            'cinemas',
+            'cinemaId',
+            'selectedCinema',
             'thisYearRevenue',
             'revenueChange',
             'totalUsers',
@@ -129,12 +361,12 @@ class AdminController extends Controller
             'movieChange',
             'totalReservations',
             'reservationChange',
-            'thisYear',
+            'revenueData',
             'movieSalesRanking',
-            'recentReservations',
-            'revenueData'
-        ));
-    }
+            'recentReservations'
+        )
+    );
+}
 
     // --------------------
     // Movies
