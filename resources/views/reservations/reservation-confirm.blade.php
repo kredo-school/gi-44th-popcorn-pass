@@ -143,9 +143,15 @@
                         <div class="mb-3">
                             <small>Payment Method</small>
                             <p class="mb-0 fw-bold fs-5">
-                                @if (($paymentInfo['payment_method'] ?? '') === 'paypal')
-                                    PayPal ({{ $paymentInfo['email'] }})
-                                @elseif (($paymentInfo['payment_method'] ?? '') === 'onsite')
+                                @if (
+                                    ($paymentInfo['payment_method'] ?? '')
+                                    === 'paypal'
+                                    )
+                                    PayPal / Debit or Credit Card
+                                @elseif (
+                                    ($paymentInfo['payment_method'] ?? '')
+                                    === 'onsite'
+                                    )
                                     Pay On-Site
                                 @else
                                     -
@@ -188,23 +194,42 @@
         </div>
 
         {{-- Button --}}
-        <div class="d-flex justify-content-between mt-5">
-            <form action="{{ route('reservations.payment-method') }}" method="GET">
-                <button type="button" class="back-btn ms-5" onclick="history.back()">
-                    <i class="fa-solid fa-arrow-left"></i> BACK
-                </button>
-            </form>
-
-            <form action="{{ route('reservations.confirm-booking') }}" method="POST">
-
-                @csrf
-
-                <button type="submit" class="confirm-btn me-5">
-                    Confirm Booking
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-
-            </form>
+        <div class="d-flex justify-content-between align-items-start mt-5">
+            <button type="button" class="back-btn ms-5" onclick="history.back()">
+                <i class="fa-solid fa-arrow-left"></i>
+                BACK
+            </button>
+            @if (
+                ($paymentInfo['payment_method'] ?? '')
+                === 'paypal'
+                && $totalPrice > 0
+                )
+                {{-- PayPal Checkout --}}
+                <div class="me-5" style="min-width: 260px;">
+                    <div id="paypal-checkout" data-client-id="{{ config('paypal.client_id') }}"
+                        data-currency="{{ config('paypal.currency') }}" data-create-url="{{ route('paypal.orders.create') }}"
+                        data-capture-url="{{ route('paypal.orders.capture') }}" data-form-id="paypal-booking-form">
+                    </div>
+            
+                    <div id="paypal-button-container"></div>
+            
+                    <div id="paypal-error" class="alert alert-danger d-none mt-2 mb-0">
+                    </div>
+                </div>
+            
+                <form id="paypal-booking-form" action="{{ route('reservations.confirm-booking') }}" method="POST" class="d-none">
+                    @csrf
+                </form>
+            @else
+                {{-- On-Site or free booking --}}
+                <form action="{{ route('reservations.confirm-booking') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="confirm-btn me-5">
+                        Confirm Booking
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            @endif
         </div>
 
     </div>

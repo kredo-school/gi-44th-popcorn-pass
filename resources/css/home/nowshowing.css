@@ -111,7 +111,7 @@
     z-index:10;
 }
 
-.nowplaying-btn{
+.nowshowing-btn{
     position:absolute;
     top:50%;
     transform:translateY(-50%);
@@ -126,16 +126,16 @@
     z-index:20;
 }
 
-.nowplaying-btn:hover{
+.nowshowing-btn:hover{
     background:#e50914;
     transform:translateY(-50%) scale(1.08);
     box-shadow:0 0 18px rgba(229,9,20,.6);
 }
 
-#nowPlayingPrevBtn{
+#nowshowingPrevBtn{
     left:-28px;
 }
 
-#nowPlayingNextBtn{
+#nowshowingNextBtn{
     right:-28px;
 }

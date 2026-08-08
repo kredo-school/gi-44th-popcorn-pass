@@ -376,7 +376,15 @@ public function dashboard(Request $request)
         Movie::syncStatuses();
 
         $movies = Movie::with(['genres', 'ageRating'])
-            ->orderBy('created_at', 'desc')
+            ->orderByRaw("
+            CASE
+                WHEN status = 'now_showing' THEN 1
+                WHEN status = 'coming_soon' THEN 2
+                WHEN status = 'archived' THEN 3
+                ELSE 4
+            END
+        ")
+            ->orderBy('released_date', 'desc')
             ->paginate(10);
 
         return view('admin.movies.index', compact('movies'));
@@ -392,6 +400,7 @@ public function dashboard(Request $request)
             'director' => $movie->director,
             'cast' => $movie->cast,
             'trailer_url' => $movie->trailer_url,
+            'genres' => $movie->genres->pluck('title'),
         ]);
     }
 
@@ -415,7 +424,7 @@ public function dashboard(Request $request)
             'age_rating_id' => 'nullable|exists:age_ratings,id',
             'released_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:released_date',
-            'status' => 'required|string',
+            'status' => 'nullable',
             'synopsis' => 'nullable|string',
             'director' => 'nullable|string|max:255',
             'cast' => 'nullable|array|max:6',
@@ -500,6 +509,16 @@ public function dashboard(Request $request)
         $validated['created_by_id'] =
             auth()->id();
 
+        $today = now()->toDateString();
+
+        if ($validated['released_date'] > $today) {
+            $validated['status'] = 'coming_soon';
+        } elseif (!empty($validated['end_date']) && $validated['end_date'] < $today) {
+            $validated['status'] = 'archived';
+        } else {
+            $validated['status'] = 'now_showing';
+        }
+
         $movie = Movie::create($validated);
 
         $movie->genres()->sync($genreIds);
@@ -525,6 +544,45 @@ public function dashboard(Request $request)
         return redirect()
             ->route('admin.movies')
             ->with('success', $message);
+    }
+
+    public function archive(Movie $movie)
+    {
+        $showtimes = $movie->showtimes()
+            ->whereDate('start_time', '>=', Carbon::today())
+            ->get();
+
+        foreach ($showtimes as $showtime) {
+
+            foreach ($showtime->reservations as $reservation) {
+
+                // Delete Payment
+                $reservation->payment()?->delete();
+
+                // Delete ReservationSeat
+                $reservation->reservationSeats()->delete();
+
+                // Delete Reservation
+                $reservation->delete();
+            }
+
+            // Delete ShowtimeSeat
+            $showtime->showtimeSeats()->delete();
+
+            // Delete Showtime
+            $showtime->delete();
+        }
+
+
+        // status->Archive
+        $movie->update([
+            'status' => 'archived',
+        ]);
+
+
+        return response()->json([
+            'success' => true,
+        ]);
     }
 
     private function hasShowtimeGenerationInput(
@@ -659,19 +717,37 @@ public function dashboard(Request $request)
         $movie = Movie::with('genres')->findOrFail($id);
 
         $genres = Genre::orderBy('title')->get();
+
         $ageRatings = AgeRating::orderBy('title')->get();
 
-        $cinemas = Cinema::orderBy('cinema_name')->get();
 
-        $screens = Screen::with('cinema')
-            ->orderBy('screen_number')
-            ->get();
+        // 映画に紐づく上映からCinema取得
+        $cinema = Showtime::where('movie_id', $movie->id)
+            ->where('start_time', '>=', now())
+            ->with('screen.cinema')
+            ->first()
+            ?->screen
+            ?->cinema;
 
+
+        // CinemaのScreenだけ取得
+        $screens = collect();
+
+        if ($cinema) {
+
+            $screens = Screen::where('cinema_id', $cinema->id)
+                ->orderBy('screen_number')
+                ->get();
+        }
+
+
+        // 現在の上映一覧
         $showtimes = Showtime::where('movie_id', $movie->id)
             ->where('start_time', '>=', now())
             ->with('screen.cinema')
             ->orderBy('start_time')
             ->get();
+
 
         return view(
             'admin.movies.edit',
@@ -679,7 +755,7 @@ public function dashboard(Request $request)
                 'movie',
                 'genres',
                 'ageRatings',
-                'cinemas',
+                'cinema',
                 'screens',
                 'showtimes'
             )
@@ -714,9 +790,38 @@ public function dashboard(Request $request)
         $validated['is_featured'] =
             $request->has('is_featured');
 
+
+        // ==========================
+        // Movie Status change automaticaly
+        // ==========================
+
+        $today = now()->toDateString();
+
+        if (
+            !empty($validated['end_date']) &&
+            $validated['end_date'] < $today
+        ) {
+
+            // archive
+            $validated['status'] = 'archived';
+        } elseif (
+            !empty($validated['released_date']) &&
+            $validated['released_date'] <= $today
+        ) {
+
+            // nowshowing
+            $validated['status'] = 'now_showing';
+        } else {
+
+            // coming soon
+            $validated['status'] = 'coming_soon';
+        }
+
+
         $movie->update($validated);
 
         $movie->genres()->sync($genreIds);
+
 
         return redirect()
             ->route('admin.movies')
@@ -766,105 +871,160 @@ public function dashboard(Request $request)
 
         $validated = $request->validate([
             'screen_id' => 'required|exists:screens,id',
+
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+
             'days' => 'required|array|min:1',
             'days.*' => 'integer|between:0,6',
+
             'time_slots' => 'required|array|min:1|max:6',
             'time_slots.*' => 'nullable|date_format:H:i',
         ]);
 
-        if (!$movie->released_date || !$movie->end_date) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Please set the movie release date and end date first.',
-            ], 422);
-        }
 
         $screen = Screen::findOrFail($validated['screen_id']);
 
+
         $durationMinutes = (int) $movie->duration;
+
 
         $created = 0;
         $skipped = 0;
 
-        $current = Carbon::parse($movie->released_date)->startOfDay();
-        $end = Carbon::parse($movie->end_date)->startOfDay();
+
+        $current = Carbon::parse($validated['start_date'])
+            ->startOfDay();
+
+        $end = Carbon::parse($validated['end_date'])
+            ->startOfDay();
+
+
 
         while ($current->lte($end)) {
+
+
             $dayOfWeek = (int) $current->format('w');
 
+
             if (!in_array($dayOfWeek, $validated['days'])) {
+
                 $current->addDay();
+
                 continue;
             }
 
+
+
             foreach ($validated['time_slots'] as $slot) {
+
+
                 if (!$slot) {
                     continue;
                 }
+
 
                 $startsAt = Carbon::parse(
                     $current->format('Y-m-d') . ' ' . $slot
                 );
 
+
                 $endsAt = $startsAt
                     ->copy()
                     ->addMinutes($durationMinutes);
 
+
                 $overlapExists = Showtime::where('screen_id', $screen->id)
                     ->where(function ($query) use ($startsAt, $endsAt) {
+
                         $query
                             ->where('start_time', '<', $endsAt)
                             ->where('end_time', '>', $startsAt);
                     })
                     ->exists();
 
+
+
                 if ($overlapExists) {
+
                     $skipped++;
+
                     continue;
                 }
 
+
+
                 $showtime = Showtime::create([
+
                     'screen_id' => $screen->id,
+
                     'movie_id' => $movie->id,
+
                     'start_time' => $startsAt,
+
                     'end_time' => $endsAt,
+
                     'is_active' => true,
+
                     'created_by_id' => auth()->id(),
+
                 ]);
 
+
+
                 $created++;
+
 
                 $screenSeats = ScreenSeat::where(
                     'screen_id',
                     $screen->id
                 )->get();
 
+
+
                 foreach ($screenSeats as $screenSeat) {
+
+
                     ShowtimeSeat::firstOrCreate(
+
                         [
                             'showtime_id' => $showtime->id,
+
                             'screen_seat_id' => $screenSeat->id,
                         ],
+
                         [
                             'id' => Str::uuid(),
+
                             'seat_status' => 'available',
+
                             'available' => true,
+
                             'price_at_showtime' => $screenSeat->price,
                         ]
+
                     );
                 }
             }
 
+
             $current->addDay();
         }
 
+
+
         return response()->json([
+
             'success' => true,
+
             'created' => $created,
+
             'skipped' => $skipped,
+
             'message' =>
             "{$created} showtime(s) created. "
                 . "{$skipped} skipped because they overlap with existing showtimes.",
+
         ]);
     }
 
@@ -1279,6 +1439,10 @@ public function analytics(Request $request)
     );
 }
 
+
+    // --------------------
+    // Reservations
+    // --------------------
     private function reservationStatusOptions(): array
     {
         return ['pending', 'confirmed', 'cancelled', 'expired'];
@@ -1316,6 +1480,34 @@ public function analytics(Request $request)
         return $query->orderBy('created_at', 'desc');
     }
 
+    public function markPaymentAsPaid(
+        Payment $payment
+    ) {
+        if ($payment->payment_method !== 'onsite') {
+            return back()->with(
+                'error',
+                'Only on-site payments can be updated manually.'
+            );
+        }
+
+        if ($payment->payment_status !== 'pending') {
+            return back()->with(
+                'error',
+                'This payment is not pending.'
+            );
+        }
+
+        $payment->update([
+            'payment_status' => 'paid',
+            'paid_at' => now(),
+        ]);
+
+        return back()->with(
+            'success',
+            'Payment marked as paid successfully.'
+        );
+    }
+
     public function reservations(Request $request)
     {
         $reservations = $this->buildReservationsQuery($request)
@@ -1341,26 +1533,99 @@ public function analytics(Request $request)
         ])->findOrFail($id);
 
         return response()->json([
-            'reservation_reference' => $reservation->reservation_reference,
-            'customer_name' => $reservation->user->username ?? '—',
-            'customer_email' => $reservation->user->email ?? '—',
-            'movie_title' => $reservation->movie->title ?? '—',
-            'cinema_name' => $reservation->cinema->cinema_name ?? '—',
-            'screen_number' => $reservation->screen->screen_number ?? '—',
-            'showtime' => optional($reservation->showtime?->start_time)->format('Y-m-d H:i'),
-            'seats' => $reservation->seat_numbers,
-            'total_seats' => $reservation->total_seats,
-            'subtotal' => number_format($reservation->subtotal, 2),
-            'discount_amount' => number_format($reservation->discount_amount, 2),
-            'final_amount' => number_format($reservation->final_amount, 2),
-            'reservation_status' => $reservation->reservation_status,
-            'qr_code' => $reservation->qr_code,
-            'confirmed_at' => optional($reservation->confirmed_at)->format('Y-m-d H:i'),
-            'cancelled_at' => optional($reservation->cancelled_at)->format('Y-m-d H:i'),
-            'payment_status' => $reservation->payment->payment_status ?? '—',
-            'payment_method' => $reservation->payment->payment_method ?? '—',
-            'transaction_id' => $reservation->payment->transaction_id ?? '—',
-            'paid_at' => optional($reservation->payment?->paid_at)->format('Y-m-d H:i'),
+            'reservation_reference' =>
+            $reservation->reservation_reference,
+
+            'customer_name' =>
+            $reservation->user?->username
+                ?? trim(
+                    ($reservation->guest_first_name ?? '')
+                        . ' '
+                        . ($reservation->guest_last_name ?? '')
+                )
+                ?: 'Guest',
+
+            'customer_email' =>
+            $reservation->user?->email
+                ?? $reservation->guest_email
+                ?? '—',
+
+            'movie_title' =>
+            $reservation->movie?->title ?? '—',
+
+            'cinema_name' =>
+            $reservation->cinema?->cinema_name ?? '—',
+
+            'screen_number' =>
+            $reservation->screen?->screen_number ?? '—',
+
+            'showtime' =>
+            $reservation->showtime?->start_time
+                ?->format('Y-m-d H:i'),
+
+            'seats' =>
+            $reservation->seat_numbers,
+
+            'total_seats' =>
+            $reservation->total_seats,
+
+            'subtotal' =>
+            number_format(
+                $reservation->subtotal,
+                2
+            ),
+
+            'discount_amount' =>
+            number_format(
+                $reservation->discount_amount,
+                2
+            ),
+
+            'final_amount' =>
+            number_format(
+                $reservation->final_amount,
+                2
+            ),
+
+            'reservation_status' =>
+            $reservation->reservation_status,
+
+            'qr_code' =>
+            $reservation->qr_code,
+
+            'confirmed_at' =>
+            $reservation->confirmed_at
+                ?->format('Y-m-d H:i'),
+
+            'cancelled_at' =>
+            $reservation->cancelled_at
+                ?->format('Y-m-d H:i'),
+
+            // Payment
+            'payment_id' =>
+            $reservation->payment?->id,
+
+            'payment_status' =>
+            $reservation->payment?->payment_status
+                ?? '—',
+
+            'payment_method' =>
+            $reservation->payment?->payment_method
+                ?? '—',
+
+            'transaction_id' =>
+            $reservation->payment?->transaction_id
+                ?? '—',
+
+            'paid_at' =>
+            $reservation->payment?->paid_at
+                ?->format('Y-m-d H:i'),
+
+            'can_mark_paid' =>
+            $reservation->payment?->payment_method
+                === 'onsite'
+                && $reservation->payment?->payment_status
+                === 'pending',
         ]);
     }
 
@@ -1881,9 +2146,14 @@ public function analytics(Request $request)
             ->latest('updated_at')
             ->paginate(10);
 
+        $chatNotificationCount = Conversation::whereIn('status', [
+            'waiting',
+            'staff'
+        ])->count();
+
         return view(
             'admin.chat.index',
-            compact('conversations')
+            compact('conversations', 'chatNotificationCount')
         );
     }
 
@@ -1916,7 +2186,7 @@ public function analytics(Request $request)
             'messages'
         ));
     }
-    
+
 
     public function chat_store(Request $request, Conversation $conversation)
     {

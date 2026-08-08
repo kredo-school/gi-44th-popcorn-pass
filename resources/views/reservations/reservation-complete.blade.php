@@ -174,5 +174,3 @@
     
 
 @endsection
-
-@vite('resources/js/reservations/reservation-complete.js')

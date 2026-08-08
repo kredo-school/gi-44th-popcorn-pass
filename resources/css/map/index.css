@@ -1,0 +1,22 @@
+.cinema-map {
+    width: 100%;
+    height: 100vh;
+}
+
+.cinema-map-info {
+    max-width: 250px;
+    padding: 10px;
+}
+
+.cinema-map-info h6 {
+    margin: 0 0 8px;
+}
+
+.cinema-map-info p {
+    margin: 0 0 8px;
+    font-size: 0.9rem;
+}
+
+.cinema-map-info p:last-child {
+    margin-bottom: 0;
+}

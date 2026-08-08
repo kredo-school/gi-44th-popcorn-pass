@@ -247,6 +247,14 @@
     border-radius: 14px;
     padding: 30px;
     color: #000;
+    max-width: 560px;
+}
+
+.review-form-poster {
+    width: 70px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 6px;
 }
 
 .star-rating {

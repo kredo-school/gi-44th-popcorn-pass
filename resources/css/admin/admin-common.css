@@ -1,0 +1,117 @@
+:root {
+    --admin-primary: #0d6efd;
+    --admin-secondary: #6c757d;
+    --admin-danger: #dc3545;
+    --admin-success: #198754;
+    --admin-warning: #ffc107;
+    --admin-info: #0dcaf0;
+    --navy: #1a1f36;
+    --navy-light: #232a47;
+    --gold: #ffd700;
+    --red: #e63946;
+}
+
+body {
+    background-color: #1a1f36 !important;
+    color: #fff;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+.admin-header {
+    padding: 16px 32px;
+    background-color: var(--navy);
+    border-bottom: 2px solid var(--gold);
+}
+
+.brand-title {
+    color: var(--gold);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.brand-subtitle {
+    margin-left: 12px;
+    color: #fff;
+    font-size: 16px;
+}
+
+.admin-nav {
+    margin-left: 32px;
+}
+
+.admin-nav .nav-link {
+    padding: 6px 14px;
+    color: #c9ccd6;
+    font-size: 15px;
+}
+
+.admin-nav .nav-link.active {
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.admin-nav .nav-link:hover {
+    color: var(--gold);
+}
+
+.admin-date {
+    color: #c9ccd6;
+    font-size: 14px;
+}
+
+.admin-content {
+    padding: 24px 32px;
+}
+
+.card-dark {
+    background-color: var(--navy-light);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.admin-sidebar {
+    min-height: 100vh;
+    background-color: var(--navy-light);
+}
+
+.admin-table {
+    font-size: 0.9rem;
+}
+
+.admin-table thead {
+    background-color: var(--navy-light);
+    color: #fff;
+}
+
+.admin-table tbody tr:hover {
+    background-color: rgba(13, 110, 253, 0.1);
+}
+
+.badge-status {
+    padding: 0.5rem 0.75rem;
+    border-radius: 50px;
+}
+
+.admin-form-control {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+}
+
+.admin-form-control:focus {
+    border-color: var(--admin-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-admin {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .admin-table {
+        font-size: 0.8rem;
+    }
+}

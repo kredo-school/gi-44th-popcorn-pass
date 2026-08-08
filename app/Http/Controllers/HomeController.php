@@ -30,6 +30,7 @@ class HomeController extends Controller
     public function index()
     {
         $movies = Movie::where('status', 'now_showing')
+            ->orderBy('released_date', 'desc')
             ->get();
         $comingSoonMovies = Movie::where('status', 'coming_soon')
             ->whereDate('released_date', '>=', now())
@@ -65,7 +66,7 @@ class HomeController extends Controller
             ->latest('published_at')
             ->first();
 
-            // chat notification
+        // chat notification
         $unreadMessages = 0;
 
         $conversation = Conversation::where(
@@ -150,27 +151,17 @@ class HomeController extends Controller
 
     public function showtime_display()
     {
-        $selectedDate = request('date', today()->format('Y-m-d'));
+        $selectedDate = request(
+            'date',
+            today()->format('Y-m-d')
+        );
 
         $data = $this->commonData($selectedDate);
 
         $data['selectedDate'] = $selectedDate;
         $data['isSearch'] = false;
 
-        $heroMovie = Movie::where('status', 'coming_soon')
-            ->inRandomOrder()
-            ->first();
-        $topMovie = Movie::withAvg([
-            'reviews as weekly_average' => function ($query) {
-                $query->where('created_at', '>=', Carbon::now()->subWeek());
-            }
-        ], 'rating')
-            ->orderByDesc('weekly_average')
-            ->first();
-
-        return view('layouts.showtime_display', $data)
-            ->with('heroMovie', $heroMovie)
-            ->with('topMovie', $topMovie);
+        return view('showtime-display.index', $data);
     }
 
 
@@ -263,7 +254,9 @@ class HomeController extends Controller
     // Relese display
     public function release(Movie $movie)
     {
-        return view('movies.release')->with('movie', $movie);
+        $movie->load('ageRating');
+
+        return view('movies.release', compact('movie'));
     }
 
     // movie detail

@@ -1,6 +1,13 @@
 @extends('layouts.app')
-@section('title', 'Payent Method')
+@section('title', 'Payment Method')
 @section('content')
+
+@php
+    $selectedPaymentMethod = old(
+    'payment_method',
+    $paymentInfo['payment_method'] ?? 'paypal'
+    );
+@endphp
 
 
     <div class="reservation-page">
@@ -148,37 +155,42 @@
                             <hr class="mb-4">
                         @endauth
         
-        
+                        {{-- Choose payment method --}}
                         <h2 class="payment-title">
                             Choose Payment Method
                         </h2>
+                        
                         <div class="payment-options">
-        
-                            <button type="button"
-                                class="payment-btn {{ ($paymentInfo['payment_method'] ?? '') === 'paypal' ? 'active' : '' }}"
+                            <button type="button" class="payment-btn {{ $selectedPaymentMethod === 'paypal' ? 'active' : '' }}"
                                 data-method="paypal">
-                                Paypal
+                                <i class="fa-brands fa-paypal me-2"></i>
+                                PayPal / Debit or Credit Card
                             </button>
-        
-                            <button type="button"
-                                class="payment-btn {{ ($paymentInfo['payment_method'] ?? '') === 'onsite' ? 'active' : '' }}"
+                        
+                            <button type="button" class="payment-btn {{ $selectedPaymentMethod === 'onsite' ? 'active' : '' }}"
                                 data-method="onsite">
+                                <i class="fa-solid fa-building me-2"></i>
                                 Pay On-Site
                             </button>
                         </div>
-        
-                        {{-- hidden payment method --}}
-                        <input type="hidden" name="payment_method" id="payment_method">
-        
+                        
+                        <input type="hidden" name="payment_method" id="payment_method" value="{{ $selectedPaymentMethod }}">
+                        
                         <div id="payment-form-container" class="mt-4">
-                                
-                            <div id="paypal-form" class="payment-form d-none">
-                                <input type="email" name="paypal_email" class="form-control" placeholder="PayPal Email">
+                            <div id="paypal-form" class="payment-form {{ $selectedPaymentMethod === 'paypal' ? '' : 'd-none' }}">
+                                <div class="alert alert-info mb-0">
+                                    <i class="fa-brands fa-paypal me-2"></i>
+                        
+                                    You can pay securely with PayPal,
+                                    a debit card, or a credit card
+                                    on the confirmation page.
+                                </div>
                             </div>
-    
-                            <div id="onsite-form" class="payment-form d-none">
-                                <div class="alert alert-danger mb-0">
-                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                        
+                            <div id="onsite-form" class="payment-form {{ $selectedPaymentMethod === 'onsite' ? '' : 'd-none' }}">
+                                <div class="alert alert-warning mb-0">
+                                    <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                        
                                     You will pay at the cinema on the day of your visit.
                                 </div>
                             </div>
