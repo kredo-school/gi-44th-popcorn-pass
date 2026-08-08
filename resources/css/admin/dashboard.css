@@ -9,3 +9,33 @@
     color:white;
 }
 
+.kpi-card {
+    padding: 20px;
+    color: #fff;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-card h6 {
+    font-size: 0.875rem;
+    opacity: 0.9;
+}
+
+.kpi-card .kpi-value {
+    margin: 10px 0;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .kpi-card .kpi-value {
+        font-size: 1.5rem;
+    }
+}

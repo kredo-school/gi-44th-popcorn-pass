@@ -8,7 +8,7 @@
         <div class="date-slider-wrapper">
             <div class="w-50 mx-auto">
                 <div class="date-slider" id="dateSlider">
-                    <button class="slider-next" onclick="scrollDateSlider()">
+                    <button type="button" class="slider-next" id="dateSliderNextBtn">
                         ▶
                     </button>
 
@@ -41,8 +41,8 @@
         <ul class="nav nav-tabs justify-content-center mt-5">
             <li class="nav-item">
                 <button class="nav-link movie-tab {{ $isSearch ? '' : 'active' }}" data-bs-toggle="tab"
-                    data-bs-target="#nowPlaying">
-                    Now Playing
+                    data-bs-target="#nowShowing">
+                    Now Showing
                 </button>
             </li>
 
@@ -58,7 +58,7 @@
 
             {{-- showtime schedule --}}
 
-            <div class="tab-pane col-10 mx-auto fade {{ $isSearch ? '' : 'show active' }}" id="nowPlaying">
+            <div class="tab-pane col-10 mx-auto fade {{ $isSearch ? '' : 'show active' }}" id="nowShowing">
 
 
                 @php
@@ -377,15 +377,5 @@
 
 
     </div>
-
-
-    <script>
-        function scrollDateSlider() {
-            document.getElementById('dateSlider').scrollBy({
-                left: 200,
-                behavior: 'smooth'
-            });
-        }
-    </script>
 
 @endsection

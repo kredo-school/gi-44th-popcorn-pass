@@ -1,59 +1,34 @@
-import '../sass/app.scss';
-import '../css/home/home.css';
 import 'bootstrap';
 
-import Swiper from 'swiper/bundle';
-import 'swiper/css/bundle';
+// Common
+import './common/navbar';
+import './common/recommendations';
 
-// reservation pages
+// Home
+import './home/swiper';
+import './home/sliders';
+import './home/nearby-cinemas';
+
+// Reservation pages
 import './reservations/seat-selection';
 import './reservations/ticket-type';
 import './reservations/payment-method';
 import './reservations/showtime-selection';
+import './reservations/paypal-checkout';
+import './reservations/reservation-complete';
 
-// customer chat
-import './customer/chat.js';
+// My Page
+import './mypage/tickets';
+import './mypage/profile-edit';
 
-new Swiper(".heroSwiper", {
-    loop: true,
-    slidesPerView: 1,
-    centeredSlides: false,
+// Customer Chat
+import './customer/chat';
 
-    autoplay: {
-        delay: 4000,
-        disableOnInteraction: false,
-    },
+// Movie Detail
+import './movie-detail/community-discussion';
 
-    pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-    },
+// Map
+import './map/index';
 
-    navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-    },
-});
-
-//navbar
-const menuBtn = document.getElementById("menuBtn");
-const closeBtn = document.getElementById("closeBtn");
-const sidebar = document.getElementById("sidebar");
-const overlay = document.getElementById("overlay");
-
-if (menuBtn) {
-    menuBtn.addEventListener("click", () => {
-        sidebar.classList.add("active");
-        overlay.classList.add("active");
-    });
-
-    closeBtn.addEventListener("click", () => {
-        sidebar.classList.remove("active");
-        overlay.classList.remove("active");
-    });
-
-    overlay.addEventListener("click", () => {
-        sidebar.classList.remove("active");
-        overlay.classList.remove("active");
-    });
-}
+// Showtime Display
+import './showtime-display/index';

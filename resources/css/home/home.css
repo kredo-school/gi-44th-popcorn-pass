@@ -1,6 +1,4 @@
-/* resources/css/home.css */
-
-.home-hero-bg {
+.home-hero {
     background: linear-gradient(
         to bottom,
         #e3ebfa 0%,
@@ -9,15 +7,55 @@
         #2a4a85 100%
     );
     min-height: 100vh;
-}
-.home-hero {
-    background: transparent; 
     padding-top: 80px;
 }
 
+.swiper-position {
+    padding-top: 80px;
+}
+
+.back-to-top {
+    width: 100%;
+    margin: 0;
+    padding: 15px 0;
+    overflow: hidden;
+    background: rgba(80, 80, 90, 0.8);
+    text-align: center;
+}
+
+.back-to-top-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.back-to-top-link span {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-align: center;
+    word-break: break-word;
+}
+
+.back-to-top-link:hover {
+    color: #f5c518;
+    transform: translateY(-2px);
+}
+
+.arrow {
+    margin-bottom: 3px;
+    font-size: 24px;
+    line-height: 1;
+}
 
 
-/* Search */
+/* ===========================
+   Search
+   =========================== */
 .search-wrapper {
     position: fixed;      
     top: 55px;
@@ -75,6 +113,10 @@
     background: #F5C126;
     font-weight: bold;
 }
+
+/* ===========================
+   Hero Swiper
+   =========================== */
 .heroSwiper {
     width: 100%;
     height: 350px;
@@ -102,9 +144,7 @@
 .heroSwiper .row {
     height: 100%;
 }
-.heroSwiper .col-lg-6 {
-    height: 100%;
-}
+
 .hero-image,
 .hero-image-welcome,
 .hero-video {
@@ -157,6 +197,9 @@
     border-color: #ff4040;
 }
 
+/* ===========================
+   Book Btn
+   =========================== */
 .btn-book {
     display: inline-block;
     margin-top: 0.5rem;
@@ -207,7 +250,9 @@
     border-radius: 8px;
 }
 
-/* Welocome slide */
+/* ===========================
+   Welocome slide
+   =========================== */
 .hero-content-welcome {
     position: absolute;
     right: 20px;
@@ -231,13 +276,9 @@
     margin-bottom: 8px;
 }
 
-.hero-content-welcome .btn-book {
-    margin-top: 0;
-    font-size: 0.8rem;
-    padding: 6px 14px;
-}
-
-/* iphone */
+/* ===========================
+   iphone
+   =========================== */
 @media (max-width: 767.98px) {
     .hero-image,
     .hero-image-welcome,
@@ -251,8 +292,6 @@
         font-size: 0.95rem;
     }
 }
-
-
 
 .swiper-bg .swiper-button-prev,
 .swiper-bg .swiper-button-next {
@@ -296,9 +335,6 @@
     right: 15% !important;
 }
 
-
-
-
 .panel-navy-overlay {
     background: rgba(183, 183, 183, 0.3);
 }
@@ -307,6 +343,9 @@
     display: none !important;
 }
 
+/* ===========================
+   Ranking
+   =========================== */
 .rank-number.rank-1 {
     font-size: 20rem;
 }
@@ -316,45 +355,22 @@
     font-size: 12rem;
 }
 
-.poster-area.first {
-    height: 400px;
-}
-
-.poster-area.second,
-.poster-area.third {
-    height: 300px;
-}
-
-.slider-btn {
-    border: 0;
-    background: transparent;
-    color: #fff;
-    flex-shrink: 0;
-    font-size: 2.5rem;
-}
-
-.slider-btn-left {
-    width: 60px;
-    min-width: 60px;
-}
-
-.slider-btn-right {
-    width: 40px;
-}
-
-.now-playing-track-wrap {
+/* ===========================
+   Now Showing
+   =========================== */
+.now-showing-track-wrap {
     flex-grow: 1;
     min-width: 0;
 }
 
-.now-playing-track {
+.now-showing-track {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
 
-.now-playing-slide {
+.now-showing-slide {
     flex-shrink: 0;
     scroll-snap-align: start;
     width: 200px;
@@ -364,10 +380,54 @@
     background: #081729;
 }
 
-.genre-label {
-    font-size: 0.75rem;
+.nowshowing-btn {
+    position: static;
+    z-index: 10;
+    flex: 0 0 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 52px;
+    height: 52px;
+    padding: 0;
+
+    color: #fff;
+    background: rgba(16, 57, 133, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+
+    font-size: 15px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+
+    transition:
+        background 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
+.nowshowing-btn:hover {
+    color: #fff;
+    background: rgba(16, 57, 133, 1);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(101, 111, 255, 0.5);
+}
+
+.nowshowing-btn:focus-visible {
+    outline: 3px solid rgba(245, 193, 38, 0.6);
+    outline-offset: 3px;
+}
+
+.nowshowing-btn i {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* ===========================
+   Coming Soon
+   =========================== */
 .coming-soon-track {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -384,16 +444,13 @@
     overflow: hidden;
 }
 
-.coming-poster {
+.coming-poster-wrap {
     width: 100%;
     height: 360px;
     object-fit: cover;
     display: block;
 }
 
-.coming-info-bg {
-    background: rgba(255, 255, 255, 0.85);
-}
 
 .coming-slider-btn {
     position: absolute;
@@ -413,25 +470,6 @@
     justify-content: center;
 }
 
-/* ===========================
-   Food & Drink
-   =========================== */
-.food-menu-img {
-    display: block;
-    object-fit: cover;
-}
-
-/* ===========================
-   Information / News
-   =========================== */
-.news-card {
-    background: #d9d9d9;
-}
-
-.news-img {
-    object-fit: cover;
-    height: 200px;
-}
 
 /* ===========================
    Location Permission Dialog
@@ -542,7 +580,7 @@
     font-weight: 600;
 }
 /* ===========================
-   Information スライド
+   Information slide
    =========================== */
 .hero-tag-blue {
     color: #1a56db;
@@ -566,21 +604,6 @@
     line-height: 1.3;
 }
 
-.info-card-content {
-    font-size: 0.85rem;
-    color: #445066;
-    line-height: 1.6;
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.btn-book-blue {
-    border-color: #1a56db;
-    color: #1a56db;
-}
 
 @media (max-width: 767.98px) {
     .info-card {
@@ -590,14 +613,12 @@
     .info-card-title {
         font-size: 1rem;
     }
-    .info-card-content {
-        font-size: 0.8rem;
-        -webkit-line-clamp: 3;
-    }
 }
 
 
-/* Contacut */
+/* ===========================
+        Contacut
+   =========================== */
 .contact-icon {
     position: fixed;
     right: 30px;
@@ -620,15 +641,9 @@
     font-size: 28px;
 }
 
-/* Chat notification */
-
-.contact-icon {
-    position: fixed;
-    right: 30px;
-    bottom: 30px;
-}
-
-
+/* ===========================
+   Chat notification
+   =========================== */
 .chat-notification {
 
     position: absolute;

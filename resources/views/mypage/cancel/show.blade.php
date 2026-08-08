@@ -1,4 +1,3 @@
-{{-- resources/views/mypage/cancel/show.blade.php --}}
 @extends('layouts.mypage')
 
 @section('title', 'Cancel or Reschedule')

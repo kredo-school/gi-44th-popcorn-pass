@@ -22,6 +22,8 @@
             @endforeach
         </select>
 
+        <button type="submit" class="btn btn-outline-warning">Search</button>
+
         <div class="ms-auto">
             <a href="{{ route('admin.reservations.export', request()->query()) }}" class="btn btn-outline-warning">Export CSV</a>
         </div>
@@ -55,7 +57,21 @@
                                 <td>{{ $reservation->seat_numbers->implode(', ') ?: '—' }}</td>
                                 <td>${{ number_format($reservation->final_amount, 2) }}</td>
                                 <td>
-                                    <span class="badge bg-secondary">{{ $reservation->payment->payment_status ?? 'unpaid' }}</span>
+                                    @php
+                                        $paymentStatus = $reservation->payment->payment_status ?? 'unpaid';
+                                    
+                                        $paymentBadgeClass = match ($paymentStatus) {
+                                        'paid' => 'bg-success',
+                                        'pending' => 'bg-warning text-dark',
+                                        'failed' => 'bg-danger',
+                                        'refunded' => 'bg-info text-dark',
+                                        default => 'bg-secondary',
+                                        };
+                                    @endphp
+                                
+                                    <span class="badge {{ $paymentBadgeClass }}">
+                                        {{ ucfirst($paymentStatus) }}
+                                    </span>
                                 </td>
                                 <td>
                                     <span class="badge bg-secondary">{{ $reservation->reservation_status }}</span>
@@ -114,6 +130,19 @@
                     <div class="form-control bg-transparent text-white" id="detail-payment">—</div>
                 </div>
 
+                {{-- On-Site Payment Action --}}
+                <div id="detail-payment-action" class="mb-3 d-none" data-mark-paid-url-template="{{ route(
+                        'admin.payments.mark-paid',
+                        ['payment' => '__PAYMENT_ID__']
+                    ) }}" data-csrf-token="{{ csrf_token() }}">
+                
+                    <button type="button" id="mark-payment-paid-btn" class="btn btn-success w-100">
+                
+                        <i class="fa-solid fa-check me-1"></i>
+                        Mark as Paid
+                    </button>
+                </div>
+
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Reservation Status</label>
                     <div class="form-control bg-transparent text-white" id="detail-status">—</div>
@@ -129,25 +158,3 @@
 
 @endsection
 
-@section('scripts')
-<script>
-document.querySelectorAll('.reservation-row').forEach(function (row) {
-    row.addEventListener('click', function () {
-        const reservationId = this.dataset.reservationId;
-        fetch(`/admin/reservations/${reservationId}/details`)
-            .then(response => response.json())
-            .then(data => {
-                document.querySelector('#detail-booking-id').textContent = data.reservation_reference || '—';
-                document.querySelector('#detail-customer').textContent = `${data.customer_name} (${data.customer_email})`;
-                document.querySelector('#detail-movie-cinema').textContent = `${data.movie_title} / ${data.cinema_name} / Screen ${data.screen_number}`;
-                document.querySelector('#detail-showtime').textContent = data.showtime || '—';
-                document.querySelector('#detail-seats').textContent = (data.seats && data.seats.length) ? data.seats.join(', ') : '—';
-                document.querySelector('#detail-amount').textContent = `$${data.subtotal} / -$${data.discount_amount} / $${data.final_amount}`;
-                document.querySelector('#detail-payment').textContent = `${data.payment_status} (${data.payment_method}) - ${data.transaction_id}`;
-                document.querySelector('#detail-status').textContent = data.reservation_status;
-                document.querySelector('#detail-qr').textContent = data.qr_code || '—';
-            });
-    });
-});
-</script>
-@endsection

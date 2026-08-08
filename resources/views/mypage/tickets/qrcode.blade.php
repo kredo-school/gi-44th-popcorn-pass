@@ -1,4 +1,3 @@
-{{-- resources/views/mypage/tickets/qrcode.blade.php --}}
 @extends('layouts.mypage')
 
 @section('title', 'Your Movie Ticket')
@@ -33,7 +32,7 @@
                 </div>
             @endif
             <div class="d-flex justify-content-between py-1">
-                <span class="text-muted">Reference</span>
+                <span class="text-muted">Booking ID:</span>
                 <span>{{ $reservation->reservation_reference ?? $reservation->id }}</span>
             </div>
         </div>

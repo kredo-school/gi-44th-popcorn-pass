@@ -65,7 +65,7 @@
         </div>
 
         <div class="col-lg-6 text-center">
-            <a href="{{ route('home') }}#Nowplaying" class="sidebar-search-item">
+            <a href="{{ route('home') }}#Nowshowing" class="sidebar-search-item">
                 <i class="fa-solid fa-film"></i><br>
                 Movie
             </a>
