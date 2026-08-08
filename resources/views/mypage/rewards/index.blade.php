@@ -1,4 +1,3 @@
-{{-- resources/views/mypage/rewards/index.blade.php --}}
 @extends('layouts.mypage')
 
 @section('title', 'Rewards Dashboard')

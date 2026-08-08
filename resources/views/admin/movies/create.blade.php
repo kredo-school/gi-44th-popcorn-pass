@@ -339,7 +339,3 @@
     </form>
 
 @endsection
-
-@section('scripts')
-    <script src="{{ asset('js/admin/movie.js') }}"></script>
-@endsection

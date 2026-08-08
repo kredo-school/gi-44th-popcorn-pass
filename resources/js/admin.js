@@ -1,13 +1,29 @@
-//
-import 'bootstrap'
+import 'bootstrap';
 
+// Information
+import './admin/information';
 
-//admin
-import './admin/dashboard.js';
-import './admin/information.js';
-import './admin/movie.js';
-import './admin/movie-create.js';
-import './admin/movie-edit.js';
-import './admin/chart.js';
+// Movies
+import './admin/movies/movie-index';
+import './admin/movies/movie-form';
+import './admin/movies/movie-edit';
+import './admin/movies/movie-showtimes';
+import './admin/movies/movie-create';
 
-import './admin/reservations.js';
+// Chart for Dashboard
+import './admin/chart';
+
+// Reservations
+import './admin/reservations';
+
+// Users
+import './admin/user-index';
+
+// Admin Chat
+import './admin/chat';
+
+// Analytics
+import './admin/analytics';
+
+// Dynamic Pricing
+import './admin/dynamic-pricing-edit';

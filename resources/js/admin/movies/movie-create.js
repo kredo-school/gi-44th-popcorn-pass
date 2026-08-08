@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusBadge =
         document.querySelector('#movie-status-badge');
 
+    // Only run on the movie Create page.
+    if (!releaseDate || !endDate || !statusBadge) {
+        return;
+    }
+
 
     function updateMovieStatus() {
 

@@ -8,7 +8,7 @@
         <div class="date-slider-wrapper">
             <div class="w-50 mx-auto">
                 <div class="date-slider" id="dateSlider">
-                    <button class="slider-next" onclick="scrollDateSlider()">
+                    <button type="button" class="slider-next" id="dateSliderNextBtn">
                         ▶
                     </button>
 
@@ -377,15 +377,5 @@
 
 
     </div>
-
-
-    <script>
-        function scrollDateSlider() {
-            document.getElementById('dateSlider').scrollBy({
-                left: 200,
-                behavior: 'smooth'
-            });
-        }
-    </script>
 
 @endsection
