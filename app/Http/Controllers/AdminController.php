@@ -1047,46 +1047,397 @@ public function dashboard(Request $request)
     // --------------------
     // Analytics
     // --------------------
-    public function analytics()
-    {
-        $dailyRevenue = Payment::where('payment_status', 'paid')
-            ->whereDate('paid_at', today())
-            ->sum('amount');
+public function analytics(Request $request)
+{
+    /*
+    |--------------------------------------------------------------------------
+    | Filters
+    |--------------------------------------------------------------------------
+    */
 
-        $weeklyRevenue = Payment::where('payment_status', 'paid')
-            ->whereBetween('paid_at', [now()->startOfWeek(), now()->endOfWeek()])
-            ->sum('amount');
+    $currentYear = now()->year;
 
-        $monthlyRevenue = Payment::where('payment_status', 'paid')
-            ->whereMonth('paid_at', now()->month)
-            ->whereYear('paid_at', now()->year)
-            ->sum('amount');
+    $requestedYear = $request->query('year');
 
-        $avgTicketPrice = Payment::where('payment_status', 'paid')->avg('amount') ?? 0;
+    $selectedYear = filter_var(
+        $requestedYear,
+        FILTER_VALIDATE_INT,
+        [
+            'options' => [
+                'min_range' => 2000,
+                'max_range' => $currentYear,
+            ],
+        ]
+    );
 
-        $dailyRevenueChart = Payment::where('payment_status', 'paid')
-            ->selectRaw('DATE(paid_at) as date, SUM(amount) as total')
-            ->groupBy('date')
-            ->orderBy('date')
-            ->limit(7)
-            ->get();
-
-        $topMovies = Reservation::selectRaw('movie_id, SUM(final_amount) as total_revenue, COUNT(*) as ticket_count')
-            ->groupBy('movie_id')
-            ->orderByDesc('total_revenue')
-            ->limit(5)
-            ->with('movie')
-            ->get();
-
-        return view('admin.analytics.index', compact(
-            'dailyRevenue',
-            'weeklyRevenue',
-            'monthlyRevenue',
-            'avgTicketPrice',
-            'dailyRevenueChart',
-            'topMovies'
-        ));
+    if ($selectedYear === false) {
+        $selectedYear = $currentYear;
     }
+
+    $availableYears = range($currentYear, 2020);
+
+    $requestedCinemaId = $request->query('cinema_id');
+
+    $selectedCinema = null;
+
+    if ($requestedCinemaId) {
+        $selectedCinema = Cinema::query()
+            ->find($requestedCinemaId);
+    }
+
+    $cinemaId = $selectedCinema?->id;
+
+    $cinemas = Cinema::query()
+        ->orderBy('cinema_name')
+        ->get([
+            'id',
+            'cinema_name',
+        ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Base Paid Payments Query
+    |--------------------------------------------------------------------------
+    */
+
+    $paidPaymentsQuery = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereYear('paid_at', $selectedYear);
+
+    if ($cinemaId) {
+        $paidPaymentsQuery->whereHas(
+            'reservation',
+            function ($query) use ($cinemaId) {
+                $query->where('cinema_id', $cinemaId);
+            }
+        );
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | KPI - Total Revenue
+    |--------------------------------------------------------------------------
+    */
+
+    $totalRevenue = (float) (clone $paidPaymentsQuery)
+        ->sum('amount');
+
+    /*
+    |--------------------------------------------------------------------------
+    | KPI - Paid Reservations
+    |--------------------------------------------------------------------------
+    */
+
+    $totalReservations = (clone $paidPaymentsQuery)
+        ->distinct()
+        ->count('reservation_id');
+
+    /*
+    |--------------------------------------------------------------------------
+    | KPI - Customers
+    |--------------------------------------------------------------------------
+    |
+    | Registered customers only.
+    | Guest reservations are not included in this unique user count.
+    |
+    */
+
+    $customersQuery = Payment::query()
+        ->join(
+            'reservations',
+            'payments.reservation_id',
+            '=',
+            'reservations.id'
+        )
+        ->where(
+            'payments.payment_status',
+            'paid'
+        )
+        ->whereYear(
+            'payments.paid_at',
+            $selectedYear
+        )
+        ->whereNotNull(
+            'reservations.user_id'
+        );
+
+    if ($cinemaId) {
+        $customersQuery->where(
+            'reservations.cinema_id',
+            $cinemaId
+        );
+    }
+
+    $totalCustomers = $customersQuery
+        ->distinct()
+        ->count('reservations.user_id');
+
+    /*
+    |--------------------------------------------------------------------------
+    | KPI - Average Revenue Per Reservation
+    |--------------------------------------------------------------------------
+    */
+
+    $avgRevenuePerReservation = $totalReservations > 0
+        ? $totalRevenue / $totalReservations
+        : 0;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Monthly Revenue Trend
+    |--------------------------------------------------------------------------
+    */
+
+    $monthlyRevenueQuery = Payment::query()
+        ->selectRaw(
+            'MONTH(paid_at) as month, SUM(amount) as total'
+        )
+        ->where(
+            'payment_status',
+            'paid'
+        )
+        ->whereYear(
+            'paid_at',
+            $selectedYear
+        );
+
+    if ($cinemaId) {
+        $monthlyRevenueQuery->whereHas(
+            'reservation',
+            function ($query) use ($cinemaId) {
+                $query->where('cinema_id', $cinemaId);
+            }
+        );
+    }
+
+    $monthlyRevenueRows = $monthlyRevenueQuery
+        ->groupByRaw(
+            'MONTH(paid_at)'
+        )
+        ->orderByRaw(
+            'MONTH(paid_at)'
+        )
+        ->get();
+
+    $monthlyRevenueData = array_fill(
+        0,
+        12,
+        0
+    );
+
+    foreach ($monthlyRevenueRows as $row) {
+        $monthIndex = (int) $row->month - 1;
+
+        if ($monthIndex >= 0 && $monthIndex < 12) {
+            $monthlyRevenueData[$monthIndex] =
+                (float) $row->total;
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Monthly Reservation Trend
+    |--------------------------------------------------------------------------
+    |
+    | Only reservations with completed paid payments are counted so that
+    | reservation and revenue analytics use the same business definition.
+    |
+    */
+
+    $monthlyReservationsQuery = Payment::query()
+        ->selectRaw(
+            'MONTH(payments.paid_at) as month,
+             COUNT(DISTINCT payments.reservation_id) as total'
+        )
+        ->join(
+            'reservations',
+            'payments.reservation_id',
+            '=',
+            'reservations.id'
+        )
+        ->where(
+            'payments.payment_status',
+            'paid'
+        )
+        ->whereYear(
+            'payments.paid_at',
+            $selectedYear
+        );
+
+    if ($cinemaId) {
+        $monthlyReservationsQuery->where(
+            'reservations.cinema_id',
+            $cinemaId
+        );
+    }
+
+    $monthlyReservationRows = $monthlyReservationsQuery
+        ->groupByRaw(
+            'MONTH(payments.paid_at)'
+        )
+        ->orderByRaw(
+            'MONTH(payments.paid_at)'
+        )
+        ->get();
+
+    $monthlyReservationData = array_fill(
+        0,
+        12,
+        0
+    );
+
+    foreach ($monthlyReservationRows as $row) {
+        $monthIndex = (int) $row->month - 1;
+
+        if ($monthIndex >= 0 && $monthIndex < 12) {
+            $monthlyReservationData[$monthIndex] =
+                (int) $row->total;
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Top Performing Movies
+    |--------------------------------------------------------------------------
+    |
+    | Revenue source is now Payment.amount, matching all other revenue
+    | analytics and the Admin Dashboard.
+    |
+    */
+
+    $topMoviesQuery = Payment::query()
+        ->join(
+            'reservations',
+            'payments.reservation_id',
+            '=',
+            'reservations.id'
+        )
+        ->join(
+            'movies',
+            'reservations.movie_id',
+            '=',
+            'movies.id'
+        )
+        ->where(
+            'payments.payment_status',
+            'paid'
+        )
+        ->whereYear(
+            'payments.paid_at',
+            $selectedYear
+        );
+
+    if ($cinemaId) {
+        $topMoviesQuery->where(
+            'reservations.cinema_id',
+            $cinemaId
+        );
+    }
+
+    $topMovies = $topMoviesQuery
+        ->select(
+            'movies.id',
+            'movies.title',
+            DB::raw(
+                'SUM(payments.amount) as total_revenue'
+            ),
+            DB::raw(
+                'COUNT(DISTINCT reservations.id) as reservation_count'
+            )
+        )
+        ->groupBy(
+            'movies.id',
+            'movies.title'
+        )
+        ->orderByDesc(
+            'total_revenue'
+        )
+        ->limit(5)
+        ->get();
+
+    /*
+    |--------------------------------------------------------------------------
+    | Cinema Performance
+    |--------------------------------------------------------------------------
+    |
+    | This comparison is only required when the administrator is viewing
+    | all cinemas.
+    |
+    */
+
+    $cinemaPerformance = collect();
+
+    if (!$cinemaId) {
+        $cinemaPerformance = Payment::query()
+            ->join(
+                'reservations',
+                'payments.reservation_id',
+                '=',
+                'reservations.id'
+            )
+            ->join(
+                'cinemas',
+                'reservations.cinema_id',
+                '=',
+                'cinemas.id'
+            )
+            ->where(
+                'payments.payment_status',
+                'paid'
+            )
+            ->whereYear(
+                'payments.paid_at',
+                $selectedYear
+            )
+            ->select(
+                'cinemas.id',
+                'cinemas.cinema_name',
+                DB::raw(
+                    'SUM(payments.amount) as total_revenue'
+                ),
+                DB::raw(
+                    'COUNT(DISTINCT reservations.id) as reservation_count'
+                ),
+                DB::raw(
+                    'COUNT(DISTINCT reservations.user_id) as customer_count'
+                )
+            )
+            ->groupBy(
+                'cinemas.id',
+                'cinemas.cinema_name'
+            )
+            ->orderByDesc(
+                'total_revenue'
+            )
+            ->get();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | View
+    |--------------------------------------------------------------------------
+    */
+
+    return view(
+        'admin.analytics.index',
+        compact(
+            'currentYear',
+            'selectedYear',
+            'availableYears',
+            'cinemas',
+            'cinemaId',
+            'selectedCinema',
+            'totalRevenue',
+            'totalReservations',
+            'totalCustomers',
+            'avgRevenuePerReservation',
+            'monthlyRevenueData',
+            'monthlyReservationData',
+            'topMovies',
+            'cinemaPerformance'
+        )
+    );
+}
 
 
     // --------------------
