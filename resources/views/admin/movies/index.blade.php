@@ -10,14 +10,44 @@
     @endif
 
     <div class="d-flex gap-2 mb-3">
-        <input type="text" class="form-control" placeholder="Search movies..." style="max-width: 250px;">
-        <select class="form-select" style="max-width: 150px;">
-            <option>Genre: All</option>
-        </select>
-        <select class="form-select" style="max-width: 150px;">
-            <option>Status: All</option>
-        </select>
-        <button type="submit" class="btn btn-outline-warning">Search</button>
+        <form method="GET" action="{{ route('admin.movies') }}" class="d-flex gap-2">
+
+            {{-- Movie Search --}}
+            <input type="text" name="search" class="form-control" placeholder="Search movies..."
+                value="{{ request('search') }}" style="max-width: 250px;">
+
+            {{-- Genre --}}
+            <select name="genre_id" class="form-select" style="max-width: 150px;">
+                <option value="all">
+                    Genre: All
+                </option>
+
+                @foreach ($genres as $genre)
+                    <option value="{{ $genre->id }}" {{ request('genre_id') == $genre->id ? 'selected' : '' }}>
+                        {{ $genre->title }}
+                    </option>
+                @endforeach
+            </select>
+
+            {{-- Status --}}
+            <select name="status" class="form-select" style="max-width: 150px;">
+                <option value="all">
+                    Status: All
+                </option>
+
+                @foreach ($statusOptions as $status)
+                    <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>
+                        {{ ucfirst(str_replace('_', ' ', $status)) }}
+                    </option>
+                @endforeach
+            </select>
+
+            {{-- Search --}}
+            <button type="submit" class="btn btn-outline-warning">
+                Search
+            </button>
+
+        </form>
         <div class="ms-auto d-flex gap-2">
             <a href="{{ route('admin.movies.create') }}" class="btn btn-outline-warning">+ Add Movie</a>
             <a href="#" id="edit-movie-btn" class="btn btn-outline-light disabled">Edit Movie</a>
@@ -52,7 +82,18 @@
                                 <td>{{ $movie->duration }} min</td>
                                 <td class="text-warning">{{ $movie->review_average ?? '—' }}</td>
                                 <td>
-                                    <span class="badge bg-secondary">{{ $movie->status }}</span>
+                                    @php
+                                        $statusClass = match ($movie->status) {
+                                            'now_showing' => 'bg-success',
+                                            'coming_soon' => 'bg-warning text-dark',
+                                            'archived' => 'bg-secondary',
+                                            default => 'bg-dark',
+                                        };
+                                    @endphp
+
+                                    <span class="badge {{ $statusClass }}">
+                                        {{ ucfirst(str_replace('_', ' ', $movie->status)) }}
+                                    </span>
                                 </td>
                                 <td>{{ $movie->released_date ? $movie->released_date->format('Y-m-d') : '—' }}</td>
                                 <td>{{ $movie->end_date ? $movie->end_date->format('Y-m-d') : '—' }}</td>
@@ -123,4 +164,3 @@
 @section('scripts')
     @vite('resources/js/admin/dashboard.js')
 @endsection
-

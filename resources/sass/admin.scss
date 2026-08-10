@@ -20,6 +20,8 @@
 //movie
 @import '../css/admin/movie-edit.css';
 @import '../css/admin/movie.css';
+//users
+@import '../css/admin/users.css';
 
 
 
@@ -41,6 +43,7 @@ body {
     background-color: var(--navy);
     border-bottom: 2px solid var(--gold);
     padding: 16px 32px;
+    height: 140px;
 }
 
 .brand-title {
@@ -48,6 +51,7 @@ body {
     font-weight: 700;
     font-size: 22px;
     letter-spacing: 1px;
+    
 }
 
 .brand-subtitle {
@@ -57,13 +61,19 @@ body {
 }
 
 .admin-nav {
-    margin-left: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-left: 0;
 }
 
 .admin-nav .nav-link {
     color: #c9ccd6;
     font-size: 15px;
     padding: 6px 14px;
+    text-align: center;
+    text-decoration: none;
 }
 
 .admin-nav .nav-link.active {
@@ -75,10 +85,14 @@ body {
     color: var(--gold);
 }
 
+
 .admin-date {
     color: #c9ccd6;
     font-size: 14px;
+    text-align: center;
+    display: block;
 }
+
 
 .admin-content {
     padding: 24px 32px;

@@ -6,6 +6,8 @@ namespace App\Http\Controllers\MyPage;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
+use App\Models\Conversation;
+use App\Models\Message;
 
 class DashboardController extends Controller
 {
@@ -70,6 +72,31 @@ class DashboardController extends Controller
             ->whereNull('used_at')
             ->count();
 
+        // chat notification
+        $unreadMessages = 0;
+
+        $conversation = Conversation::where(
+            'user_id',
+            auth()->id()
+        )->first();
+
+
+        if ($conversation) {
+            $unreadMessages = Message::where(
+                'conversation_id',
+                $conversation->id
+            )
+                ->where(
+                    'sender_type',
+                    'staff'
+                )
+                ->where(
+                    'is_read',
+                    false
+                )
+                ->count();
+        }    
+
         return view('mypage.dashboard', [
             'user' => $user,
             'upcomingTickets' => $upcomingTickets,
@@ -80,6 +107,7 @@ class DashboardController extends Controller
             'reviewsWrittenCount' => $reviewsWrittenCount,
             'coupons' => $coupons,
             'couponsCount' => $couponsCount,
+            'unreadMessages'  => $unreadMessages
         ]);
     }
 }

@@ -14,7 +14,7 @@
 
             <!-- Logo -->
             <a class="navbar-brand m-0 p-0" href="{{ url('/') }}">
-                <img src="{{ asset('images/layouts/logo.png') }}" alt="Logo" width="70" height="70">
+                <img src="{{ asset('images/layouts/logo.png') }}" alt="Logo" width="100" height="100">
             </a>
 
             <!-- right button -->
@@ -23,12 +23,12 @@
                 @auth
 
                     <!-- My Page -->
-                    <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-text">
+                    <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-btn">
                         <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
                         My Page
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-color mypage-text">
+                    <a href="{{ route('login') }}" class="btn btn-color mypage-btn">
                         <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
                         Log in
                     </a>

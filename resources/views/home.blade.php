@@ -113,8 +113,13 @@
 
                                             <div
                                                 class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                                <iframe class="hero-video" src="{{ $heroMovie->trailer_url }}"
-                                                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+                                                @if ($heroMovie && $heroMovie->trailer_embed_url)
+                                                    <iframe class="hero-video" src="{{ $heroMovie->trailer_embed_url }}"
+                                                        allow="autoplay; encrypted-media" allowfullscreen>
+                                                    </iframe>
+                                                @endif
+
                                             </div>
 
                                         </div>
@@ -139,9 +144,13 @@
                                         </div>
                                         <div
                                             class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                            <iframe class="hero-video" src="{{ $topMovie->trailer_url }}"
-                                                allow="autoplay; encrypted-media" allowfullscreen>
-                                            </iframe>
+
+                                            @if ($heroMovie && $heroMovie->trailer_embed_url)
+                                                <iframe class="hero-video" src="{{ $heroMovie->trailer_embed_url }}"
+                                                    allow="autoplay; encrypted-media" allowfullscreen>
+                                                </iframe>
+                                            @endif
+
                                         </div>
                                     </div>
                                 </div>
@@ -520,6 +529,7 @@
                                 <div class="panel-navy-overlay">
 
                                     <div class="position-relative px-3 pt-3">
+
                                         <div class="d-flex gap-4 pb-2 mt-5 ms-4 me-5 coming-soon-track"
                                             id="comingSoonSlider">
 
@@ -556,7 +566,13 @@
 
                                         </div>
 
-                                        <button id="comingSoonNextBtn" type="button" class="coming-slider-btn ">
+                                        <!-- Prev button -->
+                                        <button id="comingSoonPrevBtn" type="button" class="comingsoon-btn">
+                                            <i class="fa-solid fa-chevron-left"></i>
+                                        </button>
+
+                                        <!-- Next button -->
+                                        <button id="comingSoonNextBtn" type="button" class="comingsoon-btn">
                                             <i class="fa-solid fa-chevron-right"></i>
                                         </button>
                                     </div>

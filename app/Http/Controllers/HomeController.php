@@ -41,6 +41,9 @@ class HomeController extends Controller
             ->get();
         $topMovies = Movie::withAvg('reviews', 'rating')
             ->where('status', 'now_showing')
+            ->whereHas('showtimes', function ($query) {
+                $query->where('is_active', true);
+            })
             ->orderByDesc('review_average')
             ->take(10)
             ->get();

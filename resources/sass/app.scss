@@ -61,7 +61,41 @@ main {
     margin-top: 0;
 }
 
-// nav
+/* Navbar */
+.navbar{
+    min-height:120px;
+    padding-top:35px;
+    padding-bottom:35px;
+}
+
+
+/* PC */
+.navbar-nav{
+    gap:80px;
+}
+
+
+/* Mobile */
+@media (max-width: 991px){
+
+    .navbar{
+        min-height:70px;
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+
+    .navbar-nav{
+        gap:15px;
+        margin-top:10px;
+    }
+
+    .nav-font{
+        font-size:14px;
+        letter-spacing:1px;
+    }
+}
+
+
 .nav-font{
     font-family: Georgia, serif;
     font-size: large;
@@ -103,9 +137,6 @@ main {
 .nav-font:hover::after{
     width:100%;
 }
-.navbar-nav{
-    gap:80px;
-}
 
 .btn-color {
     background-color: #F5C126 !important;
@@ -117,6 +148,9 @@ main {
     border-color: red !important;
     color: black !important;
 }
+
+
+
 // home
 
 
@@ -176,13 +210,15 @@ body{
 }
 
 // base
-.mypage-text{
+.mypage-btn{
     font-family: 'Anton', sans-serif;
     font-size: 20px;
     font-weight: 900;
     color: #000;
 
     -webkit-text-stroke: 0.5px #fff;
+
+    margin-right: 20px;
 }
 .yellow-color{
     color:#F5C126;

@@ -19,6 +19,7 @@
     bindSlider('nowShowingPrevBtn', 'nowShowingSlider', -280);
     bindSlider('nowShowingNextBtn', 'nowShowingSlider', 280);
     bindSlider('comingSoonNextBtn', 'comingSoonSlider', 280);
+    bindSlider('comingSoonPretBtn', 'comingSoonSlider', -280);
 
     // ===========================
     // Location permission + nearby cinemas

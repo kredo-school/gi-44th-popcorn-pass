@@ -139,15 +139,58 @@ class AdminController extends Controller
     // --------------------
     // Movies
     // --------------------
-    public function movies()
+    public function movies(Request $request)
     {
         Movie::syncStatuses();
 
-        $movies = Movie::with(['genres', 'ageRating'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        $query = Movie::with(['genres', 'ageRating']);
 
-        return view('admin.movies.index', compact('movies'));
+        // Movie search
+        if ($request->filled('search')) {
+            $search = $request->search;
+
+            $query->where('title', 'like', '%' . $search . '%');
+        }
+
+        // Genre filter
+        if ($request->filled('genre_id') && $request->genre_id !== 'all') {
+            $query->whereHas('genres', function ($q) use ($request) {
+                $q->where('genres.id', $request->genre_id);
+            });
+        }
+
+        // Status filter
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        $movies = $query
+            ->orderByRaw("
+        CASE status
+            WHEN 'now_showing' THEN 1
+            WHEN 'coming_soon' THEN 2
+            WHEN 'archived' THEN 3
+            ELSE 4
+        END
+    ")
+            ->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
+
+        // Genre
+        $genres = Genre::orderBy('title')->get();
+
+        // Status
+        $statusOptions = Movie::query()
+            ->whereNotNull('status')
+            ->distinct()
+            ->pluck('status');
+
+        return view('admin.movies.index', compact(
+            'movies',
+            'genres',
+            'statusOptions'
+        ));
     }
 
     public function movieDetails($id)
@@ -189,8 +232,8 @@ class AdminController extends Controller
             'cast' => 'nullable|array|max:6',
             'cast.*' => 'nullable|string|max:100',
             'search_keywords' => 'nullable|string',
-            'trailer_url' => 'nullable|url',
-            'poster_url' => 'nullable|url',
+            'trailer_url' => 'required|url',
+            'poster_url' => 'required|url',
             'banner_image_url' => 'nullable|url',
             'budget' => 'nullable|numeric',
             'box_office' => 'nullable|numeric',
@@ -938,10 +981,10 @@ class AdminController extends Controller
     private function userRoleOptions(): array
     {
         return [
-            1 => 'Customer',
             2 => 'Admin',
             3 => 'Manager',
             4 => 'Support',
+            1 => 'Customer',
         ];
     }
 
@@ -951,6 +994,7 @@ class AdminController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->get('search');
+
             $query->where(function ($q) use ($search) {
                 $q->where('username', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
@@ -962,16 +1006,32 @@ class AdminController extends Controller
         }
 
         if ($request->filled('status') && $request->get('status') !== 'all') {
-            $query->where('is_active', $request->get('status') === 'active' ? 1 : 0);
+            $query->where(
+                'is_active',
+                $request->get('status') === 'active' ? 1 : 0
+            );
         }
 
-        $users = $query->orderBy('created_at', 'desc')
+        $users = $query
+            ->orderByRaw("
+            CASE role
+                WHEN 2 THEN 1
+                WHEN 3 THEN 2
+                WHEN 4 THEN 3
+                WHEN 1 THEN 4
+                ELSE 5
+            END
+        ")
+            ->orderBy('created_at', 'desc')
             ->paginate(15)
             ->withQueryString();
 
         $roleOptions = $this->userRoleOptions();
 
-        return view('admin.users.index', compact('users', 'roleOptions'));
+        return view('admin.users.index', compact(
+            'users',
+            'roleOptions'
+        ));
     }
 
     public function userDetails($id)
@@ -1216,27 +1276,43 @@ class AdminController extends Controller
     // --------------------
     public function information(Request $request)
     {
-        $query = Information::with('category')->latest();
+        $query = Information::with('category');
 
         if ($request->filled('search')) {
             $query->where('title', 'like', "%{$request->search}%");
         }
 
         $status = $request->get('status', 'all');
+
         if ($status !== 'all') {
             $query->where('status', $status);
         }
 
         $category = $request->get('category', 'all');
+
         if ($category !== 'all') {
             $query->where('category_id', $category);
         }
 
         $categories = \App\Models\InformationCategory::orderBy('name')->get();
 
-        $information = $query->paginate(20)->withQueryString();
+        $information = $query
+            ->orderByRaw("
+            CASE status
+                WHEN 'Draft' THEN 1
+                WHEN 'Published' THEN 2
+                WHEN 'Archive' THEN 3
+                ELSE 4
+            END
+        ")
+            ->orderBy('created_at', 'desc')
+            ->paginate(20)
+            ->withQueryString();
 
-        return view('admin.information.index', compact('information', 'categories'));
+        return view('admin.information.index', compact(
+            'information',
+            'categories'
+        ));
     }
 
     public function createInformation()
@@ -1412,15 +1488,15 @@ class AdminController extends Controller
         ")
             ->latest('updated_at')
             ->paginate(10);
-        
-            $chatNotificationCount = Conversation::whereIn('status', [
-                'waiting',
-                'staff'
-            ])->count();
+
+        $chatNotificationCount = Conversation::whereIn('status', [
+            'waiting',
+            'staff'
+        ])->count();
 
         return view(
             'admin.chat.index',
-            compact('conversations','chatNotificationCount')
+            compact('conversations', 'chatNotificationCount')
         );
     }
 

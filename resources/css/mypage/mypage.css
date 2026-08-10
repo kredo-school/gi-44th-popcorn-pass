@@ -395,3 +395,29 @@
     object-fit: cover;
     border-radius: 6px;
 }
+
+/* chatbox icon */
+.contact-icon-profile {
+    position: fixed;
+    right: 30px;
+    bottom: 30px;
+}
+
+
+.contact-icon-profile a {
+    width: 60px;
+    height: 60px;
+    background-color: #fff;
+    color: #222;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    border: 1px solid #222;
+}
+
+
+.contact-icon-profile i {
+    font-size: 28px;
+}
