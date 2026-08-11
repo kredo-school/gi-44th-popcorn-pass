@@ -150,7 +150,7 @@
                 <div class="text-warning fw-bold mb-2">Quick Actions</div>
                 <div class="d-flex gap-2 flex-wrap">
                     <a href="{{ route('admin.movies.create') }}" class="btn btn-outline-warning btn-sm">+ Add Movie</a>
-                    <a href="#" class="btn btn-outline-light btn-sm">View Reservations</a>
+                    <a href="{{ route('admin.reservations') }}" class="btn btn-outline-light btn-sm">View Reservations</a>
                 </div>
             </div>
             <div class="card card-dark p-3">

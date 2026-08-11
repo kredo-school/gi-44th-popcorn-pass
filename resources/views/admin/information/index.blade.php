@@ -32,6 +32,11 @@
         </select>
     
         <button type="submit" class="btn btn-outline-warning">Search</button>
+        @if (request()->filled('search') || request('category', 'all') !== 'all' || request('status', 'all') !== 'all')
+            <a href="{{ route('admin.information') }}" class="btn btn-outline-light">
+                Reset
+            </a>
+        @endif
     
         <div class="ms-auto d-flex gap-2">
             <a href="{{ route('admin.information.create') }}" class="btn btn-outline-warning">

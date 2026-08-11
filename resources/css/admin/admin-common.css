@@ -64,12 +64,12 @@ body {
     padding: 24px 32px;
 }
 
-.card-dark {
-    background-color: var(--navy-light);
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-}
+ .card.card-dark {
+     background-color: var(--navy-light) !important;
+     color: #fff !important;
+     border: none;
+     border-radius: 8px;
+ }
 
 .admin-sidebar {
     min-height: 100vh;
