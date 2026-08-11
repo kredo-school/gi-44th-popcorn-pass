@@ -1,25 +1,25 @@
-@import "bootstrap";
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
 
-// Admin custom variables
-:root {
-    --admin-primary: #0d6efd;
-    --admin-secondary: #6c757d;
-    --admin-danger: #dc3545;
-    --admin-success: #198754;
-    --admin-warning: #ffc107;
-    --admin-info: #0dcaf0;
-}
 
-// Admin information
-@import "../css/admin/information.css";
+// Admin common
+@import '../css/admin/admin-common.css';
 
-// Admin reviews
-@import "../css/admin/reviews.css";
-//dashboard
+// Dashboard
 @import '../css/admin/dashboard.css';
-//movie
-@import '../css/admin/movie-edit.css';
+
+// Information
+@import '../css/admin/information.css';
+
+// Reviews
+@import '../css/admin/reviews.css';
+
+// Movies
 @import '../css/admin/movie.css';
+@import '../css/admin/movie-edit.css';
+
+// Chat
+@import '../css/admin/chat.css';
 //users
 @import '../css/admin/users.css';
 
@@ -190,3 +190,4 @@ body {
         font-size: 0.8rem;
     }
 }
+

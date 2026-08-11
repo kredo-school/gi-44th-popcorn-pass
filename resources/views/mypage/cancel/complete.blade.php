@@ -1,4 +1,3 @@
-{{-- resources/views/mypage/cancel/complete.blade.php --}}
 @extends('layouts.mypage')
 
 @section('title', 'Booking Cancelled')

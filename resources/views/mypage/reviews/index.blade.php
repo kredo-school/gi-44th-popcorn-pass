@@ -1,4 +1,3 @@
-{{-- resources/views/mypage/reviews/index.blade.php --}}
 @extends('layouts.mypage')
 
 @section('title', 'Reviews Written')

@@ -140,6 +140,7 @@
 
 @endsection
 
+
 @section('scripts')
     <script>
         const updateForm = document.querySelector('#user-update-form');

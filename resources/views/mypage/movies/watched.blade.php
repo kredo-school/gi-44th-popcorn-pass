@@ -1,4 +1,3 @@
-{{-- resources/views/mypage/movies/watched.blade.php --}}
 @extends('layouts.mypage')
 
 @section('title', 'Movies Watched')

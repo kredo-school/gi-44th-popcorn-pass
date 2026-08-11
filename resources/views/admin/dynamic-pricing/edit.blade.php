@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Edit Dynamic Pricing')
 
 @section('content')
-<div class="container-fluid mt-5">
+<div id="dynamicPricingEditor" class="container-fluid mt-5" data-occupancy="{{ $occupancyRate }}">
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-md-12">
@@ -53,17 +53,8 @@
                             <label for="base_price" class="form-label fw-bold">Base Price (¥)</label>
                             <div class="input-group input-group-lg">
                                 <span class="input-group-text">¥</span>
-                                <input 
-                                    type="number" 
-                                    class="form-control @error('base_price') is-invalid @enderror" 
-                                    id="base_price" 
-                                    name="base_price"
-                                    value="{{ old('base_price', $showtime->base_price) }}"
-                                    step="100"
-                                    min="0"
-                                    max="50000"
-                                    required
-                                    oninput="updatePreview()">
+                                <input type="number" class="form-control @error('base_price') is-invalid @enderror" id="base_price" name="base_price"
+                                    value="{{ old('base_price', $showtime->base_price) }}" step="100" min="0" max="50000" required>
                             </div>
                             <small class="text-muted d-block mt-2">
                                 The original ticket price before dynamic adjustment
@@ -78,29 +69,26 @@
                             <label for="elasticity_factor" class="form-label fw-bold">
                                 Elasticity Factor: <span id="elasticity_value">{{ $showtime->elasticity_factor }}</span>
                             </label>
-                            <input 
-                                type="range" 
-                                class="form-range" 
-                                id="elasticity_factor" 
-                                name="elasticity_factor"
-                                value="{{ old('elasticity_factor', $showtime->elasticity_factor) }}"
-                                min="0"
-                                max="2"
-                                step="0.01"
-                                oninput="updateElasticityValue(); updatePreview()">
+                            <input type="range" class="form-range" id="elasticity_factor" name="elasticity_factor"
+                                value="{{ old('elasticity_factor', $showtime->elasticity_factor) }}" min="0" max="2" step="0.01">
                             <small class="text-muted d-block mt-2">
                                 Price sensitivity to occupancy (0.0 = no change, 2.0 = very sensitive)
                             </small>
 
                             <!-- Preset Buttons -->
                             <div class="mt-3">
-                                <label class="form-label text-muted small">Quick Presets:</label>
-                                <button type="button" class="btn btn-outline-secondary btn-sm me-2" 
-                                    onclick="setElasticity(0.25)">Conservative</button>
-                                <button type="button" class="btn btn-outline-secondary btn-sm me-2" 
-                                    onclick="setElasticity(0.50)">Moderate</button>
-                                <button type="button" class="btn btn-outline-secondary btn-sm" 
-                                    onclick="setElasticity(1.00)">Aggressive</button>
+                                <label class="form-label text-muted small">
+                                    Quick Presets:
+                                </label>
+                                <button type="button" class="btn btn-outline-secondary btn-sm me-2 elasticity-preset" data-value="0.25">
+                                    Conservative
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm me-2 elasticity-preset" data-value="0.50">
+                                    Moderate
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm elasticity-preset" data-value="1.00">
+                                    Aggressive
+                                </button>
                             </div>
                         </div>
 
@@ -213,65 +201,5 @@
         </div>
     </div>
 </div>
-
-<script>
-function updateElasticityValue() {
-    const value = document.getElementById('elasticity_factor').value;
-    document.getElementById('elasticity_value').textContent = parseFloat(value).toFixed(2);
-}
-
-function setElasticity(value) {
-    document.getElementById('elasticity_factor').value = value;
-    updateElasticityValue();
-    updatePreview();
-}
-
-function updatePreview() {
-    const basePrice = parseFloat(document.getElementById('base_price').value) || 0;
-    const elasticity = parseFloat(document.getElementById('elasticity_factor').value) || 0;
-    const occupancy = {{ $occupancyRate }};
-
-    // Update base price displays
-    document.getElementById('preview_base_price').textContent = Math.round(basePrice);
-    document.getElementById('preview_base_price_calc').textContent = Math.round(basePrice);
-
-    // Update elasticity and occupancy in formula
-    document.getElementById('preview_elasticity').textContent = elasticity.toFixed(2);
-    document.getElementById('preview_occupancy').textContent = occupancy.toFixed(2);
-
-    // Calculate current price
-    const multiplier = 1 + (occupancy * elasticity);
-    let currentPrice = basePrice * multiplier;
-
-    // Apply bounds
-    const minPrice = basePrice * 0.85;
-    const maxPrice = basePrice * 1.50;
-    currentPrice = Math.max(minPrice, Math.min(maxPrice, currentPrice));
-
-    // Update preview
-    document.getElementById('preview_current_price').textContent = Math.round(currentPrice);
-    document.getElementById('preview_min_price').textContent = Math.round(minPrice);
-    document.getElementById('preview_max_price').textContent = Math.round(maxPrice);
-
-    // Calculate and display percentage change
-    const changePercent = basePrice > 0 ? ((currentPrice - basePrice) / basePrice) * 100 : 0;
-    const changeElement = document.getElementById('preview_change_percent');
-    changeElement.textContent = (changePercent >= 0 ? '+' : '') + changePercent.toFixed(1) + '%';
-    
-    // Change color based on change
-    if (changePercent < -5) {
-        changeElement.className = 'fw-bold text-success';
-    } else if (changePercent > 5) {
-        changeElement.className = 'fw-bold text-danger';
-    } else {
-        changeElement.className = 'fw-bold text-secondary';
-    }
-}
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
-    updatePreview();
-});
-</script>
 
 @endsection

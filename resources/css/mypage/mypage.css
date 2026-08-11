@@ -1,9 +1,16 @@
-/* public/css/mypage.css */
 :root {
     --mypage-navy: #1a1f36;
     --mypage-navy-light: #232a47;
     --mypage-gold: #FFD700;
     --mypage-red: #E63946;
+}
+
+.mypage-text {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: #000;
+    -webkit-text-stroke: 0.5px #fff;
 }
 
 .mypage-body {
@@ -369,12 +376,6 @@
     margin: 0 auto;
 }
 
-
-.mypage-cancel-complete {
-    max-width: 500px;
-    margin: 0 auto;
-}
-
 .mypage-cancel-link {
     color: #9ca3c4;
     text-decoration: underline;
@@ -384,10 +385,6 @@
     color: var(--mypage-red);
 }
 
-/* Review submission page (linked from review-request email) */
-.review-form-card {
-    max-width: 560px;
-}
 
 .review-form-poster {
     width: 70px;

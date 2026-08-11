@@ -51,7 +51,7 @@
         <div class="ms-auto d-flex gap-2">
             <a href="{{ route('admin.movies.create') }}" class="btn btn-outline-warning">+ Add Movie</a>
             <a href="#" id="edit-movie-btn" class="btn btn-outline-light disabled">Edit Movie</a>
-            <a href="#" class="btn btn-outline-danger">Archive Movie</a>
+            <a href="#" id="archive-movie-btn" class="btn btn-outline-danger disabled">Archive Movie </a>
         </div>
     </div>
 
@@ -92,7 +92,9 @@
                                     @endphp
 
                                     <span class="badge {{ $statusClass }}">
+
                                         {{ ucfirst(str_replace('_', ' ', $movie->status)) }}
+
                                     </span>
                                 </td>
                                 <td>{{ $movie->released_date ? $movie->released_date->format('Y-m-d') : '—' }}</td>
@@ -134,10 +136,19 @@
 
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Cast</label>
-                    <div class="form-control bg-transparent text-white" id="detail-cast">—</div>
+                    <div class="form-control bg-transparent text-white" id="detail-cast">
+                        —
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-secondary small">Genre</label>
+                    <div class="form-control bg-transparent text-white" id="detail-genre">
+                        —
+                    </div>
                 </div>
 
-                <div class="mb-3">
+
+                {{-- <div class="mb-3">
                     <label class="form-label text-secondary small">Trailer URL</label>
                     <div class="form-control bg-transparent text-white" id="detail-trailer">—</div>
                 </div>
@@ -154,7 +165,7 @@
                     <div class="border border-secondary rounded p-3 text-center text-secondary small">
                         Drag &amp; Drop or Click to Upload
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
