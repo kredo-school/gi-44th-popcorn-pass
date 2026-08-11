@@ -38,16 +38,21 @@
                     </div>
 
                     <div class="col-8">
-                        <a href="{{ route('reviews.index', ['movieId' => $movie->id]) }}"
-                            class="text-decoration-none text-white text-small">
-                            ⭐
-
-                            <span class="ms-2">
+                        <a href="{{ route('reviews.index', ['movieId' => $movie->id]) }}" class="review-summary-link">
+                    
+                            <span class="review-star">⭐</span>
+                    
+                            <span class="review-avg-score">
                                 {{ number_format((float) ($averageRating ?? 0), 1) }} / 5
                             </span>
-
-                            <span class="review-total-count ms-2">
+                    
+                            <span class="review-total-count">
                                 ({{ number_format((int) ($totalReviews ?? 0)) }} reviews)
+                            </span>
+                    
+                            <span class="review-view-text">
+                                View Reviews
+                                <i class="fa-solid fa-chevron-right"></i>
                             </span>
                         </a>
                     </div>
@@ -103,19 +108,17 @@
                     <div class="col-4 fw-bold">
                         CAST
                     </div>
-
+                    
                     <div class="col-8">
-                        @if (!empty($movie->cast))
+                        @forelse (($movie->cast ?? []) as $castMember)
                             <div class="row">
-                                @foreach ($movie->cast as $cast)
-                                    <div class="col-6">
-                                        {{ $cast }}
-                                    </div>
-                                @endforeach
+                                <div class="col-12">
+                                    {{ $castMember }}
+                                </div>
                             </div>
-                        @else
+                        @empty
                             Not available
-                        @endif
+                        @endforelse
                     </div>
                 </div>
 

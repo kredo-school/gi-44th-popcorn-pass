@@ -606,7 +606,7 @@
 
 
 
-        <div class="back-to-top mb-5">
+        <div class="back-to-top">
             <a href="#top" class="back-to-top-link">
                 <div class="arrow">
                     <div class="arrow">
