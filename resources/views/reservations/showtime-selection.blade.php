@@ -118,89 +118,140 @@
         </div>
         <div class="select-showtime mx-auto mt-5">
 
-            <div class="mt-2 blue-background-list ">
+            <div class="mt-2 pt-3 blue-background-list">
+
                 <div>
-                    <h1 class="showtime-text p-3">
+                    <h1 class="showtime-text pt-2 text-center">
                         『 Select a showtime 』<br>
-                        <span class="fs-4">
-                            Screen Type【 {{ $movie->showtimes->pluck('screen.screen_type')->unique()->implode(' / ') }} 】
-                        </span>
                     </h1>
-                </div>
-                <div class="">
-
-                </div>
-                <!-- display showtime -->
-                <div class="d-flex justify-content-center gap-3 flex-wrap showtime-list pb-5">
-
-                    @foreach ($movie->showtimes->sortBy('start_time') as $showtime)
-                        @if ($showtime->start_time->isPast())
-                            <div class="showtime-card-closed">
-                                <div class="showtime-top">
-                                    <div class="showtime-time">
-                                        {{ $showtime->start_time->format('H:i') }}
-                                        <div class="showtime-end">
-                                            ～{{ $showtime->end_time->format('H:i') }}
-                                        </div>
-                                    </div>
-                                    <div class="ms-2">
-                                        <div class="theater-text">Theater</div>
-                                        <div class="theater-number theater-box">
-                                            {{ $showtime->screen->screen_number }}
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="showtime-bottom">
-                                    <div class="closed-icon">✖️</div>
-                                    <div class="closed-text">Closed</div>
-                                </div>
-                            </div>
-                        @else
-                            <div class="showtime-card-reservation">
-                                <div class="showtime-top">
-                                    <div class="showtime-time">
-                                        {{ $showtime->start_time->format('H:i') }}
-                                        <div class="showtime-end">
-                                            ～{{ $showtime->end_time->format('H:i') }}
-                                        </div>
-                                    </div>
-                                    <div class="ms-2">
-                                        <div class="theater-text">Theater</div>
-                                        <div class="theater-number theater-box">
-                                            {{ $showtime->screen->screen_number }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                @auth
-                                    {{-- already logged in --}}
-                                    <a href="{{ route('reservations.seat-selection', [
-                                        'showtime' => $showtime->id,
-                                        'new' => 1,
-                                    ]) }}" class="text-decoration-none">
-                                    
-                                        <div class="showtime-bottom pt-2">
-                                            <div class="reservation-icon">⭕️</div>
-                                            <div class="reservation-text">Reservation</div>
-                                        </div>
-                                    </a>
-                                @else
-                                    {{-- not logged in yet--}}
-                                    <button type="button" class="showtime-reservation-btn border-0 bg-transparent p-0" data-bs-toggle="modal"
-                                        data-bs-target="#guestLoginModal" data-showtime-id="{{ $showtime->id }}">
-                                        <div class="showtime-bottom pt-2">
-                                            <div class="reservation-icon">⭕️</div>
-                                            <div class="reservation-text">Reservation</div>
-                                        </div>
-                                    </button>
-                                @endauth
-                            </div>
-                        @endif
-                    @endforeach
+                    
                 </div>
 
+                {{-- Sepalate Screen --}}
+                @foreach ($movie->showtimes->groupBy('screen_id') as $screenId => $screenShowtimes)
+                    @php
+                        $screen = $screenShowtimes->first()->screen;
+                    @endphp
+
+                    {{-- title of Theater --}}
+                    <div class="screen-title px-3 pt-3">
+                        <hr class="text-white">
+                        <h2 class="fs-4 text-white">
+                            Theater {{ $screen->screen_number }} 【 {{ $screen->screen_type }} 】
+                        </h2>
+                    </div>
+
+                    {{-- showtime of screen --}}
+                    <div class="d-flex gap-3 showtime-list pb-2 ms-5">
+
+                        @foreach ($screenShowtimes->sortBy('start_time') as $showtime)
+                            @if ($showtime->start_time->isPast())
+                                {{-- Closed --}}
+                                <div class="showtime-card-closed">
+
+                                    <div class="showtime-top">
+
+                                        <div class="showtime-time">
+                                            {{ $showtime->start_time->format('H:i') }}
+
+                                            <div class="showtime-end">
+                                                ～{{ $showtime->end_time->format('H:i') }}
+                                            </div>
+                                        </div>
+
+                                        <div class="ms-2">
+                                            <div class="theater-text">
+                                                Theater
+                                            </div>
+
+                                            <div class="theater-number theater-box">
+                                                {{ $showtime->screen->screen_number }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="showtime-bottom">
+                                        <div class="closed-icon">✖️</div>
+                                        <div class="closed-text">Closed</div>
+                                    </div>
+
+                                </div>
+                            @else
+                                {{-- Reservation --}}
+                                <div class="showtime-card-reservation">
+
+                                    <div class="showtime-top">
+
+                                        <div class="showtime-time">
+                                            {{ $showtime->start_time->format('H:i') }}
+
+                                            <div class="showtime-end">
+                                                ～{{ $showtime->end_time->format('H:i') }}
+                                            </div>
+                                        </div>
+
+                                        <div class="ms-2">
+                                            <div class="theater-text">
+                                                Theater
+                                            </div>
+
+                                            <div class="theater-number theater-box">
+                                                {{ $showtime->screen->screen_number }}
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    @auth
+
+                                        {{-- already logged in --}}
+                                        <a href="{{ route('reservations.seat-selection', [
+                                            'showtime' => $showtime->id,
+                                            'new' => 1,
+                                        ]) }}"
+                                            class="text-decoration-none">
+
+                                            <div class="showtime-bottom pt-2">
+                                                <div class="reservation-icon">
+                                                    ⭕️
+                                                </div>
+
+                                                <div class="reservation-text">
+                                                    Reservation
+                                                </div>
+                                            </div>
+
+                                        </a>
+                                    @else
+                                        {{-- not logged in yet --}}
+                                        <button type="button" class="showtime-reservation-btn border-0 bg-transparent p-0"
+                                            data-bs-toggle="modal" data-bs-target="#guestLoginModal"
+                                            data-showtime-id="{{ $showtime->id }}">
+
+                                            <div class="showtime-bottom pt-2">
+                                                <div class="reservation-icon">
+                                                    ⭕️
+                                                </div>
+
+                                                <div class="reservation-text">
+                                                    Reservation
+                                                </div>
+                                            </div>
+
+                                        </button>
+
+                                    @endauth
+
+                                </div>
+                            @endif
+                        @endforeach
+
+                    </div>
+                @endforeach
 
             </div>
+
         </div>
 
 
