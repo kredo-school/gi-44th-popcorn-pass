@@ -715,37 +715,49 @@ public function dashboard(Request $request)
         $movie = Movie::with('genres')->findOrFail($id);
 
         $genres = Genre::orderBy('title')->get();
-
         $ageRatings = AgeRating::orderBy('title')->get();
 
+        // All active cinemas must be available even when the movie
+        // does not have any showtimes yet.
+        $cinemas = Cinema::where('is_active', true)
+            ->orderBy('cinema_name')
+            ->get();
 
-        // 映画に紐づく上映からCinema取得
+        // If future showtimes already exist, use the first one only as
+        // the initial cinema selection in the edit screen.
         $cinema = Showtime::where('movie_id', $movie->id)
             ->where('start_time', '>=', now())
             ->with('screen.cinema')
+            ->orderBy('start_time')
             ->first()
             ?->screen
             ?->cinema;
 
-
-        // CinemaのScreenだけ取得
-        $screens = collect();
-
-        if ($cinema) {
-
-            $screens = Screen::where('cinema_id', $cinema->id)
+        // Screens for the initially selected cinema.
+        $screens = $cinema
+            ? Screen::where('cinema_id', $cinema->id)
+                ->where('is_active', true)
                 ->orderBy('screen_number')
-                ->get();
-        }
+                ->get()
+            : collect();
 
+        // All active screens are also passed to the Blade view so that
+        // JavaScript can instantly filter them whenever Cinema changes.
+        $allScreens = Screen::where('is_active', true)
+            ->orderBy('screen_number')
+            ->get([
+                'id',
+                'cinema_id',
+                'screen_number',
+                'screen_name',
+                'screen_type',
+            ]);
 
-        // 現在の上映一覧
         $showtimes = Showtime::where('movie_id', $movie->id)
             ->where('start_time', '>=', now())
             ->with('screen.cinema')
             ->orderBy('start_time')
             ->get();
-
 
         return view(
             'admin.movies.edit',
@@ -753,8 +765,10 @@ public function dashboard(Request $request)
                 'movie',
                 'genres',
                 'ageRatings',
+                'cinemas',
                 'cinema',
                 'screens',
+                'allScreens',
                 'showtimes'
             )
         );
@@ -837,28 +851,14 @@ public function dashboard(Request $request)
             ->map(function ($showtime) {
                 return [
                     'id' => $showtime->id,
-                    'cinema_name' => $showtime->screen->cinema->cinema_name ?? '—',
-                    'screen_number' => $showtime->screen->screen_number ?? '—',
+                    'cinema_name' => $showtime->screen?->cinema?->cinema_name ?? '—',
+                    'screen_number' => $showtime->screen?->screen_number ?? '—',
                     'date' => $showtime->start_time->format('Y-m-d'),
                     'start_time' => $showtime->start_time->format('H:i'),
                     'end_time' => $showtime->end_time->format('H:i'),
                     'is_active' => $showtime->is_active,
                 ];
             });
-
-        $screenSeats = ScreenSeat::where('screen_id', $screen->id)->get();
-
-        foreach ($screenSeats as $screenSeat) {
-
-            ShowtimeSeat::create([
-                'id' => Str::uuid(),
-                'showtime_id' => $showtime->id,
-                'screen_seat_id' => $screenSeat->id,
-                'seat_status' => 'available',
-                'available' => true,
-                'price_at_showtime' => $screenSeat->price,
-            ]);
-        }
 
         return response()->json($showtimes);
     }
