@@ -771,9 +771,9 @@ class AdminController extends Controller
         // Screens for the initially selected cinema.
         $screens = $cinema
             ? Screen::where('cinema_id', $cinema->id)
-                ->where('is_active', true)
-                ->orderBy('screen_number')
-                ->get()
+            ->where('is_active', true)
+            ->orderBy('screen_number')
+            ->get()
             : collect();
 
         // All active screens are also passed to the Blade view so that
@@ -1082,7 +1082,7 @@ class AdminController extends Controller
     // --------------------
     public function analytics(Request $request)
     {
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Filters
     |--------------------------------------------------------------------------
@@ -1127,7 +1127,7 @@ class AdminController extends Controller
                 'cinema_name',
             ]);
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Base Paid Payments Query
     |--------------------------------------------------------------------------
@@ -1146,7 +1146,7 @@ class AdminController extends Controller
             );
         }
 
-        /*
+     /*
     |--------------------------------------------------------------------------
     | KPI - Total Revenue
     |--------------------------------------------------------------------------
@@ -1155,7 +1155,7 @@ class AdminController extends Controller
         $totalRevenue = (float) (clone $paidPaymentsQuery)
             ->sum('amount');
 
-        /*
+     /*
     |--------------------------------------------------------------------------
     | KPI - Paid Reservations
     |--------------------------------------------------------------------------
@@ -1165,14 +1165,10 @@ class AdminController extends Controller
             ->distinct()
             ->count('reservation_id');
 
-        /*
+     /*
     |--------------------------------------------------------------------------
     | KPI - Customers
     |--------------------------------------------------------------------------
-    |
-    | Registered customers only.
-    | Guest reservations are not included in this unique user count.
-    |
     */
 
         $customersQuery = Payment::query()
@@ -1205,7 +1201,7 @@ class AdminController extends Controller
             ->distinct()
             ->count('reservations.user_id');
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | KPI - Average Revenue Per Reservation
     |--------------------------------------------------------------------------
@@ -1215,7 +1211,44 @@ class AdminController extends Controller
             ? $totalRevenue / $totalReservations
             : 0;
 
-        /*
+    /*
+    |--------------------------------------------------------------------------
+    | Daily Revenue Chart
+    |--------------------------------------------------------------------------
+    */
+
+        $dailyRevenueQuery = Payment::query()
+            ->selectRaw(
+                'DATE(paid_at) as date, SUM(amount) as total'
+            )
+            ->where(
+                'payment_status',
+                'paid'
+            )
+            ->whereYear(
+                'paid_at',
+                $selectedYear
+            );
+
+        if ($cinemaId) {
+            $dailyRevenueQuery->whereHas(
+                'reservation',
+                function ($query) use ($cinemaId) {
+                    $query->where('cinema_id', $cinemaId);
+                }
+            );
+        }
+
+        $dailyRevenueChart = $dailyRevenueQuery
+            ->groupByRaw(
+                'DATE(paid_at)'
+            )
+            ->orderByRaw(
+                'DATE(paid_at)'
+            )
+            ->get();
+
+    /*
     |--------------------------------------------------------------------------
     | Monthly Revenue Trend
     |--------------------------------------------------------------------------
@@ -1267,14 +1300,10 @@ class AdminController extends Controller
             }
         }
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Monthly Reservation Trend
     |--------------------------------------------------------------------------
-    |
-    | Only reservations with completed paid payments are counted so that
-    | reservation and revenue analytics use the same business definition.
-    |
     */
 
         $monthlyReservationsQuery = Payment::query()
@@ -1328,14 +1357,10 @@ class AdminController extends Controller
             }
         }
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Top Performing Movies
     |--------------------------------------------------------------------------
-    |
-    | Revenue source is now Payment.amount, matching all other revenue
-    | analytics and the Admin Dashboard.
-    |
     */
 
         $topMoviesQuery = Payment::query()
@@ -1388,14 +1413,10 @@ class AdminController extends Controller
             ->limit(5)
             ->get();
 
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Cinema Performance
     |--------------------------------------------------------------------------
-    |
-    | This comparison is only required when the administrator is viewing
-    | all cinemas.
-    |
     */
 
         $cinemaPerformance = collect();
@@ -1445,7 +1466,7 @@ class AdminController extends Controller
                 ->get();
         }
 
-        /*
+     /*
     |--------------------------------------------------------------------------
     | View
     |--------------------------------------------------------------------------
@@ -1464,6 +1485,7 @@ class AdminController extends Controller
                 'totalReservations',
                 'totalCustomers',
                 'avgRevenuePerReservation',
+                'dailyRevenueChart',
                 'monthlyRevenueData',
                 'monthlyReservationData',
                 'topMovies',
