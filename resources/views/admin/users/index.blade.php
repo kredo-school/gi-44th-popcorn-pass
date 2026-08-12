@@ -24,6 +24,11 @@
         </select>
 
         <button type="submit" class="btn btn-outline-warning">Search</button>
+        @if (request()->filled('search') || request('role', 'all') !== 'all' || request('status', 'all') !== 'all')
+            <a href="{{ route('admin.users') }}" class="btn btn-outline-light">
+                Reset
+            </a>
+        @endif
     </form>
 
     <div class="row g-3">

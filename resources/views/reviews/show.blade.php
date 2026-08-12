@@ -19,37 +19,47 @@
         
             {{-- Movie Info --}}
             <div class="review-movie-info-card mx-auto">
-        
+            
                 <div class="review-info-item">
                     <span class="review-info-label">
                         <i class="fa-solid fa-film me-2"></i>Genre
                     </span>
-                    <span class="review-info-value">{{ $movie->genre->title }}</span>
+            
+                    <span class="review-info-value">
+                        {{ $movie->genres->pluck('title')->filter()->join(', ') ?: 'Not available' }}
+                    </span>
                 </div>
-        
+            
                 <div class="review-info-item">
                     <span class="review-info-label">
                         <i class="fa-regular fa-clock me-2"></i>Runtime
                     </span>
-                    <span class="review-info-value">{{ $movie->duration }} min</span>
+            
+                    <span class="review-info-value">
+                        {{ $movie->duration ? $movie->duration . ' min' : 'Not available' }}
+                    </span>
                 </div>
-        
+            
                 <div class="review-info-item">
                     <span class="review-info-label">
                         <i class="fa-regular fa-calendar me-2"></i>Released Date
                     </span>
+            
                     <span class="review-info-value">
-                        {{ $movie->released_date->format('M d, Y') }}
+                        {{ $movie->released_date?->format('M d, Y') ?? 'Not available' }}
                     </span>
                 </div>
-        
+            
                 <div class="review-info-item">
                     <span class="review-info-label">
                         <i class="fa-solid fa-circle-exclamation me-2"></i>Age Rating
                     </span>
-                    <span class="review-info-value">{{ $movie->ageRating->title }}</span>
+            
+                    <span class="review-info-value">
+                        {{ $movie->ageRating?->title ?? 'Not Rated' }}
+                    </span>
                 </div>
-        
+            
             </div>
         </div>
 
@@ -62,13 +72,16 @@
                 {{-- User --}}
                 <div class="d-flex align-items-center mb-3">
                     <div class="review-avatar-circle me-3">
-                        @if ($review->user->avatar)
+                        @if ($review->user?->avatar)
                             <img src="{{ $review->user->avatar }}" alt="{{ $review->user->username }}" class="review-avatar-img">
                         @else
                             <i class="fa-solid fa-user"></i>
                         @endif
                     </div>
-                    <span class="fw-bold fs-5">{{ $review->user->username }}</span>
+                
+                    <span class="fw-bold fs-5">
+                        {{ $review->user?->username ?? 'Unknown User' }}
+                    </span>
                 </div>
 
                 <hr class="review-divider">

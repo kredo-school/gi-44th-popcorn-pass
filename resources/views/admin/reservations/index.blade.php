@@ -23,6 +23,11 @@
         </select>
 
         <button type="submit" class="btn btn-outline-warning">Search</button>
+        @if (request()->filled('search') || request('status', 'all') !== 'all' || request('cinema_id', 'all') !== 'all')
+            <a href="{{ route('admin.reservations') }}" class="btn btn-outline-light">
+                Reset
+            </a>
+        @endif
 
         <div class="ms-auto">
             <a href="{{ route('admin.reservations.export', request()->query()) }}" class="btn btn-outline-warning">Export CSV</a>

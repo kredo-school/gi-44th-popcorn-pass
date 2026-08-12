@@ -30,6 +30,7 @@
                 @else
                     <a href="{{ route('login') }}" class="btn btn-color mypage-btn">
                         <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
+
                         Log in
                     </a>
 
@@ -96,13 +97,13 @@
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button class="sidebar-btn text-dark">
+            <button class="sidebar-btn text-dark text-center">
                 Logout
             </button>
         </form>
     @else
-        <a href="{{ route('login') }}" class="sidebar-btn text-dark">
-            Log in
+        <a href="{{ route('login') }}" class="sidebar-btn text-dark text-center">
+            Login
         </a>
 
     @endauth

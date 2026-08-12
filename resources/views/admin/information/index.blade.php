@@ -5,9 +5,52 @@
 
 @section('content')
 
-    @if (session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+<div class="gap-2 mb-3">
+    <form method="GET" action="{{ route('admin.information') }}" class="d-flex gap-2 mb-3 align-items-center">
+    
+        <input type="text" name="search" class="form-control information-search" placeholder="Search information..."
+            value="{{ request('search') }}">
+    
+        <select name="category" class="form-select information-select" onchange="this.form.submit()">
+            <option value="all" {{ request('category', 'all' )=='all' ? 'selected' : '' }}>Category: All</option>
+            @foreach($categories as $cat)
+                <option value="{{ $cat->id }}" {{ request('category')==$cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+            @endforeach
+        </select>
+    
+        <select name="status" class="form-select information-select" onchange="this.form.submit()">
+            <option value="all" {{ request('status', 'all' )=='all' ? 'selected' : '' }}>Status: All</option>
+            <option value="Published" {{ request('status')=='Published' ? 'selected' : '' }}>Published</option>
+            <option value="Draft" {{ request('status')=='Draft' ? 'selected' : '' }}>Draft</option>
+            <option value="Archived" {{ request('status')=='Archived' ? 'selected' : '' }}>Archived</option>
+        </select>
+    
+        <button type="submit" class="btn btn-outline-warning">Search</button>
+        @if (request()->filled('search') || request('category', 'all') !== 'all' || request('status', 'all') !== 'all')
+            <a href="{{ route('admin.information') }}" class="btn btn-outline-light">
+                Reset
+            </a>
+        @endif
+    
+        <div class="ms-auto d-flex gap-2">
+            <a href="{{ route('admin.information.create') }}" class="btn btn-outline-warning">
+                + Add Information
+            </a>
+            <a href="#" id="edit-information-btn" class="btn btn-outline-light disabled">
+                Edit Information
+            </a>
+            <button type="button" id="delete-information-btn" class="btn btn-outline-danger disabled"
+                onclick="confirmDelete()">
+                Delete Information
+            </button>
+
         </div>
     @endif
 

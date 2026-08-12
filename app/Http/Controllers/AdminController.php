@@ -525,9 +525,7 @@ class AdminController extends Controller
 
         $validated['cast'] =
             !empty($validated['cast'])
-            ? json_encode(array_values(array_filter(
-                $validated['cast']
-            )))
+            ? array_values(array_filter($validated['cast']))
             : null;
 
         $validated['search_keywords'] =
@@ -811,7 +809,7 @@ class AdminController extends Controller
             (int) $validated['duration'];
 
         $validated['cast'] = !empty($validated['cast'])
-            ? json_encode(array_filter($validated['cast']))
+            ? array_values(array_filter($validated['cast']))
             : null;
 
         $validated['search_keywords'] =

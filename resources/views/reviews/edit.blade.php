@@ -24,7 +24,7 @@
                     <span class="review-info-label">
                         <i class="fa-solid fa-film me-2"></i>Genre
                     </span>
-                    <span class="review-info-value">{{ $movie->genre->title }}</span>
+                    <span class="review-info-value">{{ $movie->genres->pluck('title')->filter()->join(', ') ?: 'Not available' }}</span>
                 </div>
         
                 <div class="review-info-item">
@@ -39,7 +39,7 @@
                         <i class="fa-regular fa-calendar me-2"></i>Released Date
                     </span>
                     <span class="review-info-value">
-                        {{ $movie->released_date->format('M d, Y') }}
+                        {{ $movie->released_date?->format('M d, Y') ?? 'Not available' }}
                     </span>
                 </div>
         
@@ -47,7 +47,7 @@
                     <span class="review-info-label">
                         <i class="fa-solid fa-circle-exclamation me-2"></i>Age Rating
                     </span>
-                    <span class="review-info-value">{{ $movie->ageRating->title }}</span>
+                    <span class="review-info-value">{{ $movie->ageRating?->title ?? 'Not Rated' }}</span>
                 </div>
         
             </div>
