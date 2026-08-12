@@ -111,30 +111,56 @@
                             </div>
                         @endif
 
-                        {{-- Slide 3: Top Ranking --}}
-                        <div class="swiper-slide">
-                            <div class="w-75 mx-auto h-100">
-                                <div class="row g-0 align-items-center justify-content-center h-100">
-                                    <div class="col-lg-4 position-relative h-100">
-                                        <img src="{{ $topMovie->banner_image_url }}" class="hero-image">
-                                        <div class="hero-overlay"></div>
-                                        <div class="hero-content">
-                                            <span class="hero-tag hero-tag-red">TOP RANKING</span>
-                                            <h1>#1 MOVIE<br>OF THE WEEK</h1>
-                                            <p>Most watched by our audience.</p>
-                                            <a href="{{ route('movie_detail', $topMovie->id) }}"
-                                                class="btn-book btn-book-red">SEE MOVIE DETAIL →</a>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                        <iframe class="hero-video" src="{{ $topMovie->trailer_url }}"
-                                            allow="autoplay; encrypted-media" allowfullscreen>
-                                        </iframe>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+       {{-- Slide 3: Top Ranking --}}
+@if ($topMovie)
+    <div class="swiper-slide">
+        <div class="w-75 mx-auto h-100">
+            <div class="row g-0 align-items-center justify-content-center h-100">
+
+                <div class="col-lg-4 position-relative h-100">
+                    <img
+                        src="{{ $topMovie->banner_image_url }}"
+                        class="hero-image"
+                        alt="{{ $topMovie->title }}"
+                    >
+
+                    <div class="hero-overlay"></div>
+
+                    <div class="hero-content">
+                        <span class="hero-tag hero-tag-red">
+                            TOP RANKING
+                        </span>
+
+                        <h1>
+                            #1 MOVIE<br>
+                            OF THE WEEK
+                        </h1>
+
+                        <p>Most watched by our audience.</p>
+
+                        <a
+                            href="{{ route('movie_detail', $topMovie->id) }}"
+                            class="btn-book btn-book-red"
+                        >
+                            SEE MOVIE DETAIL →
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
+                    <iframe
+                        class="hero-video"
+                        src="{{ $topMovie->trailer_url }}"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen
+                    >
+                    </iframe>
+                </div>
+
+            </div>
+        </div>
+    </div>
+@endif
 
                         {{-- Slide 4: Information --}}
                         <div class="swiper-slide">
