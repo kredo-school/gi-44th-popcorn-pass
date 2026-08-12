@@ -58,8 +58,15 @@
                     <div>
                         <div class="fw-bold">
                             {{ $reservation->movie->title }}
-                            @if ($tab === 'cancelled')
-                                <span class="badge bg-danger ms-2">Cancelled</span>
+
+                            @if ($reservation->reservation_status === 'cancelled')
+                                <span class="badge bg-danger ms-2">
+                                    Cancelled
+                                </span>
+                            @elseif ($reservation->reservation_status === 'expired')
+                                <span class="badge bg-secondary ms-2">
+                                    Expired
+                                </span>
                             @endif
                         </div>
 
@@ -94,27 +101,69 @@
                 <div class="d-flex gap-2 align-items-center">
                     @if ($tab === 'upcoming')
                         @php
-                            $paymentStatus = $reservation->payment?->payment_status ?? 'unpaid';
-                            $paymentMethod = $reservation->payment?->payment_method;
+                            $paymentStatus =
+                            $reservation->payment?->payment_status ?? 'unpaid';
+
+                            $paymentMethod =
+                            $reservation->payment?->payment_method;
+
+                            /*
+                            * Cancellation is allowed until 11:59 PM on the day before the screening.
+                            * Cancellations are not allowed from midnight on the screening date.
+                            */
+                            $cancelDeadline =
+                            $reservation->showtime->start_time
+                            ->copy()
+                            ->startOfDay();
+
+                            $canCancel =
+                            $reservation->reservation_status === 'confirmed' &&
+                            $paymentMethod === 'onsite' &&
+                            $paymentStatus === 'pending' &&
+                            now()->lt($cancelDeadline);
                         @endphp
 
                         @if ($paymentStatus === 'paid')
                             <a href="{{ route('mypage.tickets.qrcode', $reservation->id) }}" class="btn text-warning border-warning">
-                            <i class="fa-solid fa-qrcode me-1"></i>     View e-Ticket
-                        </a>
+                                <i class="fa-solid fa-qrcode me-1"></i>
+                                View e-Ticket
+                            </a>
+
                         @elseif ($paymentMethod === 'onsite' && $paymentStatus === 'pending')
                             <div class="text-end">
-                                <span class="badge bg-warning text-dark mb-1">Payment Pending</span>
-                                <div class="small text-muted">Pay at the cinema counter</div>
+                                <span class="badge bg-warning text-dark mb-1">
+                                    Payment Pending
+                                </span>
+
+                                <div class="small text-muted mb-2">
+                                    Pay at the cinema counter
+                                </div>
+
+                                @if ($canCancel)
+                                    <a href="{{ route('mypage.cancel.show', $reservation->id) }}" class="btn btn-sm text-danger border-danger">
+                                        <i class="fa-solid fa-xmark me-1"></i>
+                                        Cancel
+                                    </a>
+                                @else
+                                    <div class="small text-muted">
+                                        Cancellation period has ended
+                                    </div>
+                                @endif
                             </div>
+
                         @elseif ($paymentStatus === 'failed')
-                            <span class="badge bg-danger">Payment Failed</span>
+                            <span class="badge bg-danger">
+                                Payment Failed
+                            </span>
+
                         @else
-                            <span class="badge bg-secondary">{{ ucfirst($paymentStatus) }}</span>
+                            <span class="badge bg-secondary">
+                                {{ ucfirst($paymentStatus) }}
+                            </span>
                         @endif
                     @endif
 
-                    @if ($tab === 'past')
+                    @if ($tab === 'past' && $reservation->reservation_status === 'confirmed')
                         <button type="button" class="btn border-primary text-primary" data-bs-toggle="modal"
                         data-bs-target="#cinemaReviewModal" data-cinema-id="{{ $reservation->cinema_id }}"
                         data-cinema-name="{{ $reservation->cinema->cinema_name }}"

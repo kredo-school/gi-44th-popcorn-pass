@@ -224,8 +224,10 @@ Route::middleware('auth')
     ->prefix('mypage')
     ->name('mypage.')
     ->group(function () {
+    //dashboard
     Route::get('/', [DashboardController::class, 'index'])
         ->name('dashboard');
+    //profile
     Route::get('/profile', [ProfileController::class, 'show'])
         ->name('profile');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])
@@ -234,10 +236,12 @@ Route::middleware('auth')
         ->name('profile.update');
     Route::get('/rewards', [RewardsController::class, 'index'])
         ->name('rewards');
+    //movie
     Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])
         ->name('movies-watched');
     Route::post('/movies-watched/{reservation}/send-review-email',[MoviesWatchedController::class, 'sendReviewEmail'])
         ->name('movies-watched.send-review-email');
+    //review
     Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])
         ->name('reviews.create');
     Route::post('/reviews', [MyPageReviewController::class, 'store'])
@@ -246,18 +250,20 @@ Route::middleware('auth')
         ->name('reviews.update');
     Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])
         ->name('reviews-written');
+    //ticket
     Route::get('/tickets', [TicketController::class, 'index'])
         ->name('tickets');
     Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])
         ->name('tickets.qrcode');
+    //ticket cancel
     Route::get('/cancel/{id}', [CancelController::class, 'show'])
         ->name('cancel.show');
     Route::post('/cancel/{id}', [CancelController::class, 'cancel'])
         ->name('cancel.confirm');
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])
         ->name('cancel.complete');
-    Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
-        ->name('reservations.cancel');
+    // Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
+    //     ->name('reservations.cancel');
     // Cinema Review Routes
     Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])
         ->name('cinema-reviews.store');

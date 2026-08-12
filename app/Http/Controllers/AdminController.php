@@ -1448,7 +1448,7 @@ public function analytics(Request $request)
 
     private function paymentStatusOptions(): array
     {
-        return ['pending', 'paid', 'failed'];
+        return ['pending', 'paid', 'cancelled', 'expired', 'failed'];
     }
 
     private function buildReservationsQuery(Request $request)

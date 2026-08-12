@@ -103,7 +103,9 @@
                                         $paymentBadgeClass = match ($paymentStatus) {
                                         'paid' => 'bg-success',
                                         'pending' => 'bg-warning text-dark',
+                                        'cancelled' => 'bg-danger-subtle text-danger-emphasis',
                                         'failed' => 'bg-danger',
+                                        'expired' => 'bg-dark border border-secondary',
                                         default => 'bg-secondary',
                                         };
                                     @endphp
@@ -117,8 +119,8 @@
                                         $reservationStatus = $reservation->reservation_status;
                                     
                                         $reservationBadgeClass = match ($reservationStatus) {
-                                        'confirmed' => 'bg-primary',
-                                        'cancelled' => 'bg-danger',
+                                        'confirmed' => 'bg-success',
+                                        'cancelled' => 'bg-danger-subtle text-danger-emphasis',
                                         'expired' => 'bg-dark border border-secondary',
                                         default => 'bg-secondary',
                                         };
