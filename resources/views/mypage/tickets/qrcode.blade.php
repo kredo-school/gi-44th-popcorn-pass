@@ -1,4 +1,3 @@
-{{-- resources/views/mypage/tickets/qrcode.blade.php --}}
 @extends('layouts.mypage')
 
 @section('title', 'Your Movie Ticket')

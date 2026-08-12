@@ -30,7 +30,10 @@
                         <span class="review-info-label">
                             <i class="fa-solid fa-film me-2"></i>Genre
                         </span>
-                        <span class="review-info-value">{{ $movie->genre->title }}</span>
+                    
+                        <span class="review-info-value">
+                            {{ $movie->genres->pluck('title')->filter()->join(', ') ?: 'Not available' }}
+                        </span>
                     </div>
                 
                     <div class="review-info-item">

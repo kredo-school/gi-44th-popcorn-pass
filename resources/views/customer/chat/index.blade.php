@@ -115,6 +115,7 @@
 
 
         </div>
+
         <div class="position-relative mt-4">
 
             {{-- Home --}}
@@ -137,8 +138,7 @@
        
 
 
-    </div>
 
-    @vite('resources/js/customer/chat.js')
+    </div>
 
 @endsection

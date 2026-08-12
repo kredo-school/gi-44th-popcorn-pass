@@ -1,7 +1,7 @@
 // Fonts
 @import url('https://fonts.bunny.net/css?family=Nunito');
 
-//google 
+// Google 
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
 
@@ -10,48 +10,77 @@
 @import 'variables';
 
 // Bootstrap
-
 @import 'bootstrap/scss/bootstrap';
 
-//home
+// Auth
+@import '../css/auth/auth.css';
+
+
+// ===============
+// Navbar
+// ===============
+@import '../css/navbar.css';
+
+// ===============
+// Home
+// ===============
 @import '../css/home/home.css';
-//ranking
 @import '../css/home/ranking.css';
-//nowshowing
 @import "../css/home/nowshowing.css";
-//comingsoon
 @import '../css/home/comingsoon.css';
 
-//showtime
+// ===============
+// Common
+// ===============
+@import '../css/common/recommendations.css';
+@import '../css/common/base.css';
+
+// ===============
+// Showtime
+// ===============
 @import '../css/showtime/showtime.css';
 
-//chat
+// ===============
+// Customer
+// ===============
 @import '../css/customer/chat.css';
 
-//Reservation
+// ===============
+// Reservations
+// ===============
+@import '../css/reservations/reservation-common.css';
 @import '../css/reservations/seat-selection.css';
-
 @import '../css/reservations/ticket-type.css';
-
 @import '../css/reservations/payment-method.css';
-
 @import '../css/reservations/reservation-confirm.css';
-
 @import '../css/reservations/reservation-complete.css';
 
 
-//Review
+// ===============
+// Reviews
+// ===============
 @import '../css/reviews/reviews.css';
 
-//home information
+// ===============
+// Information
+// ===============
 @import '../css/information/information-detail.css';
 
-//Navbar
-@import '../css/navbar.css';
-
-//mypage
+// ===============
+// Mypage
+// ===============
 @import '../css/mypage/mypage.css';
 
+// ===============
+// Movie-detail
+// ===============
+@import '../css/movie-detail/community-discussion.css';
+@import '../css/movie-detail/movie-detail.css';
+
+// ===============
+// Map
+// ===============
+@import '../css/map/index.css';
 
 
 
@@ -336,3 +365,4 @@ body{
     height: 240px;
     object-fit: cover;
 }
+

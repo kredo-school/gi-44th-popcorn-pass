@@ -1,11 +1,14 @@
 <?php
-// app/Services/LocationService.php
+
 namespace App\Services;
+
 use App\Models\Cinema;
+
 class LocationService
 {
-    public function __construct(private GooglePlacesService $googlePlaces)
-    {
+    public function __construct(
+        private GooglePlacesService $googlePlaces
+    ) {
     }
 
     /**
@@ -13,8 +16,13 @@ class LocationService
      */
     public function resolveCinemas(?float $lat, ?float $lng): array
     {
-        if ($lat !== null && $lng !== null && $this->googlePlaces->isConfigured()) {
+        if (
+            $lat !== null &&
+            $lng !== null &&
+            $this->googlePlaces->isConfigured()
+        ) {
             $nearby = $this->googlePlaces->nearbyCinemas($lat, $lng);
+
             if (!empty($nearby)) {
                 return [
                     'source' => 'google_places',
@@ -22,12 +30,16 @@ class LocationService
                 ];
             }
         }
+
         return [
             'source' => 'database',
             'cinemas' => $this->fallbackCinemas(),
         ];
     }
 
+    /**
+     * Database fallback cinemas.
+     */
     public function fallbackCinemas(): array
     {
         return Cinema::where('is_active', true)
@@ -38,11 +50,22 @@ class LocationService
                 'source' => 'database',
                 'place_id' => null,
                 'name' => $cinema->cinema_name,
-                'address' => trim($cinema->address . ', ' . $cinema->city),
+                'city' => $cinema->city,
+                'address' => trim(
+                    $cinema->address . ', ' . $cinema->city
+                ),
                 'rating' => null,
                 'is_open_now' => null,
                 'distance_km' => null,
-                'maps_url' => $cinema->website_url,
+
+                // Official cinema website
+                'website_url' => $cinema->website_url,
+
+                // Popcorn Pass redirect route
+                'visit_url' => route(
+                    'cinemas.visit',
+                    $cinema
+                ),
             ])
             ->all();
     }

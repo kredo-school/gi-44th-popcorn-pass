@@ -51,7 +51,7 @@
                     <h1>{{ $movie->title }}</h1>
                     <div class="row">
                         <div class="col-1">
-                            <p class="">PG</p>
+                            <p class=""><p>{{ $movie->ageRating?->title ?? 'Not Rated' }}</p></p>
                         </div>
                         <div class="col-6">
                             <p>{{ $movie->genres->pluck('title')->join(', ') }}</p>
@@ -103,14 +103,22 @@
                     <div class="col-4 fw-bold">DIRECTOR</div>
                     <div class="col-8">{{ $movie->director }}</div>
 
-                    <div class="col-4 fw-bold">CAST</div>
+                    <div class="col-4 fw-bold">
+                        CAST
+                    </div>
+                    
                     <div class="col-8">
                         <div class="row">
-                            @foreach (json_decode($movie->cast, true) ?? [] as $cast)
-                                <div class="col-6">{{ $cast }}</div>
-                            @endforeach
+                            @forelse (($movie->cast ?? []) as $castMember)
+                                <div class="col-6">
+                                    {{ $castMember }}
+                                </div>
+                            @empty
+                                <div class="col-12">
+                                    Not available
+                                </div>
+                            @endforelse
                         </div>
-
                     </div>
                 </div>
 

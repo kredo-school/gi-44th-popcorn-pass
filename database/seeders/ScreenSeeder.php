@@ -2,212 +2,170 @@
 
 namespace Database\Seeders;
 
+use App\Models\Cinema;
+use App\Models\TheaterLayout;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Models\TheaterLayout;
 
 class ScreenSeeder extends Seeder
 {
+    /**
+     * Seed screens for every active cinema.
+     */
     public function run(): void
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Theater Layout
+        |--------------------------------------------------------------------------
+        */
         $layout = TheaterLayout::first();
-        DB::table('screens')->insert([
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 1,
-                'screen_name' => 'Screen 1',
-                'screen_type' => 'Standard',
-                'layout_id' => $layout->id,
-                'total_seats' => 100,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 2,
-                'screen_name' => 'Screen 2',
-                'screen_type' => 'Standard',
-                'layout_id' => $layout->id,
-                'total_seats' => 100,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 3,
-                'screen_name' => 'Screen 3',
-                'screen_type' => 'IMAX',
-                'layout_id' => $layout->id,
-                'total_seats' => 150,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 4,
-                'screen_name' => 'Screen 4',
-                'screen_type' => '4DX',
-                'layout_id' => $layout->id,
-                'total_seats' => 80,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 5,
-                'screen_name' => 'Screen 5',
-                'screen_type' => 'Dolby Cinema',
-                'layout_id' => $layout->id,
-                'total_seats' => 120,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 6,
-                'screen_name' => 'Screen 6',
-                'screen_type' => 'Standard',
-                'layout_id' => $layout->id,
-                'total_seats' => 100,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 7,
-                'screen_name' => 'Screen 7',
-                'screen_type' => 'Standard',
-                'layout_id' => $layout->id,
-                'total_seats' => 100,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 8,
-                'screen_name' => 'Screen 8',
-                'screen_type' => 'IMAX',
-                'layout_id' => $layout->id,
-                'total_seats' => 150,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 9,
-                'screen_name' => 'Screen 9',
-                'screen_type' => '4DX',
-                'layout_id' => $layout->id,
-                'total_seats' => 80,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 10,
-                'screen_name' => 'Screen 10',
-                'screen_type' => 'Dolby Cinema',
-                'layout_id' => $layout->id,
-                'total_seats' => 120,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 11,
-                'screen_name' => 'Screen 11',
-                'screen_type' => 'Standard',
-                'layout_id' => $layout->id,
-                'total_seats' => 100,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 12,
-                'screen_name' => 'Screen 12',
-                'screen_type' => 'Standard',
-                'layout_id' => $layout->id,
-                'total_seats' => 100,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 13,
-                'screen_name' => 'Screen 13',
-                'screen_type' => 'IMAX',
-                'layout_id' => $layout->id,
-                'total_seats' => 150,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 14,
-                'screen_name' => 'Screen 14',
-                'screen_type' => '4DX',
-                'layout_id' => $layout->id,
-                'total_seats' => 80,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ],
-            [
-                'id' => (string) Str::uuid(),
-                'cinema_id' => '019f1306-5446-727a-bad3-ca788c8413d2',
-                'screen_number' => 15,
-                'screen_name' => 'Screen 15',
-                'screen_type' => 'Dolby Cinema',
-                'layout_id' => $layout->id,
-                'total_seats' => 120,
-                'is_active' => true,
-                'created_by_id' => null,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
-        ]);
+
+        if (!$layout) {
+            $this->command?->warn(
+                'No theater layout found. Please run TheaterLayoutSeeder first.'
+            );
+
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Active Cinemas
+        |--------------------------------------------------------------------------
+        */
+        $cinemas = Cinema::where('is_active', true)
+            ->orderBy('cinema_name')
+            ->get();
+
+        if ($cinemas->isEmpty()) {
+            $this->command?->warn(
+                'No active cinemas found.'
+            );
+
+            return;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Create Screens
+        |--------------------------------------------------------------------------
+        |
+        | Each cinema gets screens according to cinemas.total_screens.
+        |
+        | Existing screens are NOT deleted.
+        | Existing cinema_id + screen_number combinations are skipped.
+        |
+        */
+        foreach ($cinemas as $cinema) {
+            $totalScreens = max(
+                1,
+                (int) $cinema->total_screens
+            );
+
+            for ($screenNumber = 1; $screenNumber <= $totalScreens; $screenNumber++) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | Do not duplicate existing screens
+                |--------------------------------------------------------------------------
+                */
+                $exists = DB::table('screens')
+                    ->where(
+                        'cinema_id',
+                        $cinema->id
+                    )
+                    ->where(
+                        'screen_number',
+                        $screenNumber
+                    )
+                    ->exists();
+
+                if ($exists) {
+                    continue;
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Screen Type
+                |--------------------------------------------------------------------------
+                */
+                $screenType = $this->getScreenType(
+                    $screenNumber
+                );
+
+                /*
+                |--------------------------------------------------------------------------
+                | Seat Count
+                |--------------------------------------------------------------------------
+                */
+                $totalSeats = $this->getSeatCount(
+                    $screenType
+                );
+
+                /*
+                |--------------------------------------------------------------------------
+                | Insert Screen
+                |--------------------------------------------------------------------------
+                */
+                DB::table('screens')->insert([
+                    'id' => (string) Str::uuid(),
+
+                    'cinema_id' => $cinema->id,
+
+                    'screen_number' => $screenNumber,
+
+                    'screen_name' =>
+                        'Screen ' . $screenNumber,
+
+                    'screen_type' => $screenType,
+
+                    'layout_id' => $layout->id,
+
+                    'total_seats' => $totalSeats,
+
+                    'is_active' => true,
+
+                    'created_by_id' => null,
+
+                    'created_at' => now(),
+
+                    'updated_at' => now(),
+                ]);
+            }
+
+            $this->command?->info(
+                "{$cinema->cinema_name}: {$totalScreens} screens ready."
+            );
+        }
+    }
+
+    /**
+     * Determine screen type.
+     */
+    private function getScreenType(
+        int $screenNumber
+    ): string {
+        return match ($screenNumber % 5) {
+            3 => 'IMAX',
+            4 => '4DX',
+            0 => 'Dolby Cinema',
+            default => 'Standard',
+        };
+    }
+
+    /**
+     * Determine seat count from screen type.
+     */
+    private function getSeatCount(
+        string $screenType
+    ): int {
+        return match ($screenType) {
+            'IMAX' => 150,
+            '4DX' => 80,
+            'Dolby Cinema' => 120,
+            default => 100,
+        };
     }
 }

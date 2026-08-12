@@ -1,12 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\Api\PostController;
 
-Route::middleware('auth')->group(function () {
-    Route::get('/recommendations', [RecommendationController::class, 'getRecommendations']);
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::get(
+        '/recommendations',
+        [RecommendationController::class, 'getRecommendations']
+    );
 });
 
 // Community Discussion - Posts & Replies (No auth middleware for testing)

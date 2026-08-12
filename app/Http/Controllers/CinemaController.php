@@ -3,15 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cinema;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class CinemaController extends Controller
 {
     /**
-     * Display the specified cinema profile
+     * Display the specified cinema profile.
      */
     public function show(Cinema $cinema): View
     {
+        // Save the currently selected cinema in the session.
+        // This will later be used to display:
+        // POPCORN PASS - Osaka / Tokyo / Nagoya
+        session([
+            'selected_cinema_id' => $cinema->id,
+        ]);
+
         $cinema->load('reviews.user');
 
         // Refactored score structure for the loop
@@ -71,5 +79,49 @@ class CinemaController extends Controller
             'scoreBreakdown' => $scoreBreakdown,
             'reviews' => $reviews,
         ]);
+    }
+
+    /**
+     * Save the selected cinema and redirect
+     * the user to the cinema's official website.
+     */
+    public function visit(Cinema $cinema): RedirectResponse
+    {
+        // Remember which cinema the user selected.
+        session([
+            'selected_cinema_id' => $cinema->id,
+        ]);
+
+        /**
+         * If an official website has not been registered,
+         * redirect to the existing cinema profile page
+         * instead of returning a 404/500 error.
+         */
+        if (blank($cinema->website_url)) {
+            return redirect()
+                ->route('cinemas.show', $cinema)
+                ->with(
+                    'warning',
+                    'The official cinema website is not available.'
+                );
+        }
+
+        /**
+         * Security check:
+         * Only allow normal HTTP / HTTPS URLs.
+         */
+        $scheme = parse_url($cinema->website_url, PHP_URL_SCHEME);
+
+        if (!in_array($scheme, ['http', 'https'], true)) {
+            return redirect()
+                ->route('cinemas.show', $cinema)
+                ->with(
+                    'warning',
+                    'The official cinema website URL is invalid.'
+                );
+        }
+
+        // Redirect outside Popcorn Pass to the official cinema website.
+        return redirect()->away($cinema->website_url);
     }
 }
