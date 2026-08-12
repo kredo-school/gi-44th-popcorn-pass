@@ -12,6 +12,7 @@
                 <span class="menu-text">MENU</span>
             </button>
 
+
 <!-- Logo + Selected Cinema -->
 @php
     $selectedCinema = null;
@@ -43,19 +44,21 @@
         </span>
     @endif
 </a>
+
             <!-- right button -->
             <div class="ms-lg-auto d-flex align-items-center gap-2">
 
                 @auth
 
                     <!-- My Page -->
-                    <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-text">
-                        <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35" class="m-0">
+                    <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-btn">
+                        <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
                         My Page
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-color mypage-text">
-                        <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35" class="m-0">
+                    <a href="{{ route('login') }}" class="btn btn-color mypage-btn">
+                        <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
+
                         Log in
                     </a>
 

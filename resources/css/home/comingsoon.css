@@ -139,15 +139,6 @@
     text-overflow: ellipsis;
 }
 
-.coming-slider-btn {
-    position: absolute;
-    right:20px; 
-    width: 45px;
-    height: 80%;
-    border-radius: 5%;
-    margin-top: 3%;
-}
-
 .coming-soon-track {
     overflow-x: hidden;
     scroll-behavior: smooth;
@@ -169,4 +160,33 @@
 .coming-detail-btn:hover{
     background:#f5c126;
     color:#000;
+}
+
+.comingsoon-btn{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 58px;
+    height: 58px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(0,0,0,.65);
+    color: #fff;
+    font-size: 22px;
+    transition: .3s;
+    z-index: 20;
+}
+
+.comingsoon-btn:hover{
+    background: #e50914;
+    transform: translateY(-50%) scale(1.08);
+    box-shadow: 0 0 18px rgba(229,9,20,.6);
+}
+
+#comingSoonPrevBtn{
+    left: -30px;
+}
+
+#comingSoonNextBtn{
+    right: -30px;
 }

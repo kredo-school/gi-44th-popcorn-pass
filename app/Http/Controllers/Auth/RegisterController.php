@@ -33,13 +33,20 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['required', 'string', 'max:20', 'unique:users,phone'],
             'password' => ['required', 'confirmed', Password::defaults()],
-            'age' => ['nullable', 'integer', 'min:1', 'max:120'],
+
+            // Birthday
+            'date_of_birth' => ['nullable', 'date', 'before:today'],
+
             'gender' => ['nullable', 'string', 'max:30'],
-            'occupation' => ['nullable', 'string', 'max:100'],
+            'occupation' => [
+                'nullable',
+                'in:student,company_employee,government_employee,self_employed,freelancer,part_time,homemaker,unemployed,other'
+            ],
         ], [
             'username.unique' => 'This username is already taken.',
             'email.unique' => 'This email is already registered.',
             'phone.unique' => 'This phone number is already registered.',
+            'date_of_birth.before' => 'Birthday must be before today.',
         ]);
     }
 
@@ -51,14 +58,15 @@ class RegisterController extends Controller
             'last_name' => $data['last_name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
-            'password_hash' => $data['password'], // 'hashed' castで自動ハッシュ化される
-            'date_of_birth' => isset($data['age'])
-                ? now()->subYears((int) $data['age'])->startOfYear()->toDateString()
-                : null,
+            'password_hash' => $data['password'],
+
+            // Birthdayをそのまま保存
+            'date_of_birth' => $data['date_of_birth'] ?? null,
+
             'gender' => $data['gender'] ?? null,
             'occupation' => $data['occupation'] ?? null,
             'points' => 0,
-            'role' => 1, // customer — 固定値
+            'role' => 1,
             'is_active' => 1,
         ]);
     }

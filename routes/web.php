@@ -7,7 +7,6 @@ use App\Http\Controllers\CinemaController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\CinemaReviewController;
-use App\Http\Controllers\RecommendationController;
 use App\Http\Controllers\MyPage\DashboardController;
 use App\Http\Controllers\MyPage\RewardsController;
 use App\Http\Controllers\MyPage\MoviesWatchedController;
@@ -19,6 +18,8 @@ use App\Http\Controllers\MyPage\CancelController;
 use App\Http\Controllers\MyPage\CouponController;
 use App\Http\Controllers\Api\NearByCinemasController;
 use App\Http\Controllers\Customer\ChatController;
+use App\Http\Controllers\RecommendationController;
+
 
 
 // ===========================

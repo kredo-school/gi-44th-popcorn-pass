@@ -23,7 +23,9 @@
                             <h1>{{ $movie->title }}</h1>
 
                             <div class="mt-1">
-                                ※ {{ $movie->ageRating?->title ?? 'Not set' }}
+
+                                ※ {{ $movie->ageRating->title ?? 'Age rating not set' }}
+
                             </div>
                         </div>
 

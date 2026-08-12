@@ -49,6 +49,7 @@ class HomeController extends Controller
      */
     private function getHomeData(?Cinema $cinema = null): array
     {
+
         /*
         |--------------------------------------------------------------------------
         | Now Showing
@@ -66,6 +67,7 @@ class HomeController extends Controller
         }
 
         $movies = $moviesQuery
+
             ->orderBy('released_date', 'desc')
             ->get();
 
@@ -90,6 +92,7 @@ class HomeController extends Controller
             ->orderBy('released_date', 'asc')
             ->get();
 
+
         /*
         |--------------------------------------------------------------------------
         | Top Movies
@@ -108,6 +111,7 @@ class HomeController extends Controller
         }
 
         $topMovies = $topMoviesQuery
+
             ->orderByDesc('review_average')
             ->take(10)
             ->get();

@@ -37,12 +37,25 @@ class LoginController extends Controller
 
     protected function attemptLogin(Request $request): bool
     {
-        $field = $this->resolveLoginField($request->input('identifier'));
+        $field = $this->resolveLoginField(
+            $request->input('identifier')
+        );
 
-        return $this->guard()->attempt([
+        $success = $this->guard()->attempt([
             $field => $request->input('identifier'),
             'password' => $request->input('password'),
         ], $request->boolean('remember'));
+
+        // Login successful → update last login time
+        if ($success) {
+            $user = $this->guard()->user();
+
+            $user->update([
+                'last_login_at' => now(),
+            ]);
+        }
+
+        return $success;
     }
 
     /**
