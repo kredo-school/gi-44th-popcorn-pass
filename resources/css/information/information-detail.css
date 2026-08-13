@@ -147,24 +147,28 @@
 }
 
 /* Back Button */
-.info-back-btn {
+a.info-back-btn {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     padding: 10px 24px;
-    background: #1B2F55;
-    color: #fff;
-    border: 2px solid #1B2F55;
+    color: #fff !important;
+    background: #1b2f55;
+    border: 2px solid #1b2f55;
     border-radius: 8px;
     font-weight: 700;
     text-decoration: none;
-    transition: .25s;
+    text-shadow: none;
+    -webkit-text-fill-color: #fff;
+    -webkit-text-stroke: 0;
+    transition: 0.25s;
 }
 
-.info-back-btn:hover {
+a.info-back-btn:hover {
+    color: #1b2f55 !important;
     background: #fff;
-    color: #1B2F55;
     text-decoration: none;
+    -webkit-text-fill-color: #1b2f55;
 }
 
 /* Pagination */

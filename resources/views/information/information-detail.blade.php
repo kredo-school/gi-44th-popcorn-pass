@@ -48,11 +48,10 @@
 
 
     {{-- Back Button --}}
-    <div class="mt-5">
-        <button type="button" class="info-back-btn" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i> BACK
-        </button>
-    </div>
+    <a href="{{ route('information.index') }}" class="info-back-btn">
+        <i class="fa-solid fa-arrow-left"></i>
+        BACK
+    </a>
 
 </div>
 

@@ -138,9 +138,10 @@
         </div>
 
         {{-- Back Button --}}
-        <button type="button" class="back-btn ms-5" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i> BACK
-        </button>
+        <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}" class="back-btn ms-5 text-decoration-none">
+            <i class="fa-solid fa-arrow-left"></i>
+            Movie Detail
+        </a>
 
     </div>
 

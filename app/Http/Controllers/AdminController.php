@@ -1045,8 +1045,8 @@ public function dashboard(Request $request)
     // --------------------
     // Analytics
     // --------------------
-public function analytics(Request $request)
-{
+    public function analytics(Request $request)
+    {
     /*
     |--------------------------------------------------------------------------
     | Filters
