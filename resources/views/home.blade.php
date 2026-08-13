@@ -165,9 +165,9 @@
                                             @if (isset($information_slide) && $information_slide)
                                                 <div class="d-flex justify-content-between align-items-center mt-2 mb-2">
                                                     <span class="hero-tag mb-0"
-                                                        style="background-color: {{ $information_slide->category?->color ?? '#6c757d' }};
-                                                                         color: {{ $information_slide->category?->text_color ?? '#fff' }};">
-                                                        {{ $information_slide->category?->name ?? 'General' }}
+                                                        style="background-color: {{ optional($information_slide->category)->color ?? '#6c757d' }};
+                                                                         color: {{ optional($information_slide->category)->text_color ?? '#fff' }};">
+                                                        {{ optional($information_slide->category)->name ?? 'General' }}
                                                     </span>
                                                     <h2 class="info-card-title mb-0">
                                                         {{ $information_slide->title }}
@@ -534,7 +534,9 @@
                                                     <div
                                                         class="ticket-stub {{ $daysLeft <= 0 ? 'ticket-stub-today' : '' }}">
                                                         <span class="ticket-stub-label">
-                                                            @if ($daysLeft == 0)
+                                                            @if ($daysLeft <= 0)
+                                                                Today
+                                                            @elseif ($daysLeft == 1)
                                                                 Tomorrow
                                                             @else
                                                                 {{ $daysLeft }}
@@ -592,9 +594,9 @@
 
                                             {{-- Category --}}
                                             <span class="info-list-badge"
-                                                style="background-color: {{ $info->category?->color ?? '#6c757d' }};
-                                                        color: {{ $info->category?->text_color ?? '#fff' }};">
-                                                {{ $info->category?->name ?? 'General' }}
+                                                style="background-color: {{ optional($info->category)->color ?? '#6c757d' }};
+                                                        color: {{ optional($info->category)->text_color ?? '#fff' }};">
+                                                {{ optional($info->category)->name ?? 'General' }}
                                             </span>
 
                                             {{-- Title --}}
