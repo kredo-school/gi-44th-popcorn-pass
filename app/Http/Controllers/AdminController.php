@@ -1446,6 +1446,27 @@ class AdminController extends Controller
         }
 
         /*
+        |--------------------------------------------------------------------------
+        | Daily Revenue Chart
+        |--------------------------------------------------------------------------
+        */
+        $dailyRevenueQuery = Payment::query()
+            ->selectRaw('DATE(paid_at) as date, SUM(amount) as total')
+            ->where('payment_status', 'paid')
+            ->whereYear('paid_at', $selectedYear);
+
+        if ($cinemaId) {
+            $dailyRevenueQuery->whereHas('reservation', function ($query) use ($cinemaId) {
+                $query->where('cinema_id', $cinemaId);
+            });
+        }
+
+        $dailyRevenueChart = $dailyRevenueQuery
+            ->groupByRaw('DATE(paid_at)')
+            ->orderByRaw('DATE(paid_at)')
+            ->get();
+
+        /*
     |--------------------------------------------------------------------------
     | View
     |--------------------------------------------------------------------------
@@ -1466,6 +1487,7 @@ class AdminController extends Controller
                 'avgRevenuePerReservation',
                 'monthlyRevenueData',
                 'monthlyReservationData',
+                'dailyRevenueChart',
                 'topMovies',
                 'cinemaPerformance'
             )

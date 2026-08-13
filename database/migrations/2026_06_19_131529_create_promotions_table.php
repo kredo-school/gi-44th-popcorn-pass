@@ -22,8 +22,8 @@ return new class extends Migration
             $table->integer('max_uses')->nullable();
             $table->integer('current_uses')->default(0);
             $table->integer('min_ticket_purchase')->default(1);
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
+            $table->dateTime('start_date');
+            $table->dateTime('end_date');
             $table->string('promotion_status', 30)->default('active');
             $table->uuid('created_by_id')->nullable();
             $table->timestamps();
