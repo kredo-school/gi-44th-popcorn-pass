@@ -20,7 +20,7 @@ class ScreenSeatSeeder extends Seeder
         | Current database has "Standard" only.
         |
         */
-        $standard = SeatCategory::where('title', 'Standard')->first();
+        $standard = SeatCategory::where('title', 'Standard')->first() ?? SeatCategory::where('title', 'Regular')->first();
 
         if (!$standard) {
             $this->command?->error(
