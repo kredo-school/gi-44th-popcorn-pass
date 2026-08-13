@@ -54,7 +54,6 @@
                     {{ $unreadMessages }}
                 </span>
             @endif
-
         </div>
 
         {{-- Swiper section --}}
