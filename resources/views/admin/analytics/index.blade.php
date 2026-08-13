@@ -211,8 +211,8 @@
         <div class="col-md-7">
             <div class="card card-dark p-3" style="height: 360px;">
                 <div class="text-warning fw-bold mb-2">Daily Revenue</div>
-                <canvas id="dailyRevenueChart" data-labels='@json($dailyRevenueChart->pluck("date")->values())'
-                    data-values='@json($dailyRevenueChart->pluck("total")->values())'></canvas>
+                <canvas id="dailyRevenueChart" data-labels='@json(($dailyRevenueChart ?? collect())->pluck("date")->values())'
+                    data-values='@json(($dailyRevenueChart ?? collect())->pluck("total")->values())'></canvas>
             </div>
         </div>
 
