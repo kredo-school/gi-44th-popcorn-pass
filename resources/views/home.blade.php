@@ -77,7 +77,7 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div class="col-lg-4 position-relative h-100">
+                                        <div class="col-lg-4 position-relative h-100 hero-left">
                                             <img src="{{ $heroMovie->banner_image_url }}" class="hero-image"
                                                 alt="{{ $heroMovie->title }}">
 
@@ -100,7 +100,9 @@
 
                                         <div
                                             class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                            <iframe class="hero-video" src="{{ $heroMovie->trailer_url }}"
+                                            <iframe class="hero-video"
+                                                src="https://www.youtube-nocookie.com/embed/jSGmZ85krBs?autoplay=1&mute=1&loop=1&playlist=jSGmZ85krBs"
+                                                referrerpolicy="strict-origin-when-cross-origin"
                                                 allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                         </div>
 
@@ -116,7 +118,7 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div class="col-lg-4 position-relative h-100">
+                                        <div class="col-lg-4 position-relative h-100 hero-left">
                                             <img src="{{ $topMovie->banner_image_url }}" class="hero-image"
                                                 alt="{{ $topMovie->title }}">
 
@@ -143,8 +145,12 @@
 
                                         <div
                                             class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                            <iframe class="hero-video" src="{{ $topMovie->trailer_url }}"
-                                                allow="autoplay; encrypted-media" allowfullscreen>
+                                            <iframe class="hero-video"
+                                                src="https://www.youtube-nocookie.com/embed/jSGmZ85krBs?autoplay=1&mute=1&loop=1&playlist=jSGmZ85krBs"
+                                                title="{{ $topMovie->title }} Trailer"
+                                                referrerpolicy="strict-origin-when-cross-origin"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                allowfullscreen>
                                             </iframe>
                                         </div>
 
@@ -156,10 +162,9 @@
                         {{-- Slide 4: Information --}}
                         <div class="swiper-slide">
                             <div class="w-75 mx-auto h-100">
-                                <div class="row g-0 align-items-center justify-content-center h-100">
+                                <div class="row g-0 align-items-center justify-content-center">
 
-                                    <div
-                                        class="col-lg-8 d-flex align-items-center justify-content-center h-100 ps-lg-5">
+                                    <div class="col-lg-10 d-flex align-items-center justify-content-center h-100 ps-lg-5">
                                         <div class="info-card">
                                             <span class="hero-tag hero-tag-blue">INFORMATION</span>
                                             @if (isset($information_slide) && $information_slide)
@@ -345,19 +350,32 @@
                             <div class="side-ranking ranking-side-background mt-1">
                                 @if (isset($topMovies))
                                     @foreach ($topMovies->slice(3, 7)->values() as $index => $movie)
-                                        <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
-                                            class="ranking-list-item text-decoration-none">
-                                            <span class="ranking-position">
-                                                {{ $index + 4 }}
-                                            </span>
+                                        <div class="ranking-list-item">
 
-                                            <img src="{{ asset($movie->poster_url) }}" class="ranking-thumb"
-                                                alt="{{ $movie->title }}">
+                                            <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}"
+                                                class="ranking-movie-link text-decoration-none">
 
-                                            <span class="ranking-title">
-                                                {{ $movie->title }}
-                                            </span>
-                                        </a>
+                                                <span class="ranking-position">
+                                                    {{ $index + 4 }}
+                                                </span>
+
+                                                <img src="{{ asset($movie->poster_url) }}" class="ranking-thumb"
+                                                    alt="{{ $movie->title }}">
+
+                                                <span class="ranking-title">
+                                                    {{ $movie->title }}
+                                                </span>
+
+                                            </a>
+
+                                            <div class="ranking-book-area">
+                                                <a href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}"
+                                                    class="ranking-slide-book-btn text-decoration-none">
+                                                    BOOK NOW
+                                                </a>
+                                            </div>
+
+                                        </div>
                                     @endforeach
                                 @endif
                             </div>
@@ -371,6 +389,8 @@
         </div>
 
         <hr class="text-white">
+
+
 
         {{-- Recommended for You --}}
         @auth
@@ -528,8 +548,8 @@
 
                                                 <div class="coming-poster-wrap mb-3">
                                                     <div class="film-sprockets"></div>
-                                                    <img src="{{ asset($movie->poster_url) }}"
-                                                        alt="{{ $movie->title }}" class="coming-poster">
+                                                    <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
+                                                        class="coming-poster">
 
                                                     <div
                                                         class="ticket-stub {{ $daysLeft <= 0 ? 'ticket-stub-today' : '' }}">
@@ -587,8 +607,7 @@
 
                             @if (isset($information))
                                 @forelse($information as $info)
-                                    <a href="{{ route('information.detail', $info->id) }}"
-                                        class="text-decoration-none">
+                                    <a href="{{ route('information.detail', $info->id) }}" class="text-decoration-none">
 
                                         <div class="info-list-item">
 

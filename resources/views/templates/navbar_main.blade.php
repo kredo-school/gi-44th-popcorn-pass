@@ -13,37 +13,27 @@
             </button>
 
 
-<!-- Logo + Selected Cinema -->
-@php
-    $selectedCinema = null;
+            <!-- Logo + Selected Cinema -->
+            @php
+                $selectedCinema = null;
 
-    $selectedCinemaId = session('selected_cinema_id');
+                $selectedCinemaId = session('selected_cinema_id');
 
-    if ($selectedCinemaId) {
-        $selectedCinema = \App\Models\Cinema::where('is_active', true)
-            ->find($selectedCinemaId);
-    }
-@endphp
+                if ($selectedCinemaId) {
+                    $selectedCinema = \App\Models\Cinema::where('is_active', true)->find($selectedCinemaId);
+                }
+            @endphp
 
-<a
-    class="navbar-brand m-0 p-0 d-flex align-items-center text-decoration-none"
-    href="{{ $selectedCinema
-        ? route('cinemas.home', $selectedCinema)
-        : url('/') }}"
->
-    <img
-        src="{{ asset('images/layouts/logo.png') }}"
-        alt="Popcorn Pass"
-        width="70"
-        height="70"
-    >
+            <a class="navbar-brand m-0 p-0 d-flex align-items-center text-decoration-none"
+                href="{{ $selectedCinema ? route('cinemas.home', $selectedCinema) : url('/') }}">
+                <img src="{{ asset('images/layouts/logo.png') }}" alt="Popcorn Pass" width="70" height="70">
 
-    @if($selectedCinema)
-        <span class="ms-2 text-white fw-bold">
-            - {{ $selectedCinema->cinema_name }}
-        </span>
-    @endif
-</a>
+                @if ($selectedCinema)
+                    <span class="ms-2 text-white fw-bold">
+                        - {{ $selectedCinema->cinema_name }}
+                    </span>
+                @endif
+            </a>
 
             <!-- right button -->
             <div class="ms-lg-auto d-flex align-items-center gap-2">
@@ -84,7 +74,7 @@
         Top Page
     </a>
 
-   
+
     <div class="row">
         <div class="col-lg-6 text-center">
             <a href="#" class="sidebar-search-item">
@@ -108,11 +98,11 @@
     </a>
 
 
-    <a href="{{ route('information.index')}}" class="bar-item">
+    <a href="{{ route('information.index') }}" class="bar-item">
         <i class="fa-solid fa-circle-exclamation"></i>
         Information
     </a>
-    <a href="{{ route('customer.chat.index')}}" class="bar-item">
+    <a href="{{ route('customer.chat.index') }}" class="bar-item">
         <i class="fa-solid fa-circle-question"></i>
         Contact
     </a>

@@ -150,6 +150,9 @@
                                     <label class="form-label text-secondary small">Trailer URL</label>
                                     <input type="url" name="trailer_url" class="form-control"
                                         value="{{ old('trailer_url', $movie->trailer_url) }}">
+                                    <label class="form-label text-secondary small">
+                                        Change youtube.com -> youtube-nocookie.com
+                                    </label>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-secondary small">Search Keywords</label>
@@ -265,10 +268,8 @@
                                     <option value="">Select cinema...</option>
 
                                     @foreach ($cinemas as $cinemaOption)
-                                        <option
-                                            value="{{ $cinemaOption->id }}"
-                                            {{ $cinema?->id === $cinemaOption->id ? 'selected' : '' }}
-                                        >
+                                        <option value="{{ $cinemaOption->id }}"
+                                            {{ $cinema?->id === $cinemaOption->id ? 'selected' : '' }}>
                                             {{ $cinemaOption->cinema_name }}
                                         </option>
                                     @endforeach
@@ -297,12 +298,8 @@
                                     Start Date
                                 </label>
 
-                                <input
-                                    type="date"
-                                    class="form-control"
-                                    id="gen-start-date"
-                                    value="{{ optional($movie->released_date)->format('Y-m-d') }}"
-                                >
+                                <input type="date" class="form-control" id="gen-start-date"
+                                    value="{{ optional($movie->released_date)->format('Y-m-d') }}">
                             </div>
 
                             <div class="col-md-3">
@@ -310,12 +307,8 @@
                                     End Date
                                 </label>
 
-                                <input
-                                    type="date"
-                                    class="form-control"
-                                    id="gen-end-date"
-                                    value="{{ optional($movie->end_date)->format('Y-m-d') }}"
-                                >
+                                <input type="date" class="form-control" id="gen-end-date"
+                                    value="{{ optional($movie->end_date)->format('Y-m-d') }}">
                             </div>
                         </div>
                     </div>
@@ -329,18 +322,10 @@
                         <div class="d-flex gap-3 flex-wrap">
                             @foreach (['Sun' => 0, 'Mon' => 1, 'Tue' => 2, 'Wed' => 3, 'Thu' => 4, 'Fri' => 5, 'Sat' => 6] as $label => $value)
                                 <div class="form-check">
-                                    <input
-                                        class="form-check-input gen-day"
-                                        type="checkbox"
-                                        value="{{ $value }}"
-                                        id="day-{{ $value }}"
-                                        checked
-                                    >
+                                    <input class="form-check-input gen-day" type="checkbox" value="{{ $value }}"
+                                        id="day-{{ $value }}" checked>
 
-                                    <label
-                                        class="form-check-label"
-                                        for="day-{{ $value }}"
-                                    >
+                                    <label class="form-check-label" for="day-{{ $value }}">
                                         {{ $label }}
                                     </label>
                                 </div>
@@ -357,10 +342,7 @@
                         <div class="row g-2">
                             @for ($i = 0; $i < 6; $i++)
                                 <div class="col-md-2">
-                                    <input
-                                        type="time"
-                                        class="form-control gen-slot"
-                                    >
+                                    <input type="time" class="form-control gen-slot">
                                 </div>
                             @endfor
                         </div>
@@ -368,19 +350,12 @@
 
                     {{-- Generate --}}
                     <div class="col-12">
-                        <button
-                            type="button"
-                            class="btn btn-warning"
-                            id="generate-btn"
-                            data-url="{{ route('admin.movies.showtimes.generate', $movie->id) }}"
-                        >
+                        <button type="button" class="btn btn-warning" id="generate-btn"
+                            data-url="{{ route('admin.movies.showtimes.generate', $movie->id) }}">
                             Generate Showtimes
                         </button>
 
-                        <span
-                            class="ms-3 text-secondary small"
-                            id="generate-msg"
-                        ></span>
+                        <span class="ms-3 text-secondary small" id="generate-msg"></span>
                     </div>
 
                 </div>
@@ -400,15 +375,8 @@
                         <div class="text-secondary text-center py-3">
                             No showtimes registered.
                         </div>
-
                     @else
-
-                        @foreach (
-                            $showtimes->groupBy(
-                                fn ($showtime) => $showtime->start_time->format('Y/m/d')
-                            ) as $date => $dailyShowtimes
-                        )
-
+                        @foreach ($showtimes->groupBy(fn($showtime) => $showtime->start_time->format('Y/m/d')) as $date => $dailyShowtimes)
                             <div class="d-flex align-items-center mt-3 mb-2">
                                 <i class="fa-solid fa-calendar-days text-warning me-2"></i>
 
@@ -448,18 +416,12 @@
                                             </td>
 
                                             <td class="text-end">
-                                                <form
-                                                    action="{{ route('admin.showtimes.delete', $showtime->id) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('Delete this showtime?')"
-                                                >
+                                                <form action="{{ route('admin.showtimes.delete', $showtime->id) }}"
+                                                    method="POST" onsubmit="return confirm('Delete this showtime?')">
                                                     @csrf
                                                     @method('DELETE')
 
-                                                    <button
-                                                        type="submit"
-                                                        class="btn btn-danger btn-sm"
-                                                    >
+                                                    <button type="submit" class="btn btn-danger btn-sm">
                                                         <i class="fa-solid fa-trash"></i>
                                                         Delete
                                                     </button>
@@ -470,7 +432,6 @@
                                 </tbody>
 
                             </table>
-
                         @endforeach
 
                     @endif
@@ -482,7 +443,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const cinemaSelect = document.getElementById('gen-cinema');
             const screenSelect = document.getElementById('gen-screen');
             const generateBtn = document.getElementById('generate-btn');
@@ -509,11 +470,11 @@
                     return;
                 }
 
-                const filteredScreens = allScreens.filter(function (screen) {
+                const filteredScreens = allScreens.filter(function(screen) {
                     return String(screen.cinema_id) === cinemaId;
                 });
 
-                filteredScreens.forEach(function (screen) {
+                filteredScreens.forEach(function(screen) {
                     const option = document.createElement('option');
 
                     option.value = screen.id;
@@ -545,21 +506,21 @@
                 return;
             }
 
-            generateBtn.addEventListener('click', async function () {
+            generateBtn.addEventListener('click', async function() {
                 const screenId = screenSelect.value;
                 const startDate = document.getElementById('gen-start-date')?.value;
                 const endDate = document.getElementById('gen-end-date')?.value;
 
                 const days = Array.from(
                     document.querySelectorAll('.gen-day:checked')
-                ).map(function (checkbox) {
+                ).map(function(checkbox) {
                     return Number(checkbox.value);
                 });
 
                 const timeSlots = Array.from(
-                    document.querySelectorAll('.gen-slot')
-                )
-                    .map(function (input) {
+                        document.querySelectorAll('.gen-slot')
+                    )
+                    .map(function(input) {
                         return input.value;
                     })
                     .filter(Boolean);
@@ -639,7 +600,7 @@
                     generateMsg.className =
                         'ms-3 text-success small';
 
-                    setTimeout(function () {
+                    setTimeout(function() {
                         window.location.reload();
                     }, 800);
 
