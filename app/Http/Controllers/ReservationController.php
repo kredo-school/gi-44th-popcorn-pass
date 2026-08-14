@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Showtime;
 use App\Models\ReservationSeat;
+use App\Models\Ticket;
 use App\Models\ShowtimeSeat;
 use App\Models\Payment;
 use App\Services\DynamicPricingService;
@@ -864,12 +865,19 @@ class ReservationController extends Controller
                     throw new \Exception("Seat not found: " . $seat['seat']);
                 }
 
-                ReservationSeat::create([
+                $reservationSeat = ReservationSeat::create([
                     'id' => Str::uuid(),
                     'reservation_id' => $reservation->id,
                     'showtime_seat_id' => $showtimeSeat->id,
                     'price_at_reservation' => ($seat['price'] ?? 0)
                         + (!empty($seat['premium']) ? 10 : 0),
+                ]);
+
+                // Create one individual QR ticket per reserved seat.
+                Ticket::create([
+                    'id' => Str::uuid(),
+                    'reservation_seat_id' => $reservationSeat->id,
+                    'qr_token' => Str::random(64),
                 ]);
 
                 $showtimeSeat->update([
@@ -978,12 +986,10 @@ class ReservationController extends Controller
     // Cancel tickets from mypage
     public function cancel(Reservation $reservation)
     {
-        // 自分の予約以外はキャンセル不可
         if ($reservation->user_id !== Auth::id()) {
             abort(403);
         }
 
-        // 既にキャンセル済み
         if ($reservation->reservation_status === 'cancelled') {
             return back()->with('error', 'This reservation has already been cancelled.');
         }
