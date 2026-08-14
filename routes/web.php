@@ -379,74 +379,54 @@ Route::middleware('auth')
     ->prefix('mypage')
     ->name('mypage.')
     ->group(function () {
-
-        Route::get('/', [DashboardController::class, 'index'])
-            ->name('dashboard');
-
-        Route::get('/profile', [ProfileController::class, 'show'])
-            ->name('profile');
-
-        Route::get('/profile/edit', [ProfileController::class, 'edit'])
-            ->name('profile.edit');
-
-        Route::put('/profile', [ProfileController::class, 'update'])
-            ->name('profile.update');
-
-        Route::get('/rewards', [RewardsController::class, 'index'])
-            ->name('rewards');
-
-        Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])
-            ->name('movies-watched');
-
-        Route::post(
-            '/movies-watched/{reservation}/send-review-email',
-            [MoviesWatchedController::class, 'sendReviewEmail']
-        )->name('movies-watched.send-review-email');
-
-        Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])
-            ->name('reviews.create');
-
-        Route::post('/reviews', [MyPageReviewController::class, 'store'])
-            ->name('reviews.store');
-
-        Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])
-            ->name('reviews.update');
-
-        Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])
-            ->name('reviews-written');
-
-        Route::get('/tickets', [TicketController::class, 'index'])
-            ->name('tickets');
-
-        Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])
-            ->name('tickets.qrcode');
-
-        Route::get('/cancel/{id}', [CancelController::class, 'show'])
-            ->name('cancel.show');
-
-        Route::post('/cancel/{id}', [CancelController::class, 'cancel'])
-            ->name('cancel.confirm');
-
-        Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])
-            ->name('cancel.complete');
-
-        Route::delete('/reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])
-            ->name('reservations.cancel');
-
-
-        // Cinema Review Routes
-        Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])
-            ->name('cinema-reviews.store');
-
-        Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])
-            ->name('cinema-reviews.index');
-
-        Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])
-            ->name('cinema-reviews.show');
-
-        Route::get('/coupons', [CouponController::class, 'index'])
-            ->name('coupons');
-    });
+    //dashboard
+    Route::get('/', [DashboardController::class, 'index'])
+        ->name('dashboard');
+    //profile
+    Route::get('/profile', [ProfileController::class, 'show'])
+        ->name('profile');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])
+        ->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])
+        ->name('profile.update');
+    Route::get('/rewards', [RewardsController::class, 'index'])
+        ->name('rewards');
+    //movie
+    Route::get('/movies-watched', [MoviesWatchedController::class, 'index'])
+        ->name('movies-watched');
+    Route::post('/movies-watched/{reservation}/send-review-email',[MoviesWatchedController::class, 'sendReviewEmail'])
+        ->name('movies-watched.send-review-email');
+    //review
+    Route::get('/reviews/create/{movie}', [MyPageReviewController::class, 'create'])
+        ->name('reviews.create');
+    Route::post('/reviews', [MyPageReviewController::class, 'store'])
+        ->name('reviews.store');
+    Route::put('/reviews/{id}', [MyPageReviewController::class, 'update'])
+        ->name('reviews.update');
+    Route::get('/reviews-written', [ReviewsWrittenController::class, 'index'])
+        ->name('reviews-written');
+    //ticket
+    Route::get('/tickets', [TicketController::class, 'index'])
+        ->name('tickets');
+    Route::get('/tickets/{id}/qrcode', [TicketController::class, 'showQrCode'])
+        ->name('tickets.qrcode');
+    //ticket cancel
+    Route::get('/cancel/{id}', [CancelController::class, 'show'])
+        ->name('cancel.show');
+    Route::post('/cancel/{id}', [CancelController::class, 'cancel'])
+        ->name('cancel.confirm');
+    Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])
+        ->name('cancel.complete');
+    // Cinema Review Routes
+    Route::post('/cinema-reviews', [CinemaReviewController::class, 'store'])
+        ->name('cinema-reviews.store');
+    Route::get('/cinema-reviews', [CinemaReviewController::class, 'getUserReviews'])
+        ->name('cinema-reviews.index');
+    Route::get('/cinema-reviews/{cinemaId}', [CinemaReviewController::class, 'getUserReview'])
+        ->name('cinema-reviews.show');
+    Route::get('/coupons', [CouponController::class, 'index'])
+        ->name('coupons');
+});
 
 
 // ===========================
@@ -492,4 +472,3 @@ Route::get(
     '/map',
     [App\Http\Controllers\MapController::class, 'index']
 )->name('map.index');
-

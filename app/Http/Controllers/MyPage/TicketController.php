@@ -56,11 +56,17 @@ class TicketController extends Controller
         */
         } elseif ($tab === 'past') {
             $tickets = $query
-                ->where('reservation_status', 'confirmed')
-                ->whereHas(
-                    'showtime',
-                    fn ($q) => $q->where('start_time', '<=', now())
-                )
+                ->where(function ($q) {
+                    $q->where('reservation_status', 'expired')
+                        ->orWhere(function ($q) {
+                            $q->where('reservation_status', 'confirmed')
+                                ->whereHas(
+                                    'showtime',
+                                    fn($showtimeQuery) =>
+                                    $showtimeQuery->where('start_time', '<=', now())
+                                );
+                        });
+                })
                 ->orderByDesc($startTimeSub)
                 ->paginate(5)
                 ->withQueryString();

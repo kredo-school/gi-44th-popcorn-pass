@@ -1082,7 +1082,7 @@ class AdminController extends Controller
     // --------------------
     public function analytics(Request $request)
     {
-        /*
+    /*
     |--------------------------------------------------------------------------
     | Filters
     |--------------------------------------------------------------------------
@@ -1500,7 +1500,12 @@ class AdminController extends Controller
     // --------------------
     private function reservationStatusOptions(): array
     {
-        return ['pending', 'confirmed', 'cancelled', 'expired'];
+        return ['confirmed', 'cancelled', 'expired'];
+    }
+
+    private function paymentStatusOptions(): array
+    {
+        return ['pending', 'paid', 'cancelled', 'expired', 'failed'];
     }
 
     private function buildReservationsQuery(Request $request)
@@ -1516,6 +1521,7 @@ class AdminController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->get('search');
+
             $query->where(function ($q) use ($search) {
                 $q->where('reservation_reference', 'like', "%{$search}%")
                     ->orWhereHas('user', function ($uq) use ($search) {
@@ -1524,15 +1530,41 @@ class AdminController extends Controller
             });
         }
 
-        if ($request->filled('status') && $request->get('status') !== 'all') {
-            $query->where('reservation_status', $request->get('status'));
+        // Reservation status
+        if (
+            $request->filled('status')
+            && $request->get('status') !== 'all'
+        ) {
+            $query->where(
+                'reservation_status',
+                $request->get('status')
+            );
         }
 
-        if ($request->filled('cinema_id') && $request->get('cinema_id') !== 'all') {
-            $query->where('cinema_id', $request->get('cinema_id'));
+        // Payment status
+        if (
+            $request->filled('payment_status')
+            && $request->get('payment_status') !== 'all'
+        ) {
+            $query->whereHas('payment', function ($paymentQuery) use ($request) {
+                $paymentQuery->where(
+                    'payment_status',
+                    $request->get('payment_status')
+                );
+            });
         }
 
-        return $query->orderBy('created_at', 'desc');
+        if (
+            $request->filled('cinema_id')
+            && $request->get('cinema_id') !== 'all'
+        ) {
+            $query->where(
+                'cinema_id',
+                $request->get('cinema_id')
+            );
+        }
+
+        return $query->orderByDesc('created_at');
     }
 
     public function markPaymentAsPaid(
@@ -1570,9 +1602,19 @@ class AdminController extends Controller
             ->withQueryString();
 
         $cinemas = Cinema::orderBy('cinema_name')->get();
-        $statusOptions = $this->reservationStatusOptions();
 
-        return view('admin.reservations.index', compact('reservations', 'cinemas', 'statusOptions'));
+        $statusOptions = $this->reservationStatusOptions();
+        $paymentStatusOptions = $this->paymentStatusOptions();
+
+        return view(
+            'admin.reservations.index',
+            compact(
+                'reservations',
+                'cinemas',
+                'statusOptions',
+                'paymentStatusOptions'
+            )
+        );
     }
 
     public function reservationDetails($id)
@@ -1703,7 +1745,7 @@ class AdminController extends Controller
             foreach ($reservations as $reservation) {
                 fputcsv($file, [
                     $reservation->reservation_reference,
-                    $reservation->user->username ?? '—',
+                    $reservation->user->username ?? 'Guest',
                     $reservation->movie->title ?? '—',
                     $reservation->cinema->cinema_name ?? '—',
                     $reservation->screen->screen_number ?? '—',

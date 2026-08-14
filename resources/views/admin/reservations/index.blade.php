@@ -5,32 +5,71 @@
 
 @section('content')
 
-    <form method="GET" action="{{ route('admin.reservations') }}" class="d-flex gap-2 mb-3">
-        <input type="text" name="search" class="form-control" placeholder="Search reservations..." style="max-width: 250px;" value="{{ request('search') }}">
-
-        <select name="status" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
-            <option value="all" {{ request('status', 'all') == 'all' ? 'selected' : '' }}>Status: All</option>
-            @foreach ($statusOptions as $status)
-                <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
-            @endforeach
-        </select>
-
-        <select name="cinema_id" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
-            <option value="all" {{ request('cinema_id', 'all') == 'all' ? 'selected' : '' }}>Cinema: All</option>
+    <form method="GET" action="{{ route('admin.reservations') }}" class="d-flex flex-wrap gap-2 mb-3">
+        <input type="text" name="search" class="form-control" placeholder="Search reservations..." style="max-width: 250px;"
+            value="{{ request('search') }}">
+    
+        {{-- Cinema --}}
+        <select name="cinema_id" class="form-select" style="max-width: 170px;" onchange="this.form.submit()">
+            <option value="all" {{ request('cinema_id', 'all' )==='all' ? 'selected' : '' }}>
+                Cinema: All
+            </option>
+        
             @foreach ($cinemas as $cinema)
-                <option value="{{ $cinema->id }}" {{ request('cinema_id') == $cinema->id ? 'selected' : '' }}>{{ $cinema->cinema_name }}</option>
+            <option value="{{ $cinema->id }}" {{ (string) request('cinema_id')===(string) $cinema->id ? 'selected' : '' }}
+                >
+                {{ $cinema->cinema_name }}
+            </option>
+            @endforeach
+        </select>
+            
+        {{-- Payment Status --}}
+        <select name="payment_status" class="form-select" style="max-width: 170px;" onchange="this.form.submit()">
+            <option value="all" {{ request('payment_status', 'all' )==='all' ? 'selected' : '' }}>
+                Payment: All
+            </option>
+    
+            @foreach ($paymentStatusOptions as $paymentStatus)
+                <option value="{{ $paymentStatus }}" {{ request('payment_status')===$paymentStatus ? 'selected' : '' }}>
+                    {{ ucfirst($paymentStatus) }}
+                </option>
             @endforeach
         </select>
 
-        <button type="submit" class="btn btn-outline-warning">Search</button>
-        @if (request()->filled('search') || request('status', 'all') !== 'all' || request('cinema_id', 'all') !== 'all')
+        {{-- Reservation Status --}}
+        <select name="status" class="form-select" style="max-width: 190px;" onchange="this.form.submit()">
+            <option value="all" {{ request('status', 'all' )==='all' ? 'selected' : '' }}>
+                Status: All
+            </option>
+        
+            @foreach ($statusOptions as $status)
+            <option value="{{ $status }}" {{ request('status')===$status ? 'selected' : '' }}>
+                {{ ucfirst($status) }}
+            </option>
+            @endforeach
+        </select>
+    
+        
+    
+        <button type="submit" class="btn btn-outline-warning">
+            Search
+        </button>
+    
+        @if (
+            request()->filled('search')
+            || request('status', 'all') !== 'all'
+            || request('payment_status', 'all') !== 'all'
+            || request('cinema_id', 'all') !== 'all'
+            )
             <a href="{{ route('admin.reservations') }}" class="btn btn-outline-light">
                 Reset
             </a>
         @endif
-
+    
         <div class="ms-auto">
-            <a href="{{ route('admin.reservations.export', request()->query()) }}" class="btn btn-outline-warning">Export CSV</a>
+            <a href="{{ route('admin.reservations.export', request()->query()) }}" class="btn btn-outline-warning">
+                Export CSV
+            </a>
         </div>
     </form>
 
@@ -44,8 +83,6 @@
                             <th>Customer</th>
                             <th>Movie</th>
                             <th>Cinema</th>
-                            <th>Screen</th>
-                            <th>Seats</th>
                             <th>Amount</th>
                             <th>Payment</th>
                             <th>Status</th>
@@ -55,11 +92,9 @@
                         @forelse ($reservations as $reservation)
                             <tr class="reservation-row" data-reservation-id="{{ $reservation->id }}" style="cursor: pointer;">
                                 <td>{{ $reservation->reservation_reference ?? '—' }}</td>
-                                <td>{{ $reservation->user->username ?? '—' }}</td>
+                                <td>{{ $reservation->user->username ?? 'Guest' }}</td>
                                 <td>{{ $reservation->movie->title ?? '—' }}</td>
                                 <td>{{ $reservation->cinema->cinema_name ?? '—' }}</td>
-                                <td>{{ $reservation->screen->screen_number ?? '—' }}</td>
-                                <td>{{ $reservation->seat_numbers->implode(', ') ?: '—' }}</td>
                                 <td>${{ number_format($reservation->final_amount, 2) }}</td>
                                 <td>
                                     @php
@@ -68,8 +103,9 @@
                                         $paymentBadgeClass = match ($paymentStatus) {
                                         'paid' => 'bg-success',
                                         'pending' => 'bg-warning text-dark',
+                                        'cancelled' => 'bg-danger-subtle text-danger-emphasis',
                                         'failed' => 'bg-danger',
-                                        'refunded' => 'bg-info text-dark',
+                                        'expired' => 'bg-dark border border-secondary',
                                         default => 'bg-secondary',
                                         };
                                     @endphp
@@ -79,7 +115,20 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="badge bg-secondary">{{ $reservation->reservation_status }}</span>
+                                    @php
+                                        $reservationStatus = $reservation->reservation_status;
+                                    
+                                        $reservationBadgeClass = match ($reservationStatus) {
+                                        'confirmed' => 'bg-success',
+                                        'cancelled' => 'bg-danger-subtle text-danger-emphasis',
+                                        'expired' => 'bg-dark border border-secondary',
+                                        default => 'bg-secondary',
+                                        };
+                                    @endphp
+            
+                                    <span class="badge {{ $reservationBadgeClass }}">
+                                        {{ ucfirst($reservationStatus) }}
+                                    </span>
                                 </td>
                             </tr>
                         @empty
@@ -151,11 +200,6 @@
                 <div class="mb-3">
                     <label class="form-label text-secondary small">Reservation Status</label>
                     <div class="form-control bg-transparent text-white" id="detail-status">—</div>
-                </div>
-
-                <div class="mb-0">
-                    <label class="form-label text-secondary small">QR Code</label>
-                    <div class="form-control bg-transparent text-white" id="detail-qr" style="word-break: break-all;">—</div>
                 </div>
             </div>
         </div>

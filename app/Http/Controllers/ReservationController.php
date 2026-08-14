@@ -49,10 +49,15 @@ class ReservationController extends Controller
         ]);
 
         // Get reserved seats
-        $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
+        $reservedSeats = Reservation::with(
+            'reservationSeats.showtimeSeat.screenSeat'
+        )
             ->where('showtime_id', $showtime->id)
+            ->where('reservation_status', 'confirmed')
             ->get()
-            ->flatMap(fn($reservation) => $reservation->seat_numbers)
+            ->flatMap(
+                fn($reservation) => $reservation->seat_numbers
+            )
             ->toArray();
 
         $selectedSeats = [];
@@ -114,10 +119,15 @@ class ReservationController extends Controller
 
         session(['showtime_id' => $showtime->id]);
 
-        $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
+        $reservedSeats = Reservation::with(
+            'reservationSeats.showtimeSeat.screenSeat'
+        )
             ->where('showtime_id', $showtime->id)
+            ->where('reservation_status', 'confirmed')
             ->get()
-            ->flatMap(fn($reservation) => $reservation->seat_numbers)
+            ->flatMap(
+                fn($reservation) => $reservation->seat_numbers
+            )
             ->toArray();
 
         return view('reservations.seat-selection', compact(
@@ -979,28 +989,5 @@ class ReservationController extends Controller
             'totalPrice',
             'reservationReference'
         ));
-    }
-
-        
-
-    // Cancel tickets from mypage
-    public function cancel(Reservation $reservation)
-    {
-        if ($reservation->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        if ($reservation->reservation_status === 'cancelled') {
-            return back()->with('error', 'This reservation has already been cancelled.');
-        }
-
-        $reservation->update([
-            'reservation_status' => 'cancelled',
-            'cancelled_at' => now(),
-        ]);
-
-        return redirect()
-    ->route('mypage.tickets')
-    ->with('success', 'Reservation cancelled successfully.');
     }
 }

@@ -59,9 +59,10 @@
 
     {{-- Back Button --}}
     <div class="mt-5">
-        <button type="button" class="info-back-btn" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i> BACK
-        </button>
+        <a href="{{ route('home') }}" class="info-back-btn text-decoration-none">
+            <i class="fa-solid fa-arrow-left"></i>
+            BACK
+        </a>
     </div>
 
 </div>
