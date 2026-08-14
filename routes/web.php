@@ -19,6 +19,7 @@ use App\Http\Controllers\MyPage\CouponController;
 use App\Http\Controllers\Api\NearByCinemasController;
 use App\Http\Controllers\Customer\ChatController;
 use App\Http\Controllers\RecommendationController;
+use App\Http\Controllers\Admin\TicketVerificationController;
 
 
 
@@ -250,6 +251,16 @@ Route::prefix('admin')
 
         Route::get('/reservations/{id}/details', [AdminController::class, 'reservationDetails'])
             ->name('reservations.details');
+        
+        // Ticket Verification
+        Route::get('/tickets/verify', [TicketVerificationController::class, 'index'])
+            ->name('tickets.verify.index');
+
+        Route::post('/tickets/verify', [TicketVerificationController::class, 'verify'])
+            ->name('tickets.verify');
+
+        Route::post('/tickets/{ticket}/admit', [TicketVerificationController::class, 'admit'])
+            ->name('tickets.admit');
 
 
         // Payments

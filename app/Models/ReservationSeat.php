@@ -33,8 +33,13 @@ class ReservationSeat extends Model
         return $this->belongsTo(Reservation::class);
     }
 
-    public function showtimeSeat()
-    {
-        return $this->belongsTo(ShowtimeSeat::class);
-    }
+public function showtimeSeat()
+{
+    return $this->belongsTo(ShowtimeSeat::class);
+}
+
+public function ticket()
+{
+    return $this->hasOne(Ticket::class, 'reservation_seat_id');
+}
 }
