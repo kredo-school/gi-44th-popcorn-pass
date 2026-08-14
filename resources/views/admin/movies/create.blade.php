@@ -130,9 +130,12 @@
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label text-secondary small">Trailer URL</label>
+                            <label class="form-label text-secondary small">Trailer URL </label>
                             <input type="url" name="trailer_url" class="form-control" placeholder="https://..."
                                 value="{{ old('trailer_url') }}">
+                            <label class="form-label text-secondary small">
+                                Change youtube.com -> youtube-nocookie.com
+                            </label>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label text-secondary small">Search Keywords</label>

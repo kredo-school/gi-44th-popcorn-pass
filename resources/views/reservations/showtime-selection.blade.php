@@ -44,14 +44,16 @@
 
         <div class="mt-5 row text-white ">
             <div class="col-5 text-end">
-                <img src="{{ $movie->poster_url }}" alt="movie-title">
+                <img src="{{ $movie->poster_url }}" alt="movie-title" class="img-fluid">
             </div>
             <div class="col-5 blue-background ">
                 <div>
                     <h1>{{ $movie->title }}</h1>
                     <div class="row">
                         <div class="col-1">
-                            <p class=""><p>{{ $movie->ageRating?->title ?? 'Not Rated' }}</p></p>
+                            <p class="">
+                            <p>{{ $movie->ageRating?->title ?? 'Not Rated' }}</p>
+                            </p>
                         </div>
                         <div class="col-6">
                             <p>{{ $movie->genres->pluck('title')->join(', ') }}</p>
@@ -106,10 +108,24 @@
                     <div class="col-4 fw-bold">
                         CAST
                     </div>
-                    
+
                     <div class="col-8">
                         <div class="row">
-                            @forelse (($movie->cast ?? []) as $castMember)
+                            @php
+                                $castMembers = $movie->cast;
+
+                                if (is_string($castMembers)) {
+                                    $castMembers = json_decode($castMembers, true);
+
+                                    if (!is_array($castMembers)) {
+                                        $castMembers = array_filter(array_map('trim', explode(',', $movie->cast)));
+                                    }
+                                }
+
+                                $castMembers = is_array($castMembers) ? $castMembers : [];
+                            @endphp
+
+                            @forelse ($castMembers as $castMember)
                                 <div class="col-6">
                                     {{ $castMember }}
                                 </div>
@@ -132,7 +148,7 @@
                     <h1 class="showtime-text pt-2 text-center">
                         『 Select a showtime 』<br>
                     </h1>
-                    
+
                 </div>
 
                 {{-- Sepalate Screen --}}
