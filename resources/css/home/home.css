@@ -58,7 +58,7 @@
    =========================== */
 .search-wrapper {
     position: fixed;      
-    top: 55px;
+    top: 109px;
     left: 0;
     z-index: 999;
 
@@ -130,16 +130,16 @@
     background: #ff4040;
 }
 .heroSwiper .swiper-wrapper {
-    height: 90%;
+    height: 100%;
 }
 .heroSwiper .swiper-slide {
-    height: 90%;
+    height: 100%;
 }
 .heroSwiper .swiper-slide > div {
-    height: 90%;
+    height: 100%;
 }
 .heroSwiper .w-75 {
-    height: 90%;
+    height: 100%;
 }
 .heroSwiper .row {
     height: 100%;
@@ -298,7 +298,7 @@
     width: 52px;
     height: 52px;
 
-    top: 40%;
+    top: 50%;
     transform: translateY(-50%);
 
     color: #fff;

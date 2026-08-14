@@ -6,12 +6,14 @@
 @section('content')
 
     <form method="GET" action="{{ route('admin.users') }}" class="d-flex gap-2 mb-3">
-        <input type="text" name="search" class="form-control" placeholder="Search users..." style="max-width: 250px;" value="{{ request('search') }}">
+        <input type="text" name="search" class="form-control" placeholder="Search users..." style="max-width: 250px;"
+            value="{{ request('search') }}">
 
         <select name="role" class="form-select" style="max-width: 150px;" onchange="this.form.submit()">
             <option value="all" {{ request('role', 'all') == 'all' ? 'selected' : '' }}>Role: All</option>
             @foreach ($roleOptions as $value => $label)
-                <option value="{{ $value }}" {{ request('role') == $value ? 'selected' : '' }}>{{ $label }}</option>
+                <option value="{{ $value }}" {{ request('role') == $value ? 'selected' : '' }}>{{ $label }}
+                </option>
             @endforeach
         </select>
 
@@ -54,6 +56,12 @@
                                 <td>
                                     @if ($user->is_active)
                                         <span class="badge bg-success">Active</span>
+
+                                        @if ($user->last_seen_at && $user->last_seen_at->gt(now()->subMinutes(5)))
+                                            <span class="online-dot"></span>
+                                        @else
+                                            <span class="offline-dot"></span>
+                                        @endif
                                     @else
                                         <span class="badge bg-danger">Inactive</span>
                                     @endif
@@ -135,4 +143,36 @@
         </div>
     </div>
 
+@endsection
+
+
+@section('scripts')
+    <script>
+        const updateForm = document.querySelector('#user-update-form');
+        const saveButton = document.querySelector('#user-save-btn');
+
+        document.querySelectorAll('.user-row').forEach(function(row) {
+            row.addEventListener('click', function() {
+                const userId = this.dataset.userId;
+
+                fetch(`/admin/users/${userId}/details`)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.querySelector('#detail-username').textContent = data.username || '—';
+                        document.querySelector('#detail-email').textContent = data.email || '—';
+                        document.querySelector('#detail-phone').textContent = data.phone || '—';
+                        document.querySelector('#detail-dob').textContent = data.date_of_birth || '—';
+                        document.querySelector('#detail-last-login').textContent = data.last_login_at ||
+                            '—';
+                        document.querySelector('#detail-created').textContent = data.created_at || '—';
+
+                        document.querySelector('#detail-role').value = data.role;
+                        document.querySelector('#detail-is-active').checked = data.is_active;
+
+                        updateForm.action = `/admin/users/${data.id}`;
+                        saveButton.disabled = false;
+                    });
+            });
+        });
+    </script>
 @endsection

@@ -10,6 +10,22 @@
         <p class="text-muted">Enjoy the perfect movie experience.</p>
     </div>
 
+    {{-- Contact icon --}}
+            <div class="contact-icon-profile">
+
+                <a href="{{ route('customer.chat.index') }}">
+                    <i class="fa-solid fa-comment"></i>
+                </a>
+
+
+                @if ($unreadMessages > 0)
+                    <span class="chat-notification">
+                        {{ $unreadMessages }}
+                    </span>
+                @endif
+
+            </div>
+
     {{-- Upcoming Tickets --}}
     <div class="mypage-card mb-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-3">

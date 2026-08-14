@@ -10,18 +10,31 @@ class SeatCategorySeeder extends Seeder
 {
     public function run(): void
     {
-        SeatCategory::create([
-            'id' => Str::uuid(),
-            'title' => 'Regular',
-            'base_price' => 15,
-            'description' => 'Regular Seat',
-        ]);
+        SeatCategory::firstOrCreate(
+            ['title' => 'Standard'],
+            [
+                'id' => Str::uuid(),
+                'base_price' => 15,
+                'description' => 'Standard Seat',
+            ]
+        );
 
-        SeatCategory::create([
-            'id' => Str::uuid(),
-            'title' => 'Premium',
-            'base_price' => 25,
-            'description' => 'Premium Seat',
-        ]);
+        SeatCategory::firstOrCreate(
+            ['title' => 'Regular'],
+            [
+                'id' => Str::uuid(),
+                'base_price' => 15,
+                'description' => 'Regular Seat',
+            ]
+        );
+
+        SeatCategory::firstOrCreate(
+            ['title' => 'Premium'],
+            [
+                'id' => Str::uuid(),
+                'base_price' => 25,
+                'description' => 'Premium Seat',
+            ]
+        );
     }
 }

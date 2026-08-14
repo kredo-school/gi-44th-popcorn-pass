@@ -27,6 +27,8 @@ use Illuminate\Notifications\Notifiable;
     'points',
     'gender',
     'occupation',
+    'last_login_at',
+    'last_seen_at',
 ])]
 #[Hidden(['password_hash', 'remember_token'])]
 class User extends Authenticatable
@@ -58,6 +60,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
+            'last_seen_at' => 'datetime',
             'date_of_birth' => 'date',
             'password_hash' => 'hashed',
             'points' => 'integer',
@@ -143,5 +146,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserCoupon::class);
     }
-    
 }

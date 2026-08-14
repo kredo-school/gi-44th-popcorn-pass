@@ -12,8 +12,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('screen_id');
             $table->uuid('movie_id');
-            $table->timestamp('start_time');
-            $table->timestamp('end_time');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
             $table->boolean('is_active')->default(true);
             $table->uuid('created_by_id')->nullable();
             $table->timestamps();
