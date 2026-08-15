@@ -38,7 +38,7 @@
                             </strong>
 
                             <p>
-                                {{ $message->message }}
+                                {!! $message->message !!}
                             </p>
 
                         </div>
@@ -85,34 +85,6 @@
 
             </div>
 
-
-
-            {{-- Bottom Buttons --}}
-            <div class="d-flex align-items-center position-relative mt-5">
-
-                {{-- Chat Home Left --}}
-                <div class="ms-3">
-                    <a href="{{ route('admin.chat.index') }}" class="btn btn-dark">
-                        Chat home
-                    </a>
-                </div>
-
-
-                {{-- End Chat Center --}}
-                <form action="{{ route('admin.chat.close', $conversation->id) }}" method="POST"
-                    class="position-absolute start-50 translate-middle-x">
-
-                    @csrf
-
-                    <button type="submit" class="btn btn-danger px-5 py-2 ">
-                        End Chat
-                    </button>
-
-                </form>
-
-            </div>
-
-
         </div>
 
 
@@ -137,8 +109,7 @@
 
 
 
-
-        @vite('resources/js/admin/chat.js')
+        
 
 
     @endsection
