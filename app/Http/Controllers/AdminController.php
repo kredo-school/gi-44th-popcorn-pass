@@ -48,27 +48,28 @@ public function dashboard(Request $request)
 
     $currentYear = now()->year;
 
-    $requestedYear = $request->query('year');
+    $availableYears = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereNotNull('paid_at')
+        ->selectRaw('YEAR(paid_at) as year')
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year')
+        ->map(fn ($year) => (int) $year)
+        ->values();
 
-    $selectedYear = filter_var(
-        $requestedYear,
-        FILTER_VALIDATE_INT,
-        [
-            'options' => [
-                'min_range' => 2000,
-                'max_range' => $currentYear,
-            ],
-        ]
-    );
-
-    if ($selectedYear === false) {
-        $selectedYear = $currentYear;
+    if ($availableYears->isEmpty()) {
+        $availableYears = collect([$currentYear]);
     }
+
+    $requestedYear = $request->integer('year');
+
+    $selectedYear = $availableYears->contains($requestedYear)
+        ? $requestedYear
+        : $availableYears->first();
 
     $thisYear = $selectedYear;
     $lastYear = $thisYear - 1;
-
-    $availableYears = range($currentYear, 2020);
 
     /*
     |--------------------------------------------------------------------------
@@ -1057,24 +1058,25 @@ public function analytics(Request $request)
 
     $currentYear = now()->year;
 
-    $requestedYear = $request->query('year');
+    $availableYears = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereNotNull('paid_at')
+        ->selectRaw('YEAR(paid_at) as year')
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year')
+        ->map(fn ($year) => (int) $year)
+        ->values();
 
-    $selectedYear = filter_var(
-        $requestedYear,
-        FILTER_VALIDATE_INT,
-        [
-            'options' => [
-                'min_range' => 2000,
-                'max_range' => $currentYear,
-            ],
-        ]
-    );
-
-    if ($selectedYear === false) {
-        $selectedYear = $currentYear;
+    if ($availableYears->isEmpty()) {
+        $availableYears = collect([$currentYear]);
     }
 
-    $availableYears = range($currentYear, 2020);
+    $requestedYear = $request->integer('year');
+
+    $selectedYear = $availableYears->contains($requestedYear)
+        ? $requestedYear
+        : $availableYears->first();
 
     $requestedCinemaId = $request->query('cinema_id');
 
@@ -1411,6 +1413,38 @@ public function analytics(Request $request)
             )
             ->get();
     }
+    /*
+|--------------------------------------------------------------------------
+| Daily Revenue Chart
+|--------------------------------------------------------------------------
+*/
+
+$dailyRevenueQuery = Payment::query()
+    ->selectRaw(
+        'DATE(paid_at) as date, SUM(amount) as total'
+    )
+    ->where(
+        'payment_status',
+        'paid'
+    )
+    ->whereYear(
+        'paid_at',
+        $selectedYear
+    );
+
+if ($cinemaId) {
+    $dailyRevenueQuery->whereHas(
+        'reservation',
+        function ($query) use ($cinemaId) {
+            $query->where('cinema_id', $cinemaId);
+        }
+    );
+}
+
+$dailyRevenueChart = $dailyRevenueQuery
+    ->groupByRaw('DATE(paid_at)')
+    ->orderByRaw('DATE(paid_at)')
+    ->get();
 
     /*
     |--------------------------------------------------------------------------
@@ -1434,7 +1468,8 @@ public function analytics(Request $request)
             'monthlyRevenueData',
             'monthlyReservationData',
             'topMovies',
-            'cinemaPerformance'
+            'cinemaPerformance',
+            'dailyRevenueChart',
         )
     );
 }
