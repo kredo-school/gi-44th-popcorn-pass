@@ -87,6 +87,7 @@
     border-radius: 15px;
 
     background: rgba(24, 36, 90, 0.8);
+    color: #fff;
 }
 
 .search-icon,
@@ -153,9 +154,12 @@
     height: 100%;
 }
 
-/* left image */
-.hero-image,
-.hero-image-welcome {
+/* Movie images */
+/* ========================================
+   HERO IMAGES
+======================================== */
+
+.hero-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -164,7 +168,26 @@
     border-radius: 8px;
 }
 
-/* video */
+/* Welcome image */
+.hero-image-welcome {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    border-radius: 8px;
+}
+
+.hero-left {
+    height: calc(100% - 35px) !important;
+    transform: translateY(0);
+    border-radius: 8px;
+    overflow: hidden;
+}
+/* ========================================
+   HERO VIDEO
+======================================== */
+
 .hero-video {
     width: 100%;
     height: 100%;
@@ -173,9 +196,7 @@
     border-radius: 8px;
 }
 
-.hero-left {
-    transform: translateY(-35px);
-}
+
 
 .hero-overlay {
     position: absolute;

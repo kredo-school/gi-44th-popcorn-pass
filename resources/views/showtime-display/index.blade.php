@@ -498,7 +498,7 @@
 
                             @empty
 
-                                <p class="text-white text-center">
+                                <p class="text-dark text-center">
                                     No movies found.
                                 </p>
                             @endforelse

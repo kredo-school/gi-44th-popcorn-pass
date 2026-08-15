@@ -77,7 +77,7 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div class="col-lg-4 position-relative h-100 hero-left">
+                                        <div class="col-lg-4 position-relative h-75 hero-left">
                                             <img src="{{ $heroMovie->banner_image_url }}" class="hero-image"
                                                 alt="{{ $heroMovie->title }}">
 
@@ -118,7 +118,7 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div class="col-lg-4 position-relative h-100 hero-left">
+                                        <div class="col-lg-4 position-relative h-75 hero-left">
                                             <img src="{{ $topMovie->banner_image_url }}" class="hero-image"
                                                 alt="{{ $topMovie->title }}">
 
@@ -538,8 +538,11 @@
                                     @if (isset($comingSoonMovies))
                                         @foreach ($comingSoonMovies as $movie)
                                             @php
-                                                $releaseDate = \Carbon\Carbon::parse($movie->released_date);
-                                                $daysLeft = (int) now()->diffInDays($releaseDate, false);
+                                                $releaseDate = \Carbon\Carbon::parse(
+                                                    $movie->released_date,
+                                                )->startOfDay();
+                                                $today = now()->startOfDay();
+                                                $daysLeft = $today->diffInDays($releaseDate, false);
                                             @endphp
 
                                             <a href="{{ route('release', ['movie' => $movie->id]) }}"
@@ -548,6 +551,7 @@
 
                                                 <div class="coming-poster-wrap mb-3">
                                                     <div class="film-sprockets"></div>
+
                                                     <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
                                                         class="coming-poster">
 
@@ -559,18 +563,18 @@
                                                             @elseif ($daysLeft == 1)
                                                                 Tomorrow
                                                             @else
-                                                                {{ $daysLeft }}
-                                                                {{ Str::plural('day', $daysLeft) }}
+                                                                {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }}
                                                             @endif
                                                         </span>
-                                                        <span
-                                                            class="ticket-stub-date">{{ $releaseDate->format('M j') }}</span>
+
+                                                        <span class="ticket-stub-date">
+                                                            {{ $releaseDate->format('M j') }}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </a>
                                         @endforeach
                                     @endif
-
                                 </div>
 
                                 <!-- Prev button -->

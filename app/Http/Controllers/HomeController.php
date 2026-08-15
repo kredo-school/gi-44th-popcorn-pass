@@ -491,7 +491,7 @@ class HomeController extends Controller
         $data['isSearch'] = true;
 
         return view(
-            'layouts.showtime_display',
+            'showtime-display.index',
             $data
         );
     }
