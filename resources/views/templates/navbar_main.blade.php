@@ -87,7 +87,7 @@
    
     <div class="row">
         <div class="col-lg-6 text-center">
-            <a href="#" class="sidebar-search-item">
+            <a href="{{ route('map.index') }}" class="sidebar-search-item">
                 <i class="fa-solid fa-map-location"></i><br>
                 Location
             </a>
