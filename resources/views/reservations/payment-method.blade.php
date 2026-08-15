@@ -3,7 +3,9 @@
 @section('content')
 
 @php
-    $selectedPaymentMethod = old(
+    $selectedPaymentMethod = session('guest')
+    ? 'paypal'
+    : old(
     'payment_method',
     $paymentInfo['payment_method'] ?? 'paypal'
     );
@@ -164,14 +166,16 @@
                             <button type="button" class="payment-btn {{ $selectedPaymentMethod === 'paypal' ? 'active' : '' }}"
                                 data-method="paypal">
                                 <i class="fa-brands fa-paypal me-2"></i>
-                                PayPal / Debit or Credit Card
+                                PayPal
                             </button>
                         
-                            <button type="button" class="payment-btn {{ $selectedPaymentMethod === 'onsite' ? 'active' : '' }}"
-                                data-method="onsite">
-                                <i class="fa-solid fa-building me-2"></i>
-                                Pay On-Site
-                            </button>
+                            @if (!session('guest'))
+                                <button type="button" class="payment-btn {{ $selectedPaymentMethod === 'onsite' ? 'active' : '' }}"
+                                    data-method="onsite">
+                                    <i class="fa-solid fa-building me-2"></i>
+                                    Pay On-Site
+                                </button>
+                            @endif
                         </div>
                         
                         <input type="hidden" name="payment_method" id="payment_method" value="{{ $selectedPaymentMethod }}">
@@ -181,9 +185,7 @@
                                 <div class="alert alert-info mb-0">
                                     <i class="fa-brands fa-paypal me-2"></i>
                         
-                                    You can pay securely with PayPal,
-                                    a debit card, or a credit card
-                                    on the confirmation page.
+                                    You can pay securely with PayPal on the confirmation page.
                                 </div>
                             </div>
                         

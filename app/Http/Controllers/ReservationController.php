@@ -412,6 +412,15 @@ class ReservationController extends Controller
             'coupon_id' => 'nullable|uuid',
         ]);
 
+        if (session('guest') && $request->payment_method === 'onsite') {
+            return back()
+                ->withErrors([
+                    'payment_method' =>
+                    'Pay On-Site is not available for guest checkout. Please use PayPal.',
+                ])
+                ->withInput();
+        }
+
         session([
             'paymentInfo' => [
                 'payment_method' => $request->payment_method,
