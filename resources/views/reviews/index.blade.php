@@ -16,7 +16,7 @@
             </div>
         @endif
 
-        <div class="row align-items-start px-4">
+        <div class="row align-items-start px-4 mb-5">
 
             {{-- Left --}}
             <div class="col-lg-6 text-center">
