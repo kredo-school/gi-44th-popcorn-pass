@@ -103,8 +103,12 @@ class Reservation extends Model
     public function getSeatNumbersAttribute()
     {
         return $this->reservationSeats
+            ->whereNull('cancelled_at')
             ->map(function ($reservationSeat) {
-                return $reservationSeat->showtimeSeat->screenSeat->seat_number ?? null;
+                return $reservationSeat
+                    ->showtimeSeat
+                    ?->screenSeat
+                    ?->seat_number;
             })
             ->filter()
             ->values();

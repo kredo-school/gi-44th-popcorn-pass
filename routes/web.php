@@ -413,6 +413,8 @@ Route::middleware('auth')
     //ticket cancel
     Route::get('/cancel/{id}', [CancelController::class, 'show'])
         ->name('cancel.show');
+    Route::post('/cancel/{reservation}/seats/{reservationSeat}', [CancelController::class, 'cancelSeat'])
+        ->name('cancel.seat');
     Route::post('/cancel/{id}', [CancelController::class, 'cancel'])
         ->name('cancel.confirm');
     Route::get('/cancel/{id}/complete', [CancelController::class, 'complete'])

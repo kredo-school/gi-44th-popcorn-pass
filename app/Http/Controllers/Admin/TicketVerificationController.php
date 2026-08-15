@@ -59,6 +59,14 @@ class TicketVerificationController extends Controller
             ]);
         }
 
+        if ($reservationSeat->cancelled_at !== null) {
+            return view('admin.tickets.verify', [
+                'ticket' => $ticket,
+                'status' => 'cancelled',
+                'message' => 'This ticket has been cancelled.',
+            ]);
+        }
+
         if ($ticket->used_at !== null) {
             return view('admin.tickets.verify', [
                 'ticket' => $ticket,
@@ -109,45 +117,75 @@ class TicketVerificationController extends Controller
     /**
      * Mark a valid ticket as used.
      */
-    public function admit(Request $request, Ticket $ticket): RedirectResponse
-    {
+    public function admit(Request $request, Ticket $ticket): RedirectResponse {
         $ticket->load([
             'reservationSeat.reservation.payment',
             'reservationSeat.reservation.showtime',
         ]);
 
-        $reservation = $ticket->reservationSeat?->reservation;
+        $reservationSeat = $ticket->reservationSeat;
+        $reservation = $reservationSeat?->reservation;
         $showtime = $reservation?->showtime;
         $payment = $reservation?->payment;
 
         if ($ticket->used_at !== null) {
             return redirect()
                 ->route('admin.tickets.verify.index')
-                ->with('error', 'This ticket has already been used.');
+                ->with(
+                    'error',
+                    'This ticket has already been used.'
+                );
         }
 
-        if (!$reservation || !$showtime) {
+        if (!$reservationSeat || !$reservation || !$showtime) {
             return redirect()
                 ->route('admin.tickets.verify.index')
-                ->with('error', 'Invalid ticket information.');
+                ->with(
+                    'error',
+                    'Invalid ticket information.'
+                );
+        }
+
+        if ($reservationSeat->cancelled_at !== null) {
+            return redirect()
+                ->route('admin.tickets.verify.index')
+                ->with(
+                    'error',
+                    'This ticket has been cancelled.'
+                );
         }
 
         if ($reservation->reservation_status !== 'confirmed') {
             return redirect()
                 ->route('admin.tickets.verify.index')
-                ->with('error', 'This reservation is not confirmed.');
+                ->with(
+                    'error',
+                    'This reservation is not confirmed.'
+                );
         }
 
-        if (!$payment || $payment->payment_status !== 'paid') {
+        if (
+            !$payment ||
+            $payment->payment_status !== 'paid'
+        ) {
             return redirect()
                 ->route('admin.tickets.verify.index')
-                ->with('error', 'Payment for this ticket has not been completed.');
+                ->with(
+                    'error',
+                    'Payment for this ticket has not been completed.'
+                );
         }
 
-        if ($showtime->end_time && now()->greaterThan($showtime->end_time)) {
+        if (
+            $showtime->end_time &&
+            now()->greaterThan($showtime->end_time)
+        ) {
             return redirect()
                 ->route('admin.tickets.verify.index')
-                ->with('error', 'This ticket has expired.');
+                ->with(
+                    'error',
+                    'This ticket has expired.'
+                );
         }
 
         $ticket->update([
@@ -156,6 +194,9 @@ class TicketVerificationController extends Controller
 
         return redirect()
             ->route('admin.tickets.verify.index')
-            ->with('success', 'Ticket admitted successfully.');
+            ->with(
+                'success',
+                'Ticket admitted successfully.'
+            );
     }
 }

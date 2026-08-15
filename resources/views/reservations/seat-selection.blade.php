@@ -203,8 +203,10 @@
 
             {{-- Button --}}
             <div class="d-flex justify-content-between mt-5">
-                <button type="button" class="back-btn ms-5" onclick="history.back()">
-                    <i class="fa-solid fa-arrow-left"></i> BACK
+                <button type="button" class="back-btn ms-5"
+                    onclick="window.location.href='{{ route('reservations.showtime.selection', ['movie' => $showtime->movie_id]) }}'">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    BACK
                 </button>
 
                 <button type="submit" class="next-btn me-5" disabled>

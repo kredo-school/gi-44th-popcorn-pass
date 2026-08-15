@@ -128,10 +128,10 @@
                             </div>
                         </div>
                         <hr>
-                        
+
                         <div class="d-flex justify-content-between align-items-center">
                             <span class="fw-bold fs-4">Total</span>
-                        
+
                             <span class="fw-bold total-price">
                                 ${{ number_format($totalPrice, 2) }}
                             </span>
@@ -142,19 +142,17 @@
 
         </div>
 
-        {{-- Button --}}
+        {{-- Buttons --}}
         <div class="d-flex justify-content-between mt-5">
+            <button type="button" class="back-btn ms-5"
+                onclick="window.location.href='{{ route('reservations.seat-selection', ['showtime' => session('showtime_id')]) }}'">
+                <i class="fa-solid fa-arrow-left"></i>
+                BACK
+            </button>
 
-            
-            <form action="{{ route('reservations.showtimeSelection', ['showtime' => session('showtime_id')]) }}" method="GET">
-                <button  type="button" class="back-btn ms-5" onclick="history.back()">
-                    <i class="fa-solid fa-arrow-left"></i> BACK
-                </button>
-            </form>
-
-            <button type="" id="next-btn" class="next-btn me-5" disabled>
-
-                NEXT<i class="fa-solid fa-arrow-right"></i>
+            <button type="submit" id="next-btn" class="next-btn me-5" disabled>
+                NEXT
+                <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>
 
