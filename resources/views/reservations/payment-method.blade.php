@@ -61,13 +61,13 @@
         {{-- Main --}}
         <form action="{{ route('reservations.confirm') }}" method="POST">
             @csrf
-        
+
             <div class="row">
-        
+
                 {{-- Payment method selection --}}
                 <div class="col-lg-7">
                     <div class="payment-panel">
-        
+
                         {{-- Guest Information --}}
                         @guest
                             <div class="guest-info-panel mb-5">
@@ -79,20 +79,20 @@
                                     <label class="col-sm-2 col-form-label fw-bold text-end">
                                         Name<span class="text-danger">*</span>
                                     </label>
-                                
+
                                     <div class="col-sm-9">
                                         <div class="row g-2">
                                             <div class="col">
                                                 <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First Name">
                                             </div>
-                                
+
                                             <div class="col">
                                                 <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last Name">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-            
+
                                 <div class="row align-items-center mb-3">
                                     <label for="guest_email" class="col-sm-2 col-form-label fw-bold text-end">
                                         Email<span class="text-danger">*</span>
@@ -101,7 +101,7 @@
                                         <input type="email" id="guest_email" name="guest_email" class="form-control" placeholder="Enter your email">
                                     </div>
                                 </div>
-                                
+
                                 <div class="row align-items-center">
                                     <label for="guest_phone" class="col-sm-2 col-form-label fw-bold text-end">
                                         Phone Number<span class="text-danger">*</span>
@@ -115,25 +115,51 @@
                             <hr class="mb-4">
                         @endguest
 
+                        {{-- Available Promotion --}}
+                        @if ($promotion && $promotionDiscount > 0)
+                            <div class="mb-4">
+                                <h2 class="payment-title">
+                                    Available Promotion
+                                </h2>
+
+                                <label class="coupon-card d-block">
+                                    <input type="hidden" name="use_promotion" value="0">
+
+                                    <input type="checkbox" name="use_promotion" id="use_promotion" value="1" class="form-check-input me-2"
+                                        data-discount="{{ $promotionDiscount }}" {{ old('use_promotion', '1' )==='1' ? 'checked' : '' }}>
+
+                                    <strong>{{ $promotion->title }}</strong>
+
+                                    <span class="ms-2">
+                                        Apply promotion(-${{ number_format($promotionDiscount, 2) }})
+                                    </span>
+                                </label>
+                            </div>
+
+                            <hr class="mb-4">
+                        @else
+                            <input type="hidden" name="use_promotion" value="0">
+                        @endif
+
                         {{-- Available Coupons --}}
                         @auth
                             <div class="mb-4">
                                 <h2 class="payment-title">Available Coupons</h2>
-                            
+
                                 @forelse($availableCoupons as $coupon)
                                     <label class="coupon-card mb-2 d-block">
                                         <input type="radio" name="coupon_id" value="{{ $coupon->id }}" class="form-check-input me-2 coupon-radio"
                                             data-type="{{ $coupon->coupon_type }}" data-percent="{{ $coupon->discount_percent ?? 0 }}"
                                             data-amount="{{ $coupon->discount_amount ?? 0 }}">
-                                
+
                                         <strong>{{ $coupon->code }}</strong>
-                                
+
                                         @if($coupon->coupon_type === 'percentage')
                                             <span class="ms-2">{{ $coupon->discount_percent }}% OFF</span>
                                         @else
                                             <span class="ms-2">${{ $coupon->discount_amount }} OFF</span>
                                         @endif
-                                
+
                                         @if($coupon->expires_at)
                                             <small class="text-muted float-end">
                                                 Expires: {{ $coupon->expires_at->format('Y.m.d') }}
@@ -143,7 +169,7 @@
                                 @empty
                                     <p class="text-muted mb-0">No available coupons.</p>
                                 @endforelse
-                            
+
                                 @if($availableCoupons->isNotEmpty())
                                     <div class="mt-2">
                                         <label>
@@ -156,19 +182,19 @@
                             </div>
                             <hr class="mb-4">
                         @endauth
-        
+
                         {{-- Choose payment method --}}
                         <h2 class="payment-title">
                             Choose Payment Method
                         </h2>
-                        
+
                         <div class="payment-options">
                             <button type="button" class="payment-btn {{ $selectedPaymentMethod === 'paypal' ? 'active' : '' }}"
                                 data-method="paypal">
                                 <i class="fa-brands fa-paypal me-2"></i>
                                 PayPal
                             </button>
-                        
+
                             @if (!session('guest'))
                                 <button type="button" class="payment-btn {{ $selectedPaymentMethod === 'onsite' ? 'active' : '' }}"
                                     data-method="onsite">
@@ -177,22 +203,22 @@
                                 </button>
                             @endif
                         </div>
-                        
+
                         <input type="hidden" name="payment_method" id="payment_method" value="{{ $selectedPaymentMethod }}">
-                        
+
                         <div id="payment-form-container" class="mt-4">
                             <div id="paypal-form" class="payment-form {{ $selectedPaymentMethod === 'paypal' ? '' : 'd-none' }}">
                                 <div class="alert alert-info mb-0">
                                     <i class="fa-brands fa-paypal me-2"></i>
-                        
+
                                     You can pay securely with PayPal on the confirmation page.
                                 </div>
                             </div>
-                        
+
                             <div id="onsite-form" class="payment-form {{ $selectedPaymentMethod === 'onsite' ? '' : 'd-none' }}">
                                 <div class="alert alert-warning mb-0">
                                     <i class="fa-solid fa-triangle-exclamation me-2"></i>
-                        
+
                                     You will pay at the cinema on the day of your visit.
                                 </div>
                             </div>
@@ -259,29 +285,34 @@
                                     <span class="fw-bold">Subtotal</span>
                                     <span class="fs-5">${{ number_format($subtotal, 2) }}</span>
                                 </div>
-                            
-                                @if($promotion && $promotionDiscount > 0)
-                                    <div class="d-flex justify-content-between mb-2">
+
+                                @if ($promotion && $promotionDiscount > 0)
+                                    <div id="promotion-discount-row" class="d-flex justify-content-between mb-2">
                                         <span class="fw-bold">
                                             Promotion Discount
+
                                             <small class="text-muted">
                                                 ({{ $promotion->title }})
                                             </small>
                                         </span>
-                                        <span class="fs-5">-${{ number_format($promotionDiscount, 2) }}</span>
+
+                                        <span id="promotion-discount" class="fs-5">
+                                            -${{ number_format($promotionDiscount, 2) }}
+                                        </span>
                                     </div>
                                 @endif
-                            
+
                                 <div id="coupon-discount-row" class="d-flex justify-content-between mb-2 d-none">
                                     <span class="fw-bold">Coupon Discount</span>
                                     <span id="coupon-discount" class="fs-5">-$0.00</span>
                                 </div>
-                            
+
                                 <hr>
-                            
+
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span class="fw-bold fs-4">Total</span>
-                                    <span id="final-total" class="fw-bold total-price" data-base-total="{{ $totalPrice }}">
+                                    <span id="final-total" class="fw-bold total-price" data-subtotal="{{ $subtotal }}"
+                                        data-promotion-discount="{{ $promotionDiscount }}">
                                         ${{ number_format($totalPrice, 2) }}
                                     </span>
                                 </div>
@@ -298,13 +329,13 @@
                     <i class="fa-solid fa-arrow-left"></i>
                     BACK
                 </button>
-        
+
                 <button type="submit" id="next-btn" class="next-btn me-5">
                     NEXT
                     <i class="fa-solid fa-arrow-right"></i>
                 </button>
             </div>
-        
+
         </form>
 
     </div>

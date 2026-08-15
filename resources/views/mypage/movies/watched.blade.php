@@ -62,9 +62,10 @@
                         @else
                             <form method="POST" action="{{ route('mypage.movies-watched.send-review-email', $reservation->id) }}">
                                 @csrf
-                                <button type="submit" class="btn text-warning border-warning">
-                                    <i class="fa-solid fa-envelope me-1"></i>Email Me a Review Link
-                                </button>
+                                <a href="{{ route('reviews.create', ['movieId' => $reservation->movie_id]) }}" class="btn text-warning border-warning">
+                                    <i class="fa-solid fa-pen me-1"></i>
+                                    Write a Review
+                                </a>
                             </form>
                         @endif
                     </div>

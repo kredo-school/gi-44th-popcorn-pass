@@ -409,6 +409,7 @@ class ReservationController extends Controller
     {
         $request->validate([
             'payment_method' => 'required|in:paypal,onsite',
+            'use_promotion' => 'required|boolean',
             'coupon_id' => 'nullable|uuid',
         ]);
 
@@ -468,9 +469,21 @@ class ReservationController extends Controller
             ])->with('error', 'Your session has expired. Please start again.');
         }
 
-        $subtotal = (float) ($discountInfo['subtotal'] ?? 0);
-        $promotionDiscount =
-            (float) ($discountInfo['promotion_discount'] ?? 0);
+        $subtotal =
+            (float) ($discountInfo['subtotal'] ?? 0);
+
+        $usePromotion =
+            $request->boolean('use_promotion');
+
+        $promotionId = $usePromotion
+            ? ($discountInfo['promotion_id'] ?? null)
+            : null;
+
+        $promotionDiscount = $usePromotion
+            ? (float) (
+                $discountInfo['promotion_discount'] ?? 0
+            )
+            : 0;
 
         $amountAfterPromotion = max(
             0,
@@ -522,22 +535,23 @@ class ReservationController extends Controller
             $amountAfterPromotion - $couponDiscount
         );
 
+        $discountInfo = [
+            'subtotal' => $subtotal,
+
+            'promotion_id' => $promotionId,
+            'promotion_discount' => $promotionDiscount,
+
+            'coupon_id' => $coupon?->id,
+            'coupon_discount' => $couponDiscount,
+
+            'discount_amount' =>
+            $promotionDiscount + $couponDiscount,
+
+            'final_amount' => $totalPrice,
+        ];
+
         session([
-            'discountInfo' => [
-                'subtotal' => $subtotal,
-
-                'promotion_id' =>
-                $discountInfo['promotion_id'] ?? null,
-                'promotion_discount' => $promotionDiscount,
-
-                'coupon_id' => $coupon?->id,
-                'coupon_discount' => $couponDiscount,
-
-                'discount_amount' =>
-                $promotionDiscount + $couponDiscount,
-
-                'final_amount' => $totalPrice,
-            ],
+            'discountInfo' => $discountInfo,
         ]);
 
         $showtimeId = session('showtime_id');

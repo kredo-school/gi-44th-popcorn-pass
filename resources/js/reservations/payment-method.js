@@ -63,82 +63,127 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --------------------
-    // Coupon
+    // Promotion and Coupon
     // --------------------
-    const couponRadios =
-        document.querySelectorAll('.coupon-radio');
+    const promotionCheckbox = document.getElementById('use_promotion');
+    const promotionDiscountRow = document.getElementById('promotion-discount-row');
+    const promotionDiscountElement = document.getElementById('promotion-discount');
+    const couponRadios = document.querySelectorAll('.coupon-radio');
+    const couponDiscountRow = document.getElementById('coupon-discount-row');
+    const couponDiscount = document.getElementById('coupon-discount');
+    const finalTotal = document.getElementById('final-total');
 
-    const couponDiscountRow =
-        document.getElementById('coupon-discount-row');
+    if (finalTotal) {
+        const subtotal =
+            parseFloat(finalTotal.dataset.subtotal) || 0;
 
-    const couponDiscount =
-        document.getElementById('coupon-discount');
+        const availablePromotionDiscount =
+            parseFloat(
+                finalTotal.dataset.promotionDiscount
+            ) || 0;
 
-    const finalTotal =
-        document.getElementById('final-total');
+        function updateDiscounts() {
+            const usePromotion =
+                promotionCheckbox?.checked ?? false;
 
-    if (
-        couponRadios.length > 0
-        && couponDiscountRow
-        && couponDiscount
-        && finalTotal
-    ) {
-        const baseTotal =
-            parseFloat(finalTotal.dataset.baseTotal) || 0;
+            const appliedPromotionDiscount =
+                usePromotion
+                    ? Math.min(
+                        availablePromotionDiscount,
+                        subtotal
+                    )
+                    : 0;
 
-        couponRadios.forEach(radio => {
-            radio.addEventListener('change', () => {
-                let discount = 0;
+            const amountAfterPromotion = Math.max(
+                subtotal - appliedPromotionDiscount,
+                0
+            );
 
+            if (promotionDiscountRow) {
+                promotionDiscountRow.classList.toggle(
+                    'd-none',
+                    !usePromotion
+                );
+            }
+
+            if (promotionDiscountElement) {
+                promotionDiscountElement.textContent =
+                    `-$${appliedPromotionDiscount.toFixed(2)}`;
+            }
+
+            const selectedCoupon =
+                document.querySelector(
+                    '.coupon-radio:checked'
+                );
+
+            let appliedCouponDiscount = 0;
+
+            if (selectedCoupon) {
                 if (
-                    radio.dataset.type === 'percentage'
+                    selectedCoupon.dataset.type ===
+                    'percentage'
                 ) {
-                    discount =
-                        baseTotal
+                    appliedCouponDiscount =
+                        amountAfterPromotion
                         * (
-                            (parseFloat(
-                                radio.dataset.percent
-                            ) || 0)
+                            (
+                                parseFloat(
+                                    selectedCoupon.dataset.percent
+                                ) || 0
+                            )
                             / 100
                         );
                 } else if (
-                    radio.dataset.type === 'fixed_amount'
+                    selectedCoupon.dataset.type ===
+                    'fixed_amount'
                 ) {
-                    discount =
+                    appliedCouponDiscount =
                         parseFloat(
-                            radio.dataset.amount
+                            selectedCoupon.dataset.amount
                         ) || 0;
                 }
+            }
 
-                discount = Math.min(
-                    discount,
-                    baseTotal
+            appliedCouponDiscount = Math.min(
+                appliedCouponDiscount,
+                amountAfterPromotion
+            );
+
+            const newTotal = Math.max(
+                amountAfterPromotion
+                    - appliedCouponDiscount,
+                0
+            );
+
+            if (
+                couponDiscountRow &&
+                couponDiscount
+            ) {
+                couponDiscountRow.classList.toggle(
+                    'd-none',
+                    appliedCouponDiscount <= 0
                 );
 
-                const newTotal = Math.max(
-                    baseTotal - discount,
-                    0
-                );
+                couponDiscount.textContent =
+                    `-$${appliedCouponDiscount.toFixed(2)}`;
+            }
 
-                if (discount > 0) {
-                    couponDiscountRow
-                        .classList
-                        .remove('d-none');
+            finalTotal.textContent =
+                `$${newTotal.toFixed(2)}`;
+        }
 
-                    couponDiscount.textContent =
-                        `-$${discount.toFixed(2)}`;
-                } else {
-                    couponDiscountRow
-                        .classList
-                        .add('d-none');
+        promotionCheckbox?.addEventListener(
+            'change',
+            updateDiscounts
+        );
 
-                    couponDiscount.textContent =
-                        '-$0.00';
-                }
-
-                finalTotal.textContent =
-                    `$${newTotal.toFixed(2)}`;
-            });
+        couponRadios.forEach(radio => {
+            radio.addEventListener(
+                'change',
+                updateDiscounts
+            );
         });
+
+        updateDiscounts();
     }
 });
