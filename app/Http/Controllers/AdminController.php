@@ -1430,7 +1430,6 @@ class AdminController extends Controller
             )
             ->limit(5)
             ->get();
-    }
     /*
 |--------------------------------------------------------------------------
 | Daily Revenue Chart
@@ -1519,7 +1518,6 @@ $dailyRevenueChart = $dailyRevenueQuery
                     'total_revenue'
                 )
                 ->get();
-        }
 
         /*
         |--------------------------------------------------------------------------
