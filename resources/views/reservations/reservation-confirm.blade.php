@@ -195,7 +195,7 @@
 
         {{-- Button --}}
         <div class="d-flex justify-content-between align-items-start mt-5">
-            <button type="button" class="back-btn ms-5" onclick="history.back()">
+            <button type="button" class="back-btn ms-5" onclick="window.location.href='{{ route('reservations.payment-method') }}'">
                 <i class="fa-solid fa-arrow-left"></i>
                 BACK
             </button>

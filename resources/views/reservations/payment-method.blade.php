@@ -323,9 +323,10 @@
             </div>
 
 
-            {{-- Button --}}
+            {{-- Buttons --}}
             <div class="d-flex justify-content-between mt-5">
-                <button type="button" class="back-btn ms-5" onclick="history.back()">
+                <button type="button" class="back-btn ms-5"
+                    onclick="window.location.href='{{ route('reservations.ticket-type') }}'">
                     <i class="fa-solid fa-arrow-left"></i>
                     BACK
                 </button>
