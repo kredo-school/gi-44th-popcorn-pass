@@ -1,6 +1,8 @@
 function initCinemaMap() {
     const mapElement = document.getElementById('map');
     const dataElement = document.getElementById('cinemas-data');
+    const selectedCinemaDataElement = document.getElementById('selected-cinema-data');
+    const cinemaHomeUrlTemplate = mapElement?.dataset.cinemaHomeUrl;
 
     // Only run on the Cinema Map page.
     if (!mapElement || !dataElement) return;
@@ -11,6 +13,15 @@ function initCinemaMap() {
     }
 
     let cinemas;
+    let selectedCinemaId = null;
+
+    if (selectedCinemaDataElement) {
+        try {
+            selectedCinemaId = JSON.parse(selectedCinemaDataElement.textContent);
+        } catch (error) {
+            console.error('Invalid selected cinema data:', error);
+        }
+    }
 
     try {
         cinemas = JSON.parse(dataElement.textContent);
@@ -27,6 +38,7 @@ function initCinemaMap() {
     let activeInfoWindow = null;
 
     cinemas.forEach((cinema) => {
+        const isSelected = String(cinema.id) === String(selectedCinemaId);
         const latitude = Number.parseFloat(cinema.latitude);
         const longitude = Number.parseFloat(cinema.longitude);
 
@@ -36,6 +48,14 @@ function initCinemaMap() {
             position: { lat: latitude, lng: longitude },
             map,
             title: cinema.cinema_name,
+            icon: isSelected ? {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 12,
+                fillColor: '#FFC107',
+                fillOpacity: 1,
+                strokeColor: '#111827',
+                strokeWeight: 3,
+            } : undefined,
         });
 
         const content = document.createElement('div');
@@ -43,6 +63,15 @@ function initCinemaMap() {
 
         const title = document.createElement('h6');
         title.textContent = cinema.cinema_name || 'Cinema';
+
+        if (isSelected) {
+            const selectedBadge = document.createElement('span');
+            selectedBadge.className = 'badge bg-warning text-dark mb-2';
+            selectedBadge.textContent = 'CURRENT CINEMA';
+            content.append(title, selectedBadge);
+        } else {
+            content.append(title);
+        }
 
         const address = document.createElement('p');
         address.textContent = `Address: ${cinema.address || 'N/A'}`;
@@ -53,7 +82,15 @@ function initCinemaMap() {
         const phone = document.createElement('p');
         phone.textContent = `Phone: ${cinema.phone || 'N/A'}`;
 
-        content.append(title, address, screens, phone);
+        content.append(address, screens, phone);
+
+        if (cinemaHomeUrlTemplate && cinema.id) {
+            const selectButton = document.createElement('a');
+            selectButton.className = 'btn btn-warning btn-sm mt-2';
+            selectButton.textContent = 'Select This Cinema';
+            selectButton.href = cinemaHomeUrlTemplate.replace('__CINEMA_ID__', cinema.id);
+            content.append(selectButton);
+        }
 
         const infoWindow = new google.maps.InfoWindow({ content });
 

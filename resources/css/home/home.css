@@ -56,8 +56,9 @@
 /* ===========================
    Search
    =========================== */
+
 .search-wrapper {
-    position: fixed;      
+    position: fixed;
     top: 109px;
     left: 0;
     z-index: 999;
@@ -80,7 +81,6 @@
 .search-input {
     width: 100%;
     height: 60px;
-
     padding: 0 140px 0 60px;
 
     border: 2px solid rgba(245, 193, 38, 0.4);
@@ -98,7 +98,7 @@
 
 .search-icon {
     left: 20px;
-    color: #F5C126;
+    color: #f5c126;
     font-size: 22px;
 }
 
@@ -110,13 +110,15 @@
     border: none;
     border-radius: 10px;
 
-    background: #F5C126;
+    background: #f5c126;
     font-weight: bold;
 }
+
 
 /* ===========================
    Hero Swiper
    =========================== */
+
 .heroSwiper {
     width: 100%;
     height: 350px;
@@ -131,18 +133,11 @@
     background: #ff4040;
 }
 
-.heroSwiper .swiper-wrapper {
-    height: 100%;
-}
-
-.heroSwiper .swiper-slide {
-    height: 100%;
-}
-
+.heroSwiper .swiper-wrapper,
+.heroSwiper .swiper-slide,
 .heroSwiper .swiper-slide > div {
     height: 100%;
 }
-
 
 .heroSwiper .w-75 {
     width: 100% !important;
@@ -153,23 +148,26 @@
     height: 100%;
 }
 
-/* left image */
 .hero-image,
 .hero-image-welcome {
+    display: block;
     width: 100%;
     height: 100%;
+
     object-fit: cover;
     object-position: center;
-    display: block;
+
     border-radius: 8px;
 }
 
-/* video */
 .hero-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
     display: block;
+    width: 100%;
+    height: 260px;
+
+    object-fit: cover;
+
+    border: 0;
     border-radius: 8px;
 }
 
@@ -180,11 +178,13 @@
 .hero-overlay {
     position: absolute;
     inset: 0;
+
     background: linear-gradient(
         to top,
-        rgba(0,0,0,0.75),
-        rgba(0,0,0,0) 60%
+        rgba(0, 0, 0, 0.75),
+        rgba(0, 0, 0, 0) 60%
     );
+
     border-radius: 8px;
 }
 
@@ -192,27 +192,33 @@
     position: absolute;
     left: 1.25rem;
     bottom: 1.25rem;
-    color: #fff;
+
     max-width: 90%;
+
+    color: #fff;
 }
 
 .hero-content h1 {
+    margin: 0.35rem 0;
+
     font-size: 1.25rem;
     font-weight: 700;
     line-height: 1.2;
-    margin: 0.35rem 0;
 }
 
 .hero-content p {
-    font-size: 0.85rem;
     margin: 0.25rem 0 0.5rem;
+    font-size: 0.85rem;
 }
 
 .hero-tag {
     display: inline-block;
+
     padding: 0.15rem 0.6rem;
+
     border: 1px solid #fff;
     border-radius: 999px;
+
     font-size: 0.65rem;
     letter-spacing: 0.05em;
 }
@@ -221,62 +227,71 @@
     color: #ff4040;
     border-color: #ff4040;
 }
+
+
 /* ===========================
-   Book Btn
+   Book Button
    =========================== */
+
 .btn-book {
     display: inline-block;
+
     margin-top: 0.5rem;
     padding: 0.35rem 1rem;
+
     border: 1px solid #fff;
     border-radius: 6px;
+
     color: #fff;
+
     font-size: 0.85rem;
     text-decoration: none;
+
     transition: background 0.2s ease;
 }
 
 .btn-book:hover {
-    background: rgba(255,255,255,0.15);
     color: #fff;
+    background: rgba(255, 255, 255, 0.15);
 }
 
 .btn-book-red {
-    border-color: #ff4040;
     color: #ff4040;
+    border-color: #ff4040;
 }
+
 .btn-book-yellow {
-    border-color: #f7ff88;
     color: #fff30f;
+    border-color: #f7ff88;
 }
+
 .btn-book-black {
     display: inline-block;
+
     margin-top: 0.5rem;
     padding: 0.35rem 1rem;
-    border: 1px solid #000000;
+
+    border: 1px solid #000;
     border-radius: 6px;
-    color: #000000;
+
+    color: #000;
+
     font-size: 0.85rem;
     text-decoration: none;
+
     transition: background 0.2s ease;
 }
+
 .btn-book-black:hover {
-    background: rgba(255,255,255,0.15);
     color: #ffa6a6;
+    background: rgba(255, 255, 255, 0.15);
 }
 
-
-
-.hero-video {
-    width: 100%;
-    height: 260px;
-    border: 0;
-    border-radius: 8px;
-}
 
 /* ===========================
-   Welocome slide
+   Welcome Slide
    =========================== */
+
 .hero-content-welcome {
     position: absolute;
     right: 20px;
@@ -286,64 +301,76 @@
     flex-direction: column;
     align-items: flex-end;
 
+    padding: 12px 16px;
+
     color: #fff;
     text-align: right;
 
     background: rgba(0, 0, 0, 0.45);
-    padding: 12px 16px;
     border-radius: 8px;
 }
 
 .hero-content-welcome p {
+    margin-bottom: 8px;
+
     font-size: 0.95rem;
     font-weight: 600;
-    margin-bottom: 8px;
 }
 
+
 /* ===========================
-   iphone
+   Hero Mobile
    =========================== */
+
 @media (max-width: 767.98px) {
     .hero-image,
     .hero-image-welcome,
     .hero-video {
         height: 180px;
     }
+
     .hero-content h1 {
         font-size: 1rem;
     }
+
     .hero-content-welcome p {
         font-size: 0.95rem;
     }
 }
 
+
+/* ===========================
+   Swiper Navigation
+   =========================== */
+
 .swiper-bg .swiper-button-prev,
 .swiper-bg .swiper-button-next {
+    top: 50%;
+
     width: 52px;
     height: 52px;
 
-    top: 50%;
-    transform: translateY(-50%);
-
     color: #fff;
-    --swiper-navigation-size: 15px;
 
     background: rgba(16, 57, 133, 0.75);
-    border: 1px solid rgba(255,255,255,.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 50%;
 
     backdrop-filter: blur(8px);
 
-    transition: all .3s ease;
+    transform: translateY(-50%);
+    transition: all 0.3s ease;
+
+    --swiper-navigation-size: 15px;
 }
 
 .swiper-bg .swiper-button-prev:hover,
 .swiper-bg .swiper-button-next:hover {
     background: rgba(16, 57, 133, 1);
+
     transform: translateY(-50%) scale(1.1);
 
-    box-shadow:
-        0 0 15px rgba(101,111,255,.5);
+    box-shadow: 0 0 15px rgba(101, 111, 255, 0.5);
 }
 
 .swiper-button-next svg,
@@ -359,6 +386,11 @@
     right: 5% !important;
 }
 
+
+/* ===========================
+   Common Panels
+   =========================== */
+
 .panel-navy-overlay {
     background: rgba(183, 183, 183, 0.3);
 }
@@ -367,9 +399,11 @@
     display: none !important;
 }
 
+
 /* ===========================
    Ranking
    =========================== */
+
 .rank-number.rank-1 {
     font-size: 20rem;
 }
@@ -379,57 +413,78 @@
     font-size: 12rem;
 }
 
+
 /* ===========================
    Now Showing
    =========================== */
+
 .now-showing-track-wrap {
-    flex-grow: 1;
+    flex: 1 1 auto;
+
     min-width: 0;
+
+    overflow: hidden;
 }
 
 .now-showing-track {
+    display: flex;
+    gap: 1rem;
+
     overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
+
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
 
+.now-showing-track::-webkit-scrollbar {
+    display: none;
+}
+
 .now-showing-slide {
     flex-shrink: 0;
-    scroll-snap-align: start;
+
     width: 200px;
+
+    scroll-snap-align: start;
 }
 
 .movie-info {
     background: #081729;
 }
+
 .nowshowing-btn {
-    width: 42px;
-    height: 42px;
+    position: relative !important;
+    z-index: 20;
 
     display: flex !important;
     align-items: center;
     justify-content: center;
 
-    position: relative !important;
+    width: 42px;
+    height: 42px;
 
+    color: #fff;
+
+    background: rgba(8, 23, 41, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 50%;
 
-    background: rgba(8, 23, 41, 0.95);
-    color: #ffffff;
-
     cursor: pointer;
 
-    z-index: 20;
-
-    transition: .3s;
+    transition: 0.3s;
 }
 
 .nowshowing-btn:hover {
     color: #fff;
+
     background: rgba(16, 57, 133, 1);
+
     transform: scale(1.1);
+
     box-shadow: 0 0 15px rgba(101, 111, 255, 0.5);
 }
 
@@ -451,64 +506,24 @@
     margin-right: -60px;
 }
 
-.now-showing-track-wrap {
-    flex: 1 1 auto;
-    min-width: 0;
-    overflow: hidden;
-}
-
-
-/* カード横スクロール */
-.now-showing-track {
-    display: flex;
-    gap: 1rem;
-
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    scroll-behavior: smooth;
-
-    scrollbar-width: none;
-}
-
-.now-showing-track::-webkit-scrollbar {
-    display: none;
-}
-
-/* Movie area */
-.now-showing-track-wrap {
-    min-width: 0;
-    overflow: hidden;
-}
-
-
-/* Movie cards */
-.now-showing-track {
-    overflow-x: auto;
-    overflow-y: hidden;
-
-    scroll-behavior: smooth;
-
-    scrollbar-width: none;
-}
-
-.now-showing-track::-webkit-scrollbar {
-    display: none;
-}
 
 /* ===========================
    Coming Soon
    =========================== */
+
 .coming-soon-track {
     overflow-x: auto;
+
     scroll-snap-type: x mandatory;
+
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
 
 .coming-card {
-    scroll-snap-align: start;
     width: 400px;
+
+    scroll-snap-align: start;
 }
 
 .coming-card-image-wrap {
@@ -516,29 +531,36 @@
 }
 
 .coming-poster-wrap {
+    display: block;
+
     width: 100%;
     height: 360px;
-    object-fit: cover;
-    display: block;
-}
 
+    object-fit: cover;
+}
 
 .coming-slider-btn {
     position: absolute;
     top: 0;
     right: 0;
-    height: 85%;
-    width: 45px;
-    background: rgba(50, 50, 70, 0.7);
-    font-size: 2.5rem;
     z-index: 10;
-    backdrop-filter: blur(2px);
-    border-radius: 8px;
-    border: 0;
-    color: #fff;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    width: 45px;
+    height: 85%;
+
+    color: #fff;
+
+    background: rgba(50, 50, 70, 0.7);
+    border: 0;
+    border-radius: 8px;
+
+    font-size: 2.5rem;
+
+    backdrop-filter: blur(2px);
 }
 
 
@@ -550,9 +572,11 @@
     position: fixed;
     inset: 0;
     z-index: 2000;
+
     display: none;
     align-items: center;
     justify-content: center;
+
     background: rgba(0, 0, 0, 0.65);
 }
 
@@ -563,29 +587,43 @@
 .location-dialog {
     width: 90%;
     max-width: 360px;
+
     padding: 32px 28px;
+
     color: #fff;
     text-align: center;
+
     background: #0d1b3d;
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 14px;
+
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
 .location-dialog-icon {
     margin-bottom: 12px;
+
     color: #ffc107;
+
     font-size: 2.2rem;
 }
 
-/* Common button settings */
+
+/* ===========================
+   Location Buttons
+   =========================== */
+
 .location-btn {
     padding: 10px;
+
     font-weight: 600;
     text-shadow: none !important;
+
     background-image: none !important;
     border-radius: 8px;
+
     -webkit-text-stroke: 0 !important;
+
     transition:
         color 0.3s ease,
         background-color 0.3s ease,
@@ -595,117 +633,236 @@
 /* Always Allow */
 button.btn.location-btn-primary {
     color: #0d1b3d !important;
+
     background-color: #ffc107 !important;
     border: none !important;
+
     -webkit-text-fill-color: #0d1b3d !important;
 }
 
 button.btn.location-btn-primary:hover {
     color: #0d1b3d !important;
+
     background-color: #e0a800 !important;
+
     -webkit-text-fill-color: #0d1b3d !important;
 }
 
 /* Allow Once */
 button.btn.location-btn-secondary {
     color: #fff !important;
+
     background-color: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
+
     -webkit-text-fill-color: #fff !important;
 }
 
 button.btn.location-btn-secondary:hover {
     color: #fff !important;
+
     background-color: rgba(255, 255, 255, 0.18) !important;
     border-color: rgba(255, 255, 255, 0.2) !important;
+
     -webkit-text-fill-color: #fff !important;
 }
 
 /* Don't Allow */
 button.btn.location-btn-outline {
     color: #adb5bd !important;
+
     background-color: transparent !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
+
     -webkit-text-fill-color: #adb5bd !important;
 }
 
 button.btn.location-btn-outline:hover {
     color: #fff !important;
+
     background-color: transparent !important;
     border-color: rgba(255, 255, 255, 0.35) !important;
+
     -webkit-text-fill-color: #fff !important;
 }
 
 /* Location Settings */
 .location-change-btn {
     color: #0d1b3d !important;
+
     background-color: rgba(255, 255, 255, 0.08) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
+
     -webkit-text-stroke: 0 !important;
 }
 
 .location-change-btn:hover {
     color: #fff !important;
+
     background-color: rgba(255, 255, 255, 0.15) !important;
 }
 
-/* Cinema cards */
+
+/* ===========================
+   Nearby Cinema Cards
+   =========================== */
+
 .cinema-card {
     height: 100%;
+
     padding: 16px;
+
     color: #fff;
+
     background: rgba(8, 23, 41, 0.9);
+    border: 2px solid transparent;
     border-radius: 10px;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
 }
 
 .cinema-card-name {
     margin-bottom: 4px;
+
+    color: #fff;
+
     font-weight: 700;
 }
 
 .cinema-card-meta {
     margin-bottom: 10px;
+
     color: #adb5bd;
+
     font-size: 0.82rem;
 }
 
 .cinema-card-distance {
     color: #ffc107;
+
     font-weight: 600;
 }
 
 
 /* ===========================
-   Information slide
+   Selected Cinema Card
    =========================== */
+
+.cinema-card-selected {
+    position: relative;
+
+    border: 3px solid #ffc107;
+
+    background: linear-gradient(
+        135deg,
+        rgba(255, 193, 7, 0.22) 0%,
+        rgba(21, 38, 59, 0.98) 45%,
+        rgba(8, 23, 41, 0.98) 100%
+    );
+
+    transform: translateY(-4px);
+
+    box-shadow:
+        0 0 0 1px rgba(255, 193, 7, 0.18),
+        0 8px 24px rgba(255, 193, 7, 0.24),
+        0 0 18px rgba(255, 193, 7, 0.12);
+}
+
+.cinema-card-selected:hover {
+    border-color: #ffd54f;
+
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 0 0 1px rgba(255, 193, 7, 0.3),
+        0 12px 30px rgba(255, 193, 7, 0.32),
+        0 0 24px rgba(255, 193, 7, 0.18);
+}
+
+.cinema-card-selected .cinema-card-name {
+    color: #ffc107;
+}
+
+.cinema-card-selected .cinema-card-meta {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.cinema-card-selected .cinema-card-distance {
+    color: #ffd54f;
+}
+
+
+/* ===========================
+   Nearby Cinema Links
+   =========================== */
+
+.cinema-card a {
+    color: inherit;
+}
+
+.cinema-card a:hover {
+    color: inherit;
+}
+
+.cinema-card .location-btn-primary {
+    color: #0d1b3d !important;
+
+    background-color: #ffc107 !important;
+    border: none !important;
+
+    -webkit-text-fill-color: #0d1b3d !important;
+}
+
+.cinema-card .location-btn-primary:hover {
+    color: #0d1b3d !important;
+
+    background-color: #e0a800 !important;
+
+    -webkit-text-fill-color: #0d1b3d !important;
+}
+
+
+/* ===========================
+   Information Slide
+   =========================== */
+
 .hero-tag-blue {
     color: #1a56db;
     border-color: #1a56db;
 }
 
 .info-card {
-    background: #fff;
-    border-radius: 8px;
-    padding: 1.5rem 1.75rem;
     width: 100%;
     max-width: 420px;
+
+    padding: 1.5rem 1.75rem;
+
+    background: #fff;
+    border-radius: 8px;
+
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .info-card-title {
+    margin: 0.6rem 0 0.5rem;
+
+    color: #0b1b33;
+
     font-size: 1.1rem;
     font-weight: 700;
-    color: #0b1b33;
-    margin: 0.6rem 0 0.5rem;
     line-height: 1.3;
 }
 
-
 @media (max-width: 767.98px) {
     .info-card {
-        padding: 1.1rem 1.25rem;
         max-width: 100%;
+        padding: 1.1rem 1.25rem;
     }
+
     .info-card-title {
         font-size: 1rem;
     }
@@ -713,8 +870,9 @@ button.btn.location-btn-outline:hover {
 
 
 /* ===========================
-        Contacut
+   Contact
    =========================== */
+
 .contact-icon {
     position: fixed;
     right: 30px;
@@ -722,53 +880,188 @@ button.btn.location-btn-outline:hover {
 }
 
 .contact-icon a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     width: 60px;
     height: 60px;
-    background-color: #222;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+    color: #fff;
     text-decoration: none;
+
+    background-color: #222;
+    border-radius: 50%;
 }
 
 .contact-icon i {
     font-size: 28px;
 }
 
+
 /* ===========================
-   Chat notification
+   Chat Notification
    =========================== */
+
 .chat-notification {
-
     position: absolute;
-
     top: -5px;
     right: -5px;
+    z-index: 10;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     width: 25px;
     height: 25px;
 
+    color: #fff;
 
     background-color: red;
-    color: white;
-
-
     border-radius: 50%;
-
 
     font-size: 12px;
     font-weight: bold;
-
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-
-    z-index: 10;
-
 }
 
+/* ===========================
+   Nearby Cinema Mini Map
+   =========================== */
+
+.nearby-map-wrapper {
+    overflow: hidden;
+
+    background: rgba(8, 23, 41, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 14px;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.nearby-cinema-map {
+    width: 100%;
+    height: 360px;
+
+    background: #d8dee9;
+}
+
+.nearby-map-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    padding: 12px 16px;
+
+    background: rgba(8, 23, 41, 0.98);
+}
+
+.nearby-map-legend {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    font-size: 0.78rem;
+}
+
+.nearby-map-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    display: inline-block;
+
+    width: 12px;
+    height: 12px;
+
+    border-radius: 50%;
+}
+
+.legend-dot-current {
+    background: #ffc107;
+    border: 2px solid #111827;
+}
+
+.legend-dot-location {
+    background: #2563eb;
+    border: 2px solid #ffffff;
+}
+
+.nearby-full-map-btn {
+    flex-shrink: 0;
+
+    color: #0d1b3d !important;
+
+    background: #ffc107 !important;
+    border: none !important;
+
+    font-weight: 700;
+
+    transition:
+        transform 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.nearby-full-map-btn:hover {
+    color: #0d1b3d !important;
+
+    background: #e0a800 !important;
+
+    transform: translateY(-1px);
+}
+
+
+/* Google Maps info window */
+
+.cinema-map-info {
+    min-width: 180px;
+
+    color: #111827;
+}
+
+.cinema-map-info h6 {
+    margin-bottom: 8px;
+
+    color: #111827;
+
+    font-weight: 700;
+}
+
+.cinema-map-info p {
+    margin: 4px 0;
+
+    color: #4b5563;
+
+    font-size: 0.82rem;
+}
+
+
+/* ===========================
+   Mini Map Responsive
+   =========================== */
+
+@media (max-width: 767.98px) {
+    .nearby-cinema-map {
+        height: 280px;
+    }
+
+    .nearby-map-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .nearby-map-legend {
+        justify-content: center;
+    }
+
+    .nearby-full-map-btn {
+        width: 100%;
+    }
+}
