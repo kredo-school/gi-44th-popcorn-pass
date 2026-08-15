@@ -48,6 +48,30 @@ class AdminController extends Controller
 
         $currentYear = now()->year;
 
+    $availableYears = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereNotNull('paid_at')
+        ->selectRaw('YEAR(paid_at) as year')
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year')
+        ->map(fn ($year) => (int) $year)
+        ->values();
+
+    if ($availableYears->isEmpty()) {
+        $availableYears = collect([$currentYear]);
+    }
+
+    $requestedYear = $request->integer('year');
+
+    $selectedYear = $availableYears->contains($requestedYear)
+        ? $requestedYear
+        : $availableYears->first();
+
+    $thisYear = $selectedYear;
+    $lastYear = $thisYear - 1;
+
+    /*
         $requestedYear = $request->query('year');
 
         $selectedYear = filter_var(
@@ -1090,6 +1114,25 @@ class AdminController extends Controller
 
         $currentYear = now()->year;
 
+    $availableYears = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereNotNull('paid_at')
+        ->selectRaw('YEAR(paid_at) as year')
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year')
+        ->map(fn ($year) => (int) $year)
+        ->values();
+
+    if ($availableYears->isEmpty()) {
+        $availableYears = collect([$currentYear]);
+    }
+
+    $requestedYear = $request->integer('year');
+
+    $selectedYear = $availableYears->contains($requestedYear)
+        ? $requestedYear
+        : $availableYears->first();
         $requestedYear = $request->query('year');
 
         $selectedYear = filter_var(
@@ -1387,6 +1430,39 @@ class AdminController extends Controller
             )
             ->limit(5)
             ->get();
+    }
+    /*
+|--------------------------------------------------------------------------
+| Daily Revenue Chart
+|--------------------------------------------------------------------------
+*/
+
+$dailyRevenueQuery = Payment::query()
+    ->selectRaw(
+        'DATE(paid_at) as date, SUM(amount) as total'
+    )
+    ->where(
+        'payment_status',
+        'paid'
+    )
+    ->whereYear(
+        'paid_at',
+        $selectedYear
+    );
+
+if ($cinemaId) {
+    $dailyRevenueQuery->whereHas(
+        'reservation',
+        function ($query) use ($cinemaId) {
+            $query->where('cinema_id', $cinemaId);
+        }
+    );
+}
+
+$dailyRevenueChart = $dailyRevenueQuery
+    ->groupByRaw('DATE(paid_at)')
+    ->orderByRaw('DATE(paid_at)')
+    ->get();
 
         /*
     |--------------------------------------------------------------------------
@@ -1472,6 +1548,27 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
+    return view(
+        'admin.analytics.index',
+        compact(
+            'currentYear',
+            'selectedYear',
+            'availableYears',
+            'cinemas',
+            'cinemaId',
+            'selectedCinema',
+            'totalRevenue',
+            'totalReservations',
+            'totalCustomers',
+            'avgRevenuePerReservation',
+            'monthlyRevenueData',
+            'monthlyReservationData',
+            'topMovies',
+            'cinemaPerformance',
+            'dailyRevenueChart',
+        )
+    );
+}
         return view(
             'admin.analytics.index',
             compact(
