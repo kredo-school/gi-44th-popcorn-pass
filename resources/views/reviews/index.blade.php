@@ -30,7 +30,10 @@
                         <span class="review-info-label">
                             <i class="fa-solid fa-film me-2"></i>Genre
                         </span>
-                        <span class="review-info-value">{{ $movie->genre->title }}</span>
+                    
+                        <span class="review-info-value">
+                            {{ $movie->genres->pluck('title')->filter()->join(', ') ?: 'Not available' }}
+                        </span>
                     </div>
                 
                     <div class="review-info-item">
@@ -135,9 +138,10 @@
         </div>
 
         {{-- Back Button --}}
-        <button type="button" class="back-btn ms-5" onclick="history.back()">
-            <i class="fa-solid fa-arrow-left"></i> BACK
-        </button>
+        <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}" class="back-btn ms-5 text-decoration-none">
+            <i class="fa-solid fa-arrow-left"></i>
+            Movie Detail
+        </a>
 
     </div>
 

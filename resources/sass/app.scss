@@ -81,3 +81,288 @@
 // Map
 // ===============
 @import '../css/map/index.css';
+
+
+
+
+/* CSS */
+main {
+    margin-top: 0;
+}
+
+/* Navbar */
+.navbar{
+    min-height:120px;
+    padding-top:35px;
+    padding-bottom:35px;
+}
+
+
+/* PC */
+.navbar-nav{
+    gap:80px;
+}
+
+
+/* Mobile */
+@media (max-width: 991px){
+
+    .navbar{
+        min-height:70px;
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+
+    .navbar-nav{
+        gap:15px;
+        margin-top:10px;
+    }
+
+    .nav-font{
+        font-size:14px;
+        letter-spacing:1px;
+    }
+}
+
+
+.nav-font{
+    font-family: Georgia, serif;
+    font-size: large;
+    color: white;
+    text-shadow: 0 1px 1px white;
+}
+
+.navbar-nav{
+    gap: 75px;
+}
+.nav-font{
+    font-size:15px;
+    font-weight:600;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:#fff;
+    transition:all .3s ease;
+    position:relative;
+}
+
+.nav-font:hover{
+    color:#ffd700 !important;
+    text-shadow:
+        0 0 10px rgba(255,215,0,.8),
+        0 0 20px rgba(255,215,0,.5);
+}
+
+.nav-font::after{
+    content:'';
+    position:absolute;
+    left:0;
+    bottom:-6px;
+    width:0;
+    height:2px;
+    background:#ffd700;
+    transition:width .3s ease;
+}
+
+.nav-font:hover::after{
+    width:100%;
+}
+
+.btn-color {
+    background-color: #F5C126 !important;
+    border-color: #F5C126 !important;
+    color: black !important;
+}
+.btn-white{
+    background-color: white !important;
+    border-color: red !important;
+    color: black !important;
+}
+
+
+
+// home
+
+
+
+.carousel-indicators button{
+    width:12px !important;
+    height:12px !important;
+    border-radius:50%;
+}
+
+.back-to-top{
+    width:100%;
+    margin:0;
+    padding:15px 0;
+    background:rgba(80,80,90,.8);
+    text-align:center;
+    overflow:hidden;
+}
+body{
+    overflow-x:hidden;
+}
+
+
+.back-to-top-link{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    text-decoration:none;
+    transition:.3s;
+}
+.back-to-top-link span {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+.back-to-top-link span {
+    word-break: break-word;
+    text-align: center;
+}
+
+.arrow{
+    font-size:24px;
+    line-height:1;
+    margin-bottom:3px;
+}
+
+.back-to-top-link span{
+    font-size:12px;
+    letter-spacing:1px;
+}
+
+.back-to-top-link:hover{
+    color:#f5c518;
+    transform:translateY(-2px);
+}
+
+// base
+.mypage-btn{
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: #000;
+
+    -webkit-text-stroke: 0.5px #fff;
+
+    margin-right: 20px;
+}
+.yellow-color{
+    color:#F5C126;
+}
+.base{
+    font-family: Georgia, serif;
+}
+.title-base {
+    font-family: Georgia, serif;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 1),
+        0 0 20px rgba(0, 0, 0, 0.9),
+        0 0 60px rgba(0, 0, 0, 0.8),
+        0 0 100px rgba(0, 0, 0, 0.6);
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
+}
+.ranking-title{
+    font-family: "jsMath-cmti10", serif;
+    color: #000;
+    font-style: italic;
+
+    
+}
+.back-gray{
+   background-color: #D9D9D9;
+}
+
+.section-gap {
+    margin-top: 2rem; 
+    margin-bottom: 10rem;
+}
+
+
+
+
+// seat selection
+.reserved {
+    background-color: #828282 !important;
+    border-color: #999999;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+// Movie release/detail
+.release-date {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 4rem;
+    letter-spacing: 0.25em;
+    color: #F5C126;
+    position: relative;
+    animation: fadeSlideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+
+    &::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 12.5%;
+        width: 75%;
+        height: 1px;
+        background: #F5C126;
+        transform: scaleX(0);
+        transform-origin: center;
+        animation: lineExpand 0.7s 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+}
+
+.release-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.6em;
+    color: rgba(171, 171, 171, 0.5);
+    margin-top: 14px;
+    text-transform: uppercase;
+    animation: fadeSlideUp 0.9s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+
+}
+
+@keyframes lineExpand {
+    to { transform: scaleX(1); }
+}
+.release-img{
+    width: 75%;
+    height: 90%;
+}
+.text-trailer{
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    background: linear-gradient(135deg, #4af3ff, #2b75ff);
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: .3s ease;
+}
+
+.text-trailer:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(245,193,38,.4);
+}
+
+.movie-container{
+    max-width: 1400px;
+    margin: 0 auto;
+
+}
+
+
+// Reservation
+.reservation-img{
+    width: 160px;
+    height: 240px;
+    object-fit: cover;
+}
+

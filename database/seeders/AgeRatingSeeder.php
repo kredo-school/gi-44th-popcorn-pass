@@ -19,10 +19,10 @@ class AgeRatingSeeder extends Seeder
 ];
 
         foreach ($ratings as $rating) {
-            DB::table('age_ratings')->insert([
-    'id' => Str::uuid(),
-    'title' => $rating,
-]);
+            DB::table('age_ratings')->insertOrIgnore([
+                'id' => Str::uuid(),
+                'title' => $rating,
+            ]);
         }
     }
 }

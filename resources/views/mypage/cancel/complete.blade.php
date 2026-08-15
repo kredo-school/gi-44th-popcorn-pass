@@ -21,27 +21,26 @@
                 <span>{{ $reservation->showtime->start_time->format('M d, Y (D)') }}</span>
             </div>
             <div class="d-flex justify-content-between py-2">
-                <span class="text-muted">Reference</span>
-                <span>{{ $reservation->reservation_reference ?? $reservation->id }}</span>
+                <span class="text-muted">Payment</span>
+                <span class="fw-bold">
+                    No payment was made
+                </span>
             </div>
             <div class="d-flex justify-content-between py-2">
-                <span class="text-muted">Refund Amount</span>
-                <span class="fw-bold" style="color: var(--mypage-gold)">
-                    ¥{{ number_format($reservation->final_amount) }}
-                </span>
+                <span class="text-muted">Reference</span>
+                <span>{{ $reservation->reservation_reference ?? $reservation->id }}</span>
             </div>
             <div class="d-flex justify-content-between py-2">
                 <span class="text-muted">Cancelled At</span>
                 <span>{{ $reservation->cancelled_at?->format('M d, Y h:i A') }}</span>
             </div>
         </div>
-
-        <p class="small text-muted mb-4">
-            Refunds are typically processed within 3-5 business days.
+        <p class="text-muted mb-4">
+            Your selected seats have been released and are now available for booking again.
         </p>
 
-        <a href="{{ route('mypage.dashboard') }}" class="btn mypage-btn-write-review px-4">
-            <i class="fa-solid fa-house me-2"></i>Back to My Page
+        <a href="{{ route('mypage.dashboard') }}" class="btn text-white border border-white px-4 back-to-mypage-btn">
+            <i class="fa-solid fa-arrow-left me-1"></i>Back to My Page
         </a>
     </div>
 @endsection

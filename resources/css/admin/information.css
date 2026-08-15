@@ -14,13 +14,6 @@
     cursor: pointer;
 }
 
-.card-dark {
-    background-color: #232a47;
-    border: none;
-    border-radius: 8px;
-    color: #fff;
-}
-
 .category-list-scroll {
     max-height: 200px;
     overflow-y: auto;

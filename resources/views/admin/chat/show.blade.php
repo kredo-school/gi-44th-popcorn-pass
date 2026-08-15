@@ -6,7 +6,9 @@
 
 @section('content')
 
+
     <div class="container py-1 show-box">
+
 
         <h2 class="bg-white mb-4 text-center text-dark p-3">
             👨‍💻 Chat with 【 {{ $conversation->user->first_name }} {{ $conversation->user->last_name }} 】
@@ -64,6 +66,25 @@
                 </div>
 
             </form>
+            <div class="position-relative d-flex justify-content-center align-items-center mt-4">
+
+                {{-- Chat home --}}
+                <div class="position-absolute start-50 translate-middle-x me-5" style="margin-left: -342px;">
+                    <a href="{{ route('admin.chat.index') }}" class="btn btn-dark">
+                        Chat home
+                    </a>
+                </div>
+
+                {{-- Chat Reset --}}
+                <form action="{{ route('admin.chat.close', $conversation->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger ps-5 pe-5">
+                        Chat Reset
+                    </button>
+                </form>
+
+            </div>
+
 
 
             {{-- Bottom Buttons --}}
@@ -94,6 +115,30 @@
 
         </div>
 
-    </div>
 
-@endsection
+
+        {{-- Scroll Bottom After Reload --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+
+
+                const chatArea = document.getElementById('chat-area');
+
+
+                if (chatArea) {
+
+                    chatArea.scrollTop = chatArea.scrollHeight;
+
+                }
+
+
+            });
+        </script>
+
+
+
+
+        @vite('resources/js/admin/chat.js')
+
+
+    @endsection

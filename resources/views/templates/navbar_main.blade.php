@@ -12,9 +12,27 @@
                 <span class="menu-text">MENU</span>
             </button>
 
-            <!-- Logo -->
-            <a class="navbar-brand m-0 p-0" href="{{ url('/') }}">
-                <img src="{{ asset('images/layouts/logo.png') }}" alt="Logo" width="70" height="70">
+
+            <!-- Logo + Selected Cinema -->
+            @php
+                $selectedCinema = null;
+
+                $selectedCinemaId = session('selected_cinema_id');
+
+                if ($selectedCinemaId) {
+                    $selectedCinema = \App\Models\Cinema::where('is_active', true)->find($selectedCinemaId);
+                }
+            @endphp
+
+            <a class="navbar-brand m-0 p-0 d-flex align-items-center text-decoration-none"
+                href="{{ $selectedCinema ? route('cinemas.home', $selectedCinema) : url('/') }}">
+                <img src="{{ asset('images/layouts/logo.png') }}" alt="Popcorn Pass" width="70" height="70">
+
+                @if ($selectedCinema)
+                    <span class="ms-2 text-white fw-bold">
+                        - {{ $selectedCinema->cinema_name }}
+                    </span>
+                @endif
             </a>
 
             <!-- right button -->
@@ -23,13 +41,14 @@
                 @auth
 
                     <!-- My Page -->
-                    <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-text">
+                    <a href="{{ route('mypage.dashboard') }}" class="btn btn-color mypage-btn">
                         <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
                         My Page
                     </a>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-color mypage-text">
+                    <a href="{{ route('login') }}" class="btn btn-color mypage-btn">
                         <img src="{{ asset('images/layouts/mypage.png') }}" width="35" height="35">
+
                         Log in
                     </a>
 
@@ -55,10 +74,10 @@
         Top Page
     </a>
 
-   
+
     <div class="row">
         <div class="col-lg-6 text-center">
-            <a href="#" class="sidebar-search-item">
+            <a href="{{ route('map.index') }}" class="sidebar-search-item">
                 <i class="fa-solid fa-map-location"></i><br>
                 Location
             </a>
@@ -79,11 +98,11 @@
     </a>
 
 
-    <a href="{{ route('information.index')}}" class="bar-item">
+    <a href="{{ route('information.index') }}" class="bar-item">
         <i class="fa-solid fa-circle-exclamation"></i>
         Information
     </a>
-    <a href="{{ route('customer.chat.index')}}" class="bar-item">
+    <a href="{{ route('customer.chat.index') }}" class="bar-item">
         <i class="fa-solid fa-circle-question"></i>
         Contact
     </a>
@@ -96,13 +115,13 @@
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-            <button class="sidebar-btn text-dark">
+            <button class="sidebar-btn text-dark text-center">
                 Logout
             </button>
         </form>
     @else
-        <a href="{{ route('login') }}" class="sidebar-btn text-dark">
-            Log in
+        <a href="{{ route('login') }}" class="sidebar-btn text-dark text-center">
+            Login
         </a>
 
     @endauth

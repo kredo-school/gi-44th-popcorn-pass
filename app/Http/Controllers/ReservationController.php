@@ -6,15 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Showtime;
 use App\Models\ReservationSeat;
+use App\Models\Ticket;
 use App\Models\ShowtimeSeat;
 use App\Models\Payment;
 use App\Services\DynamicPricingService;
 use App\Models\Coupon;
 use App\Models\Promotion;
 use App\Models\UserCoupon;
+use App\Mail\PurchaseConfirmationMail;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 use App\Services\PaypalService;
@@ -48,10 +51,15 @@ class ReservationController extends Controller
         ]);
 
         // Get reserved seats
-        $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
+        $reservedSeats = Reservation::with(
+            'reservationSeats.showtimeSeat.screenSeat'
+        )
             ->where('showtime_id', $showtime->id)
+            ->where('reservation_status', 'confirmed')
             ->get()
-            ->flatMap(fn($reservation) => $reservation->seat_numbers)
+            ->flatMap(
+                fn($reservation) => $reservation->seat_numbers
+            )
             ->toArray();
 
         $selectedSeats = [];
@@ -113,10 +121,15 @@ class ReservationController extends Controller
 
         session(['showtime_id' => $showtime->id]);
 
-        $reservedSeats = Reservation::with('reservationSeats.showtimeSeat.screenSeat')
+        $reservedSeats = Reservation::with(
+            'reservationSeats.showtimeSeat.screenSeat'
+        )
             ->where('showtime_id', $showtime->id)
+            ->where('reservation_status', 'confirmed')
             ->get()
-            ->flatMap(fn($reservation) => $reservation->seat_numbers)
+            ->flatMap(
+                fn($reservation) => $reservation->seat_numbers
+            )
             ->toArray();
 
         return view('reservations.seat-selection', compact(
@@ -764,7 +777,7 @@ class ReservationController extends Controller
         $discountAmount = (float) ($discountInfo['discount_amount'] ?? 0);
         $finalAmount = (float) ($discountInfo['final_amount'] ?? $subtotal);
 
-        DB::transaction(function () use (
+        $reservation = DB::transaction(function () use (
             $selectedSeats,
             $paymentInfo,
             $guestInfo,
@@ -864,12 +877,19 @@ class ReservationController extends Controller
                     throw new \Exception("Seat not found: " . $seat['seat']);
                 }
 
-                ReservationSeat::create([
+                $reservationSeat = ReservationSeat::create([
                     'id' => Str::uuid(),
                     'reservation_id' => $reservation->id,
                     'showtime_seat_id' => $showtimeSeat->id,
                     'price_at_reservation' => ($seat['price'] ?? 0)
                         + (!empty($seat['premium']) ? 10 : 0),
+                ]);
+
+                // Create one individual QR ticket per reserved seat.
+                Ticket::create([
+                    'id' => Str::uuid(),
+                    'reservation_seat_id' => $reservationSeat->id,
+                    'qr_token' => Str::random(64),
                 ]);
 
                 $showtimeSeat->update([
@@ -906,9 +926,46 @@ class ReservationController extends Controller
                 $showtime->refresh();
             }
 
-            // ★ DYNAMIC PRICING: Update dynamic price based on new occupancy
+             // DYNAMIC PRICING: Update dynamic price based on new occupancy
             $this->pricingService->updateDynamicPrice($showtime->id);
+
+            return $reservation;
         });
+
+        // Send purchase confirmation email only after the transaction succeeds.
+        $reservation->load([
+            'user',
+            'movie',
+            'cinema',
+            'screen',
+            'showtime',
+            'payment',
+            'reservationSeats.showtimeSeat.screenSeat',
+        ]);
+
+        if ($reservation->payment?->payment_status === 'paid') {
+            $recipientEmail = $reservation->user?->email
+                ?? $reservation->guest_email;
+
+            if ($recipientEmail) {
+                $ticketUrl = $reservation->user_id
+                    ? route('mypage.tickets.qrcode', [
+                        'id' => $reservation->id,
+                    ])
+                    : null;
+
+                try {
+                    Mail::to($recipientEmail)->send(
+                        new PurchaseConfirmationMail(
+                            $reservation,
+                            $ticketUrl
+                        )
+                    );
+                } catch (Throwable $e) {
+                    report($e);
+                }
+            }
+        }
 
         // Session cleanup after successful booking
         session()->put('booking_done', true);
@@ -971,30 +1028,5 @@ class ReservationController extends Controller
             'totalPrice',
             'reservationReference'
         ));
-    }
-
-        
-
-    // Cancel tickets from mypage
-    public function cancel(Reservation $reservation)
-    {
-        // 自分の予約以外はキャンセル不可
-        if ($reservation->user_id !== Auth::id()) {
-            abort(403);
-        }
-
-        // 既にキャンセル済み
-        if ($reservation->reservation_status === 'cancelled') {
-            return back()->with('error', 'This reservation has already been cancelled.');
-        }
-
-        $reservation->update([
-            'reservation_status' => 'cancelled',
-            'cancelled_at' => now(),
-        ]);
-
-        return redirect()
-    ->route('mypage.tickets')
-    ->with('success', 'Reservation cancelled successfully.');
     }
 }

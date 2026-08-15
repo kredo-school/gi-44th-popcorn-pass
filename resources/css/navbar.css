@@ -125,6 +125,15 @@
     font-size: 28px;
 }
 
+.bar-item {
+    display: block;
+    padding: 10px 10px;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
 .sidebar-search-item:hover,
 .bar-item:hover {
     color: #8ec5ff;
@@ -132,9 +141,34 @@
     transform: translateY(-3px);
 }
 
+
+.sidebar-btn {
+    width: 80%;
+    padding: 10px;
+    color: #102a43 !important;
+    background: #f5c126;
+    border: none;
+    border-radius: 8px;
+
+    font-size: 18px;
+    font-weight: 800;
+    text-shadow: none;
+    -webkit-text-stroke: 0;
+}
+
 /* Notification */
 .notification-icon {
     margin-right: 15px;
     color: #ffff43;
     font-size: 35px;
+}
+
+/* Navbar My Page / Log in */
+a.btn.btn-color.mypage-text {
+    color: #102a43 !important;
+    font-size: 20px;
+    font-weight: 800;
+    padding: 6px 16px;
+    text-shadow: none !important;
+    -webkit-text-stroke: 0;
 }

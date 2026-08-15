@@ -150,6 +150,9 @@
                                     <label class="form-label text-secondary small">Trailer URL</label>
                                     <input type="url" name="trailer_url" class="form-control"
                                         value="{{ old('trailer_url', $movie->trailer_url) }}">
+                                    <label class="form-label text-secondary small">
+                                        Change youtube.com -> youtube-nocookie.com
+                                    </label>
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label text-secondary small">Search Keywords</label>
@@ -244,113 +247,126 @@
             {{-- Generate Form --}}
             <div class="card card-dark p-3 mb-3">
                 <div class="text-warning fw-bold mb-3">Generate Showtimes</div>
+
                 <div class="text-secondary small mb-3">
-                    Set a recurrence pattern and click Generate to create multiple showtimes at once.
+                    Select a cinema and screen, then set the recurrence pattern.
                 </div>
 
                 <div class="row g-3" id="generate-form">
-                    <div class="col-12 row">
-                        {{-- Cinema --}}
-                        <div class="col-md-3">
-                            <label class="form-label text-secondary small">
-                                Cinema
-                            </label>
 
-                            <input type="text" class="form-control"
-                                value="{{ $cinema?->cinema_name ?? 'No Cinema' }}" disabled>
-
-                            <input type="hidden" id="gen-cinema" value="{{ $cinema?->id }}">
-                        </div>
-
-                        {{-- Screen --}}
-                        <div class="col-md-3">
-                            <label class="form-label text-secondary small">
-                                Screen
-                            </label>
-
-                            <select class="form-select" id="gen-screen">
-
-                                <option value="">
-                                    Select screen...
-                                </option>
-
-                                @foreach ($screens as $screen)
-                                    <option value="{{ $screen->id }}">
-                                        Screen {{ $screen->screen_number }}
-                                        - {{ $screen->screen_type }}
-                                    </option>
-                                @endforeach
-
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="col-12 row">
-                        {{-- Date --}}
-                        <div class="col-md-3">
-                            <label class="form-label text-secondary small">
-                                Start Date
-                            </label>
-                            <input type="date" class="form-control" id="gen-start-date">
-                        </div>
-
-                        <div class="col-md-3">
-                            <label class="form-label text-secondary small">
-                                End Date
-                            </label>
-                            <input type="date" class="form-control" id="gen-end-date">
-                        </div>
-                    </div>
-
-
+                    {{-- Cinema / Screen --}}
                     <div class="col-12">
-                        <label class="form-label text-secondary small">Days of Week</label>
+                        <div class="row g-3">
+
+                            {{-- Cinema --}}
+                            <div class="col-md-3">
+                                <label for="gen-cinema" class="form-label text-secondary small">
+                                    Cinema
+                                </label>
+
+                                <select class="form-select" id="gen-cinema">
+                                    <option value="">Select cinema...</option>
+
+                                    @foreach ($cinemas as $cinemaOption)
+                                        <option value="{{ $cinemaOption->id }}"
+                                            {{ $cinema?->id === $cinemaOption->id ? 'selected' : '' }}>
+                                            {{ $cinemaOption->cinema_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Screen --}}
+                            <div class="col-md-3">
+                                <label for="gen-screen" class="form-label text-secondary small">
+                                    Screen
+                                </label>
+
+                                <select class="form-select" id="gen-screen">
+                                    <option value="">Select screen...</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {{-- Dates --}}
+                    <div class="col-12">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label for="gen-start-date" class="form-label text-secondary small">
+                                    Start Date
+                                </label>
+
+                                <input type="date" class="form-control" id="gen-start-date"
+                                    value="{{ optional($movie->released_date)->format('Y-m-d') }}">
+                            </div>
+
+                            <div class="col-md-3">
+                                <label for="gen-end-date" class="form-label text-secondary small">
+                                    End Date
+                                </label>
+
+                                <input type="date" class="form-control" id="gen-end-date"
+                                    value="{{ optional($movie->end_date)->format('Y-m-d') }}">
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Days --}}
+                    <div class="col-12">
+                        <label class="form-label text-secondary small">
+                            Days of Week
+                        </label>
+
                         <div class="d-flex gap-3 flex-wrap">
                             @foreach (['Sun' => 0, 'Mon' => 1, 'Tue' => 2, 'Wed' => 3, 'Thu' => 4, 'Fri' => 5, 'Sat' => 6] as $label => $value)
                                 <div class="form-check">
                                     <input class="form-check-input gen-day" type="checkbox" value="{{ $value }}"
                                         id="day-{{ $value }}" checked>
-                                    <label class="form-check-label"
-                                        for="day-{{ $value }}">{{ $label }}</label>
+
+                                    <label class="form-check-label" for="day-{{ $value }}">
+                                        {{ $label }}
+                                    </label>
                                 </div>
                             @endforeach
                         </div>
                     </div>
 
+                    {{-- Time Slots --}}
                     <div class="col-12">
-                        <label class="form-label text-secondary small">Time Slots (up to 6)</label>
+                        <label class="form-label text-secondary small">
+                            Time Slots (up to 6)
+                        </label>
+
                         <div class="row g-2">
                             @for ($i = 0; $i < 6; $i++)
                                 <div class="col-md-2">
-                                    <input type="time" class="form-control gen-slot" placeholder="--:--">
+                                    <input type="time" class="form-control gen-slot">
                                 </div>
                             @endfor
                         </div>
                     </div>
 
+                    {{-- Generate --}}
                     <div class="col-12">
                         <button type="button" class="btn btn-warning" id="generate-btn"
                             data-url="{{ route('admin.movies.showtimes.generate', $movie->id) }}">
                             Generate Showtimes
                         </button>
+
                         <span class="ms-3 text-secondary small" id="generate-msg"></span>
                     </div>
+
                 </div>
             </div>
 
-            {{-- Showtime List --}}
+            {{-- Existing Showtimes --}}
             <div class="card card-dark p-3">
 
                 <div class="text-warning fw-bold mb-3">
                     Existing Showtimes
                 </div>
-
-                @if (session('success'))
-                    <div class="alert alert-success">
-                        {{ session('success') }}
-                    </div>
-                @endif
-
 
                 <div id="showtime-list-container" class="showtime-scroll">
 
@@ -360,16 +376,14 @@
                             No showtimes registered.
                         </div>
                     @else
-                        @foreach ($showtimes->groupBy(function ($showtime) {
-            return $showtime->start_time->format('Y/m/d');
-        }) as $date => $dailyShowtimes)
+                        @foreach ($showtimes->groupBy(fn($showtime) => $showtime->start_time->format('Y/m/d')) as $date => $dailyShowtimes)
                             <div class="d-flex align-items-center mt-3 mb-2">
                                 <i class="fa-solid fa-calendar-days text-warning me-2"></i>
+
                                 <h6 class="mb-0 text-warning">
                                     {{ $date }}
                                 </h6>
                             </div>
-
 
                             <table class="table table-dark table-hover align-middle mb-4">
 
@@ -382,7 +396,6 @@
                                     </tr>
                                 </thead>
 
-
                                 <tbody>
                                     @foreach ($dailyShowtimes as $showtime)
                                         <tr>
@@ -393,13 +406,13 @@
                                             </td>
 
                                             <td>
-                                                {{ $showtime->screen->cinema->cinema_name ?? '—' }}
+                                                {{ $showtime->screen?->cinema?->cinema_name ?? '—' }}
                                             </td>
 
                                             <td>
-                                                Screen {{ $showtime->screen->screen_number ?? '—' }}
+                                                Screen {{ $showtime->screen?->screen_number ?? '—' }}
                                                 -
-                                                {{ $showtime->screen->screen_type ?? '—' }}
+                                                {{ $showtime->screen?->screen_type ?? '—' }}
                                             </td>
 
                                             <td class="text-end">
@@ -424,11 +437,187 @@
                     @endif
 
                 </div>
-
-
             </div>
         </div>
 
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cinemaSelect = document.getElementById('gen-cinema');
+            const screenSelect = document.getElementById('gen-screen');
+            const generateBtn = document.getElementById('generate-btn');
+            const generateMsg = document.getElementById('generate-msg');
+
+            if (!cinemaSelect || !screenSelect) {
+                return;
+            }
+
+            /*
+             * Convert the Laravel collection to a plain JS array.
+             * Every screen already contains its cinema_id.
+             */
+            const allScreens = @js($allScreens);
+
+            function updateScreens() {
+                const cinemaId = String(cinemaSelect.value || '');
+
+                screenSelect.innerHTML =
+                    '<option value="">Select screen...</option>';
+
+                if (!cinemaId) {
+                    screenSelect.disabled = true;
+                    return;
+                }
+
+                const filteredScreens = allScreens.filter(function(screen) {
+                    return String(screen.cinema_id) === cinemaId;
+                });
+
+                filteredScreens.forEach(function(screen) {
+                    const option = document.createElement('option');
+
+                    option.value = screen.id;
+                    option.textContent =
+                        `Screen ${screen.screen_number} - ${screen.screen_type}`;
+
+                    screenSelect.appendChild(option);
+                });
+
+                screenSelect.disabled = filteredScreens.length === 0;
+
+                if (filteredScreens.length === 0) {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'No screens available';
+                    screenSelect.appendChild(option);
+                }
+            }
+
+            /*
+             * IMPORTANT:
+             * Run once when the page first opens and again every time
+             * the cinema changes.
+             */
+            updateScreens();
+            cinemaSelect.addEventListener('change', updateScreens);
+
+            if (!generateBtn) {
+                return;
+            }
+
+            generateBtn.addEventListener('click', async function() {
+                const screenId = screenSelect.value;
+                const startDate = document.getElementById('gen-start-date')?.value;
+                const endDate = document.getElementById('gen-end-date')?.value;
+
+                const days = Array.from(
+                    document.querySelectorAll('.gen-day:checked')
+                ).map(function(checkbox) {
+                    return Number(checkbox.value);
+                });
+
+                const timeSlots = Array.from(
+                        document.querySelectorAll('.gen-slot')
+                    )
+                    .map(function(input) {
+                        return input.value;
+                    })
+                    .filter(Boolean);
+
+                if (!cinemaSelect.value) {
+                    generateMsg.textContent = 'Please select a cinema.';
+                    generateMsg.className = 'ms-3 text-danger small';
+                    return;
+                }
+
+                if (!screenId) {
+                    generateMsg.textContent = 'Please select a screen.';
+                    generateMsg.className = 'ms-3 text-danger small';
+                    return;
+                }
+
+                if (!startDate || !endDate) {
+                    generateMsg.textContent = 'Please select start and end dates.';
+                    generateMsg.className = 'ms-3 text-danger small';
+                    return;
+                }
+
+                if (days.length === 0) {
+                    generateMsg.textContent = 'Please select at least one day.';
+                    generateMsg.className = 'ms-3 text-danger small';
+                    return;
+                }
+
+                if (timeSlots.length === 0) {
+                    generateMsg.textContent = 'Please enter at least one time slot.';
+                    generateMsg.className = 'ms-3 text-danger small';
+                    return;
+                }
+
+                generateBtn.disabled = true;
+                generateMsg.textContent = 'Generating showtimes...';
+                generateMsg.className = 'ms-3 text-secondary small';
+
+                try {
+                    const response = await fetch(generateBtn.dataset.url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        },
+                        body: JSON.stringify({
+                            screen_id: screenId,
+                            start_date: startDate,
+                            end_date: endDate,
+                            days: days,
+                            time_slots: timeSlots,
+                        }),
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        let message = 'Could not generate showtimes.';
+
+                        if (data?.message) {
+                            message = data.message;
+                        }
+
+                        if (data?.errors) {
+                            message = Object.values(data.errors)
+                                .flat()
+                                .join(' ');
+                        }
+
+                        throw new Error(message);
+                    }
+
+                    generateMsg.textContent =
+                        data.message ?? 'Showtimes generated successfully.';
+
+                    generateMsg.className =
+                        'ms-3 text-success small';
+
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 800);
+
+                } catch (error) {
+                    console.error(error);
+
+                    generateMsg.textContent =
+                        error.message || 'Could not generate showtimes.';
+
+                    generateMsg.className =
+                        'ms-3 text-danger small';
+
+                } finally {
+                    generateBtn.disabled = false;
+                }
+            });
+        });
+    </script>
 
 @endsection
