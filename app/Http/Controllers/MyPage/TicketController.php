@@ -227,6 +227,10 @@ class TicketController extends Controller
             })
             ->values();
 
+        $activeTicketsCount = $individualTickets
+            ->whereNull('cancelled_at')
+            ->count();
+
         /*
         |--------------------------------------------------------------------------
         | Legacy Reservation Protection
@@ -273,6 +277,7 @@ class TicketController extends Controller
             'user' => $user,
             'reservation' => $reservation,
             'individualTickets' => $individualTickets,
+            'activeTicketsCount' => $activeTicketsCount,
             'upcomingTicketsCount' => $upcomingTicketsCount,
             'moviesWatchedCount' => $moviesWatchedCount,
             'reviewsWrittenCount' => $reviewsWrittenCount,

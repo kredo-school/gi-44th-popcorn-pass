@@ -60,11 +60,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setText('#detail-showtime', data.showtime);
 
-        const seats = Array.isArray(data.seats) && data.seats.length > 0
-            ? data.seats.join(', ')
-            : '—';
+        const seats =
+            Array.isArray(data.seats) &&
+            data.seats.length > 0
+                ? data.seats
+                    .map(seat => {
+                        const status =
+                            seat.status === 'cancelled'
+                                ? 'Cancelled'
+                                : 'Active';
 
-        setText('#detail-seats', seats);
+                        const cancelledAt =
+                            seat.cancelled_at
+                                ? `: ${seat.cancelled_at}`
+                                : '';
+
+                        return `${seat.seat_number} [${status}${cancelledAt}]`;
+                    })
+                    .join(' / ')
+                : '—';
+
+        const seatSummary =
+            `${data.active_seat_count ?? 0}`
+            + `/${data.original_seat_count ?? 0} active`;
+
+        setText(
+            '#detail-seats',
+            `${seats} | ${seatSummary}`
+        );
 
         setText(
             '#detail-amount',
@@ -76,8 +99,19 @@ document.addEventListener('DOMContentLoaded', () => {
             `${data.payment_status ?? '—'} (${data.payment_method ?? '—'}) - ${data.transaction_id ?? '—'}`
         );
 
-        setText('#detail-status', data.reservation_status);
-        setText('#detail-qr', data.qr_code);
+        const displayStatus =
+            data.display_status
+            ?? data.reservation_status
+            ?? '—';
+
+        setText(
+            '#detail-status',
+            displayStatus
+                .replaceAll('_', ' ')
+                .replace(/\b\w/g, character =>
+                    character.toUpperCase()
+                )
+        );
     }
 
     function updatePaymentAction(data) {

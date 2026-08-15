@@ -22,9 +22,19 @@ class DynamicPricingService
         }
 
         // Count booked seats: COUNT(DISTINCT showtime_seat_id) where reservation_seats exist for this showtime
-        $bookedSeats = ReservationSeat::whereHas('showtimeSeat', function ($query) use ($showtimeId) {
-            $query->where('showtime_id', $showtimeId);
-        })->distinct('showtime_seat_id')->count('showtime_seat_id');
+        $bookedSeats = ReservationSeat::query()
+            ->whereNull('cancelled_at')
+            ->whereHas(
+                'showtimeSeat',
+                function ($query) use ($showtimeId) {
+                    $query->where(
+                        'showtime_id',
+                        $showtimeId
+                    );
+                }
+            )
+            ->distinct('showtime_seat_id')
+            ->count('showtime_seat_id');
 
         // Calculate occupancy rate
         $occupancyRate = $bookedSeats / $showtime->capacity;

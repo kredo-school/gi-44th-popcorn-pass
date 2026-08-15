@@ -51,11 +51,13 @@
                     </div>
 
                     <div class="ms-3 flex-shrink-0">
-                        <button type="button" class="btn border-warning text-warning btn-sm"
-                                data-bs-toggle="modal"
-                                data-bs-target="#editReviewModal-{{ $review->id }}">
-                            <i class="fa-solid fa-pen me-1"></i>Edit Review
-                        </button>
+                        <a href="{{ route('reviews.edit', [
+                                'movieId' => $review->movie_id,
+                                'reviewId' => $review->id,
+                            ]) }}" class="btn border-warning text-warning btn-sm">
+                            <i class="fa-solid fa-pen me-1"></i>
+                            Edit Review
+                        </a>
 
                         {{-- Edit Review Modal --}}
                         <div class="modal fade" id="editReviewModal-{{ $review->id }}" tabindex="-1">

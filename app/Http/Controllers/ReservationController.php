@@ -13,9 +13,11 @@ use App\Services\DynamicPricingService;
 use App\Models\Coupon;
 use App\Models\Promotion;
 use App\Models\UserCoupon;
+use App\Mail\PurchaseConfirmationMail;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 use App\Services\PaypalService;
@@ -409,8 +411,18 @@ class ReservationController extends Controller
     {
         $request->validate([
             'payment_method' => 'required|in:paypal,onsite',
+            'use_promotion' => 'required|boolean',
             'coupon_id' => 'nullable|uuid',
         ]);
+
+        if (session('guest') && $request->payment_method === 'onsite') {
+            return back()
+                ->withErrors([
+                    'payment_method' =>
+                    'Pay On-Site is not available for guest checkout. Please use PayPal.',
+                ])
+                ->withInput();
+        }
 
         session([
             'paymentInfo' => [
@@ -459,9 +471,21 @@ class ReservationController extends Controller
             ])->with('error', 'Your session has expired. Please start again.');
         }
 
-        $subtotal = (float) ($discountInfo['subtotal'] ?? 0);
-        $promotionDiscount =
-            (float) ($discountInfo['promotion_discount'] ?? 0);
+        $subtotal =
+            (float) ($discountInfo['subtotal'] ?? 0);
+
+        $usePromotion =
+            $request->boolean('use_promotion');
+
+        $promotionId = $usePromotion
+            ? ($discountInfo['promotion_id'] ?? null)
+            : null;
+
+        $promotionDiscount = $usePromotion
+            ? (float) (
+                $discountInfo['promotion_discount'] ?? 0
+            )
+            : 0;
 
         $amountAfterPromotion = max(
             0,
@@ -513,22 +537,23 @@ class ReservationController extends Controller
             $amountAfterPromotion - $couponDiscount
         );
 
+        $discountInfo = [
+            'subtotal' => $subtotal,
+
+            'promotion_id' => $promotionId,
+            'promotion_discount' => $promotionDiscount,
+
+            'coupon_id' => $coupon?->id,
+            'coupon_discount' => $couponDiscount,
+
+            'discount_amount' =>
+            $promotionDiscount + $couponDiscount,
+
+            'final_amount' => $totalPrice,
+        ];
+
         session([
-            'discountInfo' => [
-                'subtotal' => $subtotal,
-
-                'promotion_id' =>
-                $discountInfo['promotion_id'] ?? null,
-                'promotion_discount' => $promotionDiscount,
-
-                'coupon_id' => $coupon?->id,
-                'coupon_discount' => $couponDiscount,
-
-                'discount_amount' =>
-                $promotionDiscount + $couponDiscount,
-
-                'final_amount' => $totalPrice,
-            ],
+            'discountInfo' => $discountInfo,
         ]);
 
         $showtimeId = session('showtime_id');
@@ -775,7 +800,7 @@ class ReservationController extends Controller
         $discountAmount = (float) ($discountInfo['discount_amount'] ?? 0);
         $finalAmount = (float) ($discountInfo['final_amount'] ?? $subtotal);
 
-        DB::transaction(function () use (
+        $reservation = DB::transaction(function () use (
             $selectedSeats,
             $paymentInfo,
             $guestInfo,
@@ -924,9 +949,46 @@ class ReservationController extends Controller
                 $showtime->refresh();
             }
 
-            // ★ DYNAMIC PRICING: Update dynamic price based on new occupancy
+             // DYNAMIC PRICING: Update dynamic price based on new occupancy
             $this->pricingService->updateDynamicPrice($showtime->id);
+
+            return $reservation;
         });
+
+        // Send purchase confirmation email only after the transaction succeeds.
+        $reservation->load([
+            'user',
+            'movie',
+            'cinema',
+            'screen',
+            'showtime',
+            'payment',
+            'reservationSeats.showtimeSeat.screenSeat',
+        ]);
+
+        if ($reservation->payment?->payment_status === 'paid') {
+            $recipientEmail = $reservation->user?->email
+                ?? $reservation->guest_email;
+
+            if ($recipientEmail) {
+                $ticketUrl = $reservation->user_id
+                    ? route('mypage.tickets.qrcode', [
+                        'id' => $reservation->id,
+                    ])
+                    : null;
+
+                try {
+                    Mail::to($recipientEmail)->send(
+                        new PurchaseConfirmationMail(
+                            $reservation,
+                            $ticketUrl
+                        )
+                    );
+                } catch (Throwable $e) {
+                    report($e);
+                }
+            }
+        }
 
         // Session cleanup after successful booking
         session()->put('booking_done', true);

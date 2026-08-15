@@ -31,6 +31,21 @@
     </div>
 </div>
 
+@if ($tab === 'upcoming')
+    <div class="alert alert-info text-start mb-4">
+        <h6 class="fw-bold mb-2">
+            <i class="fa-solid fa-circle-info me-1"></i>
+            Cancellation Policy
+        </h6>
+
+        <p class="mb-0">
+            Unpaid Pay On-Site bookings can be cancelled until the day before
+            the showtime. Additional conditions may apply to individual ticket
+            cancellations.
+        </p>
+    </div>
+@endif
+
 <div class="mypage-card p-4">
     @if ($tickets->isEmpty())
         <p class="text-muted mb-0">

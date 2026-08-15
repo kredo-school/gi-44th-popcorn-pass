@@ -26,6 +26,12 @@ class ReservationSeat extends Model
         'reservation_id',
         'showtime_seat_id',
         'price_at_reservation',
+        'cancelled_at',
+    ];
+
+    protected $casts = [
+        'price_at_reservation' => 'decimal:2',
+        'cancelled_at' => 'datetime',
     ];
 
     public function reservation()

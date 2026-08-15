@@ -48,6 +48,30 @@ class AdminController extends Controller
 
         $currentYear = now()->year;
 
+    $availableYears = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereNotNull('paid_at')
+        ->selectRaw('YEAR(paid_at) as year')
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year')
+        ->map(fn ($year) => (int) $year)
+        ->values();
+
+    if ($availableYears->isEmpty()) {
+        $availableYears = collect([$currentYear]);
+    }
+
+    $requestedYear = $request->integer('year');
+
+    $selectedYear = $availableYears->contains($requestedYear)
+        ? $requestedYear
+        : $availableYears->first();
+
+    $thisYear = $selectedYear;
+    $lastYear = $thisYear - 1;
+
+    /*
         $requestedYear = $request->query('year');
 
         $selectedYear = filter_var(
@@ -1090,6 +1114,25 @@ class AdminController extends Controller
 
         $currentYear = now()->year;
 
+    $availableYears = Payment::query()
+        ->where('payment_status', 'paid')
+        ->whereNotNull('paid_at')
+        ->selectRaw('YEAR(paid_at) as year')
+        ->distinct()
+        ->orderByDesc('year')
+        ->pluck('year')
+        ->map(fn ($year) => (int) $year)
+        ->values();
+
+    if ($availableYears->isEmpty()) {
+        $availableYears = collect([$currentYear]);
+    }
+
+    $requestedYear = $request->integer('year');
+
+    $selectedYear = $availableYears->contains($requestedYear)
+        ? $requestedYear
+        : $availableYears->first();
         $requestedYear = $request->query('year');
 
         $selectedYear = filter_var(
@@ -1387,6 +1430,38 @@ class AdminController extends Controller
             )
             ->limit(5)
             ->get();
+    /*
+|--------------------------------------------------------------------------
+| Daily Revenue Chart
+|--------------------------------------------------------------------------
+*/
+
+$dailyRevenueQuery = Payment::query()
+    ->selectRaw(
+        'DATE(paid_at) as date, SUM(amount) as total'
+    )
+    ->where(
+        'payment_status',
+        'paid'
+    )
+    ->whereYear(
+        'paid_at',
+        $selectedYear
+    );
+
+if ($cinemaId) {
+    $dailyRevenueQuery->whereHas(
+        'reservation',
+        function ($query) use ($cinemaId) {
+            $query->where('cinema_id', $cinemaId);
+        }
+    );
+}
+
+$dailyRevenueChart = $dailyRevenueQuery
+    ->groupByRaw('DATE(paid_at)')
+    ->orderByRaw('DATE(paid_at)')
+    ->get();
 
         /*
     |--------------------------------------------------------------------------
@@ -1443,7 +1518,6 @@ class AdminController extends Controller
                     'total_revenue'
                 )
                 ->get();
-        }
 
         /*
         |--------------------------------------------------------------------------
@@ -1472,6 +1546,27 @@ class AdminController extends Controller
     |--------------------------------------------------------------------------
     */
 
+    return view(
+        'admin.analytics.index',
+        compact(
+            'currentYear',
+            'selectedYear',
+            'availableYears',
+            'cinemas',
+            'cinemaId',
+            'selectedCinema',
+            'totalRevenue',
+            'totalReservations',
+            'totalCustomers',
+            'avgRevenuePerReservation',
+            'monthlyRevenueData',
+            'monthlyReservationData',
+            'topMovies',
+            'cinemaPerformance',
+            'dailyRevenueChart',
+        )
+    );
+}
         return view(
             'admin.analytics.index',
             compact(
@@ -1500,7 +1595,7 @@ class AdminController extends Controller
     // --------------------
     private function reservationStatusOptions(): array
     {
-        return ['confirmed', 'cancelled', 'expired'];
+        return ['confirmed', 'partially_cancelled', 'cancelled', 'expired'];
     }
 
     private function paymentStatusOptions(): array
@@ -1535,10 +1630,37 @@ class AdminController extends Controller
             $request->filled('status')
             && $request->get('status') !== 'all'
         ) {
-            $query->where(
-                'reservation_status',
-                $request->get('status')
-            );
+            $status = $request->get('status');
+
+            if ($status === 'partially_cancelled') {
+                $query
+                    ->where(
+                        'reservation_status',
+                        '!=',
+                        'cancelled'
+                    )
+                    ->whereHas(
+                        'reservationSeats',
+                        function ($seatQuery) {
+                            $seatQuery->whereNotNull(
+                                'cancelled_at'
+                            );
+                        }
+                    )
+                    ->whereHas(
+                        'reservationSeats',
+                        function ($seatQuery) {
+                            $seatQuery->whereNull(
+                                'cancelled_at'
+                            );
+                        }
+                    );
+            } else {
+                $query->where(
+                    'reservation_status',
+                    $status
+                );
+            }
         }
 
         // Payment status
@@ -1629,6 +1751,45 @@ class AdminController extends Controller
             'reservationSeats.showtimeSeat.screenSeat',
         ])->findOrFail($id);
 
+        $seatDetails = $reservation->reservationSeats
+            ->map(function ($reservationSeat) {
+                $screenSeat =
+                    $reservationSeat->showtimeSeat?->screenSeat;
+
+                $seatNumber =
+                    $screenSeat?->seat_number
+                    ?? (
+                        ($screenSeat?->seat_row ?? '')
+                        . ($screenSeat?->seat_position ?? '')
+                    );
+
+                return [
+                    'seat_number' => $seatNumber ?: '—',
+
+                    'status' => $reservationSeat->cancelled_at
+                        ? 'cancelled'
+                        : 'active',
+
+                    'cancelled_at' =>
+                    $reservationSeat->cancelled_at
+                        ?->format('Y-m-d H:i'),
+                ];
+            })
+            ->values();
+
+        $activeSeatCount = $reservation->reservationSeats
+            ->whereNull('cancelled_at')
+            ->count();
+
+        $cancelledSeatCount = $reservation->reservationSeats
+            ->whereNotNull('cancelled_at')
+            ->count();
+
+        $isPartiallyCancelled =
+            $reservation->reservation_status !== 'cancelled'
+            && $activeSeatCount > 0
+            && $cancelledSeatCount > 0;
+
         return response()->json([
             'reservation_reference' =>
             $reservation->reservation_reference,
@@ -1660,11 +1821,15 @@ class AdminController extends Controller
             $reservation->showtime?->start_time
                 ?->format('Y-m-d H:i'),
 
-            'seats' =>
-            $reservation->seat_numbers,
+            'seats' => $seatDetails,
 
-            'total_seats' =>
-            $reservation->total_seats,
+            'active_seat_count' => $activeSeatCount,
+
+            'cancelled_seat_count' => $cancelledSeatCount,
+
+            'original_seat_count' => $activeSeatCount + $cancelledSeatCount,
+
+            'total_seats' => $reservation->total_seats,
 
             'subtotal' =>
             number_format(
@@ -1684,8 +1849,9 @@ class AdminController extends Controller
                 2
             ),
 
-            'reservation_status' =>
-            $reservation->reservation_status,
+            'reservation_status' => $reservation->reservation_status,
+
+            'display_status' => $isPartiallyCancelled ? 'partially_cancelled' : $reservation->reservation_status,
 
             'qr_code' =>
             $reservation->qr_code,
