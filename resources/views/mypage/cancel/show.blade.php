@@ -20,6 +20,23 @@
         </div>
     @endif
 
+    <div class="alert alert-info text-start mb-4">
+        <h6 class="fw-bold mb-2">
+            <i class="fa-solid fa-circle-info me-1"></i>
+            Cancellation Policy
+        </h6>
+    
+        <ul class="mb-0 ps-3">
+            <li>Cancellation is available only for unpaid Pay On-Site bookings.</li>
+            <li>Bookings must be cancelled before the day of the showtime.</li>
+            <li>
+                Individual tickets cannot be cancelled when a coupon or
+                promotion has been applied.
+            </li>
+            <li>Used or already cancelled tickets cannot be cancelled.</li>
+        </ul>
+    </div>
+
     {{-- Booking Summary --}}
     <div class="mypage-card p-4 mb-4">
         <h5 class="mb-3">Booking Summary</h5>
