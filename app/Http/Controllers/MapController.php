@@ -20,6 +20,7 @@ class MapController extends Controller
 
         return view('map.index', [
             'cinemas' => $cinemas,
+            'selectedCinemaId' => session('selected_cinema_id'),
             'googleMapsApiKey' => config('maps.google.api_key'),
         ]);
     }
