@@ -280,9 +280,9 @@
 
 
         <div class="d-flex justify-content-between mt-5">
-            <button type="button" class="back-btn ms-5" onclick="history.back()">
-                <i class="fa-solid fa-arrow-left"></i> BACK
-            </button>
+            <a href="{{ url('/home') }}" class="back-btn ms-5 t">
+                <i class="fa-solid fa-arrow-left"></i> HOME
+            </a>
         </div>
 
         @include('reservations.modals.guest-or-login')

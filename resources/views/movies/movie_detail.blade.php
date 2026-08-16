@@ -150,11 +150,10 @@
 
                     <div class="text-center mt-3 mb-3">
                         @if ($showtime)
-                            <a href="{{ route('reservations.seat-selection', [
-                                'showtime' => $showtime->id,
-                                'new' => 1,
-                            ]) }}"
-                                class="text-decoration-none">
+                            <a
+                                href="{{ route('reservations.showtime.selection', [
+                                    'movie' => $showtime->movie->id,
+                                ]) }}" class="text-decoration-none">
                                 <button type="button" class="book-btn mt-2 w-75">
                                     BOOK NOW
                                 </button>
@@ -224,10 +223,9 @@
         </div>
 
         <div class="d-flex justify-content-between mt-5">
-            <button type="button" class="back-btn ms-5" onclick="history.back()">
-                <i class="fa-solid fa-arrow-left"></i>
-                BACK
-            </button>
+            <a href="{{ url('/home') }}" class="back-btn ms-5 t">
+                <i class="fa-solid fa-arrow-left"></i> HOME
+            </a>
         </div>
     </div>
 
