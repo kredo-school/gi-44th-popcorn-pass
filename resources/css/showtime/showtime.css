@@ -81,7 +81,7 @@
 
     font-weight: 700;
 
-    font-family: "Helvetica Neue";
+    font-family:'Times New Roman', serif;
 }
 
 .date-week {
@@ -165,7 +165,7 @@
 .showtime-movie-title {
     color: #000000 !important;
 
-    font-family: "Times New Roman", serif;
+    font-family:'Times New Roman', serif;
 
     font-size: 1.5rem;
 

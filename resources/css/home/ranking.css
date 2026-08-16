@@ -11,7 +11,7 @@
     display: inline-block;
     overflow: hidden;
 
-    font-family: 'Times New Roman', serif;
+    font-family:'Times New Roman', serif;
     font-size: clamp(1rem, 3vw, 3rem);
     font-weight: 700;
     letter-spacing: 6px;
@@ -118,7 +118,7 @@
     left:-20px;
     z-index:20;
     line-height:1;
-    font-family:"Times New Roman", serif;
+    font-family:'Times New Roman', serif;
     font-weight:900;
 
     transform: rotate(10deg);
@@ -302,7 +302,7 @@
 
 .movie-title{
     color:#f0c96a !important;
-    font-family: "Times New Roman", serif;
+    font-family:'Times New Roman', serif;
 }
 
 .movie-info-box{
@@ -387,7 +387,7 @@
 
 .ranking-title {
     color: #ffffff;
-    font-family: "jsMath-cmti10", serif;
+    font-family:'Times New Roman', serif;
     font-size: .95rem;
     font-style: italic;
     line-height: 1.3;
@@ -461,7 +461,7 @@
 }
 
 
-/* 映画情報側 */
+/* movie information */
 .ranking-movie-link {
     display: flex;
     align-items: center;
@@ -472,7 +472,7 @@
 }
 
 
-/* 順位 */
+/* ranking */
 .ranking-position {
     width: 28px;
     flex-shrink: 0;
@@ -483,7 +483,7 @@
 }
 
 
-/* ポスター */
+/* poster */
 .ranking-thumb {
     width: 50px;
     height: 70px;
@@ -493,10 +493,10 @@
 }
 
 
-/* タイトル */
+/* title */
 .ranking-title {
     color: #ffffff;
-    font-family: "jsMath-cmti10", serif;
+    font-family:'Times New Roman', serif;
     font-size: .95rem;
     font-style: italic;
     line-height: 1.3;

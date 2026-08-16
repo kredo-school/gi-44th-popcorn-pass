@@ -126,7 +126,7 @@ main {
 
 
 .nav-font{
-    font-family: Georgia, serif;
+    font-family:'Times New Roman', serif;
     font-size: large;
     color: white;
     text-shadow: 0 1px 1px white;
@@ -240,7 +240,7 @@ body{
 
 // base
 .mypage-btn{
-    font-family: 'Anton', sans-serif;
+    font-family: sans-serif;
     font-size: 20px;
     font-weight: 900;
     color: #000;
@@ -253,10 +253,10 @@ body{
     color:#F5C126;
 }
 .base{
-    font-family: Georgia, serif;
+    font-family:'Times New Roman', serif;
 }
 .title-base {
-    font-family: Georgia, serif;
+    font-family:'Times New Roman', serif;
     text-shadow: 
         2px 2px 4px rgba(0, 0, 0, 1),
         0 0 20px rgba(0, 0, 0, 0.9),
@@ -265,7 +265,7 @@ body{
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.8));
 }
 .ranking-title{
-    font-family: "jsMath-cmti10", serif;
+    font-family:'Times New Roman', serif;
     color: #000;
     font-style: italic;
 
@@ -292,10 +292,10 @@ body{
 }
 // Movie release/detail
 .release-date {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family:'Times New Roman', serif;
     font-size: 4rem;
     letter-spacing: 0.25em;
-    color: #F5C126;
+    color: #000000;
     position: relative;
     animation: fadeSlideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
 
@@ -314,11 +314,11 @@ body{
 }
 
 .release-sub {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family:'Times New Roman', serif;
     font-size: 1.5rem;
     font-weight: 300;
     letter-spacing: 0.6em;
-    color: rgba(171, 171, 171, 0.5);
+    color: rgba(77, 77, 77, 0.5);
     margin-top: 14px;
     text-transform: uppercase;
     animation: fadeSlideUp 0.9s 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
