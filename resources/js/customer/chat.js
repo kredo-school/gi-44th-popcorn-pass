@@ -1,130 +1,120 @@
-document.addEventListener('DOMContentLoaded', function () {
 
+document.addEventListener('DOMContentLoaded', function () {
 
     const chatArea = document.getElementById('chat-area');
 
+    if (!chatArea) {
+        return;
+    }
+
     const fetchUrl = chatArea.dataset.fetchUrl;
 
-
-
-    function loadMessages(){
-
+    function loadMessages() {
 
         fetch(fetchUrl)
+            .then(response => response.json())
+            .then(data => {
 
-        .then(response => response.json())
+                chatArea.innerHTML = '';
 
-        .then(data => {
+                data.messages.forEach(message => {
 
+                    const messageWrapper = document.createElement('div');
 
-            chatArea.innerHTML = '';
+                    messageWrapper.classList.add(
+                        'message',
+                        'mb-4'
+                    );
 
+                    // =========================
+                    // AI
+                    // =========================
 
+                    if (message.sender_type === 'ai') {
 
-            data.messages.forEach(message => {
+                        messageWrapper.innerHTML = `
+                            <div class="fw-bold">
+                                🤖 AI
+                            </div>
 
+                            <div class="bubble ai"></div>
+                        `;
 
-                let html = '';
+                        const bubble =
+                            messageWrapper.querySelector('.bubble');
 
+                        // AI message can contain HTML
+                        bubble.innerHTML = message.message;
 
+                    }
 
-                if(message.sender_type === 'ai'){
+                    // =========================
+                    // Customer
+                    // =========================
 
+                    else if (message.sender_type === 'customer') {
 
-                    html = `
-                    
-                    <div class="message mb-4">
+                        messageWrapper.classList.add('text-end');
 
-                        <div class="fw-bold">
-                            🤖 AI
-                        </div>
+                        messageWrapper.innerHTML = `
+                            <div class="fw-bold">
+                                👤 You
+                            </div>
 
-                        <div class="bubble ai">
-                            ${message.message}
-                        </div>
+                            <div class="bubble customer"></div>
+                        `;
 
-                    </div>
+                        const bubble =
+                            messageWrapper.querySelector('.bubble');
 
-                    `;
+                        // Customer message must be treated as text
+                        bubble.textContent = message.message;
 
+                    }
 
-                }
+                    // =========================
+                    // Staff
+                    // =========================
 
+                    else if (message.sender_type === 'staff') {
 
-                else if(message.sender_type === 'customer'){
+                        messageWrapper.innerHTML = `
+                            <div class="fw-bold">
+                                👨‍💻 Staff
+                            </div>
 
+                            <div class="bubble staff"></div>
+                        `;
 
-                    html = `
+                        const bubble =
+                            messageWrapper.querySelector('.bubble');
 
-                    <div class="message mb-4 text-end">
+                        // Staff message must be treated as text
+                        bubble.textContent = message.message;
+                    }
 
-                        <div class="fw-bold">
-                            👤 You
-                        </div>
+                    chatArea.appendChild(messageWrapper);
+                });
 
-                        <div class="bubble customer">
-                            ${message.message}
-                        </div>
+                chatArea.scrollTop =
+                    chatArea.scrollHeight;
 
-                    </div>
-
-                    `;
-
-
-                }
-
-
-                else if(message.sender_type === 'staff'){
-
-
-                    html = `
-
-                    <div class="message mb-4">
-
-                        <div class="fw-bold">
-                            👨‍💻 Staff
-                        </div>
-
-                        <div class="bubble staff">
-                            ${message.message}
-                        </div>
-
-                    </div>
-
-                    `;
-
-
-                }
-
-
-
-                chatArea.insertAdjacentHTML(
-                    'beforeend',
-                    html
+            })
+            .catch(error => {
+                console.error(
+                    'Failed to load chat messages:',
+                    error
                 );
-
-
             });
-
-            chatArea.scrollTop =
-                chatArea.scrollHeight;
-
-        });
-
     }
 
     // Initial load
-
     loadMessages();
 
-
-
-    // renew every five seconds
-
+    // Reload every 5 seconds
     setInterval(
         loadMessages,
         5000
     );
-
 
 });

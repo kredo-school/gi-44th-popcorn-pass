@@ -1,79 +1,909 @@
-/* =========================
-   Admin Chat
-========================= */
-.admin-chat-background{
-    background-color: #aaa;
-    padding-top: 5%;
-    padding-bottom: 5%;
+/* =========================================================
+   ADMIN CHAT LIST
+========================================================= */
+
+.admin-chat-list-page {
+    min-height: calc(100vh - 80px);
+
+    background: #171d38;
+
+    padding: 35px 26px 60px;
+
+    color: #ffffff;
 }
 
-.admin-chat-wrapper {
+/* =========================================================
+   HEADER
+========================================================= */
 
-    max-width:800px;
-    height:650px;
-    margin:auto;
-    border-radius:15px;
-    overflow:hidden;
-    display:flex;
-    flex-direction:column;
+.admin-chat-header {
+    max-width: 1500px;
 
+    margin: 0 auto 28px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
 }
 
+.admin-chat-subtitle {
+    color: #858ba5;
 
+    font-size: 14px;
+
+    margin-bottom: 4px;
+}
+
+.admin-chat-header h1 {
+    margin: 0;
+
+    font-size: 38px;
+
+    font-weight: 500;
+
+    color: #ffffff;
+}
+
+.admin-chat-count {
+    min-width: 150px;
+
+    text-align: right;
+}
+
+.admin-chat-count span {
+    display: block;
+
+    color: #858ba5;
+
+    font-size: 13px;
+
+    margin-bottom: 2px;
+}
+
+.admin-chat-count strong {
+    color: #ffcc00;
+
+    font-size: 28px;
+
+    font-weight: 600;
+}
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.admin-chat-list-card {
+    max-width: 1500px;
+
+    margin: 0 auto;
+
+    background: #242c4b;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.admin-chat-list-header {
+    padding: 24px 28px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom: 1px solid #4b526b;
+}
+
+.admin-chat-list-header h2 {
+    margin: 0;
+
+    color: #ffcc00;
+
+    font-size: 20px;
+
+    font-weight: 600;
+}
+
+.admin-chat-list-header p {
+    margin: 5px 0 0;
+
+    color: #858ba5;
+
+    font-size: 13px;
+}
+
+.admin-chat-total {
+    color: #a4a9bb;
+
+    font-size: 14px;
+}
+
+/* =========================================================
+   CHAT LIST
+========================================================= */
+
+.admin-chat-list {
+    padding: 8px 28px;
+}
+
+/* =========================================================
+   CHAT ITEM
+========================================================= */
+
+.admin-chat-item {
+    min-height: 82px;
+
+    display: grid;
+
+    grid-template-columns: 1fr 180px 150px;
+
+    align-items: center;
+
+    gap: 20px;
+
+    border-bottom: 1px solid #4b526b;
+}
+
+.admin-chat-item:last-child {
+    border-bottom: none;
+}
+
+/* =========================================================
+   USER
+========================================================= */
+
+.admin-chat-user {
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+.admin-chat-avatar {
+    width: 42px;
+
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: #303856;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.admin-chat-user h5 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+.admin-chat-user span {
+    color: #858ba5;
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.admin-chat-status {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.status-label {
+    color: #858ba5;
+
+    font-size: 11px;
+}
+
+.chat-status {
+    display: inline-flex;
+
+    width: fit-content;
+
+    padding: 4px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    background: #4a5067;
+
+    color: #ffffff;
+}
+
+.chat-status.waiting {
+    background: rgba(220, 53, 69, 0.18);
+
+    color: #ff3045;
+}
+
+.chat-status.staff {
+    background: rgb(170, 204, 255);
+
+    color: #003079;
+}
+
+.chat-status.closed {
+    background: rgba(108, 117, 125, 0.18);
+
+    color: #adb5bd;
+}
+
+/* =========================================================
+   OPEN CHAT BUTTON
+========================================================= */
+
+.admin-chat-action {
+    display: flex;
+
+    justify-content: flex-end;
+}
+
+.admin-chat-open-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 8px 13px;
+
+    border: 1px solid #ffcc00;
+
+    border-radius: 4px;
+
+    color: #ffffff;
+
+    background: transparent;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    transition: all 0.2s ease;
+}
+
+.admin-chat-open-btn span {
+    color: #ffcc00;
+
+    font-size: 16px;
+
+    transition: transform 0.2s ease;
+}
+
+.admin-chat-open-btn:hover {
+    color: #ffcc00;
+
+    border-color: #ffcc00;
+
+    background: rgba(255, 204, 0, 0.05);
+}
+
+.admin-chat-open-btn:hover span {
+    transform: translateX(3px);
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.admin-chat-empty {
+    padding: 80px 20px;
+
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 42px;
+
+    margin-bottom: 15px;
+
+    opacity: 0.8;
+}
+
+.admin-chat-empty h3 {
+    color: #ffffff;
+
+    font-size: 18px;
+
+    margin-bottom: 8px;
+}
+
+.admin-chat-empty p {
+    color: #858ba5;
+
+    font-size: 13px;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.admin-chat-pagination {
+    padding: 20px 28px;
+
+    border-top: 1px solid #4b526b;
+
+    display: flex;
+
+    justify-content: center;
+}
+
+/* Bootstrap pagination adjustment */
+
+.admin-chat-pagination .pagination {
+    margin: 0;
+}
+
+.admin-chat-pagination .page-link {
+    background: #303856;
+
+    border-color: #4b526b;
+
+    color: #ffffff;
+}
+
+.admin-chat-pagination .page-link:hover {
+    background: #3a4261;
+
+    color: #ffcc00;
+}
+
+.admin-chat-pagination .active .page-link {
+    background: #ffcc00;
+
+    border-color: #ffcc00;
+
+    color: #171d38;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
+    .admin-chat-header {
+        align-items: flex-start;
+    }
+
+    .admin-chat-item {
+        grid-template-columns: 1fr 130px;
+    }
+
+    .admin-chat-action {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .admin-chat-list-page {
+        padding: 25px 15px 40px;
+    }
+
+    .admin-chat-header {
+        display: block;
+    }
+
+    .admin-chat-count {
+        text-align: left;
+
+        margin-top: 15px;
+    }
+
+    .admin-chat-list-header {
+        padding: 20px;
+    }
+
+    .admin-chat-list {
+        padding: 5px 20px;
+    }
+
+    .admin-chat-item {
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+        padding: 18px 0;
+    }
+
+    .admin-chat-action {
+        width: 100%;
+    }
+
+    .admin-chat-open-btn {
+        width: 100%;
+
+        justify-content: center;
+    }
+}
+
+/* =========================================================
+   ADMIN CHAT SHOW
+========================================================= */
+
+.admin-chat-show-page {
+    min-height: calc(100vh - 80px);
+
+    background: #171d38;
+
+    padding: 35px 26px 60px;
+
+    color: #ffffff;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.admin-chat-show-header {
+    max-width: 1000px;
+
+    margin: 0 auto 28px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-end;
+}
+
+.admin-chat-subtitle {
+    color: #858ba5;
+
+    font-size: 14px;
+
+    margin-bottom: 4px;
+}
+
+.admin-chat-show-header h1 {
+    margin: 0;
+
+    font-size: 38px;
+
+    font-weight: 500;
+
+    color: #ffffff;
+}
+
+/* =========================================================
+   CUSTOMER
+========================================================= */
+
+.admin-chat-customer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    /* White border */
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+
+    /* Inner spacing */
+    padding: 12px 16px;
+
+    /* Keep the dark background */
+    background: #202741;
+}
+
+.admin-chat-customer-icon {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    background: #303856;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+}
+
+.admin-chat-customer span {
+    display: block;
+
+    color: #858ba5;
+
+    font-size: 11px;
+}
+
+.admin-chat-customer strong {
+    display: block;
+
+    color: #ffffff;
+
+    font-size: 14px;
+}
+/* =========================================================
+   CHAT CARD
+========================================================= */
+
+.admin-chat-show-card {
+    max-width: 1000px;
+
+    height: 720px;
+
+    margin: 0 auto;
+
+    background: #242c4b;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+/* =========================================================
+   CHAT HEADER
+========================================================= */
+
+.admin-chat-show-card-header {
+    min-height: 78px;
+
+    padding: 18px 25px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    border-bottom: 1px solid #4b526b;
+}
+
+.admin-chat-show-card-header h2 {
+    margin: 0;
+
+    color: #ffcc00;
+
+    font-size: 18px;
+
+    font-weight: 600;
+}
+
+.admin-chat-show-card-header p {
+    margin: 4px 0 0;
+
+    color: #858ba5;
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.chat-status {
+    display: inline-flex;
+
+    padding: 5px 12px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    background: #4a5067;
+
+    color: #ffffff;
+}
+
+.chat-status.waiting {
+    background: rgba(220, 53, 69, 0.18);
+
+    color: #ff6878;
+}
+
+.chat-status.staff {
+    background: rgba(13, 110, 253, 0.18);
+
+    color: #6ea8fe;
+}
+
+.chat-status.closed {
+    background: rgba(108, 117, 125, 0.18);
+
+    color: #adb5bd;
+}
+
+/* =========================================================
+   MESSAGE AREA
+========================================================= */
 
 .admin-chat-area {
+    flex: 1;
 
-    height:500px;
-    overflow-y:auto;
-    background:#f8f9fa;
-    padding:20px;
+    overflow-y: auto;
 
+    padding: 25px;
+
+    background: #1d2542;
 }
 
-
+/* =========================================================
+   MESSAGE
+========================================================= */
 
 .admin-chat-message {
+    max-width: 75%;
 
-    font-size:14px;
-
+    margin-bottom: 18px;
 }
 
+.admin-chat-message strong {
+    display: block;
 
+    margin-bottom: 6px;
 
-.admin-chat-input {
+    color: #b5bbce;
 
-    max-width:800px;
-    margin:auto;
-
+    font-size: 12px;
 }
 
+.admin-chat-message p {
+    display: inline-block;
 
+    margin: 0;
 
+    padding: 11px 15px;
 
+    border-radius: 7px;
 
-/* Scrollbar */
+    background: #ffffff;
+
+    color: #000000;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    word-break: break-word;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
 .admin-chat-area::-webkit-scrollbar {
-
-    width:6px;
-
+    width: 6px;
 }
 
+.admin-chat-area::-webkit-scrollbar-track {
+    background: #1d2542;
+}
 
 .admin-chat-area::-webkit-scrollbar-thumb {
+    background: #555d77;
 
-    background:#aaa;
-    border-radius:10px;
-
+    border-radius: 10px;
 }
 
-
-
-/* Back Button */
-
-.show-box {
-
-    position:relative;
-
+.admin-chat-area::-webkit-scrollbar-thumb:hover {
+    background: #6c748e;
 }
 
+/* =========================================================
+   REPLY AREA
+========================================================= */
+
+.admin-chat-reply {
+    padding: 18px 25px;
+
+    background: #242c4b;
+
+    border-top: 1px solid #4b526b;
+}
+
+.admin-chat-input-group {
+    display: flex;
+
+    gap: 10px;
+}
+
+.admin-chat-input-field {
+    flex: 1;
+
+    height: 45px;
+
+    padding: 0 15px;
+
+    border: 1px solid #4b526b;
+
+    border-radius: 5px;
+
+    outline: none;
+
+    background: #1d2542;
+
+    color: #ffffff;
+
+    font-size: 14px;
+}
+
+.admin-chat-input-field::placeholder {
+    color: #858ba5;
+}
+
+.admin-chat-input-field:focus {
+    border-color: #ffcc00;
+
+    box-shadow: 0 0 0 1px rgba(255, 204, 0, 0.15);
+}
+
+/* =========================================================
+   SEND BUTTON
+========================================================= */
+
+.admin-chat-send-btn {
+    height: 45px;
+
+    padding: 0 18px;
+
+    border: 1px solid #ffcc00;
+
+    border-radius: 5px;
+
+    background: transparent;
+
+    color: #ffcc00;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.admin-chat-send-btn span {
+    margin-left: 7px;
+
+    font-size: 16px;
+}
+
+.admin-chat-send-btn:hover {
+    background: #ffcc00;
+
+    color: #171d38;
+}
+
+/* =========================================================
+   BOTTOM ACTIONS
+========================================================= */
+
+.admin-chat-actions {
+    padding: 15px 25px;
+
+    background: #242c4b;
+
+    border-top: 1px solid #4b526b;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+.admin-chat-home-btn {
+    padding: 8px 14px;
+
+    border: 1px solid #73798e;
+
+    border-radius: 4px;
+
+    color: #ffffff;
+
+    background: transparent;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    transition: all 0.2s ease;
+}
+
+.admin-chat-home-btn:hover {
+    color: #ffcc00;
+
+    border-color: #ffcc00;
+}
+
+.admin-chat-end-btn {
+    padding: 8px 18px;
+
+    border: 1px solid #dc3545;
+
+    border-radius: 4px;
+
+    background: transparent;
+
+    color: #ff6878;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.admin-chat-end-btn:hover {
+    background: #dc3545;
+
+    color: #ffffff;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+    .admin-chat-show-page {
+        padding: 25px 15px 40px;
+    }
+
+    .admin-chat-show-header {
+        display: block;
+    }
+
+    .admin-chat-customer {
+        margin-top: 15px;
+    }
+
+    .admin-chat-show-card {
+        height: calc(100vh - 220px);
+    }
+
+    .admin-chat-message {
+        max-width: 90%;
+    }
+
+    .admin-chat-input-group {
+        flex-direction: column;
+    }
+
+    .admin-chat-send-btn {
+        width: 100%;
+    }
+}

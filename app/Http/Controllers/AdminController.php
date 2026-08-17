@@ -1133,24 +1133,7 @@ class AdminController extends Controller
     $selectedYear = $availableYears->contains($requestedYear)
         ? $requestedYear
         : $availableYears->first();
-        $requestedYear = $request->query('year');
 
-        $selectedYear = filter_var(
-            $requestedYear,
-            FILTER_VALIDATE_INT,
-            [
-                'options' => [
-                    'min_range' => 2000,
-                    'max_range' => $currentYear,
-                ],
-            ]
-        );
-
-        if ($selectedYear === false) {
-            $selectedYear = $currentYear;
-        }
-
-        $availableYears = range($currentYear, 2020);
 
         $requestedCinemaId = $request->query('cinema_id');
 

@@ -1,4 +1,3 @@
-```blade
 @extends('layouts.admin')
 
 @section('title', 'Admin Chat Show')
@@ -6,105 +5,127 @@
 
 @section('content')
 
+    <div class="admin-chat-show-page">
 
-    <div class="container py-1 show-box">
+        {{-- Header --}}
+        <div class="admin-chat-show-header">
+
+            <div>
+                <div class="admin-chat-subtitle">
+                    Customer Support
+                </div>
+
+                <h1>
+                    Customer Chat
+                </h1>
+            </div>
+
+            <div class="admin-chat-customer">
+
+                <div class="admin-chat-customer-icon">
+                    👤
+                </div>
+
+                <div>
+                    <span>Customer</span>
+
+                    <strong>
+                        {{ $conversation->user->first_name }}
+                        {{ $conversation->user->last_name }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
 
 
-        <h2 class="bg-white mb-4 text-center text-dark p-3">
-            👨‍💻 Chat with 【 {{ $conversation->user->first_name }} {{ $conversation->user->last_name }} 】
-        </h2>
+        {{-- Chat Card --}}
+        <div class="admin-chat-show-card">
 
-        <div class="admin-chat-background">
+            {{-- Chat Header --}}
+            <div class="admin-chat-show-card-header">
 
-            {{-- Chat Box --}}
-            <div class="card shadow admin-chat-wrapper">
+                <div>
 
-                {{-- Message Area --}}
-                <div class="admin-chat-area" id="chat-area"
-                    data-fetch-url="{{ route('admin.chat.fetch', $conversation->id) }}">
+                    <h2>
+                        💬 Support Conversation
+                    </h2>
 
-
-                    @foreach ($messages as $message)
-                        <div class="admin-chat-message mb-3">
-
-                            <strong>
-                                @if ($message->sender_type === 'customer')
-                                    👤 Customer
-                                @elseif($message->sender_type === 'ai')
-                                    🤖 AI
-                                @else
-                                    👨‍💻 Staff
-                                @endif
-                            </strong>
-
-                            <p>
-                                {{ $message->message }}
-                            </p>
-
-                        </div>
-                    @endforeach
-
+                    <p>
+                        Customer support conversation
+                    </p>
 
                 </div>
 
             </div>
 
 
-            {{-- Reply --}}
-            <form method="POST" action="{{ route('admin.chat.store', $conversation->id) }}" class="admin-chat-input">
+            {{-- Message Area --}}
+            <div class="admin-chat-area" id="chat-area" data-fetch-url="{{ route('admin.chat.fetch', $conversation->id) }}">
 
-                @csrf
+                @foreach ($messages as $message)
+                    <div class="admin-chat-message mb-3">
 
-                <div class="input-group mt-4">
+                        <strong>
 
-                    <input type="text" name="message" class="form-control" placeholder="Reply message..." required>
+                            @if ($message->sender_type === 'customer')
+                                👤 Customer
+                            @elseif ($message->sender_type === 'ai')
+                                🤖 AI
+                            @else
+                                👨‍💻 Staff
+                            @endif
 
-                    <button class="btn btn-primary">
-                        Send
-                    </button>
+                        </strong>
 
-                </div>
+                        <p>
+                            {{ $message->message }}
+                        </p>
 
-            </form>
-            <div class="position-relative d-flex justify-content-center align-items-center mt-4">
+                    </div>
+                @endforeach
 
-                {{-- Chat home --}}
-                <div class="position-absolute start-50 translate-middle-x me-5" style="margin-left: -342px;">
-                    <a href="{{ route('admin.chat.index') }}" class="btn btn-dark">
-                        Chat home
-                    </a>
-                </div>
+            </div>
 
-                {{-- Chat Reset --}}
-                <form action="{{ route('admin.chat.close', $conversation->id) }}" method="POST">
+
+            {{-- Reply Area --}}
+            <div class="admin-chat-reply">
+
+                <form method="POST" action="{{ route('admin.chat.store', $conversation->id) }}">
+
                     @csrf
-                    <button type="submit" class="btn btn-danger ps-5 pe-5">
-                        Chat Reset
-                    </button>
+
+                    <div class="admin-chat-input-group">
+
+                        <input type="text" name="message" class="admin-chat-input-field"
+                            placeholder="Reply to customer..." required>
+
+                        <button type="submit" class="admin-chat-send-btn">
+                            Send
+                            <span>→</span>
+                        </button>
+
+                    </div>
+
                 </form>
 
             </div>
 
 
+            {{-- Bottom Actions --}}
+            <div class="admin-chat-actions">
 
-            {{-- Bottom Buttons --}}
-            <div class="d-flex align-items-center position-relative mt-5">
-
-                {{-- Chat Home Left --}}
-                <div class="ms-3">
-                    <a href="{{ route('admin.chat.index') }}" class="btn btn-dark">
-                        Chat home
-                    </a>
-                </div>
+                <a href="{{ route('admin.chat.index') }}" class="admin-chat-home-btn">
+                    ← Chat Home
+                </a>
 
 
-                {{-- End Chat Center --}}
-                <form action="{{ route('admin.chat.close', $conversation->id) }}" method="POST"
-                    class="position-absolute start-50 translate-middle-x">
+                <form action="{{ route('admin.chat.close', $conversation->id) }}" method="POST">
 
                     @csrf
 
-                    <button type="submit" class="btn btn-danger px-5 py-2 ">
+                    <button type="submit" class="admin-chat-end-btn">
                         End Chat
                     </button>
 
@@ -112,33 +133,22 @@
 
             </div>
 
-
         </div>
 
+    </div>
 
 
-        {{-- Scroll Bottom After Reload --}}
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    {{-- Scroll Bottom --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
 
+            const chatArea = document.getElementById('chat-area');
 
-                const chatArea = document.getElementById('chat-area');
+            if (chatArea) {
+                chatArea.scrollTop = chatArea.scrollHeight;
+            }
 
+        });
+    </script>
 
-                if (chatArea) {
-
-                    chatArea.scrollTop = chatArea.scrollHeight;
-
-                }
-
-
-            });
-        </script>
-
-
-
-
-        @vite('resources/js/admin/chat.js')
-
-
-    @endsection
+@endsection

@@ -1,33 +1,35 @@
 @extends('layouts.app')
 @section('content')
     <div class="reservation-page" style="background-image: url('{{ asset('images/background.png') }}');">
-        
+
         {{-- SEARCH --}}
-            <div class="search-wrapper">
-                <form action="{{ route('movies.search') }}" method="GET">
+        <div class="search-wrapper">
+            <form action="{{ route('movies.search') }}" method="GET">
 
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
 
-                    <input type="text" name="keyword" class="search-input" placeholder="Search by movie title..."
-                        value="{{ request('keyword') }}">
+                <input type="text" name="keyword" class="search-input" placeholder="Search by movie title..."
+                    value="{{ request('keyword') }}">
 
-                    <button class="search-btn">
-                        SEARCH
-                    </button>
-                </form>
-            </div>
-        
+                <button class="search-btn">
+                    SEARCH
+                </button>
+            </form>
+        </div>
+
         <div class="section-title-line mb-4 mt-5">
-            <hr>
-            <h2 class="text-white">
-                < Search Result >
+            <hr class="text-dark">
+
+            <h2 class="text-dark">
+                &lt; Search Result &gt;
             </h2>
-            <hr>
+
+            <hr class="text-dark">
         </div>
 
         <div class="container">
             @if ($movies->isEmpty())
-                <h1 class="text-white text-center">No movies found.</h1>
+                <h1 class="text-dark text-center mt-5">No movies found.</h1>
             @else
                 <div class="search-result-grid">
                     @foreach ($movies as $movie)
@@ -35,12 +37,13 @@
                             <img src="{{ $movie->poster_url }}" class="search-card-poster" alt="{{ $movie->title }}">
 
                             <div class="search-card-overlay">
-                                <p class="search-card-title">{{ $movie->title }}</p>
-                                <p class="search-card-director">{{ $movie->director }}</p>
+                                <p class="search-card-title text-center border">{{ $movie->title }}</p>
 
-                                <a href="{{ route('movie_detail', ['movie' => $movie->id]) }}" class="search-card-btn">
-                                    Detail
-                                    <i class="fa-solid fa-arrow-right"></i>
+                                <a href="{{ route('reservations.showtime.selection', ['movie' => $movie->id]) }}"
+                                    class="text-decoration-none">
+                                    <button class="book-btn mt-2 w-100">
+                                        BOOK NOW
+                                    </button>
                                 </a>
                             </div>
                         </div>

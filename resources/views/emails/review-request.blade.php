@@ -14,7 +14,7 @@
             margin: 0;
             padding: 0;
             background-color: #1a1f36;
-            font-family: Arial, sans-serif;
+            font-family:'Times New Roman', serif;
         }
 
         .email-wrapper {
