@@ -195,7 +195,7 @@
             : '#';
 
         return `
-            <div class="col-6 col-md-4 col-lg">
+            <div class="recommendation-column">
                 <a
                     href="${movieUrl}"
                     class="recommendation-link text-decoration-none"
@@ -214,9 +214,11 @@
                                 "
                             >
 
+                            <!--
                             <span class="recommendation-badge">
                                 Recommended
                             </span>
+                            -->
 
                             <span class="recommendation-score">
                                 ${scoreText}
@@ -238,7 +240,7 @@
         container.innerHTML = Array.from(
             { length: 5 },
             () => `
-                <div class="col-6 col-md-4 col-lg">
+                <div class="recommendation-column">
                     <div
                         class="card recommendation-card
                                recommendation-skeleton h-100"

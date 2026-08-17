@@ -1,3 +1,9 @@
+.chat-page {
+    min-height: 100vh;
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: #dce8f8;
+}
 
 .chat-box{
     max-width: 450px;
