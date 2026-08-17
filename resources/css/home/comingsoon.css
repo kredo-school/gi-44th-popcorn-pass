@@ -16,7 +16,7 @@
 /* <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet"> */
 
 .marquee-title {
-    font-family: 'Playfair Display', serif;
+    font-family:'Times New Roman', serif;
     font-weight: 1000;
     font-size: clamp(2rem, 4vw, 3.4rem);
     letter-spacing: 10px;
@@ -128,7 +128,7 @@
 }
 
 .coming-movie-title {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family:'Times New Roman', serif;
     font-size: 2rem;
     letter-spacing: 1px;
     color: #000000;

@@ -222,7 +222,7 @@
                     </div>
 
                 @empty
-                    <h1 class="text-white text-center mt-5">
+                    <h1 class="text-dark text-center mt-5">
                         No movies available for this date.
                     </h1>
                 @endforelse
@@ -498,7 +498,7 @@
 
                             @empty
 
-                                <p class="text-white text-center">
+                                <p class="text-dark text-center">
                                     No movies found.
                                 </p>
                             @endforelse

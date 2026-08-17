@@ -1,5 +1,5 @@
 .release-date {
-    font-family: 'Bebas Neue', sans-serif;
+    font-family:'Times New Roman', serif;
     font-size: 4rem;
     letter-spacing: 0.25em;
     color: #F5C126;
@@ -21,7 +21,7 @@
 }
 
 .release-sub {
-    font-family: 'Barlow Condensed', sans-serif;
+    font-family:'Times New Roman', serif;
     font-size: 1.5rem;
     font-weight: 300;
     letter-spacing: 0.6em;

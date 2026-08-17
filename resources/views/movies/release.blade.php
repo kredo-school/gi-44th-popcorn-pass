@@ -56,7 +56,7 @@
                         <div class="col-8">{{ $movie->director }}</div>
 
                         <div class="col-4 fw-bold">CAST</div>
-                        <div class="col-8">{{ $movie->cast }}</div>
+                        <div class="col-8">{{ implode(', ', $movie->cast) }}</div>
                     </div>
                     <a href="{{ $movie->trailer_url }}" target="_blank" class="text-trailer">
                         Watch the trailer

@@ -77,7 +77,7 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div class="col-lg-4 position-relative h-100 hero-left">
+                                        <div class="col-lg-4 position-relative h-75 hero-left">
                                             <img src="{{ $heroMovie->banner_image_url }}" class="hero-image"
                                                 alt="{{ $heroMovie->title }}">
 
@@ -118,7 +118,7 @@
                                 <div class="w-75 mx-auto h-100">
                                     <div class="row g-0 align-items-center justify-content-center h-100">
 
-                                        <div class="col-lg-4 position-relative h-100 hero-left">
+                                        <div class="col-lg-4 position-relative h-75 hero-left">
                                             <img src="{{ $topMovie->banner_image_url }}" class="hero-image"
                                                 alt="{{ $topMovie->title }}">
 
@@ -215,93 +215,76 @@
         {{-- ===========================
      Nearby Cinemas
      =========================== --}}
-<div class="row mt-5" id="NearbyCinemas">
-    <div class="col-1"></div>
+        <div class="row mt-5" id="NearbyCinemas">
+            <div class="col-1"></div>
 
-    <div class="col-10">
+            <div class="col-10">
 
-        {{-- Section title --}}
-        <div class="section-title-wrap d-flex justify-content-between align-items-center">
-            <h2 class="section-title mb-0">
-                <span class="title-icon">📍</span>
-                NEARBY MOVIE THEATERS
-            </h2>
+                {{-- Section title --}}
+                <div class="section-title-wrap d-flex justify-content-between align-items-center">
+                    <h2 class="section-title mb-0">
+                        <span class="title-icon">📍</span>
+                        NEARBY MOVIE THEATERS
+                    </h2>
 
-            <button
-                type="button"
-                id="changeLocationPrefBtn"
-                class="btn btn-sm location-change-btn"
-            >
-                <i class="fa-solid fa-gear me-1"></i>
-                Location Settings
-            </button>
-        </div>
+                    <button type="button" id="changeLocationPrefBtn" class="btn btn-sm location-change-btn">
+                        <i class="fa-solid fa-gear me-1"></i>
+                        Location Settings
+                    </button>
+                </div>
 
-        {{-- Nearby cinemas panel --}}
-        <div class="panel-navy-overlay py-4 px-3">
+                {{-- Nearby cinemas panel --}}
+                <div class="panel-navy-overlay py-4 px-3">
 
-            {{-- Mini Map --}}
-            <div class="nearby-map-wrapper mb-4">
+                    {{-- Mini Map --}}
+                    <div class="nearby-map-wrapper mb-4">
 
-                <div
-                    id="nearbyCinemaMap"
-                    class="nearby-cinema-map"
-                    data-full-map-url="{{ url('/map') }}"
-                ></div>
+                        <div id="nearbyCinemaMap" class="nearby-cinema-map" data-full-map-url="{{ url('/map') }}">
+                        </div>
 
-                {{-- Map footer --}}
-                <div class="nearby-map-footer">
+                        {{-- Map footer --}}
+                        <div class="nearby-map-footer">
 
-                    {{-- Map legend --}}
-                    <div class="nearby-map-legend">
+                            {{-- Map legend --}}
+                            <div class="nearby-map-legend">
 
-                        <span class="nearby-map-legend-item">
-                            <span class="legend-dot legend-dot-current"></span>
-                            Current Cinema
-                        </span>
+                                <span class="nearby-map-legend-item">
+                                    <span class="legend-dot legend-dot-current"></span>
+                                    Current Cinema
+                                </span>
 
-                        <span class="nearby-map-legend-item">
-                            <span class="legend-dot legend-dot-location"></span>
-                            Your Location
-                        </span>
+                                <span class="nearby-map-legend-item">
+                                    <span class="legend-dot legend-dot-location"></span>
+                                    Your Location
+                                </span>
 
+                            </div>
+
+                            {{-- Full map button --}}
+                            <a href="{{ url('/map') }}" class="btn btn-sm nearby-full-map-btn">
+                                <i class="fa-solid fa-map-location-dot me-1"></i>
+                                Open Full Map
+                                <i class="fa-solid fa-arrow-right ms-1"></i>
+                            </a>
+
+                        </div>
                     </div>
 
-                    {{-- Full map button --}}
-                    <a
-                        href="{{ url('/map') }}"
-                        class="btn btn-sm nearby-full-map-btn"
-                    >
-                        <i class="fa-solid fa-map-location-dot me-1"></i>
-                        Open Full Map
-                        <i class="fa-solid fa-arrow-right ms-1"></i>
-                    </a>
+                    {{-- Loading / status --}}
+                    <div id="nearbyCinemasStatus" class="text-white-50 text-center py-4">
+                        <i class="fa-solid fa-spinner fa-spin me-2"></i>
+                        Loading nearby theaters...
+                    </div>
+
+                    {{-- Cinema cards --}}
+                    <div id="nearbyCinemasList" class="row g-3 is-hidden"></div>
 
                 </div>
             </div>
 
-            {{-- Loading / status --}}
-            <div
-                id="nearbyCinemasStatus"
-                class="text-white-50 text-center py-4"
-            >
-                <i class="fa-solid fa-spinner fa-spin me-2"></i>
-                Loading nearby theaters...
-            </div>
-
-            {{-- Cinema cards --}}
-            <div
-                id="nearbyCinemasList"
-                class="row g-3 is-hidden"
-            ></div>
-
+            <div class="col-1"></div>
         </div>
-    </div>
 
-    <div class="col-1"></div>
-</div>
-
-<hr class="text-white">
         <hr class="text-white">
 
         {{-- Top Ranking --}}
@@ -598,8 +581,11 @@
                                     @if (isset($comingSoonMovies))
                                         @foreach ($comingSoonMovies as $movie)
                                             @php
-                                                $releaseDate = \Carbon\Carbon::parse($movie->released_date);
-                                                $daysLeft = (int) now()->diffInDays($releaseDate, false);
+                                                $releaseDate = \Carbon\Carbon::parse(
+                                                    $movie->released_date,
+                                                )->startOfDay();
+                                                $today = now()->startOfDay();
+                                                $daysLeft = $today->diffInDays($releaseDate, false);
                                             @endphp
 
                                             <a href="{{ route('release', ['movie' => $movie->id]) }}"
@@ -608,6 +594,7 @@
 
                                                 <div class="coming-poster-wrap mb-3">
                                                     <div class="film-sprockets"></div>
+
                                                     <img src="{{ asset($movie->poster_url) }}" alt="{{ $movie->title }}"
                                                         class="coming-poster">
 
@@ -619,18 +606,18 @@
                                                             @elseif ($daysLeft == 1)
                                                                 Tomorrow
                                                             @else
-                                                                {{ $daysLeft }}
-                                                                {{ Str::plural('day', $daysLeft) }}
+                                                                {{ $daysLeft }} {{ Str::plural('day', $daysLeft) }}
                                                             @endif
                                                         </span>
-                                                        <span
-                                                            class="ticket-stub-date">{{ $releaseDate->format('M j') }}</span>
+
+                                                        <span class="ticket-stub-date">
+                                                            {{ $releaseDate->format('M j') }}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </a>
                                         @endforeach
                                     @endif
-
                                 </div>
 
                                 <!-- Prev button -->
@@ -726,7 +713,4 @@
     </div>
 @endsection
 
-<script
-    src="https://maps.googleapis.com/maps/api/js?key={{ config('maps.google.api_key') }}"
-    defer
-></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config('maps.google.api_key') }}" defer></script>

@@ -48,35 +48,45 @@ class ChatController extends Controller
 
     public function store(Request $request)
     {
+        // =====================
+        // Get conversation
+        // =====================
+
         $conversation = Conversation::firstOrCreate([
             'user_id' => auth()->id()
         ]);
 
-
+        // =====================
         // Save customer message
+        // =====================
 
         Message::create([
-
             'conversation_id' => $conversation->id,
-
             'sender_type' => 'customer',
-
             'message' => $request->message
-
         ]);
 
-        $userMessage = $request->message;
+        // =================================================
+        // IMPORTANT:
+        // If staff is already handling this conversation,
+        // do NOT generate any AI response.
+        // =================================================
 
+        if ($conversation->status === 'waiting') {
+
+            return back();
+        }
+
+        $userMessage = $request->message;
         $message = strtolower($userMessage);
 
         $needStaff = false;
-
         $intent = 'unknown';
 
-
-        // =====================
+        // =================================================
         // Intent classification
-        // =====================
+        // =================================================
+
         if (
             str_contains($message, 'staff') ||
             str_contains($message, 'human') ||
@@ -85,7 +95,10 @@ class ChatController extends Controller
             str_contains($message, 'payment') ||
             str_contains($message, 'complaint') ||
             str_contains($message, 'problem') ||
-            str_contains($message, 'issue')
+            str_contains($message, 'issue') ||
+            str_contains($message, 'help') ||
+            str_contains($message, 'charged') ||
+            str_contains($message, 'talk to someone')
         ) {
 
             $intent = 'staff';
@@ -93,8 +106,7 @@ class ChatController extends Controller
             str_contains($message, 'change seat') ||
             str_contains($message, 'change my seat') ||
             str_contains($message, 'choose another seat') ||
-            str_contains($message, 'switch seat') ||
-            str_contains($message, 'talk to someone')
+            str_contains($message, 'switch seat')
         ) {
 
             $intent = 'seat_change';
@@ -125,57 +137,20 @@ class ChatController extends Controller
             $intent = 'movie_detail';
         }
 
-        // =====================
-        // Intent classification
-        // =====================
-
-        if (
-            str_contains($message, 'change seat') ||
-            str_contains($message, 'change my seat') ||
-            str_contains($message, 'choose another seat') ||
-            str_contains($message, 'switch seat')
-        ) {
-
-            $intent = 'seat_change';
-        } elseif (
-            str_contains($message, 'seat') ||
-            str_contains($message, 'available') ||
-            str_contains($message, 'empty')
-        ) {
-
-            $intent = 'seat';
-        } elseif (
-            str_contains($message, 'reservation') ||
-            str_contains($message, 'booking') ||
-            str_contains($message, 'ticket')
-        ) {
-
-            $intent = 'reservation';
-        }
-
         // =================================================
-        //           Search movie information
+        // Context
         // =================================================
-
-
-
 
         $movieContext = '';
         $seatContext = '';
         $movieListContext = '';
         $reservationContext = '';
 
-        // =====================
+        // =================================================
         // Reservation information
-        // =====================
+        // =================================================
 
-
-        if (
-            str_contains($message, 'reservation') ||
-            str_contains($message, 'booking') ||
-            str_contains($message, 'ticket')
-        ) {
-
+        if ($intent === 'reservation') {
 
             $reservation = Reservation::where(
                 'user_id',
@@ -184,10 +159,7 @@ class ChatController extends Controller
                 ->latest()
                 ->first();
 
-
-
             if ($reservation) {
-
 
                 $reservationContext = "
 
@@ -196,29 +168,23 @@ Reservation Information:
 Reservation Number:
 {$reservation->reservation_reference}
 
-
 Movie:
 {$reservation->movie->title}
-
 
 Showtime:
 {$reservation->showtime->start_time->format('Y-m-d H:i')}
 
-
 Status:
 {$reservation->reservation_status}
 
-
 Total Seats:
 {$reservation->total_seats}
-
 
 Final Amount:
 {$reservation->final_amount}
 
 ";
             } else {
-
 
                 $reservationContext = "
 
@@ -228,17 +194,17 @@ No reservation found.
             }
         }
 
-
-        // =====================
-        // Search movie title
-        // =====================
+        // =================================================
+        // Search movie
+        // =================================================
 
         $movie = null;
 
         $words = explode(' ', $userMessage);
 
-
         foreach ($words as $word) {
+
+            $word = trim($word);
 
             if (strlen($word) >= 3) {
 
@@ -248,68 +214,39 @@ No reservation found.
                     '%' . $word . '%'
                 )->first();
 
-
                 if ($movie) {
                     break;
                 }
             }
         }
 
-        // If not found, search words inside message
-
-        if (!$movie) {
-
-
-            $words = explode(' ', strtolower($userMessage));
-
-            foreach ($words as $word) {
-
-                $word = trim($word);
-
-                if (strlen($word) >= 3) {
-
-                    $movie = Movie::where(
-                        'title',
-                        'like',
-                        "%{$word}%"
-                    )->first();
-
-                    if ($movie) {
-                        break;
-                    }
-                }
-            }
-        }
-
-
-        // =====================
+        // =================================================
         // Movie information
-        // =====================
+        // =================================================
 
         if ($movie) {
 
             $movieContext = "
 
-            Movie Information:
+Movie Information:
 
-            Title:
-            {$movie->title}
+Title:
+{$movie->title}
 
-            Director:
-            {$movie->director}
+Director:
+{$movie->director}
 
-            Synopsis:
-            {$movie->synopsis}
+Synopsis:
+{$movie->synopsis}
 
-            Duration:
-            {$movie->duration} minutes
+Duration:
+{$movie->duration} minutes
 
-            ";
+";
 
-
-            // =====================
+            // =================================================
             // Showtime
-            // =====================
+            // =================================================
 
             if (
                 str_contains($message, 'showtime') ||
@@ -318,19 +255,16 @@ No reservation found.
                 str_contains($message, 'schedule')
             ) {
 
-
                 $showtimes = $movie->showtimes()
                     ->where('is_active', true)
                     ->orderBy('start_time')
                     ->get();
-
 
                 $movieContext .= "
 
 Available Showtimes:
 
 ";
-
 
                 foreach ($showtimes as $showtime) {
 
@@ -341,17 +275,11 @@ Available Showtimes:
             }
         }
 
-
-        // =====================
+        // =================================================
         // Seat information
-        // =====================
+        // =================================================
 
-        if (
-            str_contains($message, 'seat') ||
-            str_contains($message, 'available') ||
-            str_contains($message, 'empty')
-        ) {
-
+        if ($intent === 'seat') {
 
             if ($movie) {
 
@@ -361,32 +289,19 @@ Available Showtimes:
                     ->first();
             } else {
 
-
-                // Movie not found
-                // Get latest active showtime
-
                 $showtime = Showtime::where('is_active', true)
                     ->orderBy('start_time')
                     ->first();
             }
 
-
-
             if ($showtime) {
 
-
                 $availableSeats = $showtime->showtimeSeats()
-                    ->where(
-                        'seat_status',
-                        'available'
-                    )
+                    ->where('seat_status', 'available')
                     ->count();
-
 
                 $totalSeats = $showtime->showtimeSeats()
                     ->count();
-
-
 
                 $seatContext = "
 
@@ -408,19 +323,11 @@ Total Seats:
             }
         }
 
-
-
-        // =====================
+        // =================================================
         // Currently showing movies
-        // =====================
+        // =================================================
 
-        if (
-            str_contains($message, 'movie') ||
-            str_contains($message, 'movies') ||
-            str_contains($message, 'playing') ||
-            str_contains($message, 'showing')
-        ) {
-
+        if ($intent === 'movie_list') {
 
             $movies = Movie::where(
                 'status',
@@ -429,16 +336,13 @@ Total Seats:
                 ->orderBy('priority_order')
                 ->get();
 
-
             if ($movies->count() > 0) {
-
 
                 $movieListContext = "
 
 Currently Showing Movies:
 
 ";
-
 
                 foreach ($movies as $movieItem) {
 
@@ -448,82 +352,59 @@ Currently Showing Movies:
             }
         }
 
-        // =====================
-        // Staff support
-        // =====================
-
-        if (
-            str_contains($message, 'staff') ||
-            str_contains($message, 'help') ||
-            str_contains($message, 'complaint') ||
-            str_contains($message, 'problem') ||
-            str_contains($message, 'payment') ||
-            str_contains($message, 'refund') ||
-            str_contains($message, 'charged') ||
-            str_contains($message, 'talk to someone') ||
-            str_contains($message, 'human')
-        ) {
-
-
-            $staffContext = "
-
-Staff Support:
-
-A staff member will assist you with your request.
-
-Please wait while we connect you to our support team.
-
-";
-
-
-            $needStaff = true;
-        }
-
-        // =====================
-        // Generate AI response without Gemini
-        // =====================
+        // =================================================
+        // Generate response
+        // =================================================
 
         $reply = '';
 
+        // =================================================
+        // Staff handover
+        // =================================================
 
         if ($intent === 'staff') {
 
             $reply = '
             <span style="color:red;">
-                    I will connect you with a staff member.
-        
-            <br><br>
-            Please wait a moment while our support team reviews your request.<br><br>
+                I will connect you with a staff member.
+                <br><br>
+                Please wait a moment while our support team reviews your request.
+                <br><br>
             </span>
-            ';
+        ';
 
             $needStaff = true;
         }
 
+        // =================================================
+        // Seat change
+        // =================================================
 
-
-        // Movie list question
         elseif ($intent === 'seat_change') {
 
             $reply = '
-            You can change your seat before the movie starts.<br><br>
+            You can change your seat before the movie starts.
+            <br><br>
 
-            <a href="' . route('mypage.dashboard') . '" class="btn btn-color mypage-text">
+            <a href="' . route('mypage.dashboard') . '"
+               class="btn btn-color mypage-text">
                 My Page
             </a>
-            ';
-            $needStaff = false;
-
-            // Reservation
-
-        } elseif ($intent === 'reservation') {
-
-            $reply =
-                $reservationContext;
+        ';
         }
 
+        // =================================================
+        // Reservation
+        // =================================================
 
+        elseif ($intent === 'reservation') {
+
+            $reply = $reservationContext;
+        }
+
+        // =================================================
         // Movie list
+        // =================================================
 
         elseif ($intent === 'movie_list') {
 
@@ -531,26 +412,34 @@ Please wait while we connect you to our support team.
                 "Currently showing movies:<br><br>"
                 . nl2br($movieListContext)
                 . '<br><br>
-    <a href="' . route('movie.showtime.display') . '" class="btn btn-primary">
-       View Showtime 
-    </a>';
+            <a href="' . route('movie.showtime.display') . '"
+               class="btn btn-primary">
+                View Showtime
+            </a>';
         }
 
-
+        // =================================================
         // Movie detail
+        // =================================================
 
         elseif ($intent === 'movie_detail') {
-
 
             if ($movie) {
 
                 $reply =
-                    '<img src="' . asset($movie->poster_url) . '" class="movie-poster w-100"><br><br>'
+                    '<img src="' . asset($movie->poster_url) . '"
+                      class="movie-poster w-100">
+                <br><br>'
                     . nl2br($movieContext)
                     . '<br><br>
-            <a href="' . route('movie_detail', ['movie' => $movie->id]) . '" class="btn btn-primary">
-                View Movie Details
-            </a>';
+
+                <a href="' . route(
+                        'movie_detail',
+                        ['movie' => $movie->id]
+                    ) . '"
+                   class="btn btn-primary">
+                    View Movie Details
+                </a>';
             } else {
 
                 $reply =
@@ -558,14 +447,20 @@ Please wait while we connect you to our support team.
             }
         }
 
-
+        // =================================================
         // Seat
+        // =================================================
 
         elseif ($intent === 'seat') {
 
-            $reply =
-                $seatContext;
-        } else {
+            $reply = $seatContext;
+        }
+
+        // =================================================
+        // Unknown
+        // =================================================
+
+        else {
 
             $reply =
                 "Sorry, I could not find that information. A staff member will help. Please wait a minute.";
@@ -573,125 +468,74 @@ Please wait while we connect you to our support team.
             $needStaff = true;
         }
 
-
-
-        // =====================
-        // Gemini AI
-        // =====================
-
-        // try {
-
-        //     $response = Gemini::generativeModel('gemini-2.0-flash')
-        //         ->generateContent(
-        //             "
-
-        //     You are an AI customer support assistant for a movie theater website.
-
-
-        //     You can help customers with:
-
-        //     - Movie information
-        //     - Directors
-        //     - Movie duration
-        //     - Movie synopsis
-        //     - Showtimes
-        //     - Tickets
-        //     - Reservations
-        //     - Seat selection
-        //     - Cinema information
-        //     - Currently showing movies
-
-
-
-        //     Database information:
-
-        //     {$movieContext}
-        //     {$movieListContext}
-        //     {$seatContext}
-
-
-
-        //     Customer question:
-
-        //     {$request->message}
-
-
-
-        //     Instructions:
-
-        //     - Answer only in English.
-        //     - Be friendly and professional.
-        //     - Keep answers short and clear.
-        //     - Use database information when available.
-        //     - Do not make up movie information.
-        //     - If the information is missing, tell the customer that staff can help.
-        //     - For payment, refunds, complaints, or reservation problems, transfer the customer to staff.
-
-
-        //     "
-        //         );
-
-
-        //     $reply = $response->text();
-        // } catch (\Exception $e) {
-
-
-        //     $reply =
-        //         "Sorry, our AI support is currently unavailable. A staff member will assist you.";
-
-        //     $needStaff = true;
-        // }
-
-        // =====================
-        // Staff judgement
-        // =====================
+        // =================================================
+        // Additional staff detection
+        // =================================================
 
         if (
             str_contains($message, 'payment') ||
             str_contains($message, 'refund') ||
             str_contains($message, 'complaint') ||
             str_contains($message, 'charged') ||
-            str_contains($message, 'problem')
+            str_contains($message, 'problem') ||
+            str_contains($message, 'issue') ||
+            str_contains($message, 'staff') ||
+            str_contains($message, 'human') ||
+            str_contains($message, 'operator') ||
+            str_contains($message, 'help') ||
+            str_contains($message, 'talk to someone')
         ) {
 
             $needStaff = true;
         }
 
-        // =====================
-        // Save AI message
-        // =====================
-
-        Message::create([
-
-            'conversation_id' => $conversation->id,
-
-            'sender_type' => 'ai',
-
-            'message' => $reply
-
-        ]);
-
-        // =====================
+        // =================================================
         // Staff support
-        // =====================
+        // =================================================
 
         if ($needStaff) {
 
-            $conversation->update([
+            // -----------------------------------------
+            // Save AI handover message
+            // -----------------------------------------
 
-                'status' => 'waiting'
-
+            Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_type' => 'ai',
+                'message' => $reply
             ]);
+
+            // -----------------------------------------
+            // Change conversation status
+            // -----------------------------------------
+
+            $conversation->update([
+                'status' => 'waiting'
+            ]);
+
+            // -----------------------------------------
+            // Create / update staff request
+            // -----------------------------------------
+
             ChatRequest::updateOrCreate(
                 [
                     'conversation_id' => $conversation->id
                 ],
-
                 [
                     'status' => 'pending'
                 ]
-
             );
+        } else {
+
+            // =================================================
+            // Save normal AI response
+            // =================================================
+
+            Message::create([
+                'conversation_id' => $conversation->id,
+                'sender_type' => 'ai',
+                'message' => $reply
+            ]);
         }
 
         return back();
