@@ -32,15 +32,21 @@
 <a href="{{ route('mypage.profile') }}" class="d-block text-decoration-none text-white">
 
     <div class="mypage-sidebar-profile text-center mb-4">
-        <img src="{{ $user->avatar ?? asset('images/profile.png') }}" alt="{{ $user->full_name }}"
-            class="mypage-sidebar-avatar rounded-circle mb-2">
-
+        @if ($user->avatar)
+            <img src="{{ $user->avatar }}" alt="{{ $user->full_name }}" class="mypage-sidebar-avatar rounded-circle mb-2">
+        @else
+            <div class="mypage-sidebar-avatar rounded-circle mx-auto mb-2
+                        d-flex align-items-center justify-content-center">
+                <i class="fa-solid fa-user fa-2x"></i>
+            </div>
+        @endif
+    
         <div class="mb-1">
             <span class="mypage-sidebar-name">
                 {{ $user->full_name }}
             </span>
         </div>
-
+    
         <span class="mypage-tier-badge mypage-tier-{{ $user->tier }}">
             {{ $user->tier_label }} Member
         </span>
@@ -74,9 +80,9 @@
     </a>
 
     <a href="{{ route('mypage.profile') }}"
-        class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none mt-3 border">
+        class="mypage-stat-item d-flex align-items-center justify-content-between text-decoration-none">
         <span>
-            <i class="fa-solid fa-user me-2"></i>Edit Profile
+            <i class="fa-solid fa-user me-2"></i>Profile
         </span>
     </a>
 

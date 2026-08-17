@@ -302,7 +302,6 @@
 </div>
 
 <hr class="text-white">
-        <hr class="text-white">
 
         {{-- Top Ranking --}}
         <div class="row mt-5">
