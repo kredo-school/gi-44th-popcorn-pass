@@ -99,8 +99,10 @@
                                 {{-- Category --}}
                                 <td>
                                     @if ($info->category)
-                                        <span class="badge"
-                                            style="background-color: {{ $info->category->color }}; color: #fff;">
+                                        <span class="badge" style="
+                                                background-color: {{ $info->category->color ?? '#6c757d' }};
+                                                color: {{ $info->category->text_color ?? '#fff' }};
+                                            ">
                                             {{ $info->category->name }}
                                         </span>
                                     @else
@@ -240,7 +242,10 @@
                             @forelse($categories as $cat)
                                 <tr>
                                     <td>
-                                        <span class="badge" style="background-color: {{ $cat->color }}; color: #fff;">
+                                        <span class="badge" style="
+                                                background-color: {{ $cat->color }};
+                                                color: {{ $cat->text_color ?? '#ffffff' }};
+                                            ">
                                             {{ $cat->name }}
                                         </span>
                                     </td>
