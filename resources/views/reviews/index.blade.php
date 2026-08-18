@@ -21,7 +21,7 @@
             {{-- Left --}}
             <div class="col-lg-6 text-center">
                 {{-- Poster --}}
-                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="review-poster img-fluid rounded mb-0">
+                <img src="{{ $movie->poster_url }}" alt="{{ $movie->title }}" class="review-poster rounded mb-0">
 
                 {{-- Movie Info --}}
                 <div class="review-movie-info-card mx-auto">
