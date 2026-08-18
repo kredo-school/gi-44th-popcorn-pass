@@ -228,7 +228,7 @@
 
 
 .top-card{
-    background:#000;
+    background:#081729;
     overflow:hidden;
     border-radius:18px;
     transition:.4s;
@@ -307,7 +307,7 @@
 
 .movie-info-box{
     text-align: center;
-    background:#000002;
+    background:#081729;
     padding:20px;
 }
 

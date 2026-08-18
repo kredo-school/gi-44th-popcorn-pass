@@ -437,7 +437,7 @@
 
         {{-- Recommended for You --}}
         @auth
-            <div class="row mt-5" id="Recommendations">
+            <div class="row mt-5 home-recommendations" id="Recommendations">
                 <div class="col-1"></div>
 
                 <div class="col-10">
@@ -449,7 +449,7 @@
                     </div>
 
                     <div class="panel-navy-overlay py-4 px-4">
-                        <div id="recommendations-container" class="row g-3">
+                        <div id="recommendations-container" class="row g-3 justify-content-center">
                             <div class="col-12 text-center text-white">
                                 <div class="spinner-border spinner-border-sm text-warning" role="status">
                                     <span class="visually-hidden">

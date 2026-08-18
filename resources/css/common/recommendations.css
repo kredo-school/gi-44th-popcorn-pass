@@ -1,58 +1,169 @@
-/* Recommendations Styles */
+/* ========================================
+   Recommendation colours
+======================================== */
 
-.recommendation-card {
+/* Home */
+:root {
+    --recommendation-card-bg: #081729;
+}
+
+/* MyPage */
+.mypage-recommendations {
+    --recommendation-card-bg: #2a304d;
+}
+
+
+/* ========================================
+   Recommendation link
+======================================== */
+
+.recommendation-link {
+    display: block;
+    height: 100%;
+}
+
+
+/* ========================================
+   Recommendation card
+======================================== */
+
+.card.recommendation-card {
     position: relative;
-    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+    overflow: hidden;
+    color: #fff;
+    background-color: var(--recommendation-card-bg) !important;
+    border: none !important;
+    border-radius: 8px;
+    outline: none;
+    box-shadow: none;
     cursor: pointer;
-    border: none;
-    background: #f8f9fa;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-.recommendation-card:hover {
+.card.recommendation-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
 }
 
-.recommendation-card img {
-    height: 180px;
-    object-fit: cover;
-    border-radius: 6px;
+
+/* ========================================
+   Poster
+======================================== */
+
+.recommendation-poster-wrapper {
+    position: relative;
+    height: 260px;
+    overflow: hidden;
+    background-color: var(--recommendation-card-bg);
+    border: none;
 }
+
+.recommendation-card .recommendation-poster {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    object-fit: cover;
+    background-color: var(--recommendation-card-bg);
+    border: none !important;
+    border-radius: 0;
+    outline: none;
+    box-shadow: none;
+}
+
+
+/* ========================================
+   Movie title
+======================================== */
 
 .recommendation-card .card-body {
     padding: 12px 8px;
+    color: #fff;
+    text-align: center;
+    background-color: var(--recommendation-card-bg) !important;
+    border: none;
 }
 
 .recommendation-card .card-title {
-    font-size: 13px;
-    line-height: 1.3;
     min-height: 2.6em;
+    margin: 0;
     overflow: hidden;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1.3;
+    text-align: center;
     text-overflow: ellipsis;
 }
+
+
+/* ========================================
+   Recommendation score
+======================================== */
 
 .recommendation-score {
     position: absolute;
     top: 8px;
     right: 8px;
-    background: linear-gradient(135deg, #ff6b6b, #ff5252);
-    color: white;
     padding: 4px 10px;
+    color: #fff;
+    background: linear-gradient(135deg,
+            #ff6b6b,
+            #ff5252);
     border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
     font-size: 12px;
     font-weight: bold;
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
 }
 
+
+/* ========================================
+   Empty and error states
+======================================== */
+
 .recommendations-empty {
-    text-align: center;
     padding: 40px 20px;
     color: #999;
+    text-align: center;
 }
 
 .recommendations-empty i {
-    font-size: 48px;
     display: block;
     margin-bottom: 12px;
+    font-size: 48px;
     opacity: 0.3;
+}
+
+
+/* ========================================
+   Responsive card widths
+======================================== */
+
+/* Mobile: 2 cards */
+.recommendation-column {
+    flex: 0 0 50%;
+    width: 50%;
+    max-width: 50%;
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    padding-left: calc(var(--bs-gutter-x) * 0.5);
+}
+
+/* Tablet: 3 cards */
+@media (min-width: 768px) {
+    .recommendation-column {
+        flex: 0 0 33.333333%;
+        width: 33.333333%;
+        max-width: 33.333333%;
+    }
+}
+
+/* Desktop: 5 cards */
+@media (min-width: 992px) {
+    .recommendation-column {
+        flex: 0 0 20%;
+        width: 20%;
+        max-width: 20%;
+    }
 }

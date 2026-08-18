@@ -16,23 +16,33 @@
             <div class="text-center mb-4 pb-4" style="border-bottom: 1px solid #2a2f4a;">
                 <div class="mypage-profile-avatar-wrapper mx-auto mb-3">
                     @if ($user->avatar)
-                        <img src="{{ $user->avatar }}"
-                             alt="{{ $user->full_name }}"
-                             class="mypage-profile-avatar rounded-circle"
-                             id="avatarPreview">
+                        <img src="{{ $user->avatar }}" alt="{{ $user->full_name }}" class="mypage-profile-avatar rounded-circle"
+                        id="avatarPreview">
                     @else
-                        <div class="mypage-profile-avatar mypage-profile-avatar-placeholder rounded-circle mx-auto d-flex align-items-center justify-content-center"
-                             id="avatarPreview">
+                        <div class="mypage-profile-avatar mypage-profile-avatar-placeholder
+                                    rounded-circle mx-auto d-flex align-items-center
+                                    justify-content-center" id="avatarPreview">
                             <i class="fa-solid fa-user fa-3x"></i>
                         </div>
                     @endif
                 </div>
+            
                 <label for="avatar" class="btn text-warning border-warning btn-sm">
-                    <i class="fa-solid fa-camera me-1"></i>Change Photo
+                    <i class="fa-solid fa-camera me-1"></i>
+                    Change Photo
                 </label>
-                <input type="file" id="avatar" name="avatar" class="d-none" accept="image/*">
+            
+                <input type="file" id="avatar" name="avatar" class="d-none" accept="image/jpeg,image/png,image/webp">
+            
+                <div class="small text-muted mt-2">
+                    JPG, PNG, or WebP. Maximum file size: 2 MB.
+                    A square image is recommended.
+                </div>
+            
                 @error('avatar')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
+                    <div class="text-danger small mt-1">
+                        {{ $message }}
+                    </div>
                 @enderror
             </div>
 

@@ -58,7 +58,12 @@ class ProfileController extends Controller
             'phone' => ['required', 'string', 'max:20', Rule::unique('users')->ignore($user->id)],
             'gender' => ['nullable', 'string', 'max:30'],
             'occupation' => ['nullable', 'string', 'max:100'],
-            'avatar' => ['nullable', 'image', 'max:2048'],
+            'avatar' => [
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
         ]);
 
         if ($request->hasFile('avatar')) {
