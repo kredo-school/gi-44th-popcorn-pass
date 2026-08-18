@@ -48,30 +48,30 @@ class AdminController extends Controller
 
         $currentYear = now()->year;
 
-    $availableYears = Payment::query()
-        ->where('payment_status', 'paid')
-        ->whereNotNull('paid_at')
-        ->selectRaw('YEAR(paid_at) as year')
-        ->distinct()
-        ->orderByDesc('year')
-        ->pluck('year')
-        ->map(fn ($year) => (int) $year)
-        ->values();
+        $availableYears = Payment::query()
+            ->where('payment_status', 'paid')
+            ->whereNotNull('paid_at')
+            ->selectRaw('YEAR(paid_at) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year')
+            ->map(fn($year) => (int) $year)
+            ->values();
 
-    if ($availableYears->isEmpty()) {
-        $availableYears = collect([$currentYear]);
-    }
+        if ($availableYears->isEmpty()) {
+            $availableYears = collect([$currentYear]);
+        }
 
-    $requestedYear = $request->integer('year');
+        $requestedYear = $request->integer('year');
 
-    $selectedYear = $availableYears->contains($requestedYear)
-        ? $requestedYear
-        : $availableYears->first();
+        $selectedYear = $availableYears->contains($requestedYear)
+            ? $requestedYear
+            : $availableYears->first();
 
-    $thisYear = $selectedYear;
-    $lastYear = $thisYear - 1;
+        $thisYear = $selectedYear;
+        $lastYear = $thisYear - 1;
 
-    /*
+        /*
         $requestedYear = $request->query('year');
 
         $selectedYear = filter_var(
@@ -505,15 +505,28 @@ class AdminController extends Controller
             return null;
         }
 
-        preg_match('/(?:youtu\.be\/|v=)([^?&]+)/', $url, $matches);
+        $videoId = null;
 
-        if (!isset($matches[1])) {
+        // youtu.be/VIDEO_ID
+        if (preg_match('/youtu\.be\/([^?&]+)/', $url, $matches)) {
+            $videoId = $matches[1];
+        }
+
+        // youtube.com/watch?v=VIDEO_ID
+        elseif (preg_match('/youtube\.com\/watch\?v=([^&]+)/', $url, $matches)) {
+            $videoId = $matches[1];
+        }
+
+        // youtube.com/embed/VIDEO_ID
+        elseif (preg_match('/youtube\.com\/embed\/([^?&]+)/', $url, $matches)) {
+            $videoId = $matches[1];
+        }
+
+        if (!$videoId) {
             return $url;
         }
 
-        $videoId = $matches[1];
-
-        return "https://www.youtube.com/embed/{$videoId}?autoplay=1&mute=1&loop=1&playlist={$videoId}";
+        return "https://www.youtube-nocookie.com/embed/{$videoId}?autoplay=1&mute=1&loop=1&playlist={$videoId}";
     }
 
     public function storeMovie(Request $request)
@@ -795,9 +808,9 @@ class AdminController extends Controller
         // Screens for the initially selected cinema.
         $screens = $cinema
             ? Screen::where('cinema_id', $cinema->id)
-                ->where('is_active', true)
-                ->orderBy('screen_number')
-                ->get()
+            ->where('is_active', true)
+            ->orderBy('screen_number')
+            ->get()
             : collect();
 
         // All active screens are also passed to the Blade view so that
@@ -1106,7 +1119,7 @@ class AdminController extends Controller
     // --------------------
     public function analytics(Request $request)
     {
-    /*
+        /*
     |--------------------------------------------------------------------------
     | Filters
     |--------------------------------------------------------------------------
@@ -1114,25 +1127,25 @@ class AdminController extends Controller
 
         $currentYear = now()->year;
 
-    $availableYears = Payment::query()
-        ->where('payment_status', 'paid')
-        ->whereNotNull('paid_at')
-        ->selectRaw('YEAR(paid_at) as year')
-        ->distinct()
-        ->orderByDesc('year')
-        ->pluck('year')
-        ->map(fn ($year) => (int) $year)
-        ->values();
+        $availableYears = Payment::query()
+            ->where('payment_status', 'paid')
+            ->whereNotNull('paid_at')
+            ->selectRaw('YEAR(paid_at) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year')
+            ->map(fn($year) => (int) $year)
+            ->values();
 
-    if ($availableYears->isEmpty()) {
-        $availableYears = collect([$currentYear]);
-    }
+        if ($availableYears->isEmpty()) {
+            $availableYears = collect([$currentYear]);
+        }
 
-    $requestedYear = $request->integer('year');
+        $requestedYear = $request->integer('year');
 
-    $selectedYear = $availableYears->contains($requestedYear)
-        ? $requestedYear
-        : $availableYears->first();
+        $selectedYear = $availableYears->contains($requestedYear)
+            ? $requestedYear
+            : $availableYears->first();
 
 
         $requestedCinemaId = $request->query('cinema_id');
@@ -1413,38 +1426,38 @@ class AdminController extends Controller
             )
             ->limit(5)
             ->get();
-/*
+        /*
 |--------------------------------------------------------------------------
 | Daily Revenue Chart
 |--------------------------------------------------------------------------
 */
 
-$dailyRevenueQuery = Payment::query()
-    ->selectRaw(
-        'DATE(paid_at) as date, SUM(amount) as total'
-    )
-    ->where(
-        'payment_status',
-        'paid'
-    )
-    ->whereYear(
-        'paid_at',
-        $selectedYear
-    );
+        $dailyRevenueQuery = Payment::query()
+            ->selectRaw(
+                'DATE(paid_at) as date, SUM(amount) as total'
+            )
+            ->where(
+                'payment_status',
+                'paid'
+            )
+            ->whereYear(
+                'paid_at',
+                $selectedYear
+            );
 
-if ($cinemaId) {
-    $dailyRevenueQuery->whereHas(
-        'reservation',
-        function ($query) use ($cinemaId) {
-            $query->where('cinema_id', $cinemaId);
+        if ($cinemaId) {
+            $dailyRevenueQuery->whereHas(
+                'reservation',
+                function ($query) use ($cinemaId) {
+                    $query->where('cinema_id', $cinemaId);
+                }
+            );
         }
-    );
-}
 
-$dailyRevenueChart = $dailyRevenueQuery
-    ->groupByRaw('DATE(paid_at)')
-    ->orderByRaw('DATE(paid_at)')
-    ->get();
+        $dailyRevenueChart = $dailyRevenueQuery
+            ->groupByRaw('DATE(paid_at)')
+            ->orderByRaw('DATE(paid_at)')
+            ->get();
 
         /*
     |--------------------------------------------------------------------------
@@ -1502,54 +1515,54 @@ $dailyRevenueChart = $dailyRevenueQuery
                 )
                 ->get();
 
-        /*
+            /*
         |--------------------------------------------------------------------------
         | Daily Revenue Chart
         |--------------------------------------------------------------------------
         */
-        $dailyRevenueQuery = Payment::query()
-            ->selectRaw('DATE(paid_at) as date, SUM(amount) as total')
-            ->where('payment_status', 'paid')
-            ->whereYear('paid_at', $selectedYear);
+            $dailyRevenueQuery = Payment::query()
+                ->selectRaw('DATE(paid_at) as date, SUM(amount) as total')
+                ->where('payment_status', 'paid')
+                ->whereYear('paid_at', $selectedYear);
 
-        if ($cinemaId) {
-            $dailyRevenueQuery->whereHas('reservation', function ($query) use ($cinemaId) {
-                $query->where('cinema_id', $cinemaId);
-            });
-        }
+            if ($cinemaId) {
+                $dailyRevenueQuery->whereHas('reservation', function ($query) use ($cinemaId) {
+                    $query->where('cinema_id', $cinemaId);
+                });
+            }
 
-        $dailyRevenueChart = $dailyRevenueQuery
-            ->groupByRaw('DATE(paid_at)')
-            ->orderByRaw('DATE(paid_at)')
-            ->get();
+            $dailyRevenueChart = $dailyRevenueQuery
+                ->groupByRaw('DATE(paid_at)')
+                ->orderByRaw('DATE(paid_at)')
+                ->get();
 
-    /*
+            /*
     |--------------------------------------------------------------------------
     | View
     |--------------------------------------------------------------------------
     */
 
-    return view(
-        'admin.analytics.index',
-        compact(
-            'currentYear',
-            'selectedYear',
-            'availableYears',
-            'cinemas',
-            'cinemaId',
-            'selectedCinema',
-            'totalRevenue',
-            'totalReservations',
-            'totalCustomers',
-            'avgRevenuePerReservation',
-            'monthlyRevenueData',
-            'monthlyReservationData',
-            'topMovies',
-            'cinemaPerformance',
-            'dailyRevenueChart',
-        )
-    );
-}
+            return view(
+                'admin.analytics.index',
+                compact(
+                    'currentYear',
+                    'selectedYear',
+                    'availableYears',
+                    'cinemas',
+                    'cinemaId',
+                    'selectedCinema',
+                    'totalRevenue',
+                    'totalReservations',
+                    'totalCustomers',
+                    'avgRevenuePerReservation',
+                    'monthlyRevenueData',
+                    'monthlyReservationData',
+                    'topMovies',
+                    'cinemaPerformance',
+                    'dailyRevenueChart',
+                )
+            );
+        }
         return view(
             'admin.analytics.index',
             compact(

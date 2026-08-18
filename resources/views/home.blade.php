@@ -100,10 +100,11 @@
 
                                         <div
                                             class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                            <iframe class="hero-video"
-                                                src="https://www.youtube-nocookie.com/embed/jSGmZ85krBs?autoplay=1&mute=1&loop=1&playlist=jSGmZ85krBs"
+                                            <iframe class="hero-video" src="{{ $heroMovie->trailer_url }}"
+                                                title="{{ $heroMovie->title }} Trailer"
                                                 referrerpolicy="strict-origin-when-cross-origin"
-                                                allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                                                allow="autoplay; encrypted-media" allowfullscreen>
+                                            </iframe>
                                         </div>
 
                                     </div>
@@ -145,8 +146,7 @@
 
                                         <div
                                             class="col-lg-4 d-flex align-items-center justify-content-center h-100 ps-lg-5">
-                                            <iframe class="hero-video"
-                                                src="https://www.youtube-nocookie.com/embed/jSGmZ85krBs?autoplay=1&mute=1&loop=1&playlist=jSGmZ85krBs"
+                                            <iframe class="hero-video" src="{{ $topMovie->trailer_url }}"
                                                 title="{{ $topMovie->title }} Trailer"
                                                 referrerpolicy="strict-origin-when-cross-origin"
                                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
