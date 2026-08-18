@@ -18,13 +18,13 @@
         </div>
 
         <div class="section-title-line mb-4 mt-5">
-            <hr class="text-dark">
+            <hr class="text-dark mt-5">
 
-            <h2 class="text-dark">
+            <h2 class="text-dark mt-5">
                 &lt; Search Result &gt;
             </h2>
 
-            <hr class="text-dark">
+            <hr class="text-dark mt-5">
         </div>
 
         <div class="container">
