@@ -169,7 +169,7 @@
     </div>
 
     {{-- Recommended for You Section --}}
-    <div class="mypage-card mt-4 p-4">
+    <div class="mypage-card mt-4 p-4 mypage-recommendations">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="mb-0"><i class="fa-solid fa-wand-magic-sparkles"></i> Recommended for You</h5>
         </div>

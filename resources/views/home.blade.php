@@ -437,7 +437,7 @@
 
         {{-- Recommended for You --}}
         @auth
-            <div class="row mt-5" id="Recommendations">
+            <div class="row mt-5 home-recommendations" id="Recommendations">
                 <div class="col-1"></div>
 
                 <div class="col-10">
