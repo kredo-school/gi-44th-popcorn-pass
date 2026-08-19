@@ -122,7 +122,7 @@
                 {{-- Home --}}
                 <div class="position-absolute start-0">
                     <a href="{{ url('/') }}" class="btn btn-dark ps-3 pe-3">
-                        Home
+                        <i class="fa-solid fa-arrow-left"></i> Home
                     </a>
                 </div>
             

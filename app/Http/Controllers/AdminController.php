@@ -2247,14 +2247,14 @@ class AdminController extends Controller
 
         $information = $query
             ->orderByRaw("
-            CASE status
-                WHEN 'Draft' THEN 1
-                WHEN 'Published' THEN 2
-                WHEN 'Archive' THEN 3
-                ELSE 4
-            END
-        ")
-            ->orderBy('created_at', 'desc')
+                CASE
+                    WHEN status = 'Draft' THEN 1
+                    WHEN status = 'Published' THEN 2
+                    WHEN status = 'Archived' THEN 3
+                    ELSE 4
+                END
+            ")
+            ->orderByRaw('COALESCE(published_at, created_at) DESC')
             ->paginate(20)
             ->withQueryString();
 

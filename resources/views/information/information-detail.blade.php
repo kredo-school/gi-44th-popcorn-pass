@@ -4,6 +4,7 @@
 @section('content')
 
 <div class="info-detail-page">
+    <h2 class="info-title text-center mb-5">Information</h2>
 
     {{-- Category --}}
     <div class="text-center mb-4">
@@ -30,11 +31,11 @@
         {{-- Content --}}
         <div class="info-detail-content">
 
-            <h3 class="info-detail-heading mb-3">
+            <h3 class="info-detail-heading mb-3 text-center">
                 {{ strtoupper($information->title) }}
             </h3>
 
-            <div class="info-detail-date mb-4">
+            <div class="info-detail-date mb-4 text-end">
                 {{ $information->published_at->format('Y.m.d') }}
             </div>
 

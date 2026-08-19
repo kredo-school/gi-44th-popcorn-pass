@@ -223,7 +223,7 @@
         </div>
 
         <div class="d-flex justify-content-between mt-5">
-            <a href="{{ url('/home') }}" class="back-btn ms-5 t">
+            <a href="{{ url('/home') }}" class="back-btn ms-5">
                 <i class="fa-solid fa-arrow-left"></i> HOME
             </a>
         </div>
