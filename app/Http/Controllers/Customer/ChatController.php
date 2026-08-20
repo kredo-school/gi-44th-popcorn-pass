@@ -428,18 +428,18 @@ Currently Showing Movies:
 
                 $reply =
                     '<img src="' . asset($movie->poster_url) . '"
-                      class="movie-poster w-100">
-                <br><br>'
+          class="chat-movie-poster">
+    <br><br>'
                     . nl2br($movieContext)
                     . '<br><br>
 
-                <a href="' . route(
+    <a href="' . route(
                         'movie_detail',
                         ['movie' => $movie->id]
                     ) . '"
-                   class="btn btn-primary">
-                    View Movie Details
-                </a>';
+       class="btn btn-primary">
+        View Movie Details
+    </a>';
             } else {
 
                 $reply =
